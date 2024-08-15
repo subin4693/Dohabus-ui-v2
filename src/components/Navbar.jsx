@@ -102,7 +102,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
     return (
         <div
-            className={`py-3 px-3 sm:px-16 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
+            className={`py-3 px-3 sm:px-16 z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
                 isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"
             }`}
         >
