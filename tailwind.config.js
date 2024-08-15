@@ -18,11 +18,12 @@ module.exports = {
                 "custom-pink": "#e83e8c",
                 "custom-red": "#dc3545",
                 "custom-orange": "#fd7e14",
-                "custom-yellow": "#ffc107",
+                "custom-yellow": "#FED92E",
                 "custom-green": "#28a745",
                 "custom-teal": "#20c997",
                 "custom-cyan": "#17a2b8",
                 "custom-white": "#fff",
+                "custom-yellow-light": "rgba(255, 193, 7, 0.5)",
                 gray: {
                     DEFAULT: "#6c757d",
                     dark: "#343a40",
