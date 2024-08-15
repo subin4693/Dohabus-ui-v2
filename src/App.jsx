@@ -21,14 +21,17 @@ function App() {
                     <Route path="/" element={<Layout />}>
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<About />} />
-                        <Route
+                        {/* <Route
                             path="/single-category"
                             element={<SignleCategory />}
-                        />
+                        /> */}
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/hotel" element={<Hotel />} />
                         <Route path="/tours" element={<Tours />} />
-                        <Route path="/tours/:id" element={<SingleTour />} />
+                        <Route
+                            path="/tours/:category"
+                            element={<SignleCategory />}
+                        />
                     </Route>
                 </Routes>
             </Router>

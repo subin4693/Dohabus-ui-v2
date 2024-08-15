@@ -1,13 +1,21 @@
 import React from "react";
 
 const Banner = ({ image, title, subTitle }) => {
-    console.log(image);
     return (
-        <div>
-            <img src={image} />
-            {image}
-            {title}
-            {subTitle}
+        <div
+            className="relative w-full h-[300px] md:h-[450px] bg-cover bg-center"
+            style={{ backgroundImage: `url(${image})` }}
+        >
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                <h1 className="text-[3rem] font-bold">{title}</h1>
+
+                <p className="text-custom-yellow text-xl">
+                    {subTitle.split("|")[0]}|
+                    <span className=" text-white">
+                        {subTitle.split("|")[1]}
+                    </span>
+                </p>
+            </div>
         </div>
     );
 };

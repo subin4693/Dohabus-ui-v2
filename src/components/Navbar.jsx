@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/log.png";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoIosArrowDown } from "react-icons/io";
+
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoSearch, IoClose } from "react-icons/io5";
 
@@ -342,7 +342,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             setSidebarOpen(false);
                                             setExpandedCategory([]);
                                             setTourOpen(false);
-                                            navigate("/tours/" + index);
+                                            navigate("/tours/" + category.text);
                                         }}
                                     >
                                         {category.text}
@@ -376,7 +376,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                     (tour, tourIndex) => (
                                                         <Link
                                                             key={tourIndex}
-                                                            to={`/tours?type=${tour.text}`}
+                                                            to={`/tours/${category.text}?search=${tour.text}`}
                                                             className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                                                         >
                                                             {tour.text}
@@ -441,7 +441,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                     <div className="flex items-center">
                         <input
                             type="text"
-                            className="text-3xl w-full bg-inherit border-none outline-none"
+                            className="text-3xl w-full bg-inherit border-b border-b-[px] border-white outline-none"
                             placeholder="Search ..."
                             ref={inputref}
                         />
