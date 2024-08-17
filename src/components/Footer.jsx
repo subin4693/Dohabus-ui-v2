@@ -29,7 +29,7 @@ const Footer = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
         );
     };
     return (
@@ -150,7 +150,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="p-7 md:px-20 bg-custom-yellow text-lg">
+            <div className="p-5 md:px-20 bg-custom-yellow text-sm">
                 <p>© Copyright 2022 -Doha Bus - All Rights Reserved</p>
             </div>
         </>

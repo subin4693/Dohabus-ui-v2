@@ -196,7 +196,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                 <NavLink
                                                                     to={`/tours/${
                                                                         tourCategory.text +
-                                                                        "?search=" +
+                                                                        "/" +
                                                                         subTour.text
                                                                     }`}
                                                                     className="block text-black"
@@ -376,7 +376,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                     (tour, tourIndex) => (
                                                         <Link
                                                             key={tourIndex}
-                                                            to={`/tours/${category.text}?search=${tour.text}`}
+                                                            to={`/tours/${category.text}/${tour.text}`}
                                                             className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                                                         >
                                                             {tour.text}

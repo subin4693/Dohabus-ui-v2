@@ -21,10 +21,10 @@ function App() {
                     <Route path="/" element={<Layout />}>
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<About />} />
-                        {/* <Route
-                            path="/single-category"
-                            element={<SignleCategory />}
-                        /> */}
+                        <Route
+                            path="/tours/:category/:singletour"
+                            element={<SingleTour />}
+                        />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/hotel" element={<Hotel />} />
                         <Route path="/tours" element={<Tours />} />
