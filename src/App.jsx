@@ -13,7 +13,7 @@ import Tours from "./pages/Tours";
 
 function App() {
     return (
-        <div className="font-inter">
+        <div className="font-custom">
             <Router>
                 <Routes>
                     <Route path="/signup" element={<Signup />} />
