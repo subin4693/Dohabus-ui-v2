@@ -1,5 +1,5 @@
 import React from "react";
-import { BiHeart } from "react-icons/bi";
+import { BiCart, BiHeart } from "react-icons/bi";
 import { IoHeart } from "react-icons/io5";
 const TourCard = ({ image, description, title }) => {
     return (
@@ -11,7 +11,12 @@ const TourCard = ({ image, description, title }) => {
                 {title}
             </h3>
             <div className="absolute inset-0 flex flex-col items-center justify-center p-5 bg-custom-yellow-light group-hover:translate-y-0 translate-y-full duration-500">
-                <IoHeart className="absolute top-6 right-6 text-3xl text-red-500" />
+                <div className="absolute top-7 group/edit hover:bg-dark overflow-hidden right-7 flex justify-center items-center  duration-300 bg-white rounded-full   ">
+                    <BiCart className="text-3xl m-2 group-hover/edit:text-white" />
+                    <button className=" max-w-0  opacity-0 whitespace-nowrap group-hover/edit:text-white group-hover/edit:max-w-[170px] group-hover/edit:opacity-100 group-hover/edit:px-2 transition-all duration-300">
+                        Remove from Cart
+                    </button>
+                </div>
 
                 <div className="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4">
                     <button className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow">

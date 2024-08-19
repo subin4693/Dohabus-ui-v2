@@ -64,14 +64,6 @@ const Cart = () => {
                 title={"Cart"}
                 subTitle={"Home | Cart"}
             />{" "}
-            <div className="flex justify-end  m-1 mt-10 mr-20 ">
-                <button
-                    className="bg-custom-yellow px-5  py-2 rounded-md hover:bg-dark hover:text-white duration-300 "
-                    onClick={() => setShowCheckoutCard(true)}
-                >
-                    450 Qar Checkout
-                </button>
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
                 {data.map(({ image, title, description, id }) => (
                     <TourCard

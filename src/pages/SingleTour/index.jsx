@@ -13,6 +13,7 @@ import { CiMail } from "react-icons/ci";
 import { FaPhoneAlt } from "react-icons/fa";
 
 import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
+import { BiCart } from "react-icons/bi";
 const SingleTour = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const album = [album1, album2, album3, album4, album5, album6];
@@ -22,7 +23,7 @@ const SingleTour = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length
         );
     };
     return (
@@ -262,8 +263,12 @@ const SingleTour = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="flex justify-center items-center p-5">
-                    <button className=" bg-custom-yellow py-3 px-5 rounded-md ">
+                <div className="flex gap-5 justify-center items-center p-5 flex-wrap">
+                    <button className=" bg-dark py-3 px-5 rounded-md hover:bg-custom-yellow text-white hover:text-black duration-300 flex justify-center items-center gap-2">
+                        <BiCart className="text-2xl" /> Add to Cart
+                    </button>
+
+                    <button className=" bg-custom-yellow py-3 px-5 rounded-md hover:bg-dark hover:text-white duration-300">
                         Book Now
                     </button>
                 </div>{" "}
@@ -274,7 +279,7 @@ const SingleTour = () => {
                                 key={index}
                                 src={photo}
                                 alt={`Photo ${index}`}
-                                className="object-cover w-[150px] h-[150px] cursor-pointer"
+                                className="object-cover w-[150px] h-[150px] cursor-pointer hover:scale-110 duration-300 rounded-md"
                                 onClick={() => setSelectedImage(index)}
                             />
                         ))}

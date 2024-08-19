@@ -15,43 +15,27 @@ const SignleCategory = () => {
         {
             _id: 1,
             image: aimaj,
-            title: "Ai-Majles",
-            description:
-                "Enter into a world of luxury and relaxation as you step inside Al-Majles Resort ",
+            title: "24 Hop On - Hop off Signhtseeing Tour",
         },
         {
             _id: 1,
             image: desert,
-            title: "Desert Tours",
-            description:
-                "Explore the desert and its thrilling adventures that awaits you.",
+            title: "Explore Doha Tour",
         },
         {
             _id: 1,
             image: common,
-            title: "Combo Tours",
-            description: "Get the best out of our combo packages.",
+            title: "Doha by Night",
         },
         {
             _id: 1,
             image: city,
-            title: "City Tours",
-            description:
-                "Access lots of iconic locations with ease at your own pace.",
+            title: "Night Tour",
         },
         {
             _id: 1,
             image: cultural,
-            title: "Cultural Tours",
-            description:
-                "Plunge into the water on our beautiful vessel and experience Doha",
-        },
-        {
-            _id: 1,
-            image: sea,
-            title: "Sea Tours",
-            description:
-                "Learn more about what made Doha what it is today by diving deep into its world of art and culture ",
+            title: "Doha sports Tour",
         },
     ];
     return (

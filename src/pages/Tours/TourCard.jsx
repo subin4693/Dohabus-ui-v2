@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TourCard = ({ image, description, title }) => {
     return (
@@ -11,9 +12,11 @@ const TourCard = ({ image, description, title }) => {
             </h3>
             <div className="flex flex-col text-white justify-center items-start  p-10 absolute bg-custom-yellow-light inset-0 translate-y-full group-hover:translate-y-0 duration-500">
                 <p className="text-lg  ">{description}</p>
-                <button className="text-lg px-5 py-3 mt-3 bg-dark rounded-full hover:text-custom-yellow">
-                    Discover
-                </button>
+                <Link to={`/tours/${title}`}>
+                    <button className="text-lg px-5 py-3 mt-3 bg-dark rounded-full hover:text-custom-yellow">
+                        Discover
+                    </button>
+                </Link>
             </div>
         </div>
     );
