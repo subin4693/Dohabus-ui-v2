@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/log.png";
 import { GiHamburgerMenu } from "react-icons/gi";
-
+import { GoSignIn } from "react-icons/go";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoSearch, IoClose } from "react-icons/io5";
-
+import { MdOutlineShoppingCart } from "react-icons/md";
 const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     const tours = [
         {
@@ -116,7 +116,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
 
                 <div className="flex justify-center items-center gap-2">
-                    <div className="hidden lg:flex justify-center items-center gap-5">
+                    <div className="hidden xl:flex justify-center items-center gap-5">
                         <Link to="/">Home</Link>
                         <Link to="/about">About</Link>
 
@@ -241,12 +241,25 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         </div> */}
                         <Link to="/hotel">Hotels</Link>
                         <Link to="/contact">Contact</Link>
+                        <Link to="/cart">Cart</Link>
+
+                        <Link to="/signin">Login</Link>
                         <Link to="/">العربية</Link>
+
+                        {/*<MdOutlineShoppingCart
+                            className="w-6 h-6 font-bold text-white"
+                            onClick={() => setSearchOpen(!searchOpen)}
+                        />*/}
                     </div>
                     <GiHamburgerMenu
-                        className="w-6 h-6 text-white lg:hidden"
+                        className="w-6 h-6 text-white xl:hidden"
                         onClick={() => setSidebarOpen(true)}
-                    />
+                    />{" "}
+                    &nbsp;
+                    <Link to="/cart">
+                        <MdOutlineShoppingCart className="w-6 h-6 text-white xl:hidden" />
+                    </Link>
+                    &nbsp;
                     {searchOpen ? (
                         <IoClose
                             className="w-6 h-6 z-10 text-white"
@@ -326,7 +339,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                     </button>
 
                     <div
-                        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                        className={`transition-all  duration-300 ease-in-out overflow-hidden ${
                             tourOpen
                                 ? "max-h-[1000px] opacity-100" // Increase max-height to accommodate larger content
                                 : "max-h-0 opacity-0"

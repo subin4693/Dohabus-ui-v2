@@ -10,6 +10,7 @@ import SingleTour from "./pages/SingleTour";
 import Contact from "./pages/Contact";
 import Hotel from "./pages/Hotel";
 import Tours from "./pages/Tours";
+import Cart from "./pages/Cart";
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                             path="/tours/:category/:singletour"
                             element={<SingleTour />}
                         />
+                        <Route path="/cart" element={<Cart />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/hotel" element={<Hotel />} />
                         <Route path="/tours" element={<Tours />} />
