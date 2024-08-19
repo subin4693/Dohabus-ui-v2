@@ -115,7 +115,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                     />
                 </div>
 
-                <div className="flex justify-center items-center gap-2">
+                <div className="flex justify-center items-center gap-2 ">
                     <div className="hidden xl:flex justify-center items-center gap-5">
                         <Link to="/">Home</Link>
                         <Link to="/about">About</Link>
@@ -242,7 +242,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         <Link to="/hotel">Hotels</Link>
                         <Link to="/contact">Contact</Link>
                         <Link to="/cart">Cart</Link>
-                        {/* <Link to="/admin">Admin</Link> */}
+                        <Link to="/admin">Admin</Link>
                         <Link to="/signin">Login</Link>
                         <Link to="/">العربية</Link>
 
