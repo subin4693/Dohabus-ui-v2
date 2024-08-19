@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import Hotel from "./pages/Hotel";
 import Tours from "./pages/Tours";
 import Cart from "./pages/Cart";
+import Transportation from "./pages/Transportation";
 
 function App() {
     return (
@@ -33,6 +34,10 @@ function App() {
                         <Route
                             path="/tours/:category"
                             element={<SignleCategory />}
+                        />
+                        <Route
+                            path="/transportation"
+                            element={<Transportation />}
                         />
                     </Route>
                 </Routes>

@@ -1,7 +1,7 @@
 import React from "react";
-import { BiCart, BiHeart } from "react-icons/bi";
-import { IoHeart } from "react-icons/io5";
-const TourCard = ({ image, description, title }) => {
+import { BiCart } from "react-icons/bi";
+
+const TourCard = ({ image, title }) => {
     return (
         <div
             className="h-[500px] bg-cover bg-center relative overflow-hidden group"
