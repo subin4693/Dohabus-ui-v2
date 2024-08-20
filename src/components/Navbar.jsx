@@ -242,7 +242,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         <Link to="/hotel">Hotels</Link>
                         <Link to="/contact">Contact</Link>
                         <Link to="/cart">Cart</Link>
-                        {/* <Link to="/admin">Admin</Link> */}
+                       <Link to="/admin">Admin</Link>
                         <Link to="/signin">Login</Link>
                         <Link to="/">العربية</Link>
 
