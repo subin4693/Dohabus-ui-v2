@@ -430,6 +430,42 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                     >
                         Contact
                     </button>
+
+                    <button
+                        onClick={(e) => {
+                            setSidebarOpen(false);
+                            setExpandedCategory([]);
+                            setTourOpen(false);
+                            navigate("/favourites");
+                        }}
+                        className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                    >
+                        Favourites
+                    </button>
+
+                    <button
+                        onClick={(e) => {
+                            setSidebarOpen(false);
+                            setExpandedCategory([]);
+                            setTourOpen(false);
+                            navigate("/faq");
+                        }}
+                        className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                    >
+                        F&Q
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            setSidebarOpen(false);
+                            setExpandedCategory([]);
+                            setTourOpen(false);
+                            navigate("/admin");
+                        }}
+                        className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                    >
+                        Admin
+                    </button>
+
                     <button
                         onClick={(e) => {
                             setSidebarOpen(false);
