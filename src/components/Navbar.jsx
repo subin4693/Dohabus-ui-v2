@@ -206,7 +206,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                     }
                                                                 </NavLink>
                                                             </li>
-                                                        )
+                                                        ),
                                                     )}
                                                 </ul>
                                             )}
@@ -242,7 +242,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         <Link to="/hotel">Hotels</Link>
                         <Link to="/contact">Contact</Link>
                         <Link to="/cart">Cart</Link>
-                        {/* <Link to="/admin">Admin</Link> */}
+                        <Link to="/admin">Admin</Link>
                         <Link to="/signin">Login</Link>
                         <Link to="/">العربية</Link>
 
@@ -367,7 +367,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                                         >
                                             {expandedCategory?.includes(
-                                                index
+                                                index,
                                             ) ? (
                                                 <FaMinus />
                                             ) : (
@@ -394,7 +394,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                         >
                                                             {tour.text}
                                                         </Link>
-                                                    )
+                                                    ),
                                                 )}
                                         </div>
                                     </div>
