@@ -5,7 +5,7 @@ import DownloadModal from "./DowloadModal";
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 const mockBookings = [
-    {git 
+    { 
         userName: "John Doeoooo",
         email: "john.doe@example.com",
         ticketCount: 2,

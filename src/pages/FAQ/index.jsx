@@ -1,7 +1,6 @@
 import React from "react";
 import Banner from "../../components/Banner";
 import contactImg from "../../assets/contact.jpg";
-import { BiBorderBottom } from "react-icons/bi";
 
 const Faq = () => {
   const data = [
