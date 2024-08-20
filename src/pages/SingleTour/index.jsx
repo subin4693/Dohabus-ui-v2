@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Banner from "../../components/Banner";
+import Reviews from "./Reviews";
 
 import singleTour from "../../assets/single-tour.jpg";
 import album1 from "../../assets/album1.jpg";
@@ -23,7 +24,7 @@ const SingleTour = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
         );
     };
     return (
@@ -285,6 +286,7 @@ const SingleTour = () => {
                         ))}
                     </div>
                 </div>
+                <Reviews />
                 <div
                     className={`fixed inset-0   flex justify-center items-center transition-opacity duration-300 ${
                         selectedImage !== null ? "z-10" : "-z-10 opacity-0"
