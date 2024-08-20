@@ -21,6 +21,7 @@ import Categorys from "./pages/Admin/Categoryes";
 import ToursAdmin from "./pages/Admin/Tours";
 import Users from "./pages/Admin/Users";
 import Favourites from "./pages/Favourites";
+import Faq from "./pages/FAQ";
 
 function App() {
     return (
@@ -38,6 +39,7 @@ function App() {
                         />
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/favourites" element={<Favourites />} />
+                        <Route path="/Faq" element={<Faq />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/hotel" element={<Hotel />} />
                         <Route path="/tours" element={<Tours />} />
