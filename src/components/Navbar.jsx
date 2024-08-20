@@ -107,7 +107,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             }`}
         >
             <div className="lg:w-[70%] mx-auto flex justify-between items-center">
-                <div className="w-[20mm] h-fit">
+                <div className="min-w-[20mm] max-w-[20mm] h-fit">
                     <img
                         src={logo}
                         className="w-full h-full object-cover"
@@ -129,7 +129,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             >
                                 <NavLink
                                     to="/tours"
-                                    className="pr-1 text-white flex-1"
+                                    className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
                                 >
                                     Tours
                                 </NavLink>
@@ -146,7 +146,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             <ul
                                 id="menu"
                                 aria-hidden="true"
-                                className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm mt-5"
+                                className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
                             >
                                 {tours.map((tourCategory) => (
                                     <li
@@ -206,7 +206,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                     }
                                                                 </NavLink>
                                                             </li>
-                                                        )
+                                                        ),
                                                     )}
                                                 </ul>
                                             )}
@@ -372,7 +372,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                                         >
                                             {expandedCategory?.includes(
-                                                index
+                                                index,
                                             ) ? (
                                                 <FaMinus />
                                             ) : (
@@ -399,7 +399,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                         >
                                                             {tour.text}
                                                         </Link>
-                                                    )
+                                                    ),
                                                 )}
                                         </div>
                                     </div>
