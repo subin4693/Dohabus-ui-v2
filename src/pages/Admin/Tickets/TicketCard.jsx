@@ -1,4 +1,5 @@
 import React from "react";
+import { BiTrash } from "react-icons/bi";
 
 const TicketCard = ({ booking }) => {
     return (
@@ -13,8 +14,15 @@ const TicketCard = ({ booking }) => {
             </div>
 
             {/* Details Section */}
-            <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-1">{booking.title}</h3>
+            <div className="flex-1 group">
+                <div className="flex justify-between items-center">
+                    <h3 className="text-xl font-semibold mb-1">
+                        {booking.title}
+                    </h3>
+                    <div className="p-1 rounded-md bg-gray-100 text-red-500 hidden group-hover:inline">
+                        <BiTrash className="w-6 h-6 " />
+                    </div>
+                </div>
                 <p className="text-stone-600 mb-2">{booking.userName}</p>
                 <p className="text-stone-500 mb-2">{booking.description}</p>
                 <p className="text-stone-600 mb-2">
