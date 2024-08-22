@@ -262,7 +262,7 @@ const Home = () => {
             >
                 <div className="px-1 md:px-10 xl:w-[70%] mx-auto flex justify-center items-center gap-5 flex-wrap">
                     <div>
-                        <h1 className="text-5xl font-bold">
+                        <h1 className="text-4xl font-bold">
                             TRANSPORTATION FLEET
                         </h1>
                         <p className="my-4 text-xl">
