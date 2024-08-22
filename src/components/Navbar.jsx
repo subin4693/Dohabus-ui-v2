@@ -203,6 +203,9 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                       )}
                   </li>
                 ))}
+                <Link to={"/transportation"}>
+                  <li className="px-3 py-1 hover:bg-gray-100">Transportation Fleet</li>
+                </Link>
               </ul>
             </div>
 
@@ -232,7 +235,35 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         </div> */}
 
             <Link to="/hotel">Hotels</Link>
-            <Link to="/contact">Contact Us</Link>
+
+            <div className="group inline-block relative">
+              <button
+                aria-haspopup="true"
+                aria-controls="menu"
+                className="flex items-center relative"
+              >
+                <div className="relative flex items-center">Contact Us</div>
+                <span>
+                  <svg
+                    className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </span>
+              </button>
+              <ul
+                id="menu"
+                aria-hidden="true"
+                className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+              >
+                <Link to="/faq">
+                  <li className="px-3 py-1 hover:bg-gray-100">F&Q</li>
+                </Link>
+              </ul>
+            </div>
+            {/* <Link to="/contact">Contact Us</Link> */}
             {/* <Link to="/cart">Cart</Link> */}
 
             {/* <Link to="/faq">F&Q</Link> */}
@@ -279,10 +310,10 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
               >
                 <li className="px-3 py-1 hover:bg-gray-100">
-                <Link to="/cart">Cart</Link>
+                  <Link to="/cart">Cart</Link>
                 </li>
                 <li className="px-3 py-1 hover:bg-gray-100">
-                <Link to="/favourites">Favourites</Link>
+                  <Link to="/favourites">Favourites</Link>
                 </li>
               </ul>
             </div>
@@ -312,42 +343,42 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             )}
           </Link> */}
           <div className="group inline-block relative xl:hidden">
-              <button
-                aria-haspopup="true"
-                aria-controls="menu"
-                className="flex items-center relative"
-              >
-                <div className="relative flex items-center">
-                  <BiCart size={35} />
-                  {cartItemCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
-                      {cartItemCount}
-                    </span>
-                  )}
-                </div>
-                <span>
-                  <svg
-                    className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </span>
-              </button>
-              <ul
-                id="menu"
-                aria-hidden="true"
-                className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
-              >
-                <li className="px-3 py-1 hover:bg-gray-100">
+            <button
+              aria-haspopup="true"
+              aria-controls="menu"
+              className="flex items-center relative"
+            >
+              <div className="relative flex items-center">
+                <BiCart size={35} />
+                {cartItemCount > 0 && (
+                  <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
+              <span>
+                <svg
+                  className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </button>
+            <ul
+              id="menu"
+              aria-hidden="true"
+              className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+            >
+              <li className="px-3 py-1 hover:bg-gray-100">
                 <Link to="/cart">Cart</Link>
-                </li>
-                <li className="px-3 py-1 hover:bg-gray-100">
+              </li>
+              <li className="px-3 py-1 hover:bg-gray-100">
                 <Link to="/favourites">Favourites</Link>
-                </li>
-              </ul>
-            </div>
+              </li>
+            </ul>
+          </div>
           &nbsp;
           {searchOpen ? (
             <IoClose
