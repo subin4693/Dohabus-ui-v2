@@ -2,10 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/log.png";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { GoSignIn } from "react-icons/go";
+
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoSearch, IoClose } from "react-icons/io5";
-import { MdOutlineShoppingCart } from "react-icons/md";
+
+import { BiCart } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setLanguage } from "../features/language/languageSlice";
 const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     const tours = [
         {
@@ -67,6 +70,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             _id: 6,
         },
     ];
+
+    let cartItemCount = 3;
     const navigate = useNavigate();
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -75,6 +80,16 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     const inputref = useRef(null);
     const [expandedCategory, setExpandedCategory] = useState([]);
     const [hoveredCategory, setHoveredCategory] = useState(null);
+    const [isEnglish, setIsEnglish] = useState(true);
+    const dispatch = useDispatch();
+
+    const toggleLanguage = () => {
+        setIsEnglish((prev) => {
+            if (prev) dispatch(setLanguage("ar"));
+            else dispatch(setLanguage("en"));
+            return !prev;
+        });
+    };
     const handleToggleCategory = (index) => {
         setExpandedCategory((prev) => {
             let arr = [...prev];
@@ -88,10 +103,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             }
             return arr;
         });
-    };
-
-    const setChangeLanguage = (e) => {
-        localStorage.setItem("language", e.target.value);
     };
     useEffect(() => {
         const handleScroll = () => {
@@ -110,7 +121,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"
             }`}
         >
-            <div className="lg:w-[70%] mx-auto flex justify-between items-center">
+            <div className="lg:w-[100%] mx-auto flex justify-between items-center">
                 <div className="min-w-[20mm] max-w-[20mm] h-fit">
                     <img
                         src={logo}
@@ -122,7 +133,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 <div className="flex justify-center items-center gap-2 ">
                     <div className="hidden xl:flex justify-center items-center gap-5">
                         <Link to="/">Home</Link>
-                        <Link to="/about">About</Link>
+                        <Link to="/about">About Us</Link>
 
                         {/* =========================================================================================================================================================================================================== */}
                         <div className="group inline-block relative">
@@ -210,12 +221,17 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                     }
                                                                 </NavLink>
                                                             </li>
-                                                        ),
+                                                        )
                                                     )}
                                                 </ul>
                                             )}
                                     </li>
                                 ))}
+                                <Link to={"/transportation"}>
+                                    <li className="px-3 py-1 hover:bg-gray-100">
+                                        Transportation Fleet
+                                    </li>
+                                </Link>
                             </ul>
                         </div>
 
@@ -245,21 +261,122 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         </div> */}
 
                         <Link to="/hotel">Hotels</Link>
-                        <Link to="/contact">Contact</Link>
-                        <Link to="/cart">Cart</Link>
 
-                        <Link to="/favourites">Favourites</Link>
-                        <Link to="/faq">F&Q</Link>
+                        <div className="group inline-block relative">
+                            <button
+                                aria-haspopup="true"
+                                aria-controls="menu"
+                                className="flex items-center relative"
+                            >
+                                <div className="relative flex items-center">
+                                    Contact Us
+                                </div>
+                                <span>
+                                    <svg
+                                        className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <ul
+                                id="menu"
+                                aria-hidden="true"
+                                className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                            >
+                                <Link to="/faq">
+                                    <li className="px-3 py-1 hover:bg-gray-100">
+                                        F&Q
+                                    </li>
+                                </Link>
+                            </ul>
+                        </div>
+                        {/* <Link to="/contact">Contact Us</Link> */}
+                        {/* <Link to="/cart">Cart</Link> */}
+
+                        {/* <Link to="/faq">F&Q</Link> */}
                         <Link to="/admin">Admin</Link>
 
                         <Link to="/signin">Login</Link>
-                        <select
-                            className="bg-transparent"
-                            onChange={setChangeLanguage}
+                        {/* <Link to="/">العربية</Link> */}
+
+                        <div
+                            className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"
+                            onClick={toggleLanguage}
                         >
-                            <option value="an"> العربية</option>
-                            <option value="en"> English</option>
-                        </select>
+                            {/* Slider Circle */}
+                            <div
+                                className={`absolute w-8 h-8 bg-custom-yellow rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center ${
+                                    isEnglish
+                                        ? "translate-x-2"
+                                        : "translate-x-10"
+                                }`}
+                            >
+                                {/* Language inside the circle */}
+                                <span className="text-white font-semibold">
+                                    {isEnglish ? "en" : "an"}
+                                </span>
+                            </div>
+
+                            {/* English Language Option */}
+                            <div className="flex-1 text-center text-white font-semibold">
+                                en
+                            </div>
+
+                            {/* Arabic Language Option */}
+                            <div className="flex-1 text-center text-white font-semibold">
+                                an
+                            </div>
+                        </div>
+
+                        {/* <Link to="/cart" className="relative flex items-center">
+              <BiCart size={35} />
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link> */}
+
+                        <div className="group inline-block relative">
+                            <button
+                                aria-haspopup="true"
+                                aria-controls="menu"
+                                className="flex items-center relative"
+                            >
+                                <div className="relative flex items-center">
+                                    <BiCart size={35} />
+                                    {cartItemCount > 0 && (
+                                        <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
+                                            {cartItemCount}
+                                        </span>
+                                    )}
+                                </div>
+                                <span>
+                                    <svg
+                                        className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <ul
+                                id="menu"
+                                aria-hidden="true"
+                                className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                            >
+                                <li className="px-3 py-1 hover:bg-gray-100">
+                                    <Link to="/cart">Cart</Link>
+                                </li>
+                                <li className="px-3 py-1 hover:bg-gray-100">
+                                    <Link to="/favourites">Favourites</Link>
+                                </li>
+                            </ul>
+                        </div>
 
                         {/*<MdOutlineShoppingCart
                             className="w-6 h-6 font-bold text-white"
@@ -270,10 +387,58 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         className="w-6 h-6 text-white xl:hidden"
                         onClick={() => setSidebarOpen(true)}
                     />{" "}
-                    &nbsp;
-                    <Link to="/cart">
-                        <MdOutlineShoppingCart className="w-6 h-6 text-white xl:hidden" />
-                    </Link>
+                    {/* &nbsp;
+          <Link to="/cart">
+            <MdOutlineShoppingCart className="w-6 h-6 text-white xl:hidden" />
+          </Link> */}
+                    {/* <Link
+            to="/cart"
+            className="relative flex items-center hover:text-yellow-900 xl:hidden"
+          >
+            <BiCart size={30} />
+            {cartItemCount > 0 && (
+              <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
+                {cartItemCount}
+              </span>
+            )}
+          </Link> */}
+                    <div className="group inline-block relative xl:hidden">
+                        <button
+                            aria-haspopup="true"
+                            aria-controls="menu"
+                            className="flex items-center relative"
+                        >
+                            <div className="relative flex items-center">
+                                <BiCart size={35} />
+                                {cartItemCount > 0 && (
+                                    <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
+                                        {cartItemCount}
+                                    </span>
+                                )}
+                            </div>
+                            <span>
+                                <svg
+                                    className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </button>
+                        <ul
+                            id="menu"
+                            aria-hidden="true"
+                            className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                        >
+                            <li className="px-3 py-1 hover:bg-gray-100">
+                                <Link to="/cart">Cart</Link>
+                            </li>
+                            <li className="px-3 py-1 hover:bg-gray-100">
+                                <Link to="/favourites">Favourites</Link>
+                            </li>
+                        </ul>
+                    </div>
                     &nbsp;
                     {searchOpen ? (
                         <IoClose
@@ -382,7 +547,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                                         >
                                             {expandedCategory?.includes(
-                                                index,
+                                                index
                                             ) ? (
                                                 <FaMinus />
                                             ) : (
@@ -409,7 +574,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                         >
                                                             {tour.text}
                                                         </Link>
-                                                    ),
+                                                    )
                                                 )}
                                         </div>
                                     </div>

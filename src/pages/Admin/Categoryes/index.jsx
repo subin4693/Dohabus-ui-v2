@@ -7,8 +7,8 @@ const CreateCategory = () => {
     const [image, setImage] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState({ en: "", an: "" });
+    const [description, setDescription] = useState({ en: "", an: "" });
 
     const cardData = [
         {
@@ -61,8 +61,8 @@ const CreateCategory = () => {
         });
         setIsOpen(false);
         // Reset form fields
-        setTitle("");
-        setDescription("");
+        setTitle({ en: "", an: "" });
+        setDescription({ en: "", an: "" });
         setImage(null);
         setSelectedData(null);
     };
@@ -77,8 +77,8 @@ const CreateCategory = () => {
         } else {
             // Create mode
             setSelectedData(null);
-            setTitle("");
-            setDescription("");
+            setTitle({ en: "", an: "" });
+            setDescription({ en: "", an: "" });
             setImage(null);
         }
         setIsOpen((prev) => !prev);
@@ -109,23 +109,65 @@ const CreateCategory = () => {
                                 )}
                             </label>
                         </div>
-                        <div className="flex-1 space-y-5 ">
+                        <div className="flex-1 space-y-5">
+                            {/* Title in English */}
                             <input
                                 type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Title"
+                                value={title.en}
+                                onChange={(e) =>
+                                    setTitle((prev) => ({
+                                        ...prev,
+                                        en: e.target.value,
+                                    }))
+                                }
+                                placeholder="Title (English)"
                                 className="w-full p-2 border border-black rounded-lg outline-none"
                             />
-                            <textarea
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Description"
-                                className="w-full h-[150px] p-2 border border-black rounded-lg outline-none resize-none"
+
+                            {/* Title in Arabic */}
+                            <input
+                                dir="rtl"
+                                type="text"
+                                value={title.an}
+                                onChange={(e) =>
+                                    setTitle((prev) => ({
+                                        ...prev,
+                                        an: e.target.value,
+                                    }))
+                                }
+                                placeholder="العنوان (بالعربية)" // Arabic for 'Title'
+                                className="w-full p-2 border border-black rounded-lg outline-none"
                             />
+
+                            {/* Description in English */}
+                            <textarea
+                                value={description.en}
+                                onChange={(e) =>
+                                    setDescription((prev) => ({
+                                        ...prev,
+                                        en: e.target.value,
+                                    }))
+                                }
+                                placeholder="Description (English)"
+                                className="w-full h-[100px] p-2 border border-black rounded-lg outline-none resize-none"
+                            />
+
+                            {/* Description in Arabic */}
+                            <textarea
+                                dir="rtl"
+                                value={description.an}
+                                onChange={(e) =>
+                                    setDescription((prev) => ({
+                                        ...prev,
+                                        an: e.target.value,
+                                    }))
+                                }
+                                placeholder="الوصف (بالعربية)" // Arabic for 'Description'
+                                className="w-full h-[100px] p-2 border border-black rounded-lg outline-none resize-none"
+                            />
+
                             <div className="flex gap-2">
                                 <button
-                                    // color={"red"}
                                     className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
                                     onClick={() => handleDialog()}
                                 >
@@ -142,6 +184,7 @@ const CreateCategory = () => {
                     </div>
                 </div>
             )}
+
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-subtitle font-bold">Tour Category</h1>

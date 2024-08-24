@@ -50,7 +50,7 @@ const TourPlanForm = ({ onClose }) => {
             price.map((row) => ({
                 ...row,
                 detail: [...row.detail, { en: "newDetail", an: "تفصيل جديد" }],
-            })),
+            }))
         );
     };
 
@@ -204,7 +204,7 @@ const TourPlanForm = ({ onClose }) => {
                             handleArrayChange={handleArrayChange}
                             handleAddArrayItem={handleAddArrayItem}
                         />
-                        // Continue from where you left off...
+
                         <FieldArray
                             title="Includes"
                             data={includes}
@@ -342,7 +342,7 @@ const TourPlanForm = ({ onClose }) => {
                                                         className="w-full p-2 border border-black rounded-lg outline-none"
                                                     />
                                                 </div>
-                                            ),
+                                            )
                                         )}
                                     </div>
                                 </div>

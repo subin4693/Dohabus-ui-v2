@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Home = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const lang = useSelector((state) => state.language.lang);
     const slides = [
         {
             url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
@@ -144,53 +146,85 @@ const Home = () => {
                     initial={{ opacity: 0, y: -100 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="text-4xl p-5 text-center font-semibold ">
-                        Discover Our Tours
+                    <h1 className="text-4xl p-5 text-center font-semibold">
+                        {lang === "en" ? "Discover Our Tours" : "اكتشف جولاتنا"}
                     </h1>
                     <p className="text-lg p-2 text-center text-gray-500">
-                        ‘’Explore Qatar to its fullest under our wing..’’
+                        {lang === "en"
+                            ? "Explore Qatar to its fullest under our wing.."
+                            : "استكشف قطر على أكمل وجه تحت جناحنا.."}
                     </p>
                     <div className="flex justify-center items-center  gap-5 flex-wrap mt-20">
                         {[
                             {
-                                title: "City Tours",
-                                description:
-                                    "Access lots of iconic locations with ease at your own pace",
+                                title: {
+                                    ar: "جولات المدينة",
+                                    en: "City Tours",
+                                },
+                                description: {
+                                    ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
+                                    en: "Access lots of iconic locations with ease at your own pace",
+                                },
                                 image: "https://eng.dohabus.com/English/images/2022/10/17/city.jpg",
                                 link: "/tours/city tours",
                             },
                             {
-                                title: "Sea Tours",
-                                description:
-                                    "Access lots of iconic locations with ease at your own pace",
+                                title: {
+                                    ar: "جولات بحرية",
+                                    en: "Sea Tours",
+                                },
+                                description: {
+                                    ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
+                                    en: "Access lots of iconic locations with ease at your own pace",
+                                },
                                 image: "https://eng.dohabus.com/English/images/2022/09/29/3.jpg",
                                 link: "/tours/Sea tours",
                             },
                             {
-                                title: "Desert Tours",
-                                description:
-                                    "Access lots of iconic locations with ease at your own pace",
+                                title: {
+                                    ar: "جولات الصحراء",
+                                    en: "Desert Tours",
+                                },
+                                description: {
+                                    ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
+                                    en: "Access lots of iconic locations with ease at your own pace",
+                                },
                                 image: "https://eng.dohabus.com/English/images/2022/10/17/0.jpg",
                                 link: "/tours/Desert tours",
                             },
                             {
-                                title: "Combo Tours",
-                                description:
-                                    "Access lots of iconic locations with ease at your own pace",
+                                title: {
+                                    ar: "جولات مختلطة",
+                                    en: "Combo Tours",
+                                },
+                                description: {
+                                    ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
+                                    en: "Access lots of iconic locations with ease at your own pace",
+                                },
                                 image: "https://eng.dohabus.com/English/images/2022/10/16/combo.jpg",
                                 link: "/tours/Combo tours",
                             },
                             {
-                                title: "Cultural Tours",
-                                description:
-                                    "Access lots of iconic locations with ease at your own pace",
+                                title: {
+                                    ar: "جولات ثقافية",
+                                    en: "Cultural Tours",
+                                },
+                                description: {
+                                    ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
+                                    en: "Access lots of iconic locations with ease at your own pace",
+                                },
                                 image: "https://eng.dohabus.com/English/images/2022/09/29/4.jpg",
                                 link: "/tours/Cultural tours",
                             },
                             {
-                                title: "Al-Majles",
-                                description:
-                                    "Access lots of iconic locations with ease at your own pace",
+                                title: {
+                                    ar: "المجلس",
+                                    en: "Al-Majles",
+                                },
+                                description: {
+                                    ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
+                                    en: "Access lots of iconic locations with ease at your own pace",
+                                },
                                 image: "https://eng.dohabus.com/English/images/2022/10/17/9.jpg",
                             },
                         ].map((data) => (
@@ -198,6 +232,8 @@ const Home = () => {
                                 to={data.link}
                                 className="card w-[300px] flex flex-col items-center mb-20"
                             >
+                                {console.log(data.title["ar"])}
+                                {console.log(lang)}
                                 <div className="relative w-[200px] h-[200px]">
                                     <img
                                         className="absolute inset-0 w-full h-full object-cover rounded-full transition-transform duration-[.6s] transform hover:scale-125 cursor-pointer"
@@ -207,10 +243,10 @@ const Home = () => {
                                 </div>
                                 <div className="flex flex-col items-center justify-between flex-grow p-4">
                                     <h1 className="text-xl font-semibold text-center mt-4 transition-colors duration-300 hover:text-custom-yellow cursor-pointer">
-                                        {data.title}
+                                        {data?.title[lang]}
                                     </h1>
                                     <p className="text-gray-500 text-center mt-2">
-                                        {data.description}
+                                        {data?.description[lang]}
                                     </p>
                                 </div>
                             </Link>
@@ -239,7 +275,9 @@ const Home = () => {
 
                 <div className="w-full lg:w-1/5">
                     <h1 className="text-4xl p-5 text-center font-semibold">
-                        OVERALL TOUR EXPERIENCE
+                        {lang === "en"
+                            ? "OVERALL TOUR EXPERIENCE"
+                            : "تجربة الجولة العامة"}
                     </h1>
                 </div>
                 <div className="relative w-full lg:w-2/5 h-[400px]">
@@ -262,16 +300,21 @@ const Home = () => {
             >
                 <div className="px-1 md:px-10 xl:w-[70%] mx-auto flex justify-center items-center gap-5 flex-wrap">
                     <div>
-                        <h1 className="text-5xl font-bold">
-                            TRANSPORTATION FLEET
+                        <h1 className="text-4xl font-bold">
+                            {lang === "en"
+                                ? "TRANSPORTATION FLEET"
+                                : "أسطول النقل"}
                         </h1>
                         <p className="my-4 text-xl">
-                            Providing reliable vehicle rental service throughout
-                            Doha and across Qatar
+                            {lang === "en"
+                                ? "Providing reliable vehicle rental service throughout Doha and across Qatar"
+                                : "تقديم خدمة تأجير سيارات موثوقة في جميع أنحاء الدوحة وقطر"}
                         </p>
                         <Link to="/transportation">
                             <button className="px-4 py-2 bg-black text-white rounded-md text-xl">
-                                Discover More...
+                                {lang === "en"
+                                    ? "Discover More..."
+                                    : "اكتشف المزيد..."}
                             </button>
                         </Link>
                     </div>
