@@ -3,159 +3,248 @@ import Banner from "../../components/Banner";
 import contactImg from "../../assets/contact.jpg";
 import { FaMapPin } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 const Contact = () => {
-  return (
-    <div>
-      <Banner
-        image={contactImg}
-        title={"Contact"}
-        subTitle={"Home | Contact"}
-      />
-      <div className="lg:w-[70%] lg:mx-auto p-10 md:px-20 flex gap-10 flex-col xl:flex-row">
-        <div className="w-full xl:w-2/3   ">
-          <h1 className="text-[2.8rem] font-bold text-dark">
-            How can we help?
-          </h1>
-          <p classname="text-gray">
-            We’ll help you find the right places and ways to get the most out of
-            your visit to Qatar! Tell us a bit about yourself, and we’ll get in
-            touch as soon as we can.
-          </p>
+    const lang = useSelector((state) => state.language.lang);
+    const locations = [
+        {
+            id: 1,
+            title: {
+                en: "IDoha Bus Head Office",
+                ar: "مكتب حافلات إيدوها",
+            },
+            times: [
+                {
+                    day: { en: "Sun to Thu", ar: "من الأحد إلى الخميس" },
+                    hours: { en: "8:00 AM - 5:00 PM", ar: "8:00 ص - 5:00 م" },
+                },
+                {
+                    day: { en: "Sat", ar: "السبت" },
+                    hours: { en: "8:00 AM - 2:00 PM", ar: "8:00 ص - 2:00 م" },
+                },
+                {
+                    day: { en: "Fri", ar: "الجمعة" },
+                    hours: { en: "CLOSED", ar: "مغلق" },
+                },
+            ],
+        },
+        {
+            id: 2,
+            title: {
+                en: "Souq Waqif Kiosk",
+                ar: "كشك سوق واقف",
+            },
+            times: [
+                {
+                    day: { en: "Daily", ar: "يوميًا" },
+                    hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
+                },
+            ],
+        },
+        {
+            id: 3,
+            title: {
+                en: "National Museum Kiosk",
+                ar: "كشك المتحف الوطني",
+            },
+            times: [
+                {
+                    day: { en: "Daily", ar: "يوميًا" },
+                    hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
+                },
+            ],
+        },
+        {
+            id: 4,
+            title: {
+                en: "Sheraton Hotel Park Kiosk",
+                ar: "كشك منتزه فندق شيراتون",
+            },
+            times: [
+                {
+                    day: { en: "Daily", ar: "يوميًا" },
+                    hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
+                },
+            ],
+        },
+        {
+            id: 5,
+            title: {
+                en: "Katara Cultural Village Kiosk",
+                ar: "كشك قرية كتارا الثقافية",
+            },
+            times: [
+                {
+                    day: { en: "Daily", ar: "يوميًا" },
+                    hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
+                },
+            ],
+        },
+        {
+            id: 6,
+            title: {
+                en: "Sealine Kiosk",
+                ar: "كشك سيلين",
+            },
+            times: [
+                {
+                    day: { en: "Daily", ar: "يوميًا" },
+                    hours: { en: "9:00 AM - 5:00 PM", ar: "9:00 ص - 5:00 م" },
+                },
+            ],
+        },
+        {
+            id: 7,
+            title: {
+                en: "Al Majles Resort",
+                ar: "منتجع المجلس",
+            },
+            times: [
+                {
+                    day: {
+                        en: "Saturday to Wednesday",
+                        ar: "من السبت إلى الأربعاء",
+                    },
+                    hours: { en: "9:00 AM - 7:00 PM", ar: "9:00 ص - 7:00 م" },
+                },
+                {
+                    day: { en: "Thursday & Friday", ar: "الخميس والجمعة" },
+                    hours: {
+                        en: "10:00 AM - 12:00 AM",
+                        ar: "10:00 ص - 12:00 ص",
+                    },
+                },
+            ],
+        },
+    ];
+    const texts = {
+        en: {
+            heading: "How can we help?",
+            paragraph:
+                "We’ll help you find the right places and ways to get the most out of your visit to Qatar! Tell us a bit about yourself, and we’ll get in touch as soon as we can.",
+            placeholders: {
+                name: "Name",
+                email: "Email",
+                subject: "Subject",
+                message: "Message",
+            },
+            terms: "I agree with your terms & conditions.",
+            button: "Send Message",
+            faq: "Do you have doubts? F&Q",
+        },
+        ar: {
+            heading: "كيف يمكننا مساعدتك؟",
+            paragraph:
+                "سوف نساعدك في العثور على الأماكن المناسبة والطرق التي تساعدك على الاستفادة القصوى من زيارتك إلى قطر! قل لنا قليلاً عن نفسك، وسنتواصل معك في أقرب وقت ممكن.",
+            placeholders: {
+                name: "الاسم",
+                email: "البريد الإلكتروني",
+                subject: "الموضوع",
+                message: "الرسالة",
+            },
+            terms: "أوافق على شروطك وأحكامك.",
+            button: "إرسال الرسالة",
+            faq: "هل لديك استفسارات؟ الأسئلة الشائعة",
+        },
+    };
+    const { heading, paragraph, placeholders, terms, button, faq } =
+        texts[lang] || texts.en;
 
-          <form className="space-y-5 mt-10">
-            <div className="flex justify-center items-center gap-5 flex-col md:flex-row">
-              <input
-                type="text"
-                placeholder="Name"
-                className="p-3 px-5 w-full outline-none border border-gray-lite rounded-full focus:border-custom-yellow"
-              />
+    return (
+        <div>
+            <Banner
+                image={contactImg}
+                title={"Contact"}
+                subTitle={"Home | Contact"}
+            />
+            <div className="lg:w-[70%] lg:mx-auto p-10 md:px-20 flex gap-10 flex-col xl:flex-row">
+                <div
+                    dir={lang === "ar" ? "rtl" : "ltr"}
+                    className="w-full xl:w-2/3"
+                >
+                    <div className="w-full xl:w-2/3">
+                        <h1 className="text-[2.8rem] font-bold text-dark">
+                            {heading}
+                        </h1>
+                        <p className="text-gray">{paragraph}</p>
 
-              <input
-                type="text"
-                placeholder="email"
-                className="p-3 w-full px-5  outline-none border border-gray-lite rounded-full focus:border-custom-yellow"
-              />
+                        <form className="space-y-5 mt-10">
+                            <div className="flex justify-center items-center gap-5 flex-col md:flex-row">
+                                <input
+                                    type="text"
+                                    placeholder={placeholders.name}
+                                    className="p-3 px-5 w-full outline-none border border-gray-lite rounded-full focus:border-custom-yellow"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder={placeholders.email}
+                                    className="p-3 w-full px-5 outline-none border border-gray-lite rounded-full focus:border-custom-yellow"
+                                />
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder={placeholders.subject}
+                                className="p-3 w-full px-5 outline-none border border-gray-lite rounded-full focus:border-custom-yellow"
+                            />
+
+                            <textarea
+                                placeholder={placeholders.message}
+                                rows="5"
+                                className="p-3 w-full px-5 outline-none border border-gray-lite rounded-3xl focus:border-custom-yellow"
+                            />
+
+                            <label className="block">
+                                <input type="checkbox" /> &nbsp;{terms}{" "}
+                                <span className="text-custom-yellow">
+                                    {terms}
+                                </span>
+                            </label>
+                            <button
+                                type="button"
+                                className="w-full py-2 bg-custom-yellow hover:bg-black hover:text-white duration-300 rounded-full"
+                            >
+                                {button}
+                            </button>
+                            <p className="text-center text-lg">{faq}</p>
+                        </form>
+                    </div>
+                </div>
+                <div
+                    dir={lang === "ar" ? "rtl" : "ltr"}
+                    className="w-full xl:w-1/3 space-y-5"
+                >
+                    <h2 className="text-3xl font-bold text-dark">
+                        {lang === "en"
+                            ? "Locations & Opening Times"
+                            : "المواقع وأوقات العمل"}
+                    </h2>
+                    {locations.map((location) => (
+                        <div key={location.id}>
+                            <h4 className="flex">
+                                <FaMapPin className="w-7 h-7" />
+                                &nbsp;
+                                <span className="text-custom-yellow">
+                                    {location.title[lang]}
+                                </span>
+                            </h4>
+                            <p>
+                                {location.times.map((time, index) => (
+                                    <span key={index}>
+                                        <span className="text-gray font-bold">
+                                            {time.day[lang]}:
+                                        </span>{" "}
+                                        {time.hours[lang]}
+                                        <br />
+                                    </span>
+                                ))}
+                            </p>
+                        </div>
+                    ))}
+                </div>
             </div>
-
-            <input
-              type="text"
-              placeholder="Subject"
-              className="p-3 w-full px-5  outline-none border border-gray-lite rounded-full focus:border-custom-yellow"
-            />
-
-            <textarea
-              placeholder="message"
-              rows="5"
-              className="p-3 w-full px-5  outline-none border border-gray-lite rounded-3xl focus:border-custom-yellow "
-            />
-
-            <label className="block ">
-              <input type="checkbox" /> &nbsp;I agree with your{" "}
-              <span className="text-custom-yellow">terms & conditions.</span>
-            </label>
-            <button
-              type="button"
-              className="w-full py-2 bg-custom-yellow hover:bg-black hover:text-white duration-300 rounded-full "
-            >
-              Send Message
-            </button>
-            <p className="text-center text-lg">
-              Do you have a doubts? &nbsp;
-              <span className="text-custom-yellow cursor-pointer"><Link to="/faq">F&Q</Link></span>
-            </p>
-          </form>
         </div>
-        <div className="w-full  xl:w-1/3 space-y-5">
-          <h2 className="text-3xl font-bold text-dark">
-            Locations & Opening Times
-          </h2>
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">IDoha Bus Head Office</span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">Sun to Thu : </span>
-            8:00 AM - 5:00 PM
-            <br />
-            <span className="text-gray font-bold">Sat :</span>
-            8:00AM - 2:00PM
-            <br />
-            <span className="text-gray font-bold">Fri: </span>
-            CLOSED
-          </p>
-          {/*=================================*/}
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">Souq Waqif Kiosk</span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">Daily</span>
-            10:00AM - 5:00PM
-          </p>
-          {/*=================================*/}
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">National Museum Kiosk</span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">Daily</span>
-            10:00AM - 5:00PM
-          </p>
-          {/*=================================*/}
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">
-              Sheraton Hotel Park Kiosk
-            </span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">Daily</span>
-            10:00AM - 5:00PM
-          </p>
-          {/*=================================*/}
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">
-              Katara Cultural Village Kiosk
-            </span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">Daily</span>
-            10:00AM - 5:00PM
-          </p>
-          {/*=================================*/}
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">Sealine Kiosk</span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">Daily</span>
-            9:00AM - 5:00PM
-          </p>{" "}
-          {/*=================================*/}
-          <h4 className="flex">
-            <FaMapPin className="w-7 h-7" />
-            &nbsp;
-            <span className="text-custom-yellow">Al Majles Resort</span>
-          </h4>
-          <p>
-            <span className="text-gray font-bold">
-              Saturday to Wednesday :{" "}
-            </span>
-            9:00AM - 7:00PM <br />
-            <span className="text-gray font-bold">Thursday & Friday: </span>
-            10:00AM - 12:00AM
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Contact;

@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const TourCard = ({ image, description, title }) => {
+    const lang = useSelector((state) => state.language.lang);
     return (
         <div
+            dir={lang === "ar" ? "rtl" : "ltr"}
             className="h-[500px]  bg-cover bg-center relative overflow-hidden group"
             style={{ backgroundImage: `url(${image})` }}
         >
@@ -14,7 +17,7 @@ const TourCard = ({ image, description, title }) => {
                 <p className="text-lg  ">{description}</p>
                 <Link to={`/tours/${title}`}>
                     <button className="text-lg px-5 py-3 mt-3 bg-dark rounded-full hover:text-custom-yellow">
-                        Discover
+                        {lang === "ar" ? "اكتشف" : "Discover"}
                     </button>
                 </Link>
             </div>

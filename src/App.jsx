@@ -27,19 +27,13 @@ import Faq from "./pages/FAQ";
 import AdminCart from "./pages/Admin/AdminCart";
 import AdminFavourite from "./pages/Admin/AdminFavourite";
 import Hotels from "./pages/Admin/Hotels";
+import { useSelector } from "react-redux";
 
 // import { useDispatch, useSelector } from "react-redux";
 // import { setLanguage } from "./features/language/languageSlice";
 
 function App() {
-    // const [language, setLanguage] = useState("en");
-    // const dispatch = useDispatch();
-
-    // useEffect(() => {
-    //     const val = localStorage.getItem("language");
-
-    //     console.log(val);
-    // }, []);
+    const lang = useSelector((state) => state.language.lang);
     return (
         <div className="font-custom">
             <Router>

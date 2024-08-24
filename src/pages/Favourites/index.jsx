@@ -9,67 +9,72 @@ import city from "../../assets/city-tourpage.jpg";
 import sea from "../../assets/sea-tourpage.jpg";
 import cultural from "../../assets/cultural-tourpage.jpg";
 import TourCard from "./TourCard";
+import { useSelector } from "react-redux";
 
 const Favourites = () => {
-  const data = [
-    {
-      _id: 1,
-      image: aimaj,
-      title: "Ai-Majles",
-      description:
-        "Enter into a world of luxury and relaxation as you step inside Al-Majles Resort ",
-    },
-    {
-      _id: 1,
-      image: desert,
-      title: "Desert Tours",
-      description:
-        "Explore the desert and its thrilling adventures that awaits you.",
-    },
-    {
-      _id: 1,
-      image: common,
-      title: "Combo Tours",
-      description: "Get the best out of our combo packages.",
-    },
-    {
-      _id: 1,
-      image: city,
-      title: "City Tours",
-      description:
-        "Access lots of iconic locations with ease at your own pace.",
-    },
-    {
-      _id: 1,
-      image: cultural,
-      title: "Cultural Tours",
-      description:
-        "Plunge into the water on our beautiful vessel and experience Doha",
-    },
-    {
-      _id: 1,
-      image: sea,
-      title: "Sea Tours",
-      description:
-        "Learn more about what made Doha what it is today by diving deep into its world of art and culture ",
-    },
-  ];
+    const lang = useSelector((state) => state.language.lang);
+    const data = [
+        {
+            _id: 1,
+            image: aimaj,
+            title: {
+                en: "24 Hop On - Hop off Sightseeing Tour",
+                ar: "جولة هوب أون - هوب أوف 24",
+            },
+        },
+        {
+            _id: 2,
+            image: desert,
+            title: {
+                en: "Explore Doha Tour",
+                ar: "جولة استكشاف الدوحة",
+            },
+        },
+        {
+            _id: 3,
+            image: common,
+            title: {
+                en: "Doha by Night",
+                ar: "الدوحة في الليل",
+            },
+        },
+        {
+            _id: 4,
+            image: city,
+            title: {
+                en: "Night Tour",
+                ar: "جولة ليلية",
+            },
+        },
+        {
+            _id: 5,
+            image: cultural,
+            title: {
+                en: "Doha Sports Tour",
+                ar: "جولة الرياضة في الدوحة",
+            },
+        },
+    ];
 
-  return (
-    <div>
-      <Banner image={contactImg} title={"Favourites"} subTitle={"Home | Favourites"} />{" "}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
-        {data.map(({ image, title, description, id }) => (
-          <TourCard
-            image={image}
-            title={title}
-            description={description}
-            key={id}
-          />
-        ))}
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <Banner
+                image={contactImg}
+                title={"Favourites"}
+                subTitle={"Home | Favourites"}
+            />{" "}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
+                {data.map(({ image, title, description, id }) => (
+                    <TourCard
+                        image={image}
+                        title={title[lang]}
+                        key={id}
+                        lang={lang}
+                    />
+                ))}
+            </div>
+        </div>
+    );
 };
 
 export default Favourites;

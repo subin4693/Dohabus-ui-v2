@@ -10,53 +10,71 @@ import cultural from "../../assets/cultural-tourpage.jpg";
 
 import catTop from "../../assets/city-tour-categorypage.jpg";
 import TourCard from "./TourCard";
+import { useSelector } from "react-redux";
 const SignleCategory = () => {
     const data = [
         {
             _id: 1,
             image: aimaj,
-            title: "24 Hop On - Hop off Signhtseeing Tour",
+            title: {
+                en: "24 Hop On - Hop off Sightseeing Tour",
+                ar: "جولة هوب أون - هوب أوف 24",
+            },
         },
         {
-            _id: 1,
+            _id: 2,
             image: desert,
-            title: "Explore Doha Tour",
+            title: {
+                en: "Explore Doha Tour",
+                ar: "جولة استكشاف الدوحة",
+            },
         },
         {
-            _id: 1,
+            _id: 3,
             image: common,
-            title: "Doha by Night",
+            title: {
+                en: "Doha by Night",
+                ar: "الدوحة في الليل",
+            },
         },
         {
-            _id: 1,
+            _id: 4,
             image: city,
-            title: "Night Tour",
+            title: {
+                en: "Night Tour",
+                ar: "جولة ليلية",
+            },
         },
         {
-            _id: 1,
+            _id: 5,
             image: cultural,
-            title: "Doha sports Tour",
+            title: {
+                en: "Doha Sports Tour",
+                ar: "جولة الرياضة في الدوحة",
+            },
         },
     ];
+    const lang = useSelector((state) => state.language.lang);
+
     return (
         <div>
             <Banner
                 image={catTop}
-                title={"City Tour"}
+                title={lang === "en" ? "City Tour" : "جولة المدينة"}
                 subTitle={"Home | Tours"}
             />
 
-            <h1 className="text-center text-[3rem] font-bold mt-16 ">
-                Choose Your Tour
+            <h1 className="text-center text-[3rem] font-bold mt-16">
+                {lang === "en" ? "Choose Your Tour" : "اختر جولتك"}
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
-                {data.map(({ image, title, description, id }) => (
+                {data.map(({ image, title, _id }) => (
                     <TourCard
+                        lang={lang}
                         image={image}
-                        title={title}
-                        description={description}
-                        key={id}
+                        title={title[lang]} // Use the selected language
+                        key={_id}
                     />
                 ))}
             </div>
