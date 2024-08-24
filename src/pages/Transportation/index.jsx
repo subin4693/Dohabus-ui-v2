@@ -1,10 +1,20 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+import Banner from "../../components/Banner";
+
 const Transportation = () => {
   return (
     <div>
-      <div className="relative">
+      <Banner
+        image={
+          "https://images.pexels.com/photos/19096944/pexels-photo-19096944/free-photo-of-hot-air-balloons-in-the-yellow-sky-over-a-desert-and-people-standing-on-a-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+        }
+        title={"Transportation fleet"}
+        subTitle={"Home | Transportation fleet"}
+      />
+
+      {/*      <div className="relative">
         <img
           className="h-[80vh] w-full object-cover"
           src="https://images.pexels.com/photos/19096944/pexels-photo-19096944/free-photo-of-hot-air-balloons-in-the-yellow-sky-over-a-desert-and-people-standing-on-a-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -19,7 +29,7 @@ const Transportation = () => {
             FLEET
           </p>
         </div>
-      </div>
+      </div>*/}
 
       <div className="mt-10 mb-10">
         <motion.h1

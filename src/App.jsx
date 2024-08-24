@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import { useEffect, useState } from "react";
+
 import Layout from "./layouts/Layout";
 import AdminLayout from "./layouts/AdminLayout";
 
@@ -24,43 +26,59 @@ import Favourites from "./pages/Favourites";
 import Faq from "./pages/FAQ";
 import AdminCart from "./pages/Admin/AdminCart";
 import AdminFavourite from "./pages/Admin/AdminFavourite";
+import Hotels from "./pages/Admin/Hotels";
 
 function App() {
-  return (
-    <div className="font-custom">
-      <Router>
-        <Routes>
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route
-              path="/tours/:category/:singletour"
-              element={<SingleTour />}
-            />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/favourites" element={<Favourites />} />
-            <Route path="/Faq" element={<Faq />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/hotel" element={<Hotel />} />
-            <Route path="/tours" element={<Tours />} />
-            <Route path="/tours/:category" element={<SignleCategory />} />
-            <Route path="/transportation" element={<Transportation />} />
-            <Route path="/admin-cart" element={<AdminCart />} />
-            <Route path="/admin-favourites" element={<AdminFavourite />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="tickets" element={<Tickets />} />
-              <Route path="categorys" element={<Categorys />} />
-              <Route path="tours" element={<ToursAdmin />} />
-              <Route path="users" element={<Users />} />
-            </Route>
-          </Route>
-        </Routes>
-      </Router>
-    </div>
-  );
+    const [language, setLanguage] = useState("en");
+    useEffect(() => {
+        const val = localStorage.getItem("language");
+        console.log(val);
+    }, []);
+    return (
+        <div className="font-custom">
+            <Router>
+                <Routes>
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/signin" element={<Signin />} />
+                    <Route path="/" element={<Layout />}>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route
+                            path="/tours/:category/:singletour"
+                            element={<SingleTour />}
+                        />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/favourites" element={<Favourites />} />
+                        <Route path="/Faq" element={<Faq />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/hotel" element={<Hotel />} />
+                        <Route path="/tours" element={<Tours />} />
+                        <Route
+                            path="/tours/:category"
+                            element={<SignleCategory />}
+                        />
+                        <Route
+                            path="/transportation"
+                            element={<Transportation />}
+                        />
+                        <Route path="/admin-cart" element={<AdminCart />} />
+                        <Route
+                            path="/admin-favourites"
+                            element={<AdminFavourite />}
+                        />
+                        <Route path="/admin" element={<AdminLayout />}>
+                            <Route path="/admin" element={<AdminDashboard />} />
+                            <Route path="tickets" element={<Tickets />} />
+                            <Route path="categorys" element={<Categorys />} />
+                            <Route path="tours" element={<ToursAdmin />} />
+                            <Route path="users" element={<Users />} />
+                            <Route path="hotels" element={<Hotels />} />
+                        </Route>
+                    </Route>
+                </Routes>
+            </Router>
+        </div>
+    );
 }
 
 export default App;

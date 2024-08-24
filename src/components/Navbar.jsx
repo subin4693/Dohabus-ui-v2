@@ -89,6 +89,10 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             return arr;
         });
     };
+
+    const setChangeLanguage = (e) => {
+        localStorage.setItem("language", e.target.value);
+    };
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
@@ -249,7 +253,13 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         <Link to="/admin">Admin</Link>
 
                         <Link to="/signin">Login</Link>
-                        <Link to="/">العربية</Link>
+                        <select
+                            className="bg-transparent"
+                            onChange={setChangeLanguage}
+                        >
+                            <option value="an"> العربية</option>
+                            <option value="en"> English</option>
+                        </select>
 
                         {/*<MdOutlineShoppingCart
                             className="w-6 h-6 font-bold text-white"
