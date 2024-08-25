@@ -206,7 +206,7 @@ const Contact = () => {
                             >
                                 {button}
                             </button>
-                            <p className="text-center text-lg">{faq}</p>
+                            <Link to={"/faq"}><p className="text-center text-lg mt-5">{faq}</p></Link>
                         </form>
                     </div>
                 </div>

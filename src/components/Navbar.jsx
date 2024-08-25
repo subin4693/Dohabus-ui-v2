@@ -134,6 +134,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                     <div className="hidden xl:flex justify-center items-center gap-5">
                         <Link to="/">Home</Link>
                         <Link to="/about">About Us</Link>
+                        {/* <Link to="/about">Experiences</Link> */}
+                        {/* <Link to="/about">Services</Link> */}
 
                         {/* =========================================================================================================================================================================================================== */}
                         <div className="group inline-block relative">
@@ -146,7 +148,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                     to="/tours"
                                     className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
                                 >
-                                    Tours
+                                    Experiences
                                 </NavLink>
                                 <span>
                                     <svg
@@ -227,11 +229,46 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             )}
                                     </li>
                                 ))}
+                              
+                            </ul>
+                        </div>
+                        <div className="group inline-block relative">
+                            <button
+                                aria-haspopup="true"
+                                aria-controls="menu"
+                                className="flex items-center relative"
+                            >
+                                <NavLink
+                                    to="/tours"
+                                    className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
+                                >
+                                    Services
+                                </NavLink>
+                                <span>
+                                    <svg
+                                        className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </span>
+                            </button>
+                            <ul
+                                id="menu"
+                                aria-hidden="true"
+                                className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                            >
+                                
                                 <Link to={"/transportation"}>
                                     <li className="px-3 py-1 hover:bg-gray-100">
                                         Transportation Fleet
                                     </li>
                                 </Link>
+                                <li className="px-3 py-1 hover:bg-gray-100">Meet & Assist</li>
+                                <li className="px-3 py-1 hover:bg-gray-100">MICE</li>
+                                <li className="px-3 py-1 hover:bg-gray-100">Cruise Packages</li>
+                                <li className="px-3 py-1 hover:bg-gray-100">Visa</li>
                             </ul>
                         </div>
 
@@ -262,38 +299,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
                         <Link to="/hotel">Hotels</Link>
 
-                        <div className="group inline-block relative">
-                            <button
-                                aria-haspopup="true"
-                                aria-controls="menu"
-                                className="flex items-center relative"
-                            >
-                                <div className="relative flex items-center">
-                                    Contact Us
-                                </div>
-                                <span>
-                                    <svg
-                                        className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </span>
-                            </button>
-                            <ul
-                                id="menu"
-                                aria-hidden="true"
-                                className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
-                            >
-                                <Link to="/faq">
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        F&Q
-                                    </li>
-                                </Link>
-                            </ul>
-                        </div>
-                        {/* <Link to="/contact">Contact Us</Link> */}
+                      
+                        <Link to="/contact">Contact Us</Link>
                         {/* <Link to="/cart">Cart</Link> */}
 
                         {/* <Link to="/faq">F&Q</Link> */}
