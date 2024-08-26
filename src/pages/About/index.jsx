@@ -106,7 +106,7 @@ const About = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-center items-center gap-10 flex-wrap mt-10">
+                {/* <div className="flex justify-center items-center gap-10 flex-wrap mt-10">
                     {[about1, about2, about3].map((about, index) => (
                         <img
                             key={index}
@@ -118,7 +118,7 @@ const About = () => {
                 </div>
                 <div>
                     <img src={ticket} alt="Ticket" />
-                </div>
+                </div> */}
             </div>
         </div>
     );
