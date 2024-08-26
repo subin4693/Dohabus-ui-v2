@@ -15,11 +15,25 @@ import album3 from "../assets/album3.jpg";
 import album4 from "../assets/album4.jpg";
 import album5 from "../assets/album5.jpg";
 import album6 from "../assets/album6.jpg";
+import aboutmd1 from "../assets/about-md-1.png";
+import travelaward from "../assets/travelaward-about.jpeg";
+import log from "../assets/logo.png";
 
-import { CiMail } from "react-icons/ci";
-import { FaPhoneAlt } from "react-icons/fa";
+// import { CiMail } from "react-icons/ci";
+// import { FaPhoneAlt } from "react-icons/fa";
 
 import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
+import { FaPhoneAlt } from "react-icons/fa"; // Call icon
+import { AiOutlineMail } from "react-icons/ai"; // Email icon
+import { FaWhatsapp } from "react-icons/fa"; // WhatsApp icon
+import {
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaFacebook,
+  FaTripadvisor,
+} from "react-icons/fa";
+
 const Footer = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const album = [album1, album2, album3, album4, album5, album6];
@@ -34,41 +48,155 @@ const Footer = () => {
   };
   return (
     <>
-      <div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 p-10 md:px-20 bg-cover"
-        style={{ backgroundImage: `url(${footer})` }}
-      >
-        <div>
-          <h2 className="text-white text-2xl font-bold mb-5">DohaBus</h2>
-          <div className="w-[170px] h-[170px] bg-custom-yellow rounded-full p-7 border-white border-[2px]">
-            <img src={logo} className="w-full h-full object-cover" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20  bg-yellow-400">
+        <div className="flex flex-col justify-between h-full ">
+          <div className="flex justify-between flex-wrap gap-10">
+            <div>
+              <h2 className="text-2xl font-bold mb-5 text-dark">
+                Useful Pages
+              </h2>
+              <ul className="font-semibold text-[1.2rem]">
+                <li className="cursor-pointer mt-1">Offers & Promotions</li>
+                <li className="cursor-pointer mt-1">Guidlines</li>
+                <li className="cursor-pointer mt-1">Blog</li>
+                <li className="cursor-pointer mt-1">FAQ</li>
+                <li className="cursor-pointer mt-1">Terms & Conditions</li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold mb-5 text-dark">Contact Us</h2>
+              <ul className="font-semibold text-[1.2rem]">
+                <li className="cursor-pointer mt-2 flex items-center gap-2">
+                  <FaPhoneAlt size={30} /> +974 4442 244
+                </li>
+                <li className="cursor-pointer mt-2 flex items-center gap-2">
+                  <FaWhatsapp size={35} /> +974 4442 244
+                </li>
+                <li className="cursor-pointer mt-2 flex items-center gap-2">
+                  <AiOutlineMail size={35} /> hello@dohabus.com
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-auto p-5  text-lg text-center">
+            <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
           </div>
         </div>
-        <div>
-          <h2 className="text-white text-2xl font-bold mb-5">
-            Get in touch...
-          </h2>
-          <div className="grid grid-cols-3 gap-1 max-w-[300px]">
-            <img src={whatsapp} className="object-cover w-full h-full" />
-            <img src={youtube} className="object-cover w-full h-full" />
-            <img src={li} className="object-cover w-full h-full" />
-            <img src={insta} className="object-cover w-full h-full" />
-            <img src={trip} className="object-cover w-full h-full" />
-            <img src={facebook} className="object-cover w-full h-full" />
+
+        {/* <div className="p-5 md:px-20 bg-custom-yellow text-lg text-center">
+            <p>© Copyright 2022 -Doha Bus - All Rights Reserved</p>
+          </div> */}
+
+        <div className="flex flex-col items-center justify-between h-full">
+          <div className="gap-5 flex flex-col flex-wrap">
+            <div className="gap-5 flex">
+              <div className="w-[130px]">
+                <img src={aboutmd1} alt="" />
+              </div>
+              <div className="w-[130px]">
+                <img src={aboutmd1} alt="" />
+              </div>
+            </div>
+            <div className="w-[300px] ">
+              <img src={travelaward} alt="" />
+            </div>
+          </div>
+          <div className="flex">
+            <div className="w-[300px]">
+              <img src={log} alt="" />
+            </div>
           </div>
         </div>
-        <div>
-          <h2 className="text-white text-2xl font-bold mb-5">Contact Us...</h2>
-          <div className="flex  items-center gap-3 text-white text-lg font-bold">
-            <CiMail className="text-2xl" />
-            hello@dohabus.com
+
+        {
+          <div className="flex flex-col justify-between h-full ">
+            <div>
+              <h2 className="text-dark text-2xl font-bold mb-5">Media</h2>
+              <div className="grid grid-cols-3 gap-3 max-w-[400px]">
+                {album.map((photo, index) => (
+                  <img
+                    key={index}
+                    src={photo}
+                    alt={`Photo ${index}`}
+                    className="object-cover w-full h-full cursor-pointer transition duration-300 hover:bg-custom-yellow hover:mix-blend-multiply"
+                    onClick={() => setSelectedImage(index)}
+                  />
+                ))}
+              </div>
+              <div
+                className={`fixed inset-0   flex justify-center items-center transition-opacity duration-300 ${
+                  selectedImage !== null ? "z-10" : "-z-10 opacity-0"
+                }`}
+              >
+                <div
+                  className={`fixed inset-0 bg-black  transition-opacity duration-300 ${
+                    selectedImage !== null ? "opacity-70" : "-z-10 opacity-0"
+                  }`}
+                >
+                  {" "}
+                </div>
+                <div>
+                  {" "}
+                  {selectedImage !== null && (
+                    <div className="relative w-[80vw] max-w-[800px] h-[80vh]">
+                      <IoClose
+                        className="w-10 h-10 text-white cursor-pointer absolute -right-10 -top-10 p-2"
+                        onClick={() => setSelectedImage(null)}
+                      />
+                      <img
+                        src={album[selectedImage]}
+                        alt={`Selected ${selectedImage}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        className="absolute -left-12 top-1/2 transform -translate-y-1/2 p-2 text-white"
+                        onClick={handlePreviousImage}
+                      >
+                        <IoArrowBack className="w-8 h-8" />
+                      </button>
+                      <button
+                        className="absolute -right-12 top-1/2 transform -translate-y-1/2 p-2 text-white"
+                        onClick={handleNextImage}
+                      >
+                        <IoArrowForward className="w-8 h-8" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-1 mt-10">
+              <p className="text-white bg-black p-3 rounded-full">
+                <FaWhatsapp size={30} />
+              </p>
+              <p className="text-white bg-black p-3 rounded-full">
+                <FaTripadvisor size={30} />
+              </p>
+              <p className="text-white bg-black p-3 rounded-full">
+                <FaFacebook size={30} />
+              </p>
+              <p className="text-white bg-black p-3 rounded-full">
+                <FaLinkedin size={30} />
+              </p>
+              <p className="text-white bg-black p-3 rounded-full">
+                <FaInstagram size={30} />
+              </p>
+
+              <p className="text-white bg-black p-3 rounded-full">
+                <FaYoutube size={30} />
+              </p>
+            </div>
           </div>
-          <div className="flex  items-center gap-3 text-white text-lg font-bold">
-            <FaPhoneAlt />
-            +974 4442 2444
-          </div>
-        </div>
-        <div>
+        }
+      </div>
+    </>
+  );
+};
+
+export default Footer;
+
+{
+  /* <div>
           <h2 className="text-white text-2xl font-bold mb-5">Album</h2>
           <div className="grid grid-cols-3 gap-1 max-w-[350px]">
             {album.map((photo, index) => (
@@ -122,13 +250,5 @@ const Footer = () => {
               )}
             </div>
           </div>
-        </div>
-      </div>
-      <div className="p-5 md:px-20 bg-custom-yellow text-sm">
-        <p>© Copyright 2022 -Doha Bus - All Rights Reserved</p>
-      </div>
-    </>
-  );
-};
-
-export default Footer;
+        </div> */
+}
