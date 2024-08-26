@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Banner from "../../components/Banner";
 import Reviews from "./Reviews";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import singleTour from "../../assets/single-tour.jpg";
 import album1 from "../../assets/album1.jpg";
 import album2 from "../../assets/album2.jpg";
@@ -16,6 +19,14 @@ import { useSelector } from "react-redux";
 const SingleTour = () => {
     const lang = useSelector((state) => state.language.lang);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    // Function to check if a date is Wednesday or Sunday
+    const isWednesdayOrSunday = (date) => {
+        const day = date.getDay();
+        return day === 0 || day === 3; // 0 = Sunday, 3 = Wednesday
+    };
+
     const album = [album1, album2, album3, album4, album5, album6];
     const handleNextImage = () => {
         setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
@@ -23,7 +34,7 @@ const SingleTour = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
         );
     };
 
@@ -148,6 +159,14 @@ const SingleTour = () => {
                 title={"Monster Bus Tour in the Desert"}
                 subTitle={"Home | Tours"}
             />
+
+            {/*<DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                filterDate={isWednesdayOrSunday} // Disable all days except Wednesday and Sunday
+                inline
+                dateFormat="MMMM d, yyyy"
+            />*/}
             <div
                 className="xl:w-[70%] mx-auto"
                 dir={lang === "ar" ? "rtl" : "ltr"}
@@ -221,7 +240,7 @@ const SingleTour = () => {
                                         >
                                             {header}
                                         </th>
-                                    )
+                                    ),
                                 )}
                             </tr>
                         </thead>

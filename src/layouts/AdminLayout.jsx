@@ -29,13 +29,18 @@ const AdminLayout = () => {
                 <div className="flex flex-wrap gap-2 lg:gap-4">
                     {[
                         { text: "dashboard", link: "/admin" },
-
                         { text: "categorys", link: "/admin/categorys" },
                         { text: "plans", link: "/admin/tours" },
-
                         { text: "users", link: "/admin/users" },
                         { text: "tickets", link: "/admin/tickets" },
-                        { text: "Edit Gallery", link: "/admin" },
+
+                        { text: "Edit Gallery", link: "/admin/gallery" },
+                        { text: "about us", link: "/admin/aboutus" },
+                        { text: "banner", link: "/admin/banner" },
+
+                        { text: "hotel", link: "/admin/hotels" },
+                        { text: "locations us", link: "/admin/locations" },
+                        { text: "offer", link: "/admin/offers" },
                     ].map((menu) => (
                         <Link
                             to={menu.link}

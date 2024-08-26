@@ -27,7 +27,13 @@ import Faq from "./pages/FAQ";
 import AdminCart from "./pages/Admin/AdminCart";
 import AdminFavourite from "./pages/Admin/AdminFavourite";
 import Hotels from "./pages/Admin/Hotels";
+import AdminAboutus from "./pages/Admin/Aboutus";
+
 import { useSelector } from "react-redux";
+import Gallery from "./pages/Admin/Gallery";
+import Banner from "./pages/Admin/Banner";
+import Locations from "./pages/Admin/Locations";
+import Offers from "./pages/Admin/Offers";
 
 // import { useDispatch, useSelector } from "react-redux";
 // import { setLanguage } from "./features/language/languageSlice";
@@ -73,6 +79,12 @@ function App() {
                             <Route path="tours" element={<ToursAdmin />} />
                             <Route path="users" element={<Users />} />
                             <Route path="hotels" element={<Hotels />} />
+
+                            <Route path="aboutus" element={<AdminAboutus />} />
+                            <Route path="gallery" element={<Gallery />} />
+                            <Route path="banner" element={<Banner />} />
+                            <Route path="locations" element={<Locations />} />
+                            <Route path="offers" element={<Offers />} />
                         </Route>
                     </Route>
                 </Routes>
