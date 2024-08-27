@@ -5,6 +5,10 @@ import TourPlanForm from "./TourPlanForm";
 const Tours = () => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+    console.log(BASE_URL);
+
     const handleDialog = () => {
         setIsOpen((prev) => !prev);
     };

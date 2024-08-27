@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const TourPlanForm = ({ onClose }) => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+    const [categoryOptions, setCategoryOptions] = useState([]);
+
     const [category, setCategory] = useState("");
     const [coverImage, setCoverImage] = useState("");
     const [title, setTitle] = useState({ en: "", ar: "" });
@@ -12,15 +17,16 @@ const TourPlanForm = ({ onClose }) => {
     const [highlights, setHighlights] = useState([{ en: "", ar: "" }]);
     const [includes, setIncludes] = useState([{ en: "", ar: "" }]);
     const [itinerary, setItinerary] = useState([{ en: "", ar: "" }]);
+    const [knowBeforeYouGo, setKnowBeforeYouGo] = useState([
+        { en: "", an: "" },
+    ]);
+
     const [galleryImages, setGalleryImages] = useState([]);
     const [galleryVideos, setGalleryVideos] = useState([]);
     const [availableDays, setAvailableDays] = useState([]);
     const [adultPrice, setAdultPrice] = useState("");
     const [childPrice, setChildPrice] = useState("");
     const [selectedSessions, setSelectedSessions] = useState([]);
-    const [knowBeforeYouGo, setKnowBeforeYouGo] = useState([
-        { en: "", an: "" },
-    ]);
 
     const [faq, setFaq] = useState([
         { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
@@ -100,7 +106,7 @@ const TourPlanForm = ({ onClose }) => {
         setAvailableDays((prevDays) =>
             prevDays.includes(selectedDay)
                 ? prevDays.filter((day) => day !== selectedDay)
-                : [...prevDays, selectedDay],
+                : [...prevDays, selectedDay]
         );
     };
     const handleChange = (index, field, value) => {
@@ -124,7 +130,7 @@ const TourPlanForm = ({ onClose }) => {
         setSelectedSessions((prevSessions) =>
             prevSessions.includes(selectedSession)
                 ? prevSessions.filter((session) => session !== selectedSession)
-                : [...prevSessions, selectedSession],
+                : [...prevSessions, selectedSession]
         );
     };
     const handleChangefaq = (index, field, lang, value) => {
@@ -145,7 +151,7 @@ const TourPlanForm = ({ onClose }) => {
         const updatedFaq = faq.filter((_, i) => i !== index);
         setFaq(updatedFaq);
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = {
             category,
@@ -159,18 +165,34 @@ const TourPlanForm = ({ onClose }) => {
             highlights,
             includes,
             itinerary,
+            knowBeforeYouGo,
             galleryImages,
             galleryVideos,
             availableDays,
             adultPrice,
             childPrice,
             faq,
-            knowBeforeYouGo,
+            selectedSessions,
         };
+
+        await axios.post(BASE_URL + "/categorys", { formData });
         console.log("Form Data Submitted:", formData);
         onClose();
     };
 
+    useEffect(() => {
+        const getCategorys = async () => {
+            try {
+                const { data } = await axios.get(BASE_URL + "/categorys");
+                console.log(data.data.categories);
+                setCategoryOptions(data.data.categories);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getCategorys();
+    }, []);
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-custom-yellow-light z-20">
             <form
@@ -190,8 +212,12 @@ const TourPlanForm = ({ onClose }) => {
                         required
                     >
                         <option value="">Select a category</option>
-                        <option value="adventure">Adventure</option>
-                        <option value="cultural">Cultural</option>
+                        {categoryOptions.map((cat) => (
+                            <option key={cat._id} value={cat._id}>
+                                {cat.title.en} {/* Display the English title */}
+                            </option>
+                        ))}
+
                         {/* Add more categories as needed */}
                     </select>
                 </div>
@@ -298,7 +324,7 @@ const TourPlanForm = ({ onClose }) => {
                                     type="button"
                                     onClick={handleRemoveFromArray(
                                         setter,
-                                        index,
+                                        index
                                     )}
                                     className="text-red-500"
                                 >
@@ -405,7 +431,7 @@ const TourPlanForm = ({ onClose }) => {
                                         "Thursday",
                                         "Friday",
                                         "Saturday",
-                                    ][day - 1],
+                                    ][day - 1]
                             )
                             .join(", ")}
                     </div>
@@ -421,10 +447,10 @@ const TourPlanForm = ({ onClose }) => {
                                     index === 0
                                         ? "12 AM"
                                         : index < 12
-                                          ? `${index} AM`
-                                          : index === 12
-                                            ? `12 PM`
-                                            : `${index - 12} PM`;
+                                        ? `${index} AM`
+                                        : index === 12
+                                        ? `12 PM`
+                                        : `${index - 12} PM`;
 
                                 return (
                                     <React.Fragment key={sessionTime}>
@@ -438,7 +464,7 @@ const TourPlanForm = ({ onClose }) => {
                                                 id={`session-${sessionTime}`}
                                                 value={sessionTime}
                                                 checked={selectedSessions.includes(
-                                                    sessionTime,
+                                                    sessionTime
                                                 )}
                                                 onChange={handleSessionChange}
                                                 className="mr-2"
@@ -503,7 +529,7 @@ const TourPlanForm = ({ onClose }) => {
                                         handleChange(
                                             index,
                                             "en",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -516,7 +542,7 @@ const TourPlanForm = ({ onClose }) => {
                                         handleChange(
                                             index,
                                             "ar",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -560,7 +586,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "question",
                                             "en",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full mb-2"
@@ -574,7 +600,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "question",
                                             "ar",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -591,7 +617,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "answer",
                                             "en",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full mb-2"
@@ -605,7 +631,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "answer",
                                             "ar",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
