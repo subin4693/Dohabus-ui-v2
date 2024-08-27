@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
 
-const TourPlanForm = ({ onClose }) => {
+const TourPlanForm = ({ onClose, editPlan }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     const [file, setFile] = useState(null);
@@ -177,11 +177,9 @@ const TourPlanForm = ({ onClose }) => {
             faq,
             selectedSessions,
         };
-        // console.log(formData);
-        // return;
         try {
-            const res = await axios.post(
-                BASE_URL + "/plans",
+            const res = await axios.put(
+                BASE_URL + "/plans/" + editPlan,
                 { formData },
                 { withCredentials: true },
             );
@@ -189,8 +187,7 @@ const TourPlanForm = ({ onClose }) => {
         } catch (error) {
             console.log(error);
         } finally {
-            // console.log("Form Data Submitted:", formData);
-            onClose();
+            onClose(null);
         }
     };
     useEffect(() => {
@@ -223,6 +220,54 @@ const TourPlanForm = ({ onClose }) => {
 
         getCategorys();
     }, []);
+    useEffect(() => {
+        const fetchPlanData = async () => {
+            try {
+                const response = await axios.get(
+                    `${BASE_URL}/plans/${editPlan}`,
+                );
+                console.log(response.data.data);
+                const planData = response.data.data.plan;
+
+                // Set state variables with fetched data
+                setCategory(planData.category);
+                setCoverImage(planData.coverImage);
+                setTitle(planData.title);
+                setDuration(planData.duration);
+                setTypeOfTour(planData.typeOfTour);
+                setTransportation(planData.transportation);
+                setLanguage(planData.language);
+                setDescription(planData.description);
+                setHighlights(planData.highlights || [{ en: "", ar: "" }]);
+                setIncludes(planData.includes || [{ en: "", ar: "" }]);
+                setItinerary(planData.itinerary || [{ en: "", ar: "" }]);
+                setKnowBeforeYouGo(
+                    planData.knowBeforeYouGo || [{ en: "", ar: "" }],
+                );
+                setGalleryImages(planData.galleryimages || []);
+                setGalleryVideos(planData.galleryvideos || []);
+                setAvailableDays(planData.availableDays || []);
+                setAdultPrice(planData.adultPrice || "");
+                setChildPrice(planData.childPrice || "");
+                setSelectedSessions(planData.sessions || []);
+                console.log(planData.selectedSessions);
+                setFaq(
+                    planData.faq || [
+                        {
+                            question: { en: "", ar: "" },
+                            answer: { en: "", ar: "" },
+                        },
+                    ],
+                );
+            } catch (error) {
+                console.error("Error fetching plan data:", error);
+            }
+        };
+
+        if (editPlan) {
+            fetchPlanData();
+        }
+    }, [editPlan]);
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-custom-yellow-light z-20">
             <form
@@ -301,7 +346,7 @@ const TourPlanForm = ({ onClose }) => {
                         <input
                             type="text"
                             placeholder={`English ${label}`}
-                            value={state.en}
+                            value={state?.en}
                             name="en"
                             onChange={handleInputChange(setter)}
                             className="p-2 border rounded-md mb-2 w-full"
@@ -310,7 +355,7 @@ const TourPlanForm = ({ onClose }) => {
                         <input
                             type="text"
                             placeholder={`Arabic ${label}`}
-                            value={state.ar}
+                            value={state?.ar}
                             name="ar"
                             onChange={handleInputChange(setter)}
                             className="p-2 border rounded-md w-full"
