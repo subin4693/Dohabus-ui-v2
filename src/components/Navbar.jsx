@@ -77,6 +77,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     const [searchOpen, setSearchOpen] = useState(false);
 
     const [tourOpen, setTourOpen] = useState(false);
+    const [servicesOpen, setservicesOpen] = useState(false);
     const inputref = useRef(null);
     const [expandedCategory, setExpandedCategory] = useState([]);
     const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -115,13 +116,40 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
         };
     }, []);
 
+    const [isVisible, setIsVisible] = useState(true);
+
+    const handleClose = () => {
+        setIsVisible(false);
+    };
+
     return (
         <div
-            className={`py-3 px-3 sm:px-16 z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
+            className={`z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
                 isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"
             }`}
         >
-            <div className="lg:w-[100%] mx-auto flex justify-between items-center">
+            {isVisible && (
+                <div className="p-5 mb-3 bg-custom-yellow flex justify-between items-center border-b">
+                    <div className="flex-1 flex justify-center ">
+                        <h1 className="font-bold text-2xl text-center text-dark">
+                            Summer Sale! Save up to 15%
+                        </h1>
+                    </div>
+                    <div className="flex gap-5 md:gap-20 items-center">
+                        <button className="bg-light text-dark p-3 rounded-3xl font-bold">
+                            Find Out More
+                        </button>
+                        <h1
+                            className="font-bold text-2xl text-dark cursor-pointer"
+                            onClick={handleClose}
+                        >
+                            X
+                        </h1>
+                    </div>
+                </div>
+            )}
+
+            <div className="lg:w-[100%] mx-auto flex justify-between items-center px-10 py-3">
                 <div className="min-w-[20mm] max-w-[20mm] h-fit">
                     <img
                         src={logo}
@@ -223,13 +251,12 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                     }
                                                                 </NavLink>
                                                             </li>
-                                                        ),
+                                                        )
                                                     )}
                                                 </ul>
                                             )}
                                     </li>
                                 ))}
-                              
                             </ul>
                         </div>
                         <div className="group inline-block relative">
@@ -259,16 +286,23 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                 aria-hidden="true"
                                 className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
                             >
-                                
                                 <Link to={"/transportation"}>
                                     <li className="px-3 py-1 hover:bg-gray-100">
                                         Transportation Fleet
                                     </li>
                                 </Link>
-                                <li className="px-3 py-1 hover:bg-gray-100">Meet & Assist</li>
-                                <li className="px-3 py-1 hover:bg-gray-100">MICE</li>
-                                <li className="px-3 py-1 hover:bg-gray-100">Cruise Packages</li>
-                                <li className="px-3 py-1 hover:bg-gray-100">Visa</li>
+                                <li className="px-3 py-1 hover:bg-gray-100">
+                                    Meet & Assist
+                                </li>
+                                <li className="px-3 py-1 hover:bg-gray-100">
+                                    MICE
+                                </li>
+                                <li className="px-3 py-1 hover:bg-gray-100">
+                                    Cruise Packages
+                                </li>
+                                <li className="px-3 py-1 hover:bg-gray-100">
+                                    Visa
+                                </li>
                             </ul>
                         </div>
 
@@ -299,7 +333,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
                         <Link to="/hotel">Hotels</Link>
 
-                      
                         <Link to="/contact">Contact Us</Link>
                         {/* <Link to="/cart">Cart</Link> */}
 
@@ -501,7 +534,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         }}
                         className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                     >
-                        about
+                        About Us
                     </button>
                     <button
                         className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
@@ -513,7 +546,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             navigate("/tours");
                         }}
                     >
-                        Tours
+                        Experience
                         <div
                             className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                             onClick={(e) => {
@@ -554,7 +587,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                                         >
                                             {expandedCategory?.includes(
-                                                index,
+                                                index
                                             ) ? (
                                                 <FaMinus />
                                             ) : (
@@ -581,7 +614,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                         >
                                                             {tour.text}
                                                         </Link>
-                                                    ),
+                                                    )
                                                 )}
                                         </div>
                                     </div>
@@ -589,7 +622,74 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             ))}
                         </div>
                     </div>
+                    <button
+                        className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSidebarOpen(false);
+                            setExpandedCategory([]);
+                            setTourOpen(false);
+                            navigate("/tours");
+                        }}
+                    >
+                        Services
+                        <div
+                            className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setservicesOpen(!servicesOpen);
+                            }}
+                        >
+                            {servicesOpen ? <FaMinus /> : <FaPlus />}
+                        </div>
+                    </button>
 
+                    <div
+                        className={`transition-all  duration-300 ease-in-out overflow-hidden ${
+                            servicesOpen
+                                ? "max-h-[1000px] opacity-100" // Increase max-height to accommodate larger content
+                                : "max-h-0 opacity-0"
+                        }`}
+                    >
+                        <div className="bg-custom-yellow ml-5">
+                            <div>
+                                <div>
+                                    <div className=" ml-5">
+                                        <Link
+                                            to={`/transportation`}
+                                            className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                                        >
+                                            Transportation
+                                        </Link>
+                                        <Link
+                                            to={`/tours`}
+                                            className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                                        >
+                                            Meet & Assist
+                                        </Link>
+                                        <Link
+                                            to={`/tours`}
+                                            className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                                        >
+                                            MICE
+                                        </Link>
+                                        <Link
+                                            to={`/tours`}
+                                            className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                                        >
+                                            Cruise Packages
+                                        </Link>
+                                        <Link
+                                            to={`/tours`}
+                                            className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                                        >
+                                            Visa
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button
                         onClick={(e) => {
                             setSidebarOpen(false);
@@ -610,32 +710,32 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         }}
                         className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                     >
-                        Contact
+                        Contact Us
                     </button>
 
-                    <button
-                        onClick={(e) => {
-                            setSidebarOpen(false);
-                            setExpandedCategory([]);
-                            setTourOpen(false);
-                            navigate("/favourites");
-                        }}
-                        className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                    >
-                        Favourites
-                    </button>
+                    {/* <button
+            onClick={(e) => {
+              setSidebarOpen(false);
+              setExpandedCategory([]);
+              setTourOpen(false);
+              navigate("/favourites");
+            }}
+            className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+          >
+            Favourites
+          </button> */}
 
-                    <button
-                        onClick={(e) => {
-                            setSidebarOpen(false);
-                            setExpandedCategory([]);
-                            setTourOpen(false);
-                            navigate("/faq");
-                        }}
-                        className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                    >
-                        F&Q
-                    </button>
+                    {/* <button
+            onClick={(e) => {
+              setSidebarOpen(false);
+              setExpandedCategory([]);
+              setTourOpen(false);
+              navigate("/faq");
+            }}
+            className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+          >
+            F&Q
+          </button> */}
                     <button
                         onClick={(e) => {
                             setSidebarOpen(false);

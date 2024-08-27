@@ -1,427 +1,648 @@
-import { HiArrowLongRight, HiArrowLongDown } from "react-icons/hi2";
 import React, { useState } from "react";
 
 const TourPlanForm = ({ onClose }) => {
-    // State variables managing both English (en) and Arabic (an) fields
     const [category, setCategory] = useState("");
-    const [coverImage, setCoverImage] = useState(null);
-    const [title, setTitle] = useState({ en: "", an: "" });
-    const [itinerary, setItinerary] = useState({ en: "", an: "" });
-    const [highlights, setHighlights] = useState([{ en: "", an: "" }]);
-    const [timings, setTimings] = useState([{ en: "", an: "" }]);
-    const [includes, setIncludes] = useState([{ en: "", an: "" }]);
-    const [excludes, setExcludes] = useState([{ en: "", an: "" }]);
-    const [importantInformations, setImportantInformations] = useState([
+    const [coverImage, setCoverImage] = useState("");
+    const [title, setTitle] = useState({ en: "", ar: "" });
+    const [duration, setDuration] = useState({ en: "", ar: "" });
+    const [typeOfTour, setTypeOfTour] = useState({ en: "", ar: "" });
+    const [transportation, setTransportation] = useState({ en: "", ar: "" });
+    const [language, setLanguage] = useState({ en: "", ar: "" });
+    const [description, setDescription] = useState({ en: "", ar: "" });
+    const [highlights, setHighlights] = useState([{ en: "", ar: "" }]);
+    const [includes, setIncludes] = useState([{ en: "", ar: "" }]);
+    const [itinerary, setItinerary] = useState([{ en: "", ar: "" }]);
+    const [galleryImages, setGalleryImages] = useState([]);
+    const [galleryVideos, setGalleryVideos] = useState([]);
+    const [availableDays, setAvailableDays] = useState([]);
+    const [adultPrice, setAdultPrice] = useState("");
+    const [childPrice, setChildPrice] = useState("");
+    const [selectedSessions, setSelectedSessions] = useState([]);
+    const [knowBeforeYouGo, setKnowBeforeYouGo] = useState([
         { en: "", an: "" },
     ]);
-    const [cancellationpolicy, setCancellationPolicy] = useState([
-        { en: "", an: "" },
-    ]);
-    const [gallerys, setGallerys] = useState([]);
-    const [price, setPrice] = useState([
-        {
-            type: { en: "title", an: "العنوان" },
-            detail: [
-                { en: "detail1", an: "تفصيل1" },
-                { en: "detail2", an: "تفصيل2" },
-            ],
-        },
-    ]);
 
-    const categories = [
-        { _id: "1", type: "cate1" },
-        { _id: "2", type: "cate2" },
-        { _id: "3", type: "cate3" },
-    ];
+    const [faq, setFaq] = useState([
+        { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
+    ]);
+    // Helper function to convert file to base64
+    const fileToBase64 = (file, cb) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => cb(null, reader.result);
+        reader.onerror = (error) => cb(error, null);
+    };
 
-    const handleFileChange = (e, setState) => {
+    const handleCoverImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setState(reader.result);
-            };
-            reader.readAsDataURL(file);
+            fileToBase64(file, (err, result) => {
+                if (err) {
+                    console.error("Error converting file to base64:", err);
+                } else {
+                    setCoverImage(result);
+                }
+            });
         }
     };
 
-    const handleAddColumn = () => {
-        setPrice(
-            price.map((row) => ({
-                ...row,
-                detail: [...row.detail, { en: "newDetail", an: "تفصيل جديد" }],
-            }))
-        );
-    };
-
-    const handleAddRow = () => {
-        setPrice([
-            ...price,
-            {
-                type: { en: "newTitle", an: "عنوان جديد" },
-                detail: new Array(price[0].detail.length).fill({
-                    en: "newDetail",
-                    an: "تفصيل جديد",
-                }),
-            },
-        ]);
-    };
-
-    const handleGalleryFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        const imageUrls = [];
-        files.forEach((file) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                imageUrls.push(reader.result);
-                if (imageUrls.length === files.length) {
-                    setGallerys((prev) => [...prev, ...imageUrls]);
+    const handleGalleryImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            fileToBase64(file, (err, result) => {
+                if (err) {
+                    console.error("Error converting file to base64:", err);
+                } else {
+                    setGalleryImages((prev) => [...prev, result]);
                 }
-            };
-            reader.readAsDataURL(file);
-        });
+            });
+        }
     };
 
-    const handleArrayChange = (e, index, setState, lang) => {
-        const { value } = e.target;
-        setState((prev) => {
+    const handleGalleryVideoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            fileToBase64(file, (err, result) => {
+                if (err) {
+                    console.error("Error converting file to base64:", err);
+                } else {
+                    setGalleryVideos((prev) => [...prev, result]);
+                }
+            });
+        }
+    };
+
+    const handleInputChange = (setter) => (e) => {
+        const { name, value } = e.target;
+        setter((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleArrayChange = (setter, index) => (e) => {
+        const { name, value } = e.target;
+        setter((prev) => {
             const updatedArray = [...prev];
-            updatedArray[index][lang] = value;
+            updatedArray[index][name] = value;
             return updatedArray;
         });
     };
 
-    const handleAddArrayItem = (setState) => {
-        setState((prev) => [...prev, { en: "", an: "" }]);
+    const handleAddToArray = (setter) => () => {
+        setter((prev) => [...prev, { en: "", ar: "" }]);
     };
 
-    const handleSubmit = () => {
+    const handleRemoveFromArray = (setter, index) => () => {
+        setter((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const handleDaysChange = (event) => {
+        const selectedDay = parseInt(event.target.value);
+
+        setAvailableDays((prevDays) =>
+            prevDays.includes(selectedDay)
+                ? prevDays.filter((day) => day !== selectedDay)
+                : [...prevDays, selectedDay],
+        );
+    };
+    const handleChange = (index, field, value) => {
+        const updatedItems = [...knowBeforeYouGo];
+        updatedItems[index][field] = value;
+        setKnowBeforeYouGo(updatedItems);
+    };
+
+    const addItem = () => {
+        setKnowBeforeYouGo([...knowBeforeYouGo, { en: "", ar: "" }]);
+    };
+
+    const removeItem = (index) => {
+        const updatedItems = knowBeforeYouGo.filter((_, i) => i !== index);
+        setKnowBeforeYouGo(updatedItems);
+    };
+
+    const handleSessionChange = (event) => {
+        const selectedSession = event.target.value;
+
+        setSelectedSessions((prevSessions) =>
+            prevSessions.includes(selectedSession)
+                ? prevSessions.filter((session) => session !== selectedSession)
+                : [...prevSessions, selectedSession],
+        );
+    };
+    const handleChangefaq = (index, field, lang, value) => {
+        console.log("working");
+        const updatedFaq = [...faq];
+        updatedFaq[index][field][lang] = value;
+        setFaq(updatedFaq);
+    };
+
+    const addFaq = () => {
+        setFaq([
+            ...faq,
+            { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
+        ]);
+    };
+
+    const removeFaq = (index) => {
+        const updatedFaq = faq.filter((_, i) => i !== index);
+        setFaq(updatedFaq);
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
         const formData = {
             category,
             coverImage,
             title,
-            itinerary,
+            duration,
+            typeOfTour,
+            transportation,
+            language,
+            description,
             highlights,
-            timings,
             includes,
-            excludes,
-            importantInformations,
-            cancellationpolicy,
-            gallerys,
+            itinerary,
+            galleryImages,
+            galleryVideos,
+            availableDays,
+            adultPrice,
+            childPrice,
+            faq,
+            knowBeforeYouGo,
         };
         console.log("Form Data Submitted:", formData);
         onClose();
     };
 
     return (
-        <div className="fixed inset-0 bg-white-1/2 bg-opacity-50 z-30 backdrop-blur-sm flex justify-center items-center overflow-auto">
-            <div className="bg-white shadow-xl rounded-lg w-full md:w-[800px] max-h-[80vh] overflow-y-auto p-5">
-                <div className="flex flex-col gap-4">
-                    <h2 className="text-2xl font-bold mb-4">
-                        Create Tour Plan
-                    </h2>
-
-                    <div className="space-y-5">
-                        <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className="w-full p-2 border border-black rounded-lg outline-none"
-                        >
-                            <option value="">Select Category</option>
-                            {categories.map((category) => (
-                                <option key={category._id} value={category._id}>
-                                    {category.type}
-                                </option>
-                            ))}
-                        </select>
+        <div className="fixed inset-0 flex justify-center items-center bg-custom-yellow-light z-20">
+            <form
+                onSubmit={handleSubmit}
+                className="p-4 bg-white shadow-md rounded-md space-y-4 absolute h-[70vh] overflow-scroll max-w-[950px]"
+            >
+                {/* Category Dropdown */}
+                <div>
+                    <label htmlFor="category" className="block mb-2">
+                        Category
+                    </label>
+                    <select
+                        id="category"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="p-2 border rounded-md w-full"
+                        required
+                    >
+                        <option value="">Select a category</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="cultural">Cultural</option>
+                        {/* Add more categories as needed */}
+                    </select>
+                </div>
+                {/* Cover Image Input */}
+                <div>
+                    <label htmlFor="coverImage" className="block mb-2">
+                        Cover Image
+                    </label>
+                    <input
+                        type="file"
+                        id="coverImage"
+                        accept="image/*"
+                        onChange={handleCoverImageChange}
+                        className="p-2 border rounded-md w-full"
+                    />
+                    {coverImage && (
+                        <img
+                            src={coverImage}
+                            alt="Cover Preview"
+                            className="mt-2 w-32 h-32 object-cover"
+                        />
+                    )}
+                </div>
+                {/* Text Inputs for Title, Duration, Type of Tour, Transportation, Language, Description */}
+                {[
+                    { label: "Title", state: title, setter: setTitle },
+                    { label: "Duration", state: duration, setter: setDuration },
+                    {
+                        label: "Type of Tour",
+                        state: typeOfTour,
+                        setter: setTypeOfTour,
+                    },
+                    {
+                        label: "Transportation",
+                        state: transportation,
+                        setter: setTransportation,
+                    },
+                    { label: "Language", state: language, setter: setLanguage },
+                    {
+                        label: "Description",
+                        state: description,
+                        setter: setDescription,
+                    },
+                ].map(({ label, state, setter }) => (
+                    <div key={label}>
+                        <label className="block mb-2">{label}</label>
                         <input
-                            type="file"
-                            onChange={(e) => handleFileChange(e, setCoverImage)}
-                            className="w-full p-2 border border-black rounded-lg outline-none"
+                            type="text"
+                            placeholder={`English ${label}`}
+                            value={state.en}
+                            name="en"
+                            onChange={handleInputChange(setter)}
+                            className="p-2 border rounded-md mb-2 w-full"
+                            required
                         />
-                        {coverImage && (
+                        <input
+                            type="text"
+                            placeholder={`Arabic ${label}`}
+                            value={state.ar}
+                            name="ar"
+                            onChange={handleInputChange(setter)}
+                            className="p-2 border rounded-md w-full"
+                            required
+                        />
+                    </div>
+                ))}
+                {/* Highlights, Includes, Itinerary Array Inputs */}
+                {[
+                    {
+                        label: "Highlights",
+                        state: highlights,
+                        setter: setHighlights,
+                    },
+                    { label: "Includes", state: includes, setter: setIncludes },
+                    {
+                        label: "Itinerary",
+                        state: itinerary,
+                        setter: setItinerary,
+                    },
+                ].map(({ label, state, setter }) => (
+                    <div key={label}>
+                        <label className="block mb-2">{label}</label>
+                        {state.map((item, index) => (
+                            <div key={index} className="flex space-x-2 mb-2">
+                                <input
+                                    type="text"
+                                    placeholder={`English ${label}`}
+                                    value={item.en}
+                                    name="en"
+                                    onChange={handleArrayChange(setter, index)}
+                                    className="p-2 border rounded-md w-full"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    placeholder={`Arabic ${label}`}
+                                    value={item.ar}
+                                    name="ar"
+                                    onChange={handleArrayChange(setter, index)}
+                                    className="p-2 border rounded-md w-full"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveFromArray(
+                                        setter,
+                                        index,
+                                    )}
+                                    className="text-red-500"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={handleAddToArray(setter)}
+                            className="bg-green-500 text-white py-1 px-2 rounded-md"
+                        >
+                            Add {label}
+                        </button>
+                    </div>
+                ))}
+                {/* Gallery Images Input */}
+                <div>
+                    <label htmlFor="galleryImages" className="block mb-2">
+                        Gallery Images
+                    </label>
+                    <input
+                        type="file"
+                        id="galleryImages"
+                        accept="image/*"
+                        onChange={handleGalleryImageChange}
+                        className="p-2 border rounded-md w-full"
+                    />
+                    <div className="flex flex-wrap mt-2">
+                        {galleryImages.map((image, index) => (
                             <img
-                                src={coverImage}
-                                alt="Cover"
-                                className="w-full h-[200px] object-cover rounded-lg mt-2"
+                                key={index}
+                                src={image}
+                                alt={`Gallery Preview ${index + 1}`}
+                                className="w-20 h-20 object-cover mr-2 mb-2"
                             />
-                        )}
-                        <div className="space-y-2">
-                            <input
-                                type="text"
-                                value={title.en}
-                                onChange={(e) =>
-                                    setTitle({ ...title, en: e.target.value })
-                                }
-                                placeholder="Title (English)"
-                                className="w-full p-2 border border-black rounded-lg outline-none"
-                            />
-                            <input
-                                type="text"
-                                value={title.an}
-                                onChange={(e) =>
-                                    setTitle({ ...title, an: e.target.value })
-                                }
-                                placeholder="Title (Arabic)"
-                                className="w-full p-2 border border-black rounded-lg outline-none"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <textarea
-                                value={itinerary.en}
-                                onChange={(e) =>
-                                    setItinerary({
-                                        ...itinerary,
-                                        en: e.target.value,
-                                    })
-                                }
-                                placeholder="Itinerary (English)"
-                                className="w-full h-[150px] p-2 border border-black rounded-lg outline-none resize-none"
-                            />
-                            <textarea
-                                value={itinerary.an}
-                                onChange={(e) =>
-                                    setItinerary({
-                                        ...itinerary,
-                                        an: e.target.value,
-                                    })
-                                }
-                                placeholder="Itinerary (Arabic)"
-                                className="w-full h-[150px] p-2 border border-black rounded-lg outline-none resize-none"
-                            />
-                        </div>
-                        <FieldArray
-                            title="Highlights"
-                            data={highlights}
-                            setState={setHighlights}
-                            handleArrayChange={handleArrayChange}
-                            handleAddArrayItem={handleAddArrayItem}
-                        />
-                        <FieldArray
-                            title="Timings"
-                            data={timings}
-                            setState={setTimings}
-                            handleArrayChange={handleArrayChange}
-                            handleAddArrayItem={handleAddArrayItem}
-                        />
-
-                        <FieldArray
-                            title="Includes"
-                            data={includes}
-                            setState={setIncludes}
-                            handleArrayChange={handleArrayChange}
-                            handleAddArrayItem={handleAddArrayItem}
-                        />
-                        <FieldArray
-                            title="Excludes"
-                            data={excludes}
-                            setState={setExcludes}
-                            handleArrayChange={handleArrayChange}
-                            handleAddArrayItem={handleAddArrayItem}
-                        />
-                        <FieldArray
-                            title="Important Informations"
-                            data={importantInformations}
-                            setState={setImportantInformations}
-                            handleArrayChange={handleArrayChange}
-                            handleAddArrayItem={handleAddArrayItem}
-                        />
-                        <FieldArray
-                            title="Cancellation Policy"
-                            data={cancellationpolicy}
-                            setState={setCancellationPolicy}
-                            handleArrayChange={handleArrayChange}
-                            handleAddArrayItem={handleAddArrayItem}
-                        />
-                        <div className="space-y-2">
-                            <label className="font-bold">Gallery</label>
-                            <input
-                                type="file"
-                                multiple
-                                onChange={handleGalleryFileChange}
-                                className="w-full p-2 border border-black rounded-lg outline-none"
-                            />
-                            <div className="grid grid-cols-2 gap-4 mt-2">
-                                {gallerys.map((image, index) => (
-                                    <img
-                                        key={index}
-                                        src={image}
-                                        alt={`Gallery Image ${index + 1}`}
-                                        className="w-full h-[150px] object-cover rounded-lg"
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="font-bold">Pricing</label>
-                            {price.map((row, rowIndex) => (
-                                <div
-                                    key={rowIndex}
-                                    className="border p-4 rounded-lg space-y-2"
-                                >
-                                    <div className="space-y-2">
-                                        <input
-                                            type="text"
-                                            value={row.type.en}
-                                            onChange={(e) =>
-                                                setPrice((prev) => {
-                                                    const updatedPrice = [
-                                                        ...prev,
-                                                    ];
-                                                    updatedPrice[
-                                                        rowIndex
-                                                    ].type.en = e.target.value;
-                                                    return updatedPrice;
-                                                })
-                                            }
-                                            placeholder="Type (English)"
-                                            className="w-full p-2 border border-black rounded-lg outline-none"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={row.type.an}
-                                            onChange={(e) =>
-                                                setPrice((prev) => {
-                                                    const updatedPrice = [
-                                                        ...prev,
-                                                    ];
-                                                    updatedPrice[
-                                                        rowIndex
-                                                    ].type.an = e.target.value;
-                                                    return updatedPrice;
-                                                })
-                                            }
-                                            placeholder="Type (Arabic)"
-                                            className="w-full p-2 border border-black rounded-lg outline-none"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        {row.detail.map(
-                                            (detail, detailIndex) => (
-                                                <div
-                                                    key={detailIndex}
-                                                    className="space-y-2"
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        value={detail.en}
-                                                        onChange={(e) =>
-                                                            setPrice((prev) => {
-                                                                const updatedPrice =
-                                                                    [...prev];
-                                                                updatedPrice[
-                                                                    rowIndex
-                                                                ].detail[
-                                                                    detailIndex
-                                                                ].en =
-                                                                    e.target.value;
-                                                                return updatedPrice;
-                                                            })
-                                                        }
-                                                        placeholder="Detail (English)"
-                                                        className="w-full p-2 border border-black rounded-lg outline-none"
-                                                    />
-                                                    <input
-                                                        type="text"
-                                                        value={detail.an}
-                                                        onChange={(e) =>
-                                                            setPrice((prev) => {
-                                                                const updatedPrice =
-                                                                    [...prev];
-                                                                updatedPrice[
-                                                                    rowIndex
-                                                                ].detail[
-                                                                    detailIndex
-                                                                ].an =
-                                                                    e.target.value;
-                                                                return updatedPrice;
-                                                            })
-                                                        }
-                                                        placeholder="Detail (Arabic)"
-                                                        className="w-full p-2 border border-black rounded-lg outline-none"
-                                                    />
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                            <div className="flex justify-between mt-2">
-                                <button
-                                    onClick={handleAddRow}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                >
-                                    Add Row
-                                </button>
-                                <button
-                                    onClick={handleAddColumn}
-                                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                                >
-                                    Add Column
-                                </button>
-                            </div>
-                        </div>
-                        <div className="flex justify-end mt-4 space-x-2">
-                            <button
-                                onClick={onClose}
-                                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSubmit}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                            >
-                                Submit
-                            </button>
-                        </div>
+                        ))}
                     </div>
                 </div>
-            </div>
-        </div>
-    );
-};
-
-// FieldArray Component
-const FieldArray = ({
-    title,
-    data,
-    setState,
-    handleArrayChange,
-    handleAddArrayItem,
-}) => {
-    return (
-        <div className="space-y-2">
-            <label className="font-bold">{title}</label>
-            {data.map((item, index) => (
-                <div key={index} className="space-y-2">
+                {/* Gallery Videos Input */}
+                <div>
+                    <label htmlFor="galleryVideos" className="block mb-2">
+                        Gallery Videos
+                    </label>
                     <input
-                        type="text"
-                        value={item.en}
-                        onChange={(e) =>
-                            handleArrayChange(e, index, setState, "en")
-                        }
-                        placeholder={`${title} (English)`}
-                        className="w-full p-2 border border-black rounded-lg outline-none"
+                        type="file"
+                        id="galleryVideos"
+                        accept="video/*"
+                        onChange={handleGalleryVideoChange}
+                        className="p-2 border rounded-md w-full"
                     />
-                    <input
-                        type="text"
-                        value={item.an}
-                        onChange={(e) =>
-                            handleArrayChange(e, index, setState, "an")
-                        }
-                        placeholder={`${title} (Arabic)`}
-                        className="w-full p-2 border border-black rounded-lg outline-none"
-                    />
+                    <div className="flex flex-wrap mt-2">
+                        {galleryVideos.map((video, index) => (
+                            <video
+                                key={index}
+                                src={video}
+                                controls
+                                className="w-32 h-32 mr-2 mb-2"
+                            />
+                        ))}
+                    </div>
                 </div>
-            ))}
-            <button
-                onClick={() => handleAddArrayItem(setState)}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-            >
-                Add {title}
-            </button>
+                {/* Available Days Dropdown */}
+                <div>
+                    <label htmlFor="availableDays" className="block mb-2">
+                        Available Days
+                    </label>
+                    <div className="flex flex-wrap">
+                        {[
+                            "Sunday",
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                        ].map((day, index) => (
+                            <div
+                                key={day}
+                                className="flex items-center mr-4 mb-2"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id={`day-${index}`}
+                                    value={index + 1}
+                                    checked={availableDays.includes(index + 1)}
+                                    onChange={handleDaysChange}
+                                    className="mr-2"
+                                />
+                                <label htmlFor={`day-${index}`}>{day}</label>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="mt-2">
+                        Selected Days:{" "}
+                        {availableDays
+                            .map(
+                                (day) =>
+                                    [
+                                        "Sunday",
+                                        "Monday",
+                                        "Tuesday",
+                                        "Wednesday",
+                                        "Thursday",
+                                        "Friday",
+                                        "Saturday",
+                                    ][day - 1],
+                            )
+                            .join(", ")}
+                    </div>
+                </div>
+                <div className="mt-4">
+                    <div className="mt-4">
+                        <label htmlFor="sessions" className="block mb-2">
+                            Select Sessions
+                        </label>
+                        <div className="flex flex-wrap">
+                            {Array.from({ length: 24 }, (_, index) => {
+                                const sessionTime =
+                                    index === 0
+                                        ? "12 AM"
+                                        : index < 12
+                                          ? `${index} AM`
+                                          : index === 12
+                                            ? `12 PM`
+                                            : `${index - 12} PM`;
+
+                                return (
+                                    <React.Fragment key={sessionTime}>
+                                        {index === 12 && (
+                                            <div className="w-full"></div>
+                                        )}{" "}
+                                        {/* Line break after 12 items */}
+                                        <div className="flex items-center mr-4 mb-2">
+                                            <input
+                                                type="checkbox"
+                                                id={`session-${sessionTime}`}
+                                                value={sessionTime}
+                                                checked={selectedSessions.includes(
+                                                    sessionTime,
+                                                )}
+                                                onChange={handleSessionChange}
+                                                className="mr-2"
+                                            />
+                                            <label
+                                                htmlFor={`session-${sessionTime}`}
+                                            >
+                                                {sessionTime}
+                                            </label>
+                                        </div>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="mt-2">
+                        Selected Sessions: {selectedSessions.join(", ")}
+                    </div>
+                </div>
+                {/* Price Inputs */}
+                <div className="flex space-x-4">
+                    <div>
+                        <label htmlFor="adultPrice" className="block mb-2">
+                            Adult Price
+                        </label>
+                        <input
+                            type="number"
+                            id="adultPrice"
+                            value={adultPrice}
+                            onChange={(e) => setAdultPrice(e.target.value)}
+                            className="p-2 border rounded-md w-full"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="childPrice" className="block mb-2">
+                            Child Price
+                        </label>
+                        <input
+                            type="number"
+                            id="childPrice"
+                            value={childPrice}
+                            onChange={(e) => setChildPrice(e.target.value)}
+                            className="p-2 border rounded-md w-full"
+                            required
+                        />
+                    </div>
+                </div>{" "}
+                <div className="mt-4">
+                    <label htmlFor="knowBeforeYouGo" className="block mb-2">
+                        Know Before You Go
+                    </label>
+                    {knowBeforeYouGo.map((item, index) => (
+                        <div key={index} className="flex flex- w-full  mb-2">
+                            <div className="flex   w-full gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    placeholder="English"
+                                    value={item.en}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "en",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="p-2 border rounded-md w-full"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Arabic"
+                                    value={item.ar}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "ar",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="p-2 border rounded-md w-full"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => removeItem(index)}
+                                className="text-red-500 ml-2"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addItem}
+                        className="mt-2 p-2 bg-blue-500 text-white rounded-md"
+                    >
+                        Add Item
+                    </button>
+                </div>
+                {/* Submit Button */}
+                <div className="mt-4">
+                    <label htmlFor="faq" className="block mb-2">
+                        FAQs
+                    </label>
+                    {faq.map((faqItem, index) => (
+                        <div
+                            key={index}
+                            className="flex flex-col mb-4 p-2 border rounded-md"
+                        >
+                            <div className="mb-2">
+                                <label className="block mb-1">Question</label>
+                                <input
+                                    type="text"
+                                    placeholder="English"
+                                    value={faqItem.question.en}
+                                    onChange={(e) =>
+                                        handleChangefaq(
+                                            index,
+                                            "question",
+                                            "en",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="p-2 border rounded-md w-full mb-2"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Arabic"
+                                    value={faqItem.question.ar}
+                                    onChange={(e) =>
+                                        handleChangefaq(
+                                            index,
+                                            "question",
+                                            "ar",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="p-2 border rounded-md w-full"
+                                />
+                            </div>
+                            <div className="mb-2">
+                                <label className="block mb-1">Answer</label>
+                                <input
+                                    type="text"
+                                    placeholder="English"
+                                    value={faqItem.answer.en}
+                                    onChange={(e) =>
+                                        handleChangefaq(
+                                            index,
+                                            "answer",
+                                            "en",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="p-2 border rounded-md w-full mb-2"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Arabic"
+                                    value={faqItem.answer.ar}
+                                    onChange={(e) =>
+                                        handleChangefaq(
+                                            index,
+                                            "answer",
+                                            "ar",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="p-2 border rounded-md w-full"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => removeFaq(index)}
+                                className="text-red-500"
+                            >
+                                Remove FAQ
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addFaq}
+                        className="mt-2 p-2 bg-blue-500 text-white rounded-md"
+                    >
+                        Add FAQ
+                    </button>
+                </div>
+                <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                >
+                    Submit
+                </button>
+                &nbsp;
+                <button
+                    type="submit"
+                    onClick={onClose}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                >
+                    Close
+                </button>
+            </form>
         </div>
     );
 };

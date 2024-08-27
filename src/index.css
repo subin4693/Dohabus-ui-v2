@@ -9,3 +9,31 @@ th,
 td {
 	border: 1px solid black;
 }
+/* Custom styles for React DatePicker */
+.react-datepicker {
+	width: 100%; /* Full width for small screens */
+}
+
+.react-datepicker__month-container {
+	width: 100%; /* Ensuring the container takes full width */
+}
+
+.react-datepicker__day {
+	width: 30px;
+	height: 30px;
+	padding-top: 3px;
+}
+
+.react-datepicker__day--selected {
+	background-color: #fed92e;
+}
+.react-datepicker__day--selected:hover {
+	background-color: #ffc107;
+}
+
+@media (min-width: 768px) {
+	/* Tailwind's md breakpoint */
+	.react-datepicker {
+		width: 300px; /* Fixed width for medium screens and above */
+	}
+}

@@ -16,6 +16,7 @@ const data = [
       "TV screens with audio",
       "Equipped with microphone",
       "All seats equipped with seat belt",
+      "All seats equipped with seat belt",
     ],
   },
   {
@@ -313,23 +314,13 @@ const Transportation = () => {
       </AnimatePresence>
 
       <div className="mt-10 mb-10">
-        <motion.h1
-          whileInView={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: -100 }}
-          transition={{ duration: 0.5 }}
-          //   viewport={{ once: true }}
-          className="text-4xl p-5 text-center font-semibold "
-        >
+        <h1 className="text-4xl p-5 text-center font-semibold ">
           TRANSPORTATION <span className="text-custom-yellow">FLEET</span>
-        </motion.h1>
+        </h1>
         <div className="cards flex justify-center items-center flex-wrap gap-5 p-3">
           {data.map((card, index) => (
-            <motion.div
-              initial={{ opacity: 0, y: 80 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              // viewport={{ once: true }}
-              className="card w-[500px] p-5"
+            <div
+              className="card w-[500px] p-5 shadow-xl "
               key={index}
             >
               <div className="">
@@ -349,7 +340,7 @@ const Transportation = () => {
                   ))}
                 </ul>
               </div>
-              <div className="text-center mt-5">
+              {/* <div className="text-center mt-5">
                 <button
                   onClick={openModal}
                   type="button"
@@ -357,8 +348,16 @@ const Transportation = () => {
                 >
                   <b className="text-2xl">Book Now</b>
                 </button>
+              </div> */}
+              <div className="flex items-center justify-center">
+                <button
+                  onClick={openModal}
+                  className="text-2xl text-custom-yellow text-center block mt-4 underline"
+                >
+                  Book Now
+                </button>
               </div>
-            </motion.div>
+            </div>
           ))}
 
           {/* <motion.div
