@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Card from "./Card"; // Import Card component
+import axios from "axios";
 
 // Initial details data
 const initialDetails = [
@@ -15,7 +16,8 @@ const initialDetails = [
 ];
 
 const DetailsManager = () => {
-    const [details, setDetails] = useState(initialDetails);
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+    const [details, setDetails] = useState([]);
     const [isEditing, setIsEditing] = useState(false); // State to track if we're editing an existing item
     const [currentDetail, setCurrentDetail] = useState(null); // State to track which item is being edited or created
 
@@ -28,26 +30,55 @@ const DetailsManager = () => {
     };
 
     // Function to handle saving a new or edited detail
-    const handleSave = (detail) => {
-        if (currentDetail) {
-            // Editing existing detail
-            setDetails((prevDetails) =>
-                prevDetails.map((d) => (d._id === detail._id ? detail : d))
-            );
+    const handleSave = async (detail) => {
+        if (currentDetail && isEditing) {
+            try {
+                const data = await axios.put(
+                    BASE_URL + "/locations/" + detail._id,
+                    detail,
+                );
+
+                const resData = data.data.data.location;
+                alert("Location edited Successfully");
+                setDetails((prevDetails) =>
+                    prevDetails.map((d) =>
+                        d._id === resData._id ? resData : d,
+                    ),
+                );
+            } catch (error) {
+                console.log(error);
+            }
         } else {
-            // Creating new detail
-            setDetails((prevDetails) => [
-                ...prevDetails,
-                { ...detail, _id: (prevDetails.length + 1).toString() },
-            ]);
+            try {
+                const data = await axios.post(BASE_URL + "/locations", detail);
+                let tempData = data.data.data.location;
+                alert("New location added");
+                setDetails((prevDetails) => [...prevDetails, tempData]);
+            } catch (error) {
+                console.log(error);
+            }
         }
         setIsEditing(false); // Hide the edit/create form
     };
 
     // Function to handle deleting a detail
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
+        try {
+            const data = await axios.delete(
+                BASE_URL + "/locations/" + id,
+                detail,
+            );
+
+            alert("Deleted successfully");
+            setDetails((prevDetails) =>
+                prevDetails.map((d) => (d._id === resData._id ? resData : d)),
+            );
+        } catch (error) {
+            console.log(error);
+        }
+
         setDetails((prevDetails) =>
-            prevDetails.filter((detail) => detail._id !== id)
+            prevDetails.filter((detail) => detail._id !== id),
         );
     };
 
@@ -56,6 +87,18 @@ const DetailsManager = () => {
         setCurrentDetail(detail); // Set the detail to be edited
         setIsEditing(true); // Show the edit form
     };
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const res = await axios.get(BASE_URL + "/locations");
+                setDetails(res.data.data.locations);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getData();
+    }, []);
 
     return (
         <div>
@@ -74,11 +117,12 @@ const DetailsManager = () => {
                         key={detail._id} // Added key prop
                         className="bg-gray-100 rounded-md shadow-md p-5 w-[400px] relative"
                     >
+                        {console.log(detail)}
                         <>
                             <h4 className="text-xl font-semibold mb-2">
                                 {detail.title[lang]}
                             </h4>
-                            {detail.dates.map((date, index) => (
+                            {detail?.dates?.map((date, index) => (
                                 <div
                                     key={index}
                                     className="flex items-center gap-10"

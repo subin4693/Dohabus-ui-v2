@@ -5,7 +5,7 @@ const Card = ({ data, onSave, onCancel }) => {
         data || {
             title: { en: "", ar: "" },
             dates: [{ day: { en: "", ar: "" }, time: "" }],
-        }
+        },
     );
 
     // Handle input changes for title
@@ -63,12 +63,12 @@ const Card = ({ data, onSave, onCancel }) => {
                     className="border p-2 w-full"
                 />
             </div>
-
-            {detail.dates.map((date, index) => (
+            {detail?.dates?.map((date, index) => (
                 <div key={index} className="mb-4">
                     <label className="block font-bold mb-1">
                         Day (English)
                     </label>
+                    {console.log(date)}
                     <input
                         type="text"
                         value={date.day.en}
@@ -103,18 +103,17 @@ const Card = ({ data, onSave, onCancel }) => {
                     />
                 </div>
             ))}
-
-            <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-                onClick={handleAddDate}
-            >
-                Add Date
-            </button>
             <button
                 className="bg-green-500 text-white px-4 py-2 rounded-md mr-2"
                 onClick={() => onSave(detail)}
             >
                 Save
+            </button>{" "}
+            <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                onClick={handleAddDate}
+            >
+                Add Date
             </button>
             <button
                 className="bg-gray-500 text-white px-4 py-2 rounded-md"
