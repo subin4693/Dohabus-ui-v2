@@ -112,8 +112,9 @@ const Tours = () => {
                 {lang === "en" ? "Choose Your Tour" : "اختر جولتك"}
             </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
-                {categorys.map(({ coverImage, title, description, _id }) => (
+            <div className="p-5">
+               <div className="flex flex-wrap gap-5 justify-center items-center mt-5">
+               {categorys.map(({ coverImage, title, description, _id }) => (
                     <>
                         {console.log(categorys)}{" "}
                         <TourCard
@@ -125,6 +126,7 @@ const Tours = () => {
                         />
                     </>
                 ))}
+               </div>
             </div>
         </div>
     );
