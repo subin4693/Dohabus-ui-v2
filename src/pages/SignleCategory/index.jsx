@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 const SignleCategory = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [tours, setTours] = useState([]);
+    const [bannerCategory, setBannerCategory] = useState(null);
     const { category } = useParams();
     const data = [
         {
@@ -67,7 +68,9 @@ const SignleCategory = () => {
                 );
                 console.log(data.data.data.plans);
                 // setAlbum(data?.data?.images);
+                console.log(data.data.data.category);
                 setTours(data.data.data.plans);
+                setBannerCategory(data.data.data.category);
             } catch (error) {
                 setTours([]);
                 console.log(error);
@@ -78,8 +81,8 @@ const SignleCategory = () => {
     return (
         <div>
             <Banner
-                image={catTop}
-                title={lang === "en" ? "City Tour" : "جولة المدينة"}
+                image={bannerCategory && bannerCategory?.coverImage}
+                title={bannerCategory && bannerCategory?.title[lang]}
                 subTitle={"Home | Tours"}
             />
 
