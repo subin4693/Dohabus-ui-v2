@@ -43,17 +43,33 @@ const AboutUsForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            // Post request to the backend endpoint with formData
-            console.log(formData);
-            const response = await axios.put(
-                `${BASE_URL}/about/` + formData._id,
-                formData,
-            );
-            alert("Successfully updated");
-        } catch (error) {
-            console.error("Error submitting form data:", error);
-            alert("There was an error submitting the form.");
+        if (initialData) {
+            try {
+                // Post request to the backend endpoint with formData
+                console.log(formData);
+                const response = await axios.put(
+                    `${BASE_URL}/about/` + formData._id,
+                    formData,
+                );
+                alert("Successfully updated");
+            } catch (error) {
+                console.error("Error submitting form data:", error);
+                alert("There was an error submitting the form.");
+            }
+        } else {
+            e.preventDefault();
+            try {
+                // Post request to the backend endpoint with formData
+                console.log(formData);
+                const response = await axios.post(
+                    `${BASE_URL}/about/`,
+                    formData,
+                );
+                alert("Successfully updated");
+            } catch (error) {
+                console.error("Error submitting form data:", error);
+                alert("There was an error submitting the form.");
+            }
         }
     };
 
