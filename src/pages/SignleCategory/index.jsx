@@ -82,7 +82,7 @@ const SignleCategory = () => {
                 {lang === "en" ? "Choose Your Tour" : "اختر جولتك"}
             </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
+            <div className="flex flex-wrap gap-5 justify-center items-center mt-5">
                 {tours.map(({ coverImage, title, _id }) => (
                     <TourCard
                         lang={lang}

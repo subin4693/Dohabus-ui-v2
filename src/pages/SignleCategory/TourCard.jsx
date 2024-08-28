@@ -1,62 +1,81 @@
 import React from "react";
-import { AiFillHeart } from "react-icons/ai";
-import { BiCart } from "react-icons/bi";
+// import { AiFillHeart } from "react-icons/ai";
+// import { BiCart } from "react-icons/bi";
+import {
+  FaHeart as HeartIcon,
+  FaShoppingCart as CartIcon,
+} from "react-icons/fa";
+import { FaRegClock as Watch } from "react-icons/fa";
+import { FaMapMarkerAlt as LocationPin } from "react-icons/fa";
+
+import { FaDollarSign as Dollar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const TourCard = ({ image, title, lang, link }) => {
-    return (
-        <div
-            className="h-[500px] bg-cover bg-center relative overflow-hidden group"
-            style={{ backgroundImage: `url(${image})` }}
-        >
-            <h3 className="absolute bottom-10 left-10 font-bold text-white text-2xl">
-                {title}
-            </h3>
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-5 bg-custom-yellow-light group-hover:translate-y-0 translate-y-full duration-500">
-                <div className="absolute top-7 left-7 right-7 flex justify-between items-center">
-                    <div className="group/edit flex items-center bg-white rounded-full p-2 hover:bg-dark duration-300">
-                        <AiFillHeart className="text-4xl  group-hover/edit:text-white" />
-                        <button className="max-w-0 opacity-0 whitespace-nowrap group-hover/edit:text-white group-hover/edit:max-w-[170px] group-hover/edit:opacity-100 group-hover/edit:px-2 transition-all duration-300">
-                            {lang === "en"
-                                ? "Add To Favourites"
-                                : "أضف إلى المفضلة"}
-                        </button>
-                    </div>
+const TourCard = ({ image, title, link }) => {
+  const lang = useSelector((state) => state.language.lang);
 
-                    <div className="group/edit flex items-center bg-white rounded-full p-2 hover:bg-dark duration-300">
-                        <BiCart className="text-4xl group-hover/edit:text-white" />
-                        <button className="max-w-0 opacity-0 whitespace-nowrap group-hover/edit:text-white group-hover/edit:max-w-[170px] group-hover/edit:opacity-100 group-hover/edit:px-2 transition-all duration-300">
-                            {lang === "en" ? "Add To Cart" : "أضف إلى السلة"}
-                        </button>
-                    </div>
-                    {/*
-          <div className="group/edit flex items-center bg-white rounded-full p-2 hover:bg-dark duration-300">
-            <BiCart className="text-3xl m-2 group-hover/edit:text-white" />
-            <button className="max-w-0 opacity-0 whitespace-nowrap group-hover/edit:text-white group-hover/edit:max-w-[170px] group-hover/edit:opacity-100 group-hover/edit:px-2 transition-all duration-300">
-              Add To Cart
-            </button>
-          </div>*/}
-                </div>
+  return (
+    <div
+      dir={lang === "ar" ? "rtl" : "ltr"}
+      className="h-[700px] w-[550px] bg-cover bg-center relative overflow-hidden group rounded-2xl mb-5"
+      style={{ backgroundImage: `url(${image})` }}
+    >
+      <h3 className="mt-[100px] font-semibold text-black text-center text-3xl">
+        {title}
+      </h3>
+      <div className="flex flex-wrap justify-center text-white items-center p-10 absolute bg-yellow-300 bg-opacity-100 inset-0 translate-y-full group-hover:bg-opacity-90 group-hover:translate-y-0 duration-500">
+        <h3 className=" mt-5 font-semibold  text-black  text-3xl">{title}</h3>
+        <div className="mt-5 w-full">
+          <div className="flex items-center gap-5 justify-center">
+            <Watch color="black" size={50} />{" "}
+            <div>
+              <h2 className="text-3xl text-black font-bold">Tour Durations</h2>
 
-                <div className="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4 mt-4">
-                    <Link
-                        to={link}
-                        className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow"
-                    >
-                        {lang === "en" ? " Book now" : "احجز الآن"}
-                    </Link>
-                    <Link
-                        to={link}
-                        className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow"
-                    >
-                        {lang === "en"
-                            ? "Starting from QAR 180"
-                            : "ابتداءً من 180 ريال قطري"}
-                    </Link>
-                </div>
+              <small className="text-2xl text-black font-semibold">
+                4 Hours
+              </small>
             </div>
+          </div>
+          <div className="flex items-center gap-5 mt-5 justify-center">
+            <LocationPin color="black" size={50} />{" "}
+            <div>
+              <h2 className="text-3xl text-black font-bold">Tour Durations</h2>
+
+              <small className="text-2xl text-black font-semibold">
+                4 Hours
+              </small>
+            </div>
+          </div>
+          <div className="flex items-center gap-5 mt-5 justify-center">
+            <Dollar color="black" size={50} />{" "}
+            <div>
+              <h2 className="text-3xl text-black font-bold">Tour Durations</h2>
+
+              <small className="text-2xl text-black font-semibold">
+                4 Hours
+              </small>
+            </div>
+          </div>
+          <div className="flex flex-row items-center mt-20 justify-center gap-[8%]">
+            <div className="p-5 bg-white rounded-full cursor-pointer">
+              <HeartIcon style={{ color: "black", fontSize: "2rem" }} />
+            </div>
+            <div className="">
+              <Link to={link}>
+                <button className="p-5 text-black text-2xl font-semibold rounded-full bg-white w-[180px]">
+                  View Tour
+                </button>
+              </Link>
+            </div>
+            <div className="p-5 bg-white rounded-full cursor-pointer">
+              <CartIcon style={{ color: "black", fontSize: "2rem" }} />
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default TourCard;
