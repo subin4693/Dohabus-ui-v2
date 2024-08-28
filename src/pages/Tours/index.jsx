@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import Banner from "../../components/Banner";
 
 import aimaj from "../../assets/aimaaj-tourpagej.jpg";
@@ -12,7 +14,9 @@ import tourtop from "../../assets/tourtop.jpg";
 import TourCard from "./TourCard";
 import { useSelector } from "react-redux";
 const Tours = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const lang = useSelector((state) => state.language.lang);
+    const [categorys, setCategorys] = useState([]);
     const data = [
         {
             _id: 1,
@@ -87,7 +91,15 @@ const Tours = () => {
             },
         },
     ];
-
+    useEffect(() => {
+        const getData = async () => {
+            const data = await axios.get(BASE_URL + "/categorys");
+            console.log(data.data.data.categories);
+            // setAlbum(data?.data?.images);
+            setCategorys(data?.data?.data?.categories);
+        };
+        getData();
+    }, []);
     return (
         <div>
             <Banner
@@ -101,13 +113,16 @@ const Tours = () => {
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
-                {data.map(({ image, title, description, _id }) => (
-                    <TourCard
-                        image={image}
-                        title={title[lang]}
-                        description={description[lang]}
-                        key={_id}
-                    />
+                {categorys.map(({ coverImage, title, description, _id }) => (
+                    <>
+                        {console.log(categorys)}{" "}
+                        <TourCard
+                            image={coverImage}
+                            title={title[lang]}
+                            description={description[lang]}
+                            key={_id}
+                        />
+                    </>
                 ))}
             </div>
         </div>
