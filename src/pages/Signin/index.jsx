@@ -23,10 +23,14 @@ const Signin = () => {
         return;
       }
 
-      const res = await axios.post(BASE_URL + "/users/signin", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        BASE_URL + "/users/signin",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
 
       if (res) {
         dispatch(setUser(res.data.data.user));

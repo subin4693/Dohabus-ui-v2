@@ -94,9 +94,10 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const toggleLanguage = () => {
     setIsEnglish((prev) => {
-      if (prev) dispatch(setLanguage("ar"));
-      else dispatch(setLanguage("en"));
-      return !prev;
+      const newLanguage = prev ? "ar" : "en"; // Determine the new language
+      dispatch(setLanguage(newLanguage)); // Update the Redux state with the new language
+      localStorage.setItem("language", newLanguage); // Save the new language to localStorage
+      return !prev; // Toggle the language state
     });
   };
   const handleToggleCategory = (index) => {
@@ -130,9 +131,20 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     setIsVisible(false);
   };
 
-  const handleSignOut = () => {
-    dispatch(setUser({}));
-    navigate("/");
+  const handleSignOut = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/users/signout",
+        {},
+        { withCredentials: true },
+      );
+      console.log(res);
+
+      dispatch(setUser({}));
+    } catch (error) {
+      console.log(error);
+    }
+
     console.log("Logged Out");
   };
 
@@ -365,7 +377,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 {/* Language inside the circle */}
                 <span className="text-white font-semibold">
-                  {isEnglish ? "en" : "an"}
+                  {isEnglish ? "en" : "ar"}
                 </span>
               </div>
 
@@ -376,7 +388,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
               {/* Arabic Language Option */}
               <div className="flex-1 text-center text-white font-semibold">
-                an
+                ar
               </div>
             </div>
 

@@ -28,11 +28,15 @@ const Signup = () => {
         alert("Password length must be greater than 8");
         return;
       }
-      const res = await axios.post(BASE_URL + "/users/signup", {
-        name: name,
-        email,
-        password: password,
-      });
+      const res = await axios.post(
+        BASE_URL + "/users/signup",
+        {
+          name: name,
+          email,
+          password: password,
+        },
+        { withCredentials: true },
+      );
       console.log(res.data.data);
       if (res) {
         dispatch(setUser(res.data.data.user));
