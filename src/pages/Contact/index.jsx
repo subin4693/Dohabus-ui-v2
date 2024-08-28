@@ -1,11 +1,14 @@
-import React from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import Banner from "../../components/Banner";
 import contactImg from "../../assets/contact.jpg";
 import { FaMapPin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 const Contact = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const lang = useSelector((state) => state.language.lang);
+    const [datas, setDatas] = useState([]);
     const locations = [
         {
             id: 1,
@@ -149,7 +152,14 @@ const Contact = () => {
     };
     const { heading, paragraph, placeholders, terms, button, faq } =
         texts[lang] || texts.en;
-
+    useEffect(() => {
+        const getData = async () => {
+            const data = await axios.get(BASE_URL + "/locations");
+            console.log(data.data.data.locations);
+            setDatas(data.data.data.locations);
+        };
+        getData();
+    }, []);
     return (
         <div>
             <Banner
@@ -206,7 +216,11 @@ const Contact = () => {
                             >
                                 {button}
                             </button>
-                            <Link to={"/faq"}><p className="text-center text-lg mt-5">{faq}</p></Link>
+                            <Link to={"/faq"}>
+                                <p className="text-center text-lg mt-5">
+                                    {faq}
+                                </p>
+                            </Link>
                         </form>
                     </div>
                 </div>
@@ -219,8 +233,9 @@ const Contact = () => {
                             ? "Locations & Opening Times"
                             : "المواقع وأوقات العمل"}
                     </h2>
-                    {locations.map((location) => (
+                    {datas?.map((location) => (
                         <div key={location.id}>
+                            {console.log(location)}
                             <h4 className="flex">
                                 <FaMapPin className="w-7 h-7" />
                                 &nbsp;
@@ -229,12 +244,12 @@ const Contact = () => {
                                 </span>
                             </h4>
                             <p>
-                                {location.times.map((time, index) => (
+                                {location.dates.map((time, index) => (
                                     <span key={index}>
                                         <span className="text-gray font-bold">
                                             {time.day[lang]}:
                                         </span>{" "}
-                                        {time.hours[lang]}
+                                        {time.time[lang]}
                                         <br />
                                     </span>
                                 ))}
