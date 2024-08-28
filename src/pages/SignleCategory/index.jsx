@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Banner from "../../components/Banner";
-
+import { useParams } from "react-router-dom";
 import aimaj from "../../assets/aimaaj-tourpagej.jpg";
 import desert from "../../assets/deset-tourpage.jpg";
 import common from "../../assets/common-tourpage.jpg";
@@ -12,6 +13,9 @@ import catTop from "../../assets/city-tour-categorypage.jpg";
 import TourCard from "./TourCard";
 import { useSelector } from "react-redux";
 const SignleCategory = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+    const [tours, setTours] = useState([]);
+    const { category } = useParams();
     const data = [
         {
             _id: 1,
@@ -55,7 +59,17 @@ const SignleCategory = () => {
         },
     ];
     const lang = useSelector((state) => state.language.lang);
-
+    useEffect(() => {
+        const getData = async () => {
+            const data = await axios.get(
+                BASE_URL + "/plans/category/" + category,
+            );
+            console.log(data.data.data.plans);
+            // setAlbum(data?.data?.images);
+            setTours(data.data.data.plans);
+        };
+        getData();
+    }, []);
     return (
         <div>
             <Banner
@@ -69,11 +83,12 @@ const SignleCategory = () => {
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">
-                {data.map(({ image, title, _id }) => (
+                {tours.map(({ coverImage, title, _id }) => (
                     <TourCard
                         lang={lang}
-                        image={image}
-                        title={title[lang]} // Use the selected language
+                        image={coverImage}
+                        title={title[lang]}
+                        link={_id}
                         key={_id}
                     />
                 ))}

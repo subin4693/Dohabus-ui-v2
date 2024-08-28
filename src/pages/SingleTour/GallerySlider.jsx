@@ -5,7 +5,7 @@ const MediaGallery = ({ mediaUrls }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
-    if (currentIndex < mediaUrls.length - 1) {
+    if (currentIndex < mediaUrls?.length - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -23,7 +23,7 @@ const MediaGallery = ({ mediaUrls }) => {
         {currentIndex > 0 && (
           <div className="w-1/2 h-80 rounded-3xl overflow-hidden -z-10 absolute -left-10 hidden sm:inline">
             <img
-              src={mediaUrls[currentIndex - 1]}
+              src={mediaUrls && mediaUrls[currentIndex - 1]}
               className="w-full h-full object-cover"
             />
           </div>
@@ -38,7 +38,7 @@ const MediaGallery = ({ mediaUrls }) => {
           />
 
           <img
-            src={mediaUrls[currentIndex]}
+            src={mediaUrls && mediaUrls[currentIndex]}
             className="w-full h-full object-cover"
           />
 
@@ -50,10 +50,10 @@ const MediaGallery = ({ mediaUrls }) => {
         </div>
 
         {/* Next Image Preview */}
-        {currentIndex < mediaUrls.length - 1 && (
+        {currentIndex < mediaUrls?.length - 1 && (
           <div className="w-1/2 h-80 rounded-3xl overflow-hidden -z-10 absolute -right-10 hidden sm:inline">
             <img
-              src={mediaUrls[currentIndex + 1]}
+              src={mediaUrls && mediaUrls[currentIndex + 1]}
               className="w-full h-full object-cover"
             />
           </div>

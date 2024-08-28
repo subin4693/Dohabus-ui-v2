@@ -3,7 +3,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { BiCart } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
-const TourCard = ({ image, title, lang }) => {
+const TourCard = ({ image, title, lang, link }) => {
     return (
         <div
             className="h-[500px] bg-cover bg-center relative overflow-hidden group"
@@ -40,13 +40,13 @@ const TourCard = ({ image, title, lang }) => {
 
                 <div className="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4 mt-4">
                     <Link
-                        to={title}
+                        to={link}
                         className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow"
                     >
                         {lang === "en" ? " Book now" : "احجز الآن"}
                     </Link>
                     <Link
-                        to={title}
+                        to={link}
                         className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow"
                     >
                         {lang === "en"
