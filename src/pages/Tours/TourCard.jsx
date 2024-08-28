@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const TourCard = ({ image, description, title }) => {
+const TourCard = ({ image, description, title, link }) => {
     const lang = useSelector((state) => state.language.lang);
     return (
         <div
@@ -15,7 +15,7 @@ const TourCard = ({ image, description, title }) => {
             </h3>
             <div className="flex flex-col text-white justify-center items-start  p-10 absolute bg-custom-yellow-light inset-0 translate-y-full group-hover:translate-y-0 duration-500">
                 <p className="text-lg  ">{description}</p>
-                <Link to={`/tours/${title}`}>
+                <Link to={`/tours/${link}`}>
                     <button className="text-lg px-5 py-3 mt-3 bg-dark rounded-full hover:text-custom-yellow">
                         {lang === "ar" ? "اكتشف" : "Discover"}
                     </button>

@@ -120,6 +120,7 @@ const Tours = () => {
                             image={coverImage}
                             title={title[lang]}
                             description={description[lang]}
+                            link={_id}
                             key={_id}
                         />
                     </>
