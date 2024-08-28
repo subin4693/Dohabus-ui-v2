@@ -198,18 +198,22 @@ const SingleTour = () => {
 
     useEffect(() => {
         const getData = async () => {
-            console.log("get data function clled **************");
-            const data = await axios.get(BASE_URL + "/plans/" + singletour);
-            console.log("*************");
-            console.log(data);
-            console.log("*************");
+            try {
+                console.log("get data function clled **************");
+                const data = await axios.get(BASE_URL + "/plans/" + singletour);
+                console.log("*************");
+                console.log(data);
+                console.log("*************");
 
-            setData(data.data.data.plan);
-            // setAlbum(data?.data?.images);
-            // setTours(data.data.data.plans);
+                setData(data.data.data.plan);
+                // setAlbum(data?.data?.images);
+                // setTours(data.data.data.plans);
+            } catch (error) {
+                console.log(error);
+            }
         };
         getData();
-    }, []);
+    }, [singletour]);
     return (
         <div>
             <Banner

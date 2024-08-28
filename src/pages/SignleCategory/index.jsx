@@ -61,15 +61,20 @@ const SignleCategory = () => {
     const lang = useSelector((state) => state.language.lang);
     useEffect(() => {
         const getData = async () => {
-            const data = await axios.get(
-                BASE_URL + "/plans/category/" + category,
-            );
-            console.log(data.data.data.plans);
-            // setAlbum(data?.data?.images);
-            setTours(data.data.data.plans);
+            try {
+                const data = await axios.get(
+                    BASE_URL + "/plans/category/" + category,
+                );
+                console.log(data.data.data.plans);
+                // setAlbum(data?.data?.images);
+                setTours(data.data.data.plans);
+            } catch (error) {
+                setTours([]);
+                console.log(error);
+            }
         };
         getData();
-    }, []);
+    }, [category]);
     return (
         <div>
             <Banner
