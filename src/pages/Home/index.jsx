@@ -2,28 +2,30 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import axios from "axios";
 const Home = () => {
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [currentIndex, setCurrentIndex] = useState(0);
   const lang = useSelector((state) => state.language.lang);
-  const slides = [
-    {
-      url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
-      alt: "Slide 1",
-    },
-    {
-      url: "https://images.pexels.com/photos/11912983/pexels-photo-11912983.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      alt: "Slide 2",
-    },
-    {
-      url: "https://dohabus.com/wp-content/uploads/2020/05/DSC6346-scaled.jpg",
-      alt: "Slide 3",
-    },
-    {
-      url: "https://cdn.getyourguide.com/img/tour/63b3fd9ac54a9.jpeg/145.jpg",
-      alt: "Slide 4",
-    },
-  ];
+  const [slides, setSlides] = useState([]);
+  // const slides = [
+  //   {
+  //     url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
+  //     alt: "Slide 1",
+  //   },
+  //   {
+  //     url: "https://images.pexels.com/photos/11912983/pexels-photo-11912983.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  //     alt: "Slide 2",
+  //   },
+  //   {
+  //     url: "https://dohabus.com/wp-content/uploads/2020/05/DSC6346-scaled.jpg",
+  //     alt: "Slide 3",
+  //   },
+  //   {
+  //     url: "https://cdn.getyourguide.com/img/tour/63b3fd9ac54a9.jpeg/145.jpg",
+  //     alt: "Slide 4",
+  //   },
+  // ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,7 +45,7 @@ const Home = () => {
 
   const prevSlide = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length
+      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length,
     );
   };
 
@@ -63,6 +65,15 @@ const Home = () => {
     hidden: { opacity: 0, y: 100 },
     visible: { opacity: 1, y: 0 },
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await axios.get(BASE_URL + "/banner");
+      console.log(data?.data?.data?.banner);
+      setSlides(data?.data?.data?.banner);
+    };
+    getData();
+  }, []);
 
   return (
     <div
@@ -87,22 +98,22 @@ const Home = () => {
                     index === 0
                       ? firstImageVariants
                       : index === 1
-                      ? secondImageVariants
-                      : {
-                          enter: { opacity: 0, x: 100 },
-                          center: { opacity: 1, x: 0 },
-                          exit: { opacity: 0, x: -100 },
-                        }
+                        ? secondImageVariants
+                        : {
+                            enter: { opacity: 0, x: 100 },
+                            center: { opacity: 1, x: 0 },
+                            exit: { opacity: 0, x: -100 },
+                          }
                   }
                   transition={{ duration: 0.5 }}
                 >
                   <img
-                    src={slide.url}
+                    src={slide.image}
                     alt={slide.alt}
                     className="w-full h-screen object-cover"
                   />
                 </motion.div>
-              )
+              ),
           )}
         </AnimatePresence>
 
@@ -235,8 +246,6 @@ const Home = () => {
                 to={data.link}
                 className="card w-[300px] flex flex-col items-center mb-20"
               >
-                {console.log(data.title["ar"])}
-                {console.log(lang)}
                 <div className="relative w-[200px] h-[200px]">
                   <img
                     className="absolute inset-0 w-full h-full object-cover rounded-full transition-transform duration-[.6s] transform hover:scale-125 cursor-pointer"

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/log.png";
 import footer from "../assets/lfooter.jpg";
+import axios from "axios";
 
 import trip from "../assets/trip.png";
 import youtube from "../assets/youtube.png";
@@ -35,17 +36,28 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [selectedImage, setSelectedImage] = useState(null);
-  const album = [album1, album2, album3, album4, album5, album6];
+  // const album = [album1, album2, album3, album4, album5, album6];
+  const [album, setAlbum] = useState([]);
   const handleNextImage = () => {
     setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
   };
 
   const handlePreviousImage = () => {
     setSelectedImage(
-      (prevIndex) => (prevIndex - 1 + album.length) % album.length
+      (prevIndex) => (prevIndex - 1 + album.length) % album.length,
     );
   };
+  useEffect(() => {
+    const getData = async () => {
+      const data = await axios.get(BASE_URL + "/footer");
+      console.log(data?.data?.images);
+      setAlbum(data?.data?.images);
+      // setSlides(data?.data?.data?.banner);
+    };
+    getData();
+  }, []);
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20  bg-yellow-400">
@@ -116,7 +128,7 @@ const Footer = () => {
                 {album.map((photo, index) => (
                   <img
                     key={index}
-                    src={photo}
+                    src={photo.image}
                     alt={`Photo ${index}`}
                     className="object-cover w-full h-full cursor-pointer transition duration-300 hover:bg-custom-yellow hover:mix-blend-multiply"
                     onClick={() => setSelectedImage(index)}
