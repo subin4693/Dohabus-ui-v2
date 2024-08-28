@@ -8,6 +8,7 @@ const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const lang = useSelector((state) => state.language.lang);
   const [slides, setSlides] = useState([]);
+  const [categorys, setCategorys] = useState([]);
   // const slides = [
   //   {
   //     url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
@@ -71,6 +72,11 @@ const Home = () => {
       const data = await axios.get(BASE_URL + "/banner");
       console.log(data?.data?.data?.banner);
       setSlides(data?.data?.data?.banner);
+
+      const categoryData = await axios.get(BASE_URL + "/categorys");
+      console.log(categoryData.data.data.categories);
+      // setAlbum(data?.data?.images);
+      setCategorys(categoryData?.data?.data?.categories);
     };
     getData();
   }, []);
@@ -132,15 +138,16 @@ const Home = () => {
         </button>
 
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full ${
-                index === currentIndex ? "bg-gray-800" : "bg-gray-400"
-              }`}
-              onClick={() => goToSlide(index)}
-            ></button>
-          ))}
+          {slides &&
+            slides?.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full ${
+                  index === currentIndex ? "bg-gray-800" : "bg-gray-400"
+                }`}
+                onClick={() => goToSlide(index)}
+              ></button>
+            ))}
         </div>
       </div>
       <div
@@ -163,106 +170,30 @@ const Home = () => {
               : "استكشف قطر على أكمل وجه تحت جناحنا.."}
           </p>
           <div className="flex justify-center items-center  gap-5 flex-wrap mt-20">
-            {[
-              {
-                title: {
-                  ar: "جولات المدينة",
-                  en: "City Tours",
-                },
-                description: {
-                  ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
-                  en: "Access lots of iconic locations with ease at your own pace",
-                },
-                image:
-                  "https://eng.dohabus.com/English/images/2022/10/17/city.jpg",
-                link: "/tours/city tours",
-              },
-              {
-                title: {
-                  ar: "جولات بحرية",
-                  en: "Sea Tours",
-                },
-                description: {
-                  ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
-                  en: "Access lots of iconic locations with ease at your own pace",
-                },
-                image:
-                  "https://eng.dohabus.com/English/images/2022/09/29/3.jpg",
-                link: "/tours/Sea tours",
-              },
-              {
-                title: {
-                  ar: "جولات الصحراء",
-                  en: "Desert Tours",
-                },
-                description: {
-                  ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
-                  en: "Access lots of iconic locations with ease at your own pace",
-                },
-                image:
-                  "https://eng.dohabus.com/English/images/2022/10/17/0.jpg",
-                link: "/tours/Desert tours",
-              },
-              {
-                title: {
-                  ar: "جولات مختلطة",
-                  en: "Combo Tours",
-                },
-                description: {
-                  ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
-                  en: "Access lots of iconic locations with ease at your own pace",
-                },
-                image:
-                  "https://eng.dohabus.com/English/images/2022/10/16/combo.jpg",
-                link: "/tours/Combo tours",
-              },
-              {
-                title: {
-                  ar: "جولات ثقافية",
-                  en: "Cultural Tours",
-                },
-                description: {
-                  ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
-                  en: "Access lots of iconic locations with ease at your own pace",
-                },
-                image:
-                  "https://eng.dohabus.com/English/images/2022/09/29/4.jpg",
-                link: "/tours/Cultural tours",
-              },
-              {
-                title: {
-                  ar: "المجلس",
-                  en: "Al-Majles",
-                },
-                description: {
-                  ar: "الوصول إلى العديد من المواقع الأيقونية بسهولة وبوتيرة الخاصة بك",
-                  en: "Access lots of iconic locations with ease at your own pace",
-                },
-                image:
-                  "https://eng.dohabus.com/English/images/2022/10/17/9.jpg",
-              },
-            ].map((data) => (
-              <Link
-                to={data.link}
-                className="card w-[300px] flex flex-col items-center mb-20"
-              >
-                <div className="relative w-[200px] h-[200px]">
-                  <img
-                    className="absolute inset-0 w-full h-full object-cover rounded-full transition-transform duration-[.6s] transform hover:scale-125 cursor-pointer"
-                    src={data.image}
-                    alt="img"
-                  />
-                </div>
-                <div className="flex flex-col items-center justify-between flex-grow p-4">
-                  <h1 className="text-xl font-semibold text-center mt-4 transition-colors duration-300 hover:text-custom-yellow cursor-pointer">
-                    {data?.title[lang]}
-                  </h1>
-                  <p className="text-gray-500 text-center mt-2">
-                    {data?.description[lang]}
-                  </p>
-                </div>
-              </Link>
-            ))}
+            {console.log(categorys)}
+            {categorys &&
+              categorys?.map((data) => (
+                <Link
+                  to={`tours/${data._id}`}
+                  className="card w-[300px] flex flex-col items-center mb-20"
+                >
+                  <div className="relative w-[200px] h-[200px]">
+                    <img
+                      className="absolute inset-0 w-full h-full object-cover rounded-full transition-transform duration-[.6s] transform hover:scale-125 cursor-pointer"
+                      src={data.coverImage}
+                      alt="img"
+                    />
+                  </div>
+                  <div className="flex flex-col items-center justify-between flex-grow p-4">
+                    <h1 className="text-xl font-semibold text-center mt-4 transition-colors duration-300 hover:text-custom-yellow cursor-pointer">
+                      {data?.title[lang]}
+                    </h1>
+                    <p className="text-gray-500 text-center mt-2">
+                      {data?.description[lang]}
+                    </p>
+                  </div>
+                </Link>
+              ))}
           </div>
         </motion.div>
       </div>

@@ -155,8 +155,9 @@ const Footer = () => {
                         className="w-10 h-10 text-white cursor-pointer absolute -right-10 -top-10 p-2"
                         onClick={() => setSelectedImage(null)}
                       />
+
                       <img
-                        src={album[selectedImage]}
+                        src={album[selectedImage].image}
                         alt={`Selected ${selectedImage}`}
                         className="w-full h-full object-cover"
                       />

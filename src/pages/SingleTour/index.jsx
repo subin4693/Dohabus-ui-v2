@@ -408,7 +408,7 @@ const SingleTour = () => {
                                         <h2 className="text-lg font-semibold">
                                             Adult
                                         </h2>
-                                        <p>Price: ${data?.adultPrice}</p>
+                                        <p>Price: {data?.adultPrice} qar</p>
                                     </div>
                                     <div className="flex items-center">
                                         {/* Minus Button */}
@@ -448,7 +448,7 @@ const SingleTour = () => {
                                         <h2 className="text-lg font-semibold">
                                             Child
                                         </h2>
-                                        <p>Price: ${data?.childPrice}</p>
+                                        <p>Price: {data?.childPrice} qar</p>
                                     </div>
                                     <div className="flex items-center">
                                         {/* Minus Button */}
