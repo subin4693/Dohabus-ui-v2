@@ -132,15 +132,16 @@ const Home = () => {
         </button>
 
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full ${
-                index === currentIndex ? "bg-gray-800" : "bg-gray-400"
-              }`}
-              onClick={() => goToSlide(index)}
-            ></button>
-          ))}
+          {slides &&
+            slides?.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full ${
+                  index === currentIndex ? "bg-gray-800" : "bg-gray-400"
+                }`}
+                onClick={() => goToSlide(index)}
+              ></button>
+            ))}
         </div>
       </div>
       <div

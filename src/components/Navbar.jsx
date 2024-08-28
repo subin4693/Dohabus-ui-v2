@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/log.png";
 import { GiHamburgerMenu } from "react-icons/gi";
+import axios from "axios";
+import { setUser } from "../features/Auth/userSlice";
 
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoSearch, IoClose } from "react-icons/io5";
@@ -11,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "../features/language/languageSlice";
 const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   const { user } = useSelector((state) => state.user);
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+  const [categorys, setCategorys] = useState([]);
   console.log(user);
   const tours = [
     {
@@ -125,10 +129,21 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   const handleSignOut = () => {
-    dispatch(setUser({})); 
-    navigate("/"); 
+    dispatch(setUser({}));
+    navigate("/");
     console.log("Logged Out");
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await axios.get(BASE_URL + "/categorys");
+      console.log(data.data.data.categories);
+      // setAlbum(data?.data?.images);
+      setCategorys(data?.data?.data?.categories);
+    };
+    getData();
+  }, []);
+
   return (
     <div
       className={`z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
@@ -322,11 +337,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             {/* <Link to="/cart">Cart</Link> */}
 
             {/* <Link to="/faq">F&Q</Link> */}
-            <Link to="/admin">Admin</Link>
-            {!user ? (
+            {user && user?.role === "admin" && <Link to="/admin">Admin</Link>}
+            {!user._id ? (
               <Link to="/signin">Login</Link>
             ) : (
-              <Link onClick={handleSignOut}>{user.name}</Link>
+              <Link onClick={handleSignOut}>Logout</Link>
             )}
             {/* <Link to="/signin">Login</Link> */}
             {/* <Link to="/">العربية</Link> */}

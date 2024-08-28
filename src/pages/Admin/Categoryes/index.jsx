@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
+import axios from "axios";
 
 import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
 
 const CreateCategory = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [image, setImage] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [title, setTitle] = useState({ en: "", an: "" });
     const [description, setDescription] = useState({ en: "", an: "" });
+    const [file, setFile] = useState(null);
 
     const cardData = [
         {
@@ -44,21 +48,36 @@ const CreateCategory = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setFile(file); // Set the file state to trigger Firebase upload
         }
     };
 
-    const handleCreate = () => {
-        // Handle create or update logic here
-        console.log("Creating/Updating category with data:", {
-            title,
-            description,
-            image,
-        });
+    const handleCreate = async (isEdit) => {
+        if (isEdit) {
+            try {
+            } catch (error) {
+                console.log(error);
+                alert("Some error occured");
+            }
+        } else {
+            try {
+                console.log("Creating/Updating category with data:", {
+                    title,
+                    description,
+                    image,
+                });
+                const data = await axios.post(BASE_URL + "/categorys", {
+                    title,
+                    description,
+                    coverImage: image,
+                });
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+                alert("Some error occured");
+            }
+        }
+
         setIsOpen(false);
         // Reset form fields
         setTitle({ en: "", an: "" });
@@ -83,6 +102,12 @@ const CreateCategory = () => {
         }
         setIsOpen((prev) => !prev);
     };
+    const { progress, error, downloadURL } = useFirebaseUpload(file);
+    useEffect(() => {
+        if (downloadURL) {
+            setImage(downloadURL); // Update formData with the Firebase download URL
+        }
+    }, [downloadURL]);
 
     return (
         <div>
@@ -96,7 +121,8 @@ const CreateCategory = () => {
                                         <IoCameraOutline className="w-12 h-12 text-gray-500" />
                                         <input
                                             type="file"
-                                            className="hidden"
+                                            accept="image/*"
+                                            style={{ display: "none" }}
                                             onChange={handleImageChange}
                                         />
                                     </>
@@ -107,6 +133,10 @@ const CreateCategory = () => {
                                         className="w-full h-full object-cover rounded-md"
                                     />
                                 )}
+                                {progress > 0 && (
+                                    <p>Upload Progress: {progress}%</p>
+                                )}
+                                {error && <p>Error: {error}</p>}
                             </label>
                         </div>
                         <div className="flex-1 space-y-5">
@@ -173,12 +203,22 @@ const CreateCategory = () => {
                                 >
                                     Close
                                 </button>
-                                <button
-                                    className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
-                                    onClick={handleCreate}
-                                >
-                                    {selectedData ? "Update" : "Create"}
-                                </button>
+
+                                {selectedData ? (
+                                    <button
+                                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                                        onClick={() => handleCreate(true)}
+                                    >
+                                        Update
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                                        onClick={() => handleCreate(false)}
+                                    >
+                                        Create
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
