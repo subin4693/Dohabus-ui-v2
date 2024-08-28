@@ -40,7 +40,7 @@ const Tours = () => {
                 const res = await axios.get(BASE_URL + "/admin/plans", {
                     withCredentials: true,
                 });
-                console.log(res.data.data);
+                console.log(res);
                 setPlans(res?.data?.data);
             } catch (error) {
                 console.error("Error fetching plans:", error);

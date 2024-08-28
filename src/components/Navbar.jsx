@@ -338,7 +338,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
             {/* <Link to="/faq">F&Q</Link> */}
             {user && user?.role === "admin" && <Link to="/admin">Admin</Link>}
-            {!user._id ? (
+            {user && !user._id ? (
               <Link to="/signin">Login</Link>
             ) : (
               <Link onClick={handleSignOut}>Logout</Link>

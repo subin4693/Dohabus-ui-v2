@@ -459,8 +459,8 @@ const TourPlanForm = ({ onClose }) => {
                                 <input
                                     type="checkbox"
                                     id={`day-${index}`}
-                                    value={index + 1}
-                                    checked={availableDays.includes(index + 1)}
+                                    value={index}
+                                    checked={availableDays.includes(index)}
                                     onChange={handleDaysChange}
                                     className="mr-2"
                                 />
@@ -481,7 +481,7 @@ const TourPlanForm = ({ onClose }) => {
                                         "Thursday",
                                         "Friday",
                                         "Saturday",
-                                    ][day - 1],
+                                    ][day],
                             )
                             .join(", ")}
                     </div>
