@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Banner from "../../components/Banner";
 import Reviews from "./Reviews";
 import { FaBus } from "react-icons/fa";
@@ -12,6 +13,7 @@ import album3 from "../../assets/album3.jpg";
 import album4 from "../../assets/album4.jpg";
 import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
+import { useParams } from "react-router-dom";
 
 import Slider from "./GallerySlider";
 import Faq from "./Faq";
@@ -135,7 +137,8 @@ const dataa = {
 };
 
 const SingleTour = () => {
-    const [data, setData] = useState(dataa);
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+    const [data, setData] = useState({});
     const lang = useSelector((state) => state.language.lang);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -143,10 +146,12 @@ const SingleTour = () => {
     const [childCount, setChildCount] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
     const [session, setSession] = useState(null);
+
+    const { singletour } = useParams();
     // Function to check if a date is Wednesday or Sunday
     const isAvailableDay = (date) => {
         const day = date.getDay(); // Get the day index (0 for Sunday, 1 for Monday, etc.)
-        return data?.availableDays.includes(day); // Check if the day index is in the availableDays array
+        return data?.availableDays?.includes(day); // Check if the day index is in the availableDays array
     };
 
     const album = [album1, album2, album3, album4, album5, album6];
@@ -187,13 +192,32 @@ const SingleTour = () => {
         setSession(sess);
     };
 
+    const handleBookNow = async () => {
+        alert("handle booknow");
+    };
+
+    useEffect(() => {
+        const getData = async () => {
+            console.log("get data function clled **************");
+            const data = await axios.get(BASE_URL + "/plans/" + singletour);
+            console.log("*************");
+            console.log(data);
+            console.log("*************");
+
+            setData(data.data.data.plan);
+            // setAlbum(data?.data?.images);
+            // setTours(data.data.data.plans);
+        };
+        getData();
+    }, []);
     return (
         <div>
             <Banner
-                image={singleTour}
+                image={data?.coverImage}
                 title={"Monster Bus Tour in the Desert"}
                 subTitle={"Home | Tours"}
             />
+
             <div className="flex justify-center items-center px-2  pt-10">
                 <div className="flex w-screen md:w-[80vw]   flex-wrap">
                     <div className="w-full md:w-3/4  space-y-10    flex flex-col justify-center ">
@@ -210,7 +234,10 @@ const SingleTour = () => {
                                         <h4 className="font-bold text-lg">
                                             Time Duration
                                         </h4>
-                                        <p>5 hours</p>
+                                        <p>
+                                            {data.duration &&
+                                                data?.duration[lang]}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex  gap-5 items-center ">
@@ -218,9 +245,12 @@ const SingleTour = () => {
 
                                     <div>
                                         <h4 className="font-bold text-lg">
-                                            Time Duration
+                                            Transportation
                                         </h4>
-                                        <p>5 hours</p>
+                                        <p>
+                                            {data?.transportation &&
+                                                data?.transportation[lang]}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex  gap-5 items-center ">
@@ -230,9 +260,12 @@ const SingleTour = () => {
                                     />
                                     <div>
                                         <h4 className="font-bold text-lg">
-                                            Time Duration
+                                            Type of Tour
                                         </h4>
-                                        <p>5 hours</p>
+                                        <p>
+                                            {data?.language &&
+                                                data?.language[lang]}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex  gap-5 items-center ">
@@ -243,9 +276,12 @@ const SingleTour = () => {
 
                                     <div>
                                         <h4 className="font-bold text-lg">
-                                            Time Duration
+                                            Language
                                         </h4>
-                                        <p>5 hours</p>
+                                        <p>
+                                            {data?.typeOfTour &&
+                                                data?.typeOfTour[lang]}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +290,9 @@ const SingleTour = () => {
                             <h2 className="text-3xl font-bold">Description</h2>
 
                             <div className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl">
-                                <p>{data.description[lang]}</p>
+                                <p>
+                                    {data.description && data.description[lang]}
+                                </p>
                             </div>
                         </div>
                         <div>
@@ -262,9 +300,10 @@ const SingleTour = () => {
 
                             <div className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl">
                                 <ul className="list-disc pl-5">
-                                    {data.highlights.map((item) => (
-                                        <li>{item[lang]}</li>
-                                    ))}
+                                    {data.highlights &&
+                                        data.highlights.map((item) => (
+                                            <li>{item[lang]}</li>
+                                        ))}
                                 </ul>
                             </div>
                         </div>
@@ -275,9 +314,10 @@ const SingleTour = () => {
 
                             <div className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl">
                                 <ul className="list-disc pl-5">
-                                    {data.includes.map((item) => (
-                                        <li>{item[lang]}</li>
-                                    ))}
+                                    {data.includes &&
+                                        data.includes.map((item) => (
+                                            <li>{item[lang]}</li>
+                                        ))}
                                 </ul>
                             </div>
                         </div>
@@ -286,38 +326,40 @@ const SingleTour = () => {
 
                             <div className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg ">
                                 <ul>
-                                    {data.itinerary.map((item, index) => {
-                                        if (
-                                            index ==
-                                                data?.itinerary.length - 2 ||
-                                            index == 1
-                                        )
+                                    {data.itinerary &&
+                                        data.itinerary.map((item, index) => {
+                                            if (
+                                                index ==
+                                                    data?.itinerary.length -
+                                                        2 ||
+                                                index == 1
+                                            )
+                                                return (
+                                                    <li
+                                                        className={` ${index == data?.itinerary.length - 1 ? "pt-[90px]" : "pb-[90px]"}   border-l border-l-4   border-dashed border-black flex  items-center relative`}
+                                                    >
+                                                        <DiscImage />
+                                                        <span className="pl-10">
+                                                            {item[lang]}
+                                                        </span>
+                                                    </li>
+                                                );
+
                                             return (
                                                 <li
-                                                    className={` ${index == data?.itinerary.length - 1 ? "pt-[90px]" : "pb-[90px]"}   border-l border-l-4   border-dashed border-black flex  items-center relative`}
+                                                    className={`${index == data?.itinerary.length - 1 ? " pb-0 " : " pb-[90px] "}  
+                                            ${index == 0 || index == data?.itinerary.length - 3 ? " border-dashed  " : "border-solid "}  
+
+
+                                             border-l border-l-4   border-solid border-black flex  items-center relative`}
                                                 >
-                                                    <DiscImage />
+                                                    <Disc />
                                                     <span className="pl-10">
                                                         {item[lang]}
                                                     </span>
                                                 </li>
                                             );
-
-                                        return (
-                                            <li
-                                                className={`${index == data?.itinerary.length - 1 ? " pb-0 " : " pb-[90px] "}  
-                                            ${index == 0 || index == data?.itinerary.length - 3 ? " border-dashed  " : "border-solid "}  
-
-
-                                             border-l border-l-4   border-solid border-black flex  items-center relative`}
-                                            >
-                                                <Disc />
-                                                <span className="pl-10">
-                                                    {item[lang]}
-                                                </span>
-                                            </li>
-                                        );
-                                    })}
+                                        })}
                                 </ul>
                             </div>
                         </div>
@@ -340,15 +382,18 @@ const SingleTour = () => {
                         <div>
                             <h2 className="text-xl mt-5 font-bold">Sessions</h2>
                             <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
-                                {data.sessions.map((sessionL) => (
-                                    <button
-                                        className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${sessionL == session && " bg-custom-yellow "}`}
-                                        onClick={() => handleSession(sessionL)}
-                                    >
-                                        <BiTime className="w-[25px] h-[25px]" />{" "}
-                                        {sessionL}
-                                    </button>
-                                ))}
+                                {data.sessions &&
+                                    data.sessions.map((sessionL) => (
+                                        <button
+                                            className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${sessionL == session && " bg-custom-yellow "}`}
+                                            onClick={() =>
+                                                handleSession(sessionL)
+                                            }
+                                        >
+                                            <BiTime className="w-[25px] h-[25px]" />{" "}
+                                            {sessionL}
+                                        </button>
+                                    ))}
                             </div>
                         </div>
 
@@ -363,7 +408,7 @@ const SingleTour = () => {
                                         <h2 className="text-lg font-semibold">
                                             Adult
                                         </h2>
-                                        <p>Price: ${data.adultPrice}</p>
+                                        <p>Price: ${data?.adultPrice}</p>
                                     </div>
                                     <div className="flex items-center">
                                         {/* Minus Button */}
@@ -403,7 +448,7 @@ const SingleTour = () => {
                                         <h2 className="text-lg font-semibold">
                                             Child
                                         </h2>
-                                        <p>Price: ${data.childPrice}</p>
+                                        <p>Price: ${data?.childPrice}</p>
                                     </div>
                                     <div className="flex items-center">
                                         {/* Minus Button */}
@@ -443,7 +488,10 @@ const SingleTour = () => {
                                         Total Price: ${totalPrice}
                                     </h2>
                                     <br />
-                                    <button className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300">
+                                    <button
+                                        onClick={handleBookNow}
+                                        className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300"
+                                    >
                                         Book Now
                                     </button>
                                 </div>
@@ -452,13 +500,17 @@ const SingleTour = () => {
                     </div>
                 </div>
             </div>
-            <Slider mediaUrls={data?.gallerys} />
+
+            <Slider mediaUrls={data?.galleryimages && data?.galleryimages} />
             <div className="flex justify-center items-center px-2  mb-10 ">
                 <div className="flex    flex-wrap  w-[80vw]">
                     <div className="w-full   space-y-10    flex flex-col justify-center ">
                         <div>
                             <h2 className="text-3xl font-bold mb-5">FAQs</h2>
-                            <Faq faqData={data?.faq} lang={lang} />
+                            <Faq
+                                faqData={data.faq ? data?.faq : []}
+                                lang={lang}
+                            />
                         </div>
                     </div>
                 </div>
