@@ -14,8 +14,6 @@ const Tours = () => {
     const lang = useSelector((state) => state.language.lang);
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-    console.log(BASE_URL);
-
     const handleDialog = () => {
         setIsOpen((prev) => !prev);
     };

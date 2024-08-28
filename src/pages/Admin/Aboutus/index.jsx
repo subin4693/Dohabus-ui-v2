@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import LocalizedInput from "./LocalizedInput";
-// import axios from "axios";
+import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
+
+import axios from "axios";
 const AboutUsForm = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [initialData, setInitialData] = useState(false);
     const [formData, setFormData] = useState({
         image: "",
@@ -10,6 +13,7 @@ const AboutUsForm = () => {
         vision: { en: "", ar: "" },
     });
 
+    const [file, setFile] = useState(null);
     const handleChange = (e) => {
         const { name, value, dataset } = e.target;
         const lang = dataset.lang;
@@ -33,31 +37,57 @@ const AboutUsForm = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData((prevData) => ({
-                    ...prevData,
-                    image: reader.result,
-                }));
-            };
-            reader.readAsDataURL(file);
+            setFile(file); // Set the file state to trigger Firebase upload
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Post request to the backend endpoint with formData
             console.log(formData);
-            alert("About Us content successfully created/updated!");
+            const response = await axios.put(
+                `${BASE_URL}/about/` + formData._id,
+                formData,
+            );
+            alert("Successfully updated");
         } catch (error) {
             console.error("Error submitting form data:", error);
             alert("There was an error submitting the form.");
         }
     };
 
+    const { progress, error, downloadURL } = useFirebaseUpload(file);
+
     useEffect(() => {
-        //api call for about us
-    });
+        if (downloadURL) {
+            setFormData((prevData) => ({
+                ...prevData,
+                image: downloadURL, // Update formData with the Firebase download URL
+            }));
+        }
+    }, [downloadURL]);
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}/about`, formData);
+                console.log(response.data.aboutus[0]);
+                let dataa = response.data.aboutus[0];
+
+                dataa.about = dataa.text;
+                setFormData(dataa);
+
+                setInitialData(true);
+            } catch (error) {
+                console.log(error);
+                alert("Error occured");
+                setInitialData(false);
+            }
+        };
+        getData();
+    }, []);
+
     return (
         <div className="p-6 max-w-lg mx-auto">
             <h2 className="text-2xl font-bold mb-4">
@@ -80,9 +110,13 @@ const AboutUsForm = () => {
                             type="file"
                             accept="image/*"
                             style={{ display: "none" }}
-                            onChange={handleImageChange}
+                            onChange={handleImageChange} // Handle file selection
                         />
                     </label>
+
+                    {/* Optionally display upload progress and errors */}
+                    {progress > 0 && <p>Upload Progress: {progress}%</p>}
+                    {error && <p>Error: {error}</p>}
                 </div>
 
                 <LocalizedInput

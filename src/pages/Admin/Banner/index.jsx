@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Import Axios for API calls
+import useFirebaseUpload from "../../../hooks/use-firebaseUpload"; // Import your custom Firebase hook
 
 const Banner = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [slide, setSlide] = useState([
         {
             _id: "asdfa1",
@@ -28,6 +31,16 @@ const Banner = () => {
     const [editIndex, setEditIndex] = useState(null);
     const [newImage, setNewImage] = useState("");
     const [newUrl, setNewUrl] = useState("");
+    const [file, setFile] = useState(null);
+
+    // Use your custom hook to handle Firebase uploads
+    const { progress, error, downloadURL } = useFirebaseUpload(file);
+
+    useEffect(() => {
+        if (downloadURL) {
+            setNewImage(downloadURL); // Set the image to the Firebase download URL after upload
+        }
+    }, [downloadURL]);
 
     const handleEdit = (index) => {
         setEditIndex(index);
@@ -36,16 +49,29 @@ const Banner = () => {
         setNewUrl(slide[index].url);
     };
 
-    const handleSave = () => {
-        const updatedSlides = [...slide];
-        updatedSlides[editIndex] = {
-            ...updatedSlides[editIndex],
+    const handleSave = async () => {
+        const updatedSlide = {
+            ...slide[editIndex],
             image: newImage,
             url: newUrl,
         };
-        setSlide(updatedSlides);
+        const updatedSlides = [...slide];
+        updatedSlides[editIndex] = updatedSlide;
+
         setIsEditing(false);
         setEditIndex(null);
+
+        try {
+            await axios.put(
+                `${BASE_URL}/banner/${updatedSlide._id}`,
+                updatedSlide,
+            );
+            setSlide(updatedSlides);
+            alert("Banner updated successfully!");
+        } catch (err) {
+            console.error("Error updating banner:", err);
+            alert("Failed to update banner.");
+        }
     };
 
     const handleAddNew = () => {
@@ -55,27 +81,40 @@ const Banner = () => {
         setNewUrl("");
     };
 
-    const handleAddNewSave = () => {
+    const handleAddNewSave = async () => {
         const newSlide = {
-            _id: Date.now().toString(),
             image: newImage,
             url: newUrl,
         };
-        setSlide([...slide, newSlide]);
+        setSlide([...slide]);
         setIsEditing(false);
+        console.log(newSlide);
+        try {
+            const res = await axios.post(`${BASE_URL}/banner`, newSlide);
+            console.log(res.data.data.banner);
+            const val = res.data.data.banner;
+            setSlide([...slide, val]);
+            alert("New banner added successfully!");
+        } catch (err) {
+            console.error("Error adding new banner:", err);
+            alert("Failed to add new banner.");
+        }
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setNewImage(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setFile(file); // Set the file for Firebase upload
         }
     };
-
+    useEffect(() => {
+        const getData = async () => {
+            const res = await axios.get(`${BASE_URL}/banner`);
+            console.log(res.data.data.banner);
+            setSlide(res.data.data.banner);
+        };
+        getData();
+    }, []);
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">Banner Images</h2>
@@ -131,6 +170,12 @@ const Banner = () => {
                             onChange={handleImageChange}
                             className="mt-2"
                         />
+                        {progress > 0 && <p>Upload progress: {progress}%</p>}
+                        {error && (
+                            <p className="text-red-500">
+                                Error: {error.message}
+                            </p>
+                        )}
                     </div>
                     <div className="mb-4">
                         <label className="block font-bold mb-2">URL</label>
