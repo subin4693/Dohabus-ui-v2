@@ -13,7 +13,7 @@ import catTop from "../../assets/city-tour-categorypage.jpg";
 import TourCard from "./TourCard";
 import { useSelector } from "react-redux";
 const SignleCategory = () => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+    const BASE_URL = import.meta.env.VITE_BASE_URL; 
     const [tours, setTours] = useState([]);
     const { category } = useParams();
     const data = [
