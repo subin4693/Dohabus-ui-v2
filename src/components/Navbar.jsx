@@ -17,66 +17,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [categorys, setCategorys] = useState([]);
   console.log(user);
-  const tours = [
-    {
-      text: "City Tours",
-      _id: 1,
-      tours: [
-        { text: "24 Hour Hop On Hop Off Sightseeing Tour" },
-        { text: "Explore Doha Tour" },
-        { text: "Doha Sports Tour" },
-        { text: "Doha By Night" },
-        { text: "Night Tour" },
-      ],
-    },
-    {
-      text: "Sea Tours",
-      _id: 2,
-      tours: [
-        { text: "Dhow Cruising" },
-        { text: "Dhow with Dinner" },
-        { text: "Panoramic Dhow Cruise with Al Safliyah Island" },
-      ],
-    },
-    {
-      text: "Cultural Tours",
-      _id: 3,
-      tours: [
-        { text: "History & Heritage of Qatar" },
-        { text: "West Coast Excursion " },
-        { text: "Doha Museum Tour" },
-        { text: "Education City Tour" },
-        { text: "Sheikh Faisal Museum and Camel Track" },
-      ],
-    },
-    {
-      text: "Desert Tours",
-      _id: 4,
-      tours: [
-        { text: "Half day Desert Safari" },
-        {
-          text: "Monster Bus Tour in the Desert (Direct from Sealine)",
-        },
-        { text: "Monster Bus Tour in the Desert" },
-        {
-          text: "Monster Bus Tour in the Desert with Day Pass at Al Majles Resort ",
-        },
-        { text: "Full Day Desert Safari" },
-      ],
-    },
-    {
-      text: "Combo Tours",
-      _id: 5,
-      tours: [
-        { text: "City & Monster Bus Combo Tour" },
-        { text: "City & 4x4 Safari Desert Combo Tour" },
-      ],
-    },
-    {
-      text: "AL Majles Resort",
-      _id: 6,
-    },
-  ];
 
   let cartItemCount = 3;
   const navigate = useNavigate();
@@ -409,11 +349,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 <div className="relative flex items-center">
                   <BiCart size={35} />
-                  {cartItemCount > 0 && (
+                  {/*{cartItemCount > 0 && (
                     <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
                       {cartItemCount}
                     </span>
-                  )}
+                  )}*/}
                 </div>
                 <span>
                   <svg
@@ -431,10 +371,18 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
               >
                 <li className="px-3 py-1 hover:bg-gray-100">
-                  <Link to="/cart">Cart</Link>
+                  {user && user?.role == "admin" ? (
+                    <Link to="/admin-cart">Cart</Link>
+                  ) : (
+                    <Link to="/cart">Cart</Link>
+                  )}
                 </li>
                 <li className="px-3 py-1 hover:bg-gray-100">
-                  <Link to="/favourites">Favourites</Link>
+                  {user && user?.role == "admin" ? (
+                    <Link to="/admin-favourites">Favourites</Link>
+                  ) : (
+                    <Link to="/favourites">Favourites</Link>
+                  )}
                 </li>
               </ul>
             </div>

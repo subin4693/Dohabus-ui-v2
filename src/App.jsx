@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
 
 import { useEffect, useState } from "react";
 
@@ -34,12 +39,16 @@ import Gallery from "./pages/Admin/Gallery";
 import Banner from "./pages/Admin/Banner";
 import Locations from "./pages/Admin/Locations";
 import Offers from "./pages/Admin/Offers";
-
+import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "./features/language/languageSlice";
 
 function App() {
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+
     const lang = useSelector((state) => state.language.lang);
+    const { user } = useSelector((state) => state.user);
+
     const dispatch = useDispatch();
     useEffect(() => {
         // Check if a language preference is stored in localStorage
@@ -53,7 +62,20 @@ function App() {
             dispatch(setLanguage("en"));
         }
     }, []);
+    useEffect(() => {
+        const verify = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}/users/verify`, {
+                    withCredentials: true,
+                });
+                console.log(response.data.data.user); // Use response.data to access the data
+            } catch (error) {
+                console.error("Error verifying user:", error); // Log the error
+            }
+        };
 
+        verify(); // Call verify on component mount
+    }, []);
     return (
         <div className="font-custom">
             <Router>
@@ -67,8 +89,26 @@ function App() {
                             path="/tours/:category/:singletour"
                             element={<SingleTour />}
                         />
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/favourites" element={<Favourites />} />
+                        <Route
+                            path="/cart"
+                            element={
+                                user?.email ? (
+                                    <Cart />
+                                ) : (
+                                    <Navigate to="/signin" />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/favourites"
+                            element={
+                                user?.email ? (
+                                    <Favourites />
+                                ) : (
+                                    <Navigate to="/signin" />
+                                )
+                            }
+                        />
                         <Route path="/Faq" element={<Faq />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/hotel" element={<Hotel />} />
@@ -81,12 +121,36 @@ function App() {
                             path="/transportation"
                             element={<Transportation />}
                         />
-                        <Route path="/admin-cart" element={<AdminCart />} />
+                        <Route
+                            path="/admin-cart"
+                            element={
+                                user && user.role === "admin" ? (
+                                    <AdminCart />
+                                ) : (
+                                    <Navigate to="/" />
+                                )
+                            }
+                        />
                         <Route
                             path="/admin-favourites"
-                            element={<AdminFavourite />}
+                            element={
+                                user && user.role === "admin" ? (
+                                    <AdminFavourite />
+                                ) : (
+                                    <Navigate to="/" />
+                                )
+                            }
                         />
-                        <Route path="/admin" element={<AdminLayout />}>
+                        <Route
+                            path="/admin"
+                            element={
+                                user && user.role === "admin" ? (
+                                    <AdminLayout />
+                                ) : (
+                                    <Navigate to="/" />
+                                )
+                            }
+                        >
                             <Route path="/admin" element={<AdminDashboard />} />
                             <Route path="tickets" element={<Tickets />} />
                             <Route path="categorys" element={<Categorys />} />
