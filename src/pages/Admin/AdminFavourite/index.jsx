@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "../../../components/Banner";
 import { motion } from "framer-motion";
 import contactImg from "../../../assets/contact.jpg";
@@ -6,68 +6,91 @@ import DownloadModal from "./DowloadModal";
 
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
+import axios from "axios";
 const AdminFavourite = () => {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const data = [
-    {
-      tourDetails: "Amazing Beach Tour",
-      category: "Beach",
-      user: "John Doe",
-      userContact: "john@gmail.com",
-    },
-    {
-      tourDetails: "Historical City Tour",
-      category: "City",
-      user: "Jane Smith",
-      userContact: "jane@gmail.com",
-    },
-    {
-      tourDetails: "Doha Tour",
-      category: "Mall",
-      user: "Jane Smith",
-      userContact: "b@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-  ];
+  // const data = [
+  //   {
+  //     tourDetails: "Amazing Beach Tour",
+  //     category: "Beach",
+  //     user: "John Doe",
+  //     userContact: "john@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Historical City Tour",
+  //     category: "City",
+  //     user: "Jane Smith",
+  //     userContact: "jane@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Doha Tour",
+  //     category: "Mall",
+  //     user: "Jane Smith",
+  //     userContact: "b@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Art Area",
+  //     category: "Art",
+  //     user: "Jane Smith",
+  //     userContact: "a@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Art Area",
+  //     category: "Art",
+  //     user: "Jane Smith",
+  //     userContact: "a@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Art Area",
+  //     category: "Art",
+  //     user: "Jane Smith",
+  //     userContact: "a@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Art Area",
+  //     category: "Art",
+  //     user: "Jane Smith",
+  //     userContact: "a@gmail.com",
+  //   },
+  //   {
+  //     tourDetails: "Art Area",
+  //     category: "Art",
+  //     user: "Jane Smith",
+  //     userContact: "a@gmail.com",
+  //   },
+  // ];
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const favouriteResponse = await axios.get(
+          `${BASE_URL}/admin/favourite`
+        );
+        console.log("Favourite Data:", favouriteResponse.data);
+        setData(favouriteResponse.data.data.favourites || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  console.log("data", data);
 
   const filteredData = data.filter(
     (item) =>
-      item.tourDetails.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.userContact.toLowerCase().includes(searchQuery.toLowerCase()),
+      item.tourName?.en?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.categoryName?.en
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      item.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.userEmail?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -94,9 +117,13 @@ const AdminFavourite = () => {
       doc.text("Sample Data", 10, 10);
       mockBookings.forEach((item, index) => {
         doc.text(
-          `${index + 1}. ${item.userName}, ${item.email}, ${item.ticketCount}, ${item.price}, ${item.title}, ${item.description}, ${item.tourPlaces}`,
+          `${index + 1}. ${item.userName}, ${item.email}, ${
+            item.ticketCount
+          }, ${item.price}, ${item.title}, ${item.description}, ${
+            item.tourPlaces
+          }`,
           10,
-          20 + index * 10,
+          20 + index * 10
         );
       });
       doc.save("TicketSheet.pdf");
@@ -198,16 +225,16 @@ const AdminFavourite = () => {
                     {currentItems.map((item, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 whitespace-nowrap text-md font-medium text-gray-900">
-                          {item.tourDetails}
+                          {item.tourName?.en}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
-                          {item.category}
+                          {item.categoryName?.en}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
-                          {item.user}
+                          {item.username}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
-                          {item.userContact}
+                          {item.userEmail}
                         </td>
                       </tr>
                     ))}

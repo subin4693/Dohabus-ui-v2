@@ -1,41 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "../../../components/Banner";
 import { motion } from "framer-motion";
 import contactImg from "../../../assets/contact.jpg";
 import DownloadModal from "./DowloadModal";
-
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
+import axios from "axios";
+
 const AdminCart = () => {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [carts, setCarts] = useState([]);
+  
   const mockBookings = [
-    {
-      userName: "John Doeoooo",
-      email: "john.doe@example.com",
-      ticketCount: 2,
-      price: 100,
-      planImage:
-        "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
-      title: "Amazing Beach Tour",
-      description:
-        "Enjoy a relaxing day at some of the most beautiful beaches.",
-      tourPlaces: ["Beach 1", "Beach 2", "Beach 3"],
-    },
-    {
-      userName: "Jane Smith",
-      email: "jane.smith@example.com",
-      ticketCount: 1,
-      price: 50,
-      planImage:
-        "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
-      title: "Historical City Tour",
-      description: "Explore the rich history and heritage of the city.",
-      tourPlaces: ["City Center", "Historical Museum", "Old Town"],
-    },
+    // Mock data
   ];
+
   const openPopup = () => {
     setIsModalOpen(true);
   };
@@ -50,12 +33,15 @@ const AdminCart = () => {
       console.log("Download as PDF");
       const doc = new jsPDF();
       doc.text("Sample Data", 10, 10);
-      doc.text("Sample Data", 10, 10);
       mockBookings.forEach((item, index) => {
         doc.text(
-          `${index + 1}. ${item.userName}, ${item.email}, ${item.ticketCount}, ${item.price}, ${item.title}, ${item.description}, ${item.tourPlaces}`,
+          `${index + 1}. ${item.userName}, ${item.email}, ${
+            item.ticketCount
+          }, ${item.price}, ${item.title}, ${item.description}, ${
+            item.tourPlaces
+          }`,
           10,
-          20 + index * 10,
+          20 + index * 10
         );
       });
       doc.save("TicketSheet.pdf");
@@ -67,69 +53,35 @@ const AdminCart = () => {
       XLSX.writeFile(workbook, "TicketSheet.xlsx");
     }
   };
-  const data = [
-    {
-      tourDetails: "Amazing Beach Tour",
-      category: "Beach",
-      user: "John Doe",
-      userContact: "john@gmail.com",
-    },
-    {
-      tourDetails: "Historical City Tour",
-      category: "City",
-      user: "Jane Smith",
-      userContact: "jane@gmail.com",
-    },
-    {
-      tourDetails: "Doha Tour",
-      category: "Mall",
-      user: "Jane Smith",
-      userContact: "b@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-    {
-      tourDetails: "Art Area",
-      category: "Art",
-      user: "Jane Smith",
-      userContact: "a@gmail.com",
-    },
-  ];
 
-  const filteredData = data.filter(
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const cartResponse = await axios.get(`${BASE_URL}/admin/cart/`);
+        console.log("Cart Data:", cartResponse.data);
+        setCarts(cartResponse.data.data.carts || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  console.log(carts);
+
+  const filteredCarts = carts.filter(
     (item) =>
-      item.tourDetails.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.userContact.toLowerCase().includes(searchQuery.toLowerCase()),
+      item.tourName?.en?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.categoryName?.en?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.userEmail?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const currentItems = filteredCarts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredCarts.length / itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -144,9 +96,6 @@ const AdminCart = () => {
       />
 
       <div className="p-5">
-        {/* <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-4xl font-bold text-center">
-          Admin Cart Details
-        </h1>*/}
         <motion.div
           whileInView={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 100 }}
@@ -196,16 +145,16 @@ const AdminCart = () => {
                     {currentItems.map((item, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 whitespace-nowrap text-md font-medium text-gray-900">
-                          {item.tourDetails}
+                          {item.tourName?.en || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
-                          {item.category}
+                          {item.categoryName?.en || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
-                          {item.user}
+                          {item.username || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
-                          {item.userContact}
+                          {item.userEmail || "N/A"}
                         </td>
                       </tr>
                     ))}
