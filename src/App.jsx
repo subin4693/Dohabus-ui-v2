@@ -40,6 +40,10 @@ import Gallery from "./pages/Admin/Gallery";
 import Banner from "./pages/Admin/Banner";
 import Locations from "./pages/Admin/Locations";
 import Offers from "./pages/Admin/Offers";
+import HotelBookings from "./pages/Admin/HotelBookings";
+
+import AdminTransportation from "./pages/Admin/Transportation";
+
 import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "./features/language/languageSlice";
@@ -160,12 +164,19 @@ function App() {
                             <Route path="tours" element={<ToursAdmin />} />
                             <Route path="users" element={<Users />} />
                             <Route path="hotels" element={<Hotels />} />
-
+                            <Route
+                                path="transportations"
+                                element={<AdminTransportation />}
+                            />
                             <Route path="aboutus" element={<AdminAboutus />} />
                             <Route path="gallery" element={<Gallery />} />
                             <Route path="banner" element={<Banner />} />
                             <Route path="locations" element={<Locations />} />
                             <Route path="offers" element={<Offers />} />
+                            <Route
+                                path="hotel-bookings"
+                                element={<HotelBookings />}
+                            />
                         </Route>
                     </Route>
                 </Routes>

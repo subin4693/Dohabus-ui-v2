@@ -43,6 +43,7 @@ const Hotel = () => {
                                 title={hotel.title[lang]} // Use language-specific title
                                 desc={hotel.description[lang]} // Use language-specific description
                                 key={hotel._id}
+                                id={hotel._id}
                             />
                         ))}
                 </div>

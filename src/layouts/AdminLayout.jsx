@@ -40,7 +40,14 @@ const AdminLayout = () => {
 
                         { text: "hotel", link: "/admin/hotels" },
                         { text: "locations us", link: "/admin/locations" },
-                        // { text: "offer", link: "/admin/offers" },
+                        {
+                            text: "transportations",
+                            link: "/admin/transportations",
+                        },
+                        // {
+                        //     text: "hotel bookings",
+                        //     link: "/admin/hotel-bookings",
+                        // },
                     ].map((menu) => (
                         <Link
                             to={menu.link}
