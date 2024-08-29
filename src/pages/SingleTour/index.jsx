@@ -84,16 +84,36 @@ const SingleTour = () => {
     const handleSession = (sess) => {
         setSession(sess);
     };
+    const formatDateForBackend = (date) => {
+        // Convert to ISO string without time
+        const localDate = new Date(date);
+        localDate.setHours(0, 0, 0, 0); // Set time to midnight in local time
+
+        // Convert to UTC date
+        const utcDate = new Date(
+            Date.UTC(
+                localDate.getFullYear(),
+                localDate.getMonth(),
+                localDate.getDate(),
+            ),
+        );
+
+        return utcDate.toISOString();
+    };
 
     const handleBookNow = async () => {
-        console.log(user);
-        if (!user || !user.email) navigate("/signin");
-
+        console.log(selectedDate);
+        // return;
+        if (!user || !user.email) {
+            navigate("/signin");
+            return;
+        }
+        const isoDate = formatDateForBackend(selectedDate);
         try {
             const res = await axios.post(
                 BASE_URL + "/tickets",
                 {
-                    date: selectedDate,
+                    date: isoDate,
                     adultQuantity: adultCount,
                     childQuantity: childCount,
                     session: session,
@@ -110,7 +130,7 @@ const SingleTour = () => {
         // console.log(data._id);
         // console.log({ selectedDate, adultCount, childCount, session });
     };
-
+    const minDate = new Date();
     useEffect(() => {
         const getData = async () => {
             try {
@@ -245,7 +265,7 @@ const SingleTour = () => {
 
                             <div className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg ">
                                 <ul>
-                                    {data.itinerary &&
+                                    {data?.itinerary &&
                                         data.itinerary.map((item, index) => {
                                             if (
                                                 index ==
@@ -296,6 +316,7 @@ const SingleTour = () => {
                                 inline
                                 dateFormat="MMMM d, yyyy"
                                 className="w-full"
+                                minDate={minDate}
                             />
                         </div>
                         <div>
@@ -420,7 +441,12 @@ const SingleTour = () => {
                 </div>
             </div>
 
-            <Slider mediaUrls={data?.galleryimages && data?.galleryimages} />
+            <Slider
+                mediaUrls={data && data.galleryimages ? data.galleryimages : []}
+                mediaVideoUrls={
+                    data && data.galleryvideos ? data.galleryvideos : []
+                }
+            />
             <div className="flex justify-center items-center px-2  mb-10 ">
                 <div className="flex    flex-wrap  w-[80vw]">
                     <div className="w-full   space-y-10    flex flex-col justify-center ">

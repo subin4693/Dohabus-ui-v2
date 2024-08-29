@@ -1,54 +1,123 @@
 import React from "react";
-import { AiFillHeart } from "react-icons/ai";
-import { BiCart } from "react-icons/bi";
+// import { AiFillHeart } from "react-icons/ai";
+// import { BiCart } from "react-icons/bi";
+import {
+    FaHeart as HeartIcon,
+    FaShoppingCart as CartIcon,
+} from "react-icons/fa";
+import { FaRegClock as Watch } from "react-icons/fa";
+import { FaMapMarkerAlt as LocationPin } from "react-icons/fa";
+
+import { FaDollarSign as Dollar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const TourCard = ({ image, title, lang }) => {
-    const buttonTexts = {
-        en: {
-            removeFromCart: "Remove from Cart",
-            bookNow: "Book now",
-            startingFrom: "Starting from QAR 180",
-        },
-        ar: {
-            removeFromCart: "إزالة من السلة",
-            bookNow: "احجز الآن",
-            startingFrom: "يبدأ من 180 ريال قطري",
-        },
-    };
+const TourCard = ({
+    image,
+    title,
+    link,
+    catId,
+    addToCart,
+    addToFav,
+    removeFromCart,
+    removeFromFav,
+    isInCart,
+    isInFavorites,
+    duration,
+    favId,
+    cartId,
+    itinerary,
+    childPrice,
+}) => {
+    const lang = useSelector((state) => state.language.lang);
+    console.log({ favId, cartId });
     return (
         <div
-            className="h-[500px] bg-cover bg-center relative overflow-hidden group"
+            dir={lang === "ar" ? "rtl" : "ltr"}
+            className="h-[700px] w-[550px] bg-cover bg-center relative overflow-hidden group rounded-2xl mb-5"
             style={{ backgroundImage: `url(${image})` }}
         >
-            <h3 className="absolute bottom-10 left-10 font-bold text-white text-2xl">
+            <h3 className="mt-[100px] font-semibold text-white text-center text-3xl">
                 {title}
             </h3>
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-5 bg-custom-yellow-light group-hover:translate-y-0 translate-y-full duration-500">
-                <div className="absolute top-7 left-7 right-7 flex justify-end gap-10 items-center">
-                    <div className="group/edit flex items-center bg-white rounded-full p-2 hover:bg-dark duration-300">
-                        <AiFillHeart className="text-4xl text-danger group-hover/edit:text-white" />
-                        <button className="max-w-0 opacity-0 whitespace-nowrap group-hover/edit:text-white group-hover/edit:max-w-[240px] group-hover/edit:opacity-100 group-hover/edit:px-2 transition-all duration-300">
-                            {lang === "en"
-                                ? "Remove from Favourite"
-                                : "إزالة من المفضلة"}
+            <div className="flex flex-wrap justify-center text-white items-center p-10 absolute bg-yellow-300 bg-opacity-100 inset-0 translate-y-full group-hover:bg-opacity-90 group-hover:translate-y-0 duration-500">
+                <h3 className=" mt-5 font-semibold  text-black  text-3xl">
+                    {title}
+                </h3>
+                <div className="mt-5 w-full flex flex-col items-center ">
+                    <div>
+                        <div className="flex items-center gap-5 ">
+                            <Watch color="black" size={50} />{" "}
+                            <div>
+                                <h2 className="text-3xl text-black font-bold">
+                                    Tour Durations
+                                </h2>
+
+                                <small className="text-2xl text-black font-semibold">
+                                    {duration[lang]}
+                                </small>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-5 mt-5 justify-c enter">
+                            <LocationPin color="black" size={50} />{" "}
+                            <div>
+                                <h2 className="text-3xl text-black font-bold">
+                                    Starting Point
+                                </h2>
+
+                                <small className="text-2xl text-black font-semibold">
+                                    {itinerary && itinerary[lang]}
+                                </small>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-5 mt-5 justi fy-center">
+                            <Dollar color="black" size={50} />{" "}
+                            <div>
+                                <h2 className="text-3xl text-black font-bold">
+                                    Price Starts From
+                                </h2>
+
+                                <small className="text-2xl text-black font-semibold">
+                                    QAR {childPrice}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-row items-center mt-20 justify-center gap-[8%]">
+                        <button
+                            onClick={() => {
+                                return removeFromFav(favId);
+                            }}
+                            className="p-5 bg-white rounded-full cursor-pointer"
+                        >
+                            <HeartIcon
+                                style={{
+                                    color: "red",
+                                    fontSize: "2rem",
+                                }}
+                            />
+                        </button>
+                        <div className="">
+                            <Link to={link}>
+                                <button className="p-5 text-black text-2xl font-semibold rounded-full bg-white w-[180px]">
+                                    View Tour
+                                </button>
+                            </Link>
+                        </div>
+                        <button
+                        // onClick={() => {
+                        //     return removeFromCart(cartId);
+                        // }}
+                        // className="p-5 bg-white rounded-full cursor-pointer"
+                        >
+                            {/* <CartIcon
+                                style={{
+                                    color: "cyan",
+                                    fontSize: "2rem",
+                                }}
+                            />*/}
                         </button>
                     </div>
-                </div>
-
-                <div className="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4 mt-4">
-                    <Link
-                        to={`#`}
-                        className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow"
-                    >
-                        {buttonTexts[lang]?.bookNow}
-                    </Link>
-                    <Link
-                        to={`#`}
-                        className="px-5 py-3 bg-dark rounded-full text-white hover:text-custom-yellow"
-                    >
-                        {buttonTexts[lang]?.startingFrom}
-                    </Link>
                 </div>
             </div>
         </div>

@@ -60,11 +60,119 @@ const SignleCategory = () => {
         },
     ];
     const lang = useSelector((state) => state.language.lang);
+
+    const addToCart = async (categoryId, planId) => {
+        try {
+            console.log(categoryId);
+            console.log(planId);
+            console.log("Adding to cart...");
+
+            const res = await axios.post(
+                `${BASE_URL}/carts`,
+                { category: categoryId, tour: planId },
+                { withCredentials: true },
+            );
+
+            const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
+
+            // Update the tours state after successful request
+            setTours((prevTours) =>
+                prevTours.map((tour) =>
+                    tour._id === planId
+                        ? {
+                              ...tour,
+                              isInCart: !tour.isInCart,
+                              cartId: cartId ? cartId : null, // Conditionally set cartId
+                          }
+                        : tour,
+                ),
+            );
+            alert("Added to Cart");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const addToFav = async (categoryId, planId) => {
+        try {
+            console.log(categoryId);
+            console.log(planId);
+            console.log("Adding to favorites...");
+
+            const res = await axios.post(
+                `${BASE_URL}/favourites`,
+                { category: categoryId, tour: planId },
+                { withCredentials: true },
+            );
+
+            const favId = res.data.data.favourite?._id; // Safely access favourite._id
+
+            // Update the tours state after successful request
+            setTours((prevTours) =>
+                prevTours.map((tour) =>
+                    tour._id === planId
+                        ? {
+                              ...tour,
+                              isInFavorites: !tour.isInFavorites,
+                              favId: favId ? favId : null, // Conditionally set favId
+                          }
+                        : tour,
+                ),
+            );
+            alert("Added to favourite");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const removeFromCart = async (cartId) => {
+        try {
+            const res = await axios.delete(`${BASE_URL}/carts/${cartId}`, {
+                withCredentials: true,
+            });
+            console.log(res);
+
+            // Update the tours state after successful removal
+            setTours((prevTours) =>
+                prevTours.map((tour) =>
+                    tour.cartId === cartId
+                        ? { ...tour, isInCart: false, cartId: null }
+                        : tour,
+                ),
+            );
+            alert("Removed from Cart");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const removeFromFav = async (favId) => {
+        try {
+            const res = await axios.delete(`${BASE_URL}/favourites/${favId}`, {
+                withCredentials: true,
+            });
+            console.log(res);
+
+            // Update the tours state after successful removal
+            setTours((prevTours) =>
+                prevTours.map((tour) =>
+                    tour.favId === favId
+                        ? { ...tour, isInFavorites: false, favId: null }
+                        : tour,
+                ),
+            );
+            alert("Removed from favourite");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         const getData = async () => {
             try {
                 const data = await axios.get(
                     BASE_URL + "/plans/category/" + category,
+                    {
+                        withCredentials: true, // This option ensures cookies or other credentials are sent with the request
+                    },
                 );
                 console.log(data.data.data.plans);
                 // setAlbum(data?.data?.images);
@@ -91,15 +199,40 @@ const SignleCategory = () => {
             </h1>
 
             <div className="flex flex-wrap gap-5 justify-center items-center mt-5">
-                {tours.map(({ coverImage, title, _id }) => (
-                    <TourCard
-                        lang={lang}
-                        image={coverImage}
-                        title={title[lang]}
-                        link={_id}
-                        key={_id}
-                    />
-                ))}
+                {tours.map(
+                    ({
+                        isInCart,
+                        isInFavorites,
+                        coverImage,
+                        duration,
+                        title,
+                        _id,
+                        favId,
+                        cartId,
+                        itinerary,
+                        childPrice,
+                    }) => (
+                        <TourCard
+                            lang={lang}
+                            image={coverImage}
+                            title={title[lang]}
+                            isInCart={isInCart}
+                            isInFavorites={isInFavorites}
+                            link={_id}
+                            catId={bannerCategory._id}
+                            key={_id}
+                            addToCart={addToCart}
+                            addToFav={addToFav}
+                            removeFromCart={removeFromCart}
+                            removeFromFav={removeFromFav}
+                            duration={duration}
+                            favId={favId}
+                            cartId={cartId}
+                            itinerary={itinerary && itinerary[0]}
+                            childPrice={childPrice ? childPrice : 0}
+                        />
+                    ),
+                )}
             </div>
         </div>
     );

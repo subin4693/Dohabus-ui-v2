@@ -16,7 +16,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   const { user } = useSelector((state) => state.user);
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [categorys, setCategorys] = useState([]);
-
+  console.log(user);
   const tours = [
     {
       text: "City Tours",
@@ -357,7 +357,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
             {/* <Link to="/faq">F&Q</Link> */}
             {user && user?.role === "admin" && <Link to="/admin">Admin</Link>}
-            {user && !user._id ? (
+            {!user || !user._id ? (
               <Link to="/signin">Login</Link>
             ) : (
               <Link onClick={handleSignOut}>Logout</Link>
