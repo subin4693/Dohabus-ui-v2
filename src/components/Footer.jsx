@@ -34,6 +34,7 @@ import {
   FaFacebook,
   FaTripadvisor,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -46,7 +47,7 @@ const Footer = () => {
 
   const handlePreviousImage = () => {
     setSelectedImage(
-      (prevIndex) => (prevIndex - 1 + album.length) % album.length,
+      (prevIndex) => (prevIndex - 1 + album.length) % album.length
     );
   };
   useEffect(() => {
@@ -180,23 +181,47 @@ const Footer = () => {
             </div>
             <div className="flex gap-1 mt-10">
               <p className="text-white bg-black p-3 rounded-full">
-                <FaWhatsapp size={30} />
+                <Link to={"http://wa.me/97433246556"}>
+                  <FaWhatsapp size={30} />
+                </Link>
               </p>
               <p className="text-white bg-black p-3 rounded-full">
-                <FaTripadvisor size={30} />
+                <Link
+                  to={
+                    "https://www.tripadvisor.com/Attraction_Review-g294009-d6215547-Reviews-Doha_Bus-Doha.html"
+                  }
+                >
+                  <FaTripadvisor size={30} />
+                </Link>
               </p>
               <p className="text-white bg-black p-3 rounded-full">
-                <FaFacebook size={30} />
+                <Link to={"https://www.facebook.com/DohaBus/"}>
+                  <FaFacebook size={30} />
+                </Link>
               </p>
               <p className="text-white bg-black p-3 rounded-full">
-                <FaLinkedin size={30} />
+                <Link
+                  to={
+                    "https://www.linkedin.com/company/100753681/admin/dashboard/"
+                  }
+                >
+                  <FaLinkedin size={30} />
+                </Link>
               </p>
               <p className="text-white bg-black p-3 rounded-full">
-                <FaInstagram size={30} />
+                <Link to={"https://www.instagram.com/doha_bus/?hl=en"}>
+                  <FaInstagram size={30} />
+                </Link>
               </p>
 
               <p className="text-white bg-black p-3 rounded-full">
-                <FaYoutube size={30} />
+                <Link
+                  to={
+                    "https://www.youtube.com/channel/UCAiEl0u3qaOIHL7zlTP8IgQ"
+                  }
+                >
+                  <FaYoutube size={30} />
+                </Link>
               </p>
             </div>
           </div>
