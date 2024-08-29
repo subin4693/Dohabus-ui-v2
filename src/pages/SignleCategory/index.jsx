@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Banner from "../../components/Banner";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import aimaj from "../../assets/aimaaj-tourpagej.jpg";
 import desert from "../../assets/deset-tourpage.jpg";
 import common from "../../assets/common-tourpage.jpg";
@@ -17,6 +17,7 @@ const SignleCategory = () => {
     const [tours, setTours] = useState([]);
     const [bannerCategory, setBannerCategory] = useState(null);
     const { category } = useParams();
+    const navigate = useNavigate();
     const data = [
         {
             _id: 1,
@@ -60,8 +61,12 @@ const SignleCategory = () => {
         },
     ];
     const lang = useSelector((state) => state.language.lang);
-
+    const { user } = useSelector((state) => state.user);
     const addToCart = async (categoryId, planId) => {
+        if (!user || !user.email) {
+            navigate("/signin");
+            return;
+        }
         try {
             console.log(categoryId);
             console.log(planId);
@@ -94,6 +99,10 @@ const SignleCategory = () => {
     };
 
     const addToFav = async (categoryId, planId) => {
+        if (!user || !user.email) {
+            navigate("/signin");
+            return;
+        }
         try {
             console.log(categoryId);
             console.log(planId);
@@ -125,6 +134,10 @@ const SignleCategory = () => {
         }
     };
     const removeFromCart = async (cartId) => {
+        if (!user || !user.email) {
+            navigate("/signin");
+            return;
+        }
         try {
             const res = await axios.delete(`${BASE_URL}/carts/${cartId}`, {
                 withCredentials: true,
@@ -145,6 +158,10 @@ const SignleCategory = () => {
         }
     };
     const removeFromFav = async (favId) => {
+        if (!user || !user.email) {
+            navigate("/signin");
+            return;
+        }
         try {
             const res = await axios.delete(`${BASE_URL}/favourites/${favId}`, {
                 withCredentials: true,
@@ -176,7 +193,7 @@ const SignleCategory = () => {
                 );
                 console.log(data.data.data.plans);
                 // setAlbum(data?.data?.images);
-                console.log(data.data.data.category);
+                console.log("category", data.data.data.category);
                 setTours(data.data.data.plans);
                 setBannerCategory(data.data.data.category);
             } catch (error) {

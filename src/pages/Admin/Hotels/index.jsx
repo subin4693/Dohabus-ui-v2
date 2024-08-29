@@ -1,89 +1,129 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
+import axios from "axios";
+import { useSelector } from "react-redux";
 import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
 
 const CreateCategory = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [image, setImage] = useState(null);
+    const lang = useSelector((state) => state.language.lang);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [title, setTitle] = useState({ en: "", an: "" });
-    const [description, setDescription] = useState({ en: "", an: "" });
-
-    const cardData = [
-        {
-            id: 1,
-            title: "Beach Destinations",
-            description: "Explore the best beaches around the world",
-            imageUrl:
-                "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
-        },
-        {
-            id: 2,
-            title: "Beach Destinations",
-            description: "Explore the best beaches around the world",
-            imageUrl:
-                "https://c.regencyholidays.com/blog/blog/content/images/2021/08/Places-To-Visit-In-Qatar.webp",
-        },
-        {
-            id: 3,
-            title: "Beach Destinations",
-            description: "Explore the best beaches around the world",
-            imageUrl:
-                "https://c.regencyholidays.com/blog/blog/content/images/2021/08/Banana-Islands.webp",
-        },
-        {
-            id: 4,
-            title: "Beach Destinations",
-            description: "Explore the best beaches around the world",
-            imageUrl:
-                "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
-        },
-    ];
+    const [title, setTitle] = useState({ en: "", ar: "" });
+    const [description, setDescription] = useState({ en: "", ar: "" });
+    const [file, setFile] = useState(null);
+    const [categories, setCategories] = useState([]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setFile(file); // Set the file state to trigger Firebase upload
         }
     };
 
-    const handleCreate = () => {
-        // Handle create or update logic here
-        console.log("Creating/Updating category with data:", {
-            title,
-            description,
-            image,
-        });
-        setIsOpen(false);
-        // Reset form fields
-        setTitle({ en: "", an: "" });
-        setDescription({ en: "", an: "" });
-        setImage(null);
-        setSelectedData(null);
+    const handleCreate = async (isEdit) => {
+        try {
+            let updatedCategory;
+            if (isEdit) {
+                // Edit an existing category
+                const res = await axios.put(
+                    `${BASE_URL}/hotels/${selectedData._id}`,
+                    {
+                        title,
+                        description,
+                        coverImage: image,
+                    },
+                );
+                console.log(res.data.data);
+
+                updatedCategory = res.data.data.hotel;
+
+                console.log(updatedCategory);
+
+                // Update the category in the state
+                setCategories((prevCategories) =>
+                    prevCategories.map((category) =>
+                        category._id === updatedCategory._id
+                            ? updatedCategory
+                            : category,
+                    ),
+                );
+            } else {
+                // Create a new category
+                const res = await axios.post(`${BASE_URL}/hotels`, {
+                    title,
+                    description,
+                    coverImage: image,
+                });
+                updatedCategory = res.data.data.category;
+                console.log(updatedCategory);
+
+                // Add the new category to the end of the state array
+                setCategories((prevCategories) => [
+                    ...prevCategories,
+                    updatedCategory,
+                ]);
+            }
+
+            // Log the creation/update
+            console.log("Creating/Updating category with data:", {
+                title,
+                description,
+                image,
+            });
+
+            // Close the modal or form
+            setIsOpen(false);
+
+            // Reset form fields
+            setTitle({ en: "", ar: "" });
+            setDescription({ en: "", ar: "" });
+            setImage(null);
+            setSelectedData(null);
+        } catch (error) {
+            console.error(error);
+            alert("Some error occurred");
+        }
     };
 
     const handleDialog = (data = null) => {
         if (data) {
             // Edit mode
+            console.log(data);
             setSelectedData(data);
             setTitle(data.title);
             setDescription(data.description);
-            setImage(data.imageUrl);
+            setImage(data.coverImage);
         } else {
             // Create mode
             setSelectedData(null);
-            setTitle({ en: "", an: "" });
-            setDescription({ en: "", an: "" });
+            setTitle({ en: "", ar: "" });
+            setDescription({ en: "", ar: "" });
             setImage(null);
         }
         setIsOpen((prev) => !prev);
     };
+    const { progress, error, downloadURL } = useFirebaseUpload(file);
+    useEffect(() => {
+        if (downloadURL) {
+            setImage(downloadURL); // Update formData with the Firebase download URL
+        }
+    }, [downloadURL]);
 
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const res = await axios.get(BASE_URL + "/hotels");
+                console.log(res.data.data.hotels);
+                setCategories(res.data.data.hotels);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getData();
+    }, []);
     return (
         <div>
             {isOpen && (
@@ -97,6 +137,8 @@ const CreateCategory = () => {
                                         <input
                                             type="file"
                                             className="hidden"
+                                            id="coverImage"
+                                            accept="image/*"
                                             onChange={handleImageChange}
                                         />
                                     </>
@@ -106,6 +148,15 @@ const CreateCategory = () => {
                                         alt="Selected"
                                         className="w-full h-full object-cover rounded-md"
                                     />
+                                )}{" "}
+                                {progress > 0 ||
+                                    (progress !== 100 && (
+                                        <p>Upload progress: {progress}%</p>
+                                    ))}
+                                {error && (
+                                    <p className="text-red-500">
+                                        Error: {error.message}
+                                    </p>
                                 )}
                             </label>
                         </div>
@@ -128,11 +179,11 @@ const CreateCategory = () => {
                             <input
                                 dir="rtl"
                                 type="text"
-                                value={title.an}
+                                value={title.ar}
                                 onChange={(e) =>
                                     setTitle((prev) => ({
                                         ...prev,
-                                        an: e.target.value,
+                                        ar: e.target.value,
                                     }))
                                 }
                                 placeholder="العنوان (بالعربية)" // Arabic for 'Title'
@@ -155,11 +206,11 @@ const CreateCategory = () => {
                             {/* Description in Arabic */}
                             <textarea
                                 dir="rtl"
-                                value={description.an}
+                                value={description.ar}
                                 onChange={(e) =>
                                     setDescription((prev) => ({
                                         ...prev,
-                                        an: e.target.value,
+                                        ar: e.target.value,
                                     }))
                                 }
                                 placeholder="الوصف (بالعربية)" // Arabic for 'Description'
@@ -173,12 +224,22 @@ const CreateCategory = () => {
                                 >
                                     Close
                                 </button>
-                                <button
-                                    className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
-                                    onClick={handleCreate}
-                                >
-                                    {selectedData ? "Update" : "Create"}
-                                </button>
+
+                                {selectedData ? (
+                                    <button
+                                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                                        onClick={() => handleCreate(true)}
+                                    >
+                                        Update
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                                        onClick={() => handleCreate(false)}
+                                    >
+                                        Create
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -187,9 +248,9 @@ const CreateCategory = () => {
 
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-subtitle font-bold">Tour Category</h1>
+                    <h1 className="text-subtitle font-bold">All Hotels</h1>
                     <p className="text-small text-red">
-                        Manage your tour categories
+                        Manage your tour Hotels
                     </p>
                 </div>
                 <div>
@@ -197,17 +258,22 @@ const CreateCategory = () => {
                         className="px-5 bg-custom-yellow py-2 rounded-md duration-300 hover:bg-black hover:text-white"
                         onClick={() => handleDialog()}
                     >
-                        Create Hotels
+                        Create Hotel
                     </button>
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-10 flex-wrap">
-                {cardData.map((card) => (
+                {console.log(categories)}
+                {categories.map((card) => (
                     <Card
-                        key={card.id}
-                        title={card.title}
-                        description={card.description}
-                        imageUrl={card.imageUrl}
+                        key={card._id}
+                        title={card.title ? card.title[lang] : "Default Title"}
+                        description={
+                            card.description
+                                ? card.description[lang]
+                                : "Default Description"
+                        }
+                        imageUrl={card.coverImage || "default-image-url"} // Replace with a default image URL
                         onClick={() => handleDialog(card)}
                     />
                 ))}

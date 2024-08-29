@@ -41,7 +41,7 @@ const SingleTour = () => {
     const [session, setSession] = useState(null);
     const { user } = useSelector((state) => state.user);
     const { singletour } = useParams();
-    // Function to check if a date is Wednesday or Sunday
+
     const isAvailableDay = (date) => {
         const day = date.getDay(); // Get the day index (0 for Sunday, 1 for Monday, etc.)
         return data?.availableDays?.includes(day); // Check if the day index is in the availableDays array
@@ -102,8 +102,6 @@ const SingleTour = () => {
     };
 
     const handleBookNow = async () => {
-        console.log(selectedDate);
-        // return;
         if (!user || !user.email) {
             navigate("/signin");
             return;
