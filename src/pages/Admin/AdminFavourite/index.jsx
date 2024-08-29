@@ -110,56 +110,99 @@ const AdminFavourite = () => {
 
   const handleDownload = (format) => {
     setIsModalOpen(false);
+
     if (format === "pdf") {
-      console.log("Download as PDF");
       const doc = new jsPDF();
-      doc.text("Sample Data", 10, 10);
-      doc.text("Sample Data", 10, 10);
-      mockBookings.forEach((item, index) => {
+
+      doc.setFontSize(18);
+      doc.text("Favourite Tours Data", 14, 22);
+
+      doc.setLineWidth(0.5);
+      doc.line(14, 24, 196, 24);
+
+      doc.setFontSize(12);
+      const startY = 30;
+      let currentY = startY;
+
+      const headers = ["Tour Name", "Category", "User Name", "User Email"];
+      const colWidths = [50, 50, 40, 50];
+      headers.forEach((header, index) => {
         doc.text(
-          `${index + 1}. ${item.userName}, ${item.email}, ${
-            item.ticketCount
-          }, ${item.price}, ${item.title}, ${item.description}, ${
-            item.tourPlaces
-          }`,
-          10,
-          20 + index * 10
+          header,
+          14 + colWidths.slice(0, index).reduce((a, b) => a + b, 0),
+          currentY
         );
       });
-      doc.save("TicketSheet.pdf");
+
+      currentY += 8;
+
+      data.forEach((item) => {
+        doc.text(item.tourName?.en || "N/A", 14, currentY);
+        doc.text(item.categoryName?.en || "N/A", 64, currentY);
+        doc.text(item.username || "N/A", 114, currentY);
+        doc.text(item.userEmail || "N/A", 154, currentY);
+
+        currentY += 8;
+
+        if (currentY > 280) {
+          doc.addPage();
+          currentY = startY;
+        }
+      });
+
+      doc.save("FavouriteToursData.pdf");
     } else if (format === "excel") {
-      console.log("Download as Excel");
-      const worksheet = XLSX.utils.json_to_sheet(mockBookings);
+      const formattedData = data.map((item) => ({
+        "Tour Name": item.tourName?.en || "N/A",
+        Category: item.categoryName?.en || "N/A",
+        "User Name": item.username || "N/A",
+        "User Email": item.userEmail || "N/A",
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+      XLSX.utils.sheet_add_aoa(
+        worksheet,
+        [["Tour Name", "Category", "User Name", "User Email"]],
+        {
+          origin: "A1",
+        }
+      );
+
+      const colWidths = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 25 }];
+      worksheet["!cols"] = colWidths;
+
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      XLSX.writeFile(workbook, "TicketSheet.xlsx");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Favourites");
+
+      XLSX.writeFile(workbook, "FavouriteToursData.xlsx");
     }
   };
-  const mockBookings = [
-    {
-      userName: "John Doeoooo",
-      email: "john.doe@example.com",
-      ticketCount: 2,
-      price: 100,
-      planImage:
-        "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
-      title: "Amazing Beach Tour",
-      description:
-        "Enjoy a relaxing day at some of the most beautiful beaches.",
-      tourPlaces: ["Beach 1", "Beach 2", "Beach 3"],
-    },
-    {
-      userName: "Jane Smith",
-      email: "jane.smith@example.com",
-      ticketCount: 1,
-      price: 50,
-      planImage:
-        "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
-      title: "Historical City Tour",
-      description: "Explore the rich history and heritage of the city.",
-      tourPlaces: ["City Center", "Historical Museum", "Old Town"],
-    },
-  ];
+
+  //   {
+  //     userName: "John Doeoooo",
+  //     email: "john.doe@example.com",
+  //     ticketCount: 2,
+  //     price: 100,
+  //     planImage:
+  //       "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
+  //     title: "Amazing Beach Tour",
+  //     description:
+  //       "Enjoy a relaxing day at some of the most beautiful beaches.",
+  //     tourPlaces: ["Beach 1", "Beach 2", "Beach 3"],
+  //   },
+  //   {
+  //     userName: "Jane Smith",
+  //     email: "jane.smith@example.com",
+  //     ticketCount: 1,
+  //     price: 50,
+  //     planImage:
+  //       "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
+  //     title: "Historical City Tour",
+  //     description: "Explore the rich history and heritage of the city.",
+  //     tourPlaces: ["City Center", "Historical Museum", "Old Town"],
+  //   },
+  // ];
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

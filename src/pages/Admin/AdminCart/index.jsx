@@ -14,10 +14,6 @@ const AdminCart = () => {
   const itemsPerPage = 5;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [carts, setCarts] = useState([]);
-  
-  const mockBookings = [
-    // Mock data
-  ];
 
   const openPopup = () => {
     setIsModalOpen(true);
@@ -29,28 +25,72 @@ const AdminCart = () => {
 
   const handleDownload = (format) => {
     setIsModalOpen(false);
+
+    const formattedData = carts.map((item) => ({
+      "Tour Name": item.tourName?.en || "N/A",
+      Category: item.categoryName?.en || "N/A",
+      "User Name": item.username || "N/A",
+      "User Email": item.userEmail || "N/A",
+    }));
+
     if (format === "pdf") {
-      console.log("Download as PDF");
       const doc = new jsPDF();
-      doc.text("Sample Data", 10, 10);
-      mockBookings.forEach((item, index) => {
+
+      doc.setFontSize(18);
+      doc.text("Carts Tours Data", 14, 22);
+
+      doc.setLineWidth(0.5);
+      doc.line(14, 24, 196, 24);
+
+      doc.setFontSize(12);
+      const startY = 30;
+      let currentY = startY;
+
+      const headers = ["Tour Name", "Category", "User Name", "User Email"];
+      const colWidths = [50, 50, 40, 50];
+      headers.forEach((header, index) => {
         doc.text(
-          `${index + 1}. ${item.userName}, ${item.email}, ${
-            item.ticketCount
-          }, ${item.price}, ${item.title}, ${item.description}, ${
-            item.tourPlaces
-          }`,
-          10,
-          20 + index * 10
+          header,
+          14 + colWidths.slice(0, index).reduce((a, b) => a + b, 0),
+          currentY
         );
       });
-      doc.save("TicketSheet.pdf");
+
+      currentY += 8;
+
+      formattedData.forEach((item, index) => {
+        doc.text(item["Tour Name"], 14, currentY);
+        doc.text(item.Category, 64, currentY);
+        doc.text(item["User Name"], 114, currentY);
+        doc.text(item["User Email"], 154, currentY);
+
+        currentY += 8;
+
+        if (currentY > 280) {
+          doc.addPage();
+          currentY = startY;
+        }
+      });
+
+      doc.save("CartsToursData.pdf");
     } else if (format === "excel") {
-      console.log("Download as Excel");
-      const worksheet = XLSX.utils.json_to_sheet(mockBookings);
+      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+      XLSX.utils.sheet_add_aoa(
+        worksheet,
+        [["Tour Name", "Category", "User Name", "User Email"]],
+        {
+          origin: "A1",
+        }
+      );
+
+      const colWidths = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 25 }];
+      worksheet["!cols"] = colWidths;
+
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      XLSX.writeFile(workbook, "TicketSheet.xlsx");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Favourites");
+
+      XLSX.writeFile(workbook, "FavouriteToursData.xlsx");
     }
   };
 
@@ -73,7 +113,9 @@ const AdminCart = () => {
   const filteredCarts = carts.filter(
     (item) =>
       item.tourName?.en?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.categoryName?.en?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.categoryName?.en
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       item.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.userEmail?.toLowerCase().includes(searchQuery.toLowerCase())
   );
