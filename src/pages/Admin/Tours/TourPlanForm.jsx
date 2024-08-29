@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
-
+import { toast } from "react-toastify";
 const TourPlanForm = ({ onClose }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -109,7 +109,7 @@ const TourPlanForm = ({ onClose }) => {
         setAvailableDays((prevDays) =>
             prevDays.includes(selectedDay)
                 ? prevDays.filter((day) => day !== selectedDay)
-                : [...prevDays, selectedDay],
+                : [...prevDays, selectedDay]
         );
     };
     const handleChange = (index, field, value) => {
@@ -133,7 +133,7 @@ const TourPlanForm = ({ onClose }) => {
         setSelectedSessions((prevSessions) =>
             prevSessions.includes(selectedSession)
                 ? prevSessions.filter((session) => session !== selectedSession)
-                : [...prevSessions, selectedSession],
+                : [...prevSessions, selectedSession]
         );
     };
     const handleChangefaq = (index, field, lang, value) => {
@@ -183,10 +183,29 @@ const TourPlanForm = ({ onClose }) => {
             const res = await axios.post(
                 BASE_URL + "/plans",
                 { formData },
-                { withCredentials: true },
+                { withCredentials: true }
             );
-            console.log(res);
+            toast.success("  Plan created successfully...", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
             console.log(error);
         } finally {
             // console.log("Form Data Submitted:", formData);
@@ -358,7 +377,7 @@ const TourPlanForm = ({ onClose }) => {
                                     type="button"
                                     onClick={handleRemoveFromArray(
                                         setter,
-                                        index,
+                                        index
                                     )}
                                     className="text-red-500"
                                 >
@@ -481,7 +500,7 @@ const TourPlanForm = ({ onClose }) => {
                                         "Thursday",
                                         "Friday",
                                         "Saturday",
-                                    ][day],
+                                    ][day]
                             )
                             .join(", ")}
                     </div>
@@ -497,10 +516,10 @@ const TourPlanForm = ({ onClose }) => {
                                     index === 0
                                         ? "12 AM"
                                         : index < 12
-                                          ? `${index} AM`
-                                          : index === 12
-                                            ? `12 PM`
-                                            : `${index - 12} PM`;
+                                        ? `${index} AM`
+                                        : index === 12
+                                        ? `12 PM`
+                                        : `${index - 12} PM`;
 
                                 return (
                                     <React.Fragment key={sessionTime}>
@@ -514,7 +533,7 @@ const TourPlanForm = ({ onClose }) => {
                                                 id={`session-${sessionTime}`}
                                                 value={sessionTime}
                                                 checked={selectedSessions.includes(
-                                                    sessionTime,
+                                                    sessionTime
                                                 )}
                                                 onChange={handleSessionChange}
                                                 className="mr-2"
@@ -579,7 +598,7 @@ const TourPlanForm = ({ onClose }) => {
                                         handleChange(
                                             index,
                                             "en",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -592,7 +611,7 @@ const TourPlanForm = ({ onClose }) => {
                                         handleChange(
                                             index,
                                             "ar",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -636,7 +655,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "question",
                                             "en",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full mb-2"
@@ -650,7 +669,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "question",
                                             "ar",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -667,7 +686,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "answer",
                                             "en",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full mb-2"
@@ -681,7 +700,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "answer",
                                             "ar",
-                                            e.target.value,
+                                            e.target.value
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LocalizedInput from "./LocalizedInput";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
-
+import { toast } from "react-toastify";
 import axios from "axios";
 const AboutUsForm = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -49,12 +49,32 @@ const AboutUsForm = () => {
                 console.log(formData);
                 const response = await axios.put(
                     `${BASE_URL}/about/` + formData._id,
-                    formData,
+                    formData
                 );
-                alert("Successfully updated");
+
+                toast.success("Successfully updated", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } catch (error) {
                 console.error("Error submitting form data:", error);
-                alert("There was an error submitting the form.");
+
+                toast.error("Something went wrong please try again later", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             }
         } else {
             e.preventDefault();
@@ -63,12 +83,31 @@ const AboutUsForm = () => {
                 console.log(formData);
                 const response = await axios.post(
                     `${BASE_URL}/about/`,
-                    formData,
+                    formData
                 );
-                alert("Successfully updated");
+
+                toast.success("Successfully updated", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } catch (error) {
                 console.error("Error submitting form data:", error);
-                alert("There was an error submitting the form.");
+                toast.error("Something went wrong please try again later", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             }
         }
     };

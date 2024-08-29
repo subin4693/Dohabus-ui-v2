@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload"; // Import your custom Firebase hook
+import { toast } from "react-toastify";
 
 const Gallery = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -22,7 +23,7 @@ const Gallery = () => {
                         // Make a PUT request to your backend to update an existing image
                         response = await axios.put(
                             `${BASE_URL}/footer/${editingImageId}`,
-                            { imageUrl },
+                            { imageUrl }
                         );
 
                         const resData = response?.data?.response;
@@ -32,11 +33,23 @@ const Gallery = () => {
                             prevImages.map((image) =>
                                 image._id === editingImageId
                                     ? { ...image, image: imageUrl }
-                                    : image,
-                            ),
+                                    : image
+                            )
                         );
                         downloadURL = null;
-                        alert("Image updated successfully!");
+                        toast.success(
+                            "Image uploaded and added to gallery successfully!",
+                            {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "dark",
+                            }
+                        );
                     } else if (!editingImageId && imageUrl) {
                         // Make a POST request to your backend to create a new image
                         response = await axios.post(`${BASE_URL}/footer`, {
@@ -45,15 +58,36 @@ const Gallery = () => {
                         console.log(response.data.iiimage);
                         const newImage = response.data.iiimage;
                         setImages((prevImages) => [...prevImages, newImage]);
-                        alert(
+                        alert();
+                        toast.success(
                             "Image uploaded and added to gallery successfully!",
+                            {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "dark",
+                            }
                         );
                     }
 
                     setEditingImageId(null); // Reset editing state
                 } catch (err) {
                     console.error("Failed to save image to gallery:", err);
-                    alert("Failed to save image to gallery.");
+
+                    toast.error("Failed to save image to gallery.", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
                 } finally {
                     setEditingImageId(null);
                 }

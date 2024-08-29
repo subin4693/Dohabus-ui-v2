@@ -8,12 +8,13 @@ import common from "../../assets/common-tourpage.jpg";
 import city from "../../assets/city-tourpage.jpg";
 import sea from "../../assets/sea-tourpage.jpg";
 import cultural from "../../assets/cultural-tourpage.jpg";
+import { toast } from "react-toastify";
 
 import catTop from "../../assets/city-tour-categorypage.jpg";
 import TourCard from "./TourCard";
 import { useSelector } from "react-redux";
 const SignleCategory = () => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL; 
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [tours, setTours] = useState([]);
     const [bannerCategory, setBannerCategory] = useState(null);
     const { category } = useParams();
@@ -75,7 +76,7 @@ const SignleCategory = () => {
             const res = await axios.post(
                 `${BASE_URL}/carts`,
                 { category: categoryId, tour: planId },
-                { withCredentials: true },
+                { withCredentials: true }
             );
 
             const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
@@ -89,12 +90,31 @@ const SignleCategory = () => {
                               isInCart: !tour.isInCart,
                               cartId: cartId ? cartId : null, // Conditionally set cartId
                           }
-                        : tour,
-                ),
+                        : tour
+                )
             );
-            alert("Added to Cart");
+            toast.success(" Added to Cart", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 
@@ -111,7 +131,7 @@ const SignleCategory = () => {
             const res = await axios.post(
                 `${BASE_URL}/favourites`,
                 { category: categoryId, tour: planId },
-                { withCredentials: true },
+                { withCredentials: true }
             );
 
             const favId = res.data.data.favourite?._id; // Safely access favourite._id
@@ -125,12 +145,32 @@ const SignleCategory = () => {
                               isInFavorites: !tour.isInFavorites,
                               favId: favId ? favId : null, // Conditionally set favId
                           }
-                        : tour,
-                ),
+                        : tour
+                )
             );
-            alert("Added to favourite");
+
+            toast.success("Added to favourite ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
     const removeFromCart = async (cartId) => {
@@ -149,12 +189,32 @@ const SignleCategory = () => {
                 prevTours.map((tour) =>
                     tour.cartId === cartId
                         ? { ...tour, isInCart: false, cartId: null }
-                        : tour,
-                ),
+                        : tour
+                )
             );
-            alert("Removed from Cart");
+
+            toast.success("Removed from Cart", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
     const removeFromFav = async (favId) => {
@@ -173,12 +233,31 @@ const SignleCategory = () => {
                 prevTours.map((tour) =>
                     tour.favId === favId
                         ? { ...tour, isInFavorites: false, favId: null }
-                        : tour,
-                ),
+                        : tour
+                )
             );
-            alert("Removed from favourite");
+            toast.success("Removed from favourite  ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 
@@ -189,7 +268,7 @@ const SignleCategory = () => {
                     BASE_URL + "/plans/category/" + category,
                     {
                         withCredentials: true, // This option ensures cookies or other credentials are sent with the request
-                    },
+                    }
                 );
                 console.log(data.data.data.plans);
                 // setAlbum(data?.data?.images);
@@ -248,7 +327,7 @@ const SignleCategory = () => {
                             itinerary={itinerary && itinerary[0]}
                             childPrice={childPrice ? childPrice : 0}
                         />
-                    ),
+                    )
                 )}
             </div>
         </div>

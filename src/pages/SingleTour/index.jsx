@@ -14,6 +14,7 @@ import album4 from "../../assets/album4.jpg";
 import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import Slider from "./GallerySlider";
 import Faq from "./Faq";
@@ -54,7 +55,7 @@ const SingleTour = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length
         );
     };
     const handleTicketCountChange = (type, isIncrement) => {
@@ -66,7 +67,7 @@ const SingleTour = () => {
             setAdultCount(newCount);
             // Calculate new total price
             setTotalPrice(
-                newCount * data.adultPrice + childCount * data.childPrice,
+                newCount * data.adultPrice + childCount * data.childPrice
             );
         } else if (type === "child") {
             // Calculate new child count
@@ -76,7 +77,7 @@ const SingleTour = () => {
             setChildCount(newCount);
             // Calculate new total price
             setTotalPrice(
-                adultCount * data.adultPrice + newCount * data.childPrice,
+                adultCount * data.adultPrice + newCount * data.childPrice
             );
         }
     };
@@ -94,8 +95,8 @@ const SingleTour = () => {
             Date.UTC(
                 localDate.getFullYear(),
                 localDate.getMonth(),
-                localDate.getDate(),
-            ),
+                localDate.getDate()
+            )
         );
 
         return utcDate.toISOString();
@@ -118,10 +119,33 @@ const SingleTour = () => {
                     category: data.category,
                     plan: data._id,
                 },
-                { withCredentials: true },
+                { withCredentials: true }
             );
-            alert("ticket booked successflly check you email for more details");
+
+            toast.success(
+                "  ticket booked successflly check you email for more details",
+                {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                }
+            );
         } catch (error) {
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
             console.log(error);
         }
         // console.log(data.category);
@@ -306,7 +330,14 @@ const SingleTour = () => {
                                             )
                                                 return (
                                                     <li
-                                                        className={` ${index == data?.itinerary.length - 1 ? "pt-[90px]" : "pb-[90px]"}   border-l border-l-4   border-dashed border-black flex  items-center relative`}
+                                                        className={` ${
+                                                            index ==
+                                                            data?.itinerary
+                                                                .length -
+                                                                1
+                                                                ? "pt-[90px]"
+                                                                : "pb-[90px]"
+                                                        }   border-l border-l-4   border-dashed border-black flex  items-center relative`}
                                                     >
                                                         <DiscImage />
                                                         <span className="pl-10">
@@ -317,8 +348,20 @@ const SingleTour = () => {
 
                                             return (
                                                 <li
-                                                    className={`${index == data?.itinerary.length - 1 ? " pb-0 " : " pb-[90px] "}  
-                                            ${index == 0 || index == data?.itinerary.length - 3 ? " border-dashed  " : "border-solid "}  
+                                                    className={`${
+                                                        index ==
+                                                        data?.itinerary.length -
+                                                            1
+                                                            ? " pb-0 "
+                                                            : " pb-[90px] "
+                                                    }  
+                                            ${
+                                                index == 0 ||
+                                                index ==
+                                                    data?.itinerary.length - 3
+                                                    ? " border-dashed  "
+                                                    : "border-solid "
+                                            }  
 
 
                                              border-l border-l-4   border-solid border-black flex  items-center relative`}
@@ -360,7 +403,10 @@ const SingleTour = () => {
                                 {data.sessions &&
                                     data.sessions.map((sessionL) => (
                                         <button
-                                            className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${sessionL == session && " bg-custom-yellow "}`}
+                                            className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
+                                                sessionL == session &&
+                                                " bg-custom-yellow "
+                                            }`}
                                             onClick={() =>
                                                 handleSession(sessionL)
                                             }
@@ -396,7 +442,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "adult",
-                                                    false,
+                                                    false
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -412,7 +458,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "adult",
-                                                    true,
+                                                    true
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -439,7 +485,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "child",
-                                                    false,
+                                                    false
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -455,7 +501,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "child",
-                                                    true,
+                                                    true
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"

@@ -3,6 +3,7 @@ import TicketCard from "./TicketCard"; // Adjust the path as needed
 import DownloadModal from "./DowloadModal";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
@@ -106,7 +107,7 @@ const ManageTickets = () => {
     const handleCancelTicket = async (id) => {
         try {
             const res = await axios.put(
-                BASE_URL + "/admin/tickets-cancel/" + id,
+                BASE_URL + "/admin/tickets-cancel/" + id
             );
             const canceledTicket = res?.data?.data?.ticket;
 
@@ -115,11 +116,31 @@ const ManageTickets = () => {
                 prevDetails.map((ticket) =>
                     ticket._id === canceledTicket._id
                         ? { ...ticket, status: "Canceled" }
-                        : ticket,
-                ),
+                        : ticket
+                )
             );
+            toast.success("Ticket canceled", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.error("Error canceling ticket:", error);
+            toast.error("Something went wrong...", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
     useEffect(() => {

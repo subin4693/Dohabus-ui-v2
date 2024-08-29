@@ -1,13 +1,16 @@
 import React from "react";
 import { BiTrash } from "react-icons/bi";
-import axios from "axios";
 
 const TicketCard = ({ booking, lang, handleCancelTicket }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     return (
         <div
-            className={`bg-white shadow-lg rounded-lg p-5 border  flex flex-col md:flex-row gap-4 ${booking.status.toLowerCase() !== "booked" ? "border-2 border-red-500 " : " border-stone-300 "}`}
+            className={`bg-white shadow-lg rounded-lg p-5 border  flex flex-col md:flex-row gap-4 ${
+                booking.status.toLowerCase() !== "booked"
+                    ? "border-2 border-red-500 "
+                    : " border-stone-300 "
+            }`}
         >
             <div className="flex-shrink-0">
                 <img

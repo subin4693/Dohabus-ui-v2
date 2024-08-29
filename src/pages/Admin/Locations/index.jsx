@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Card from "./Card"; // Import Card component
 import axios from "axios";
-
+import { toast } from "react-toastify";
 // Initial details data
 const initialDetails = [
     {
@@ -35,16 +35,27 @@ const DetailsManager = () => {
             try {
                 const data = await axios.put(
                     BASE_URL + "/locations/" + detail._id,
-                    detail,
+                    detail
                 );
 
                 const resData = data.data.data.location;
-                alert("Location edited Successfully");
+
                 setDetails((prevDetails) =>
                     prevDetails.map((d) =>
-                        d._id === resData._id ? resData : d,
-                    ),
+                        d._id === resData._id ? resData : d
+                    )
                 );
+
+                toast.success("Location edited Successfully", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -52,10 +63,30 @@ const DetailsManager = () => {
             try {
                 const data = await axios.post(BASE_URL + "/locations", detail);
                 let tempData = data.data.data.location;
-                alert("New location added");
+
                 setDetails((prevDetails) => [...prevDetails, tempData]);
+                toast.success("New location added", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } catch (error) {
                 console.log(error);
+                toast.error("Someyhing went wrong. Try again later...", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             }
         }
         setIsEditing(false); // Hide the edit/create form
@@ -66,19 +97,28 @@ const DetailsManager = () => {
         try {
             const data = await axios.delete(
                 BASE_URL + "/locations/" + id,
-                detail,
+                detail
             );
 
-            alert("Deleted successfully");
             setDetails((prevDetails) =>
-                prevDetails.map((d) => (d._id === resData._id ? resData : d)),
+                prevDetails.map((d) => (d._id === resData._id ? resData : d))
             );
+            toast.success("Deleted successfully", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
         }
 
         setDetails((prevDetails) =>
-            prevDetails.filter((detail) => detail._id !== id),
+            prevDetails.filter((detail) => detail._id !== id)
         );
     };
 

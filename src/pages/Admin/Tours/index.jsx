@@ -4,6 +4,7 @@ import axios from "axios";
 import TourPlanForm from "./TourPlanForm";
 import EditPlanForm from "./EditPlanForm";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Tours = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -26,11 +27,32 @@ const Tours = () => {
             // Update the plans array with the updated plan
             setPlans((prevPlans) =>
                 prevPlans.map((plan) =>
-                    plan._id === updatedPlan._id ? updatedPlan : plan,
-                ),
+                    plan._id === updatedPlan._id ? updatedPlan : plan
+                )
             );
+
+            toast.success("Plan status changed", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 

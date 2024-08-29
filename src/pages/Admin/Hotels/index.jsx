@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
+import { toast } from "react-toastify";
 
 const CreateCategory = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -34,7 +35,7 @@ const CreateCategory = () => {
                         title,
                         description,
                         coverImage: image,
-                    },
+                    }
                 );
                 console.log(res.data.data);
 
@@ -47,9 +48,19 @@ const CreateCategory = () => {
                     prevCategories.map((category) =>
                         category._id === updatedCategory._id
                             ? updatedCategory
-                            : category,
-                    ),
+                            : category
+                    )
                 );
+                toast.success("New hotel created", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } else {
                 // Create a new category
                 const res = await axios.post(`${BASE_URL}/hotels`, {
@@ -82,9 +93,29 @@ const CreateCategory = () => {
             setDescription({ en: "", ar: "" });
             setImage(null);
             setSelectedData(null);
+            toast.success("Hotel details updated", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.error(error);
-            alert("Some error occurred");
+
+            toast.error("Some error occurred", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 

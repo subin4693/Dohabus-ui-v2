@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
+import { toast } from "react-toastify";
 
 const CreateCategory = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -34,7 +35,7 @@ const CreateCategory = () => {
                         title,
                         description,
                         coverImage: image,
-                    },
+                    }
                 );
                 updatedCategory = res.data.data.category;
                 console.log(updatedCategory);
@@ -44,9 +45,20 @@ const CreateCategory = () => {
                     prevCategories.map((category) =>
                         category._id === updatedCategory._id
                             ? updatedCategory
-                            : category,
-                    ),
+                            : category
+                    )
                 );
+
+                toast.success("New category created ", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } else {
                 // Create a new category
                 const res = await axios.post(`${BASE_URL}/categorys`, {
@@ -65,12 +77,16 @@ const CreateCategory = () => {
             }
 
             // Log the creation/update
-            console.log("Creating/Updating category with data:", {
-                title,
-                description,
-                image,
+            toast.success("Category edited ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
             });
-
             // Close the modal or form
             setIsOpen(false);
 
@@ -81,7 +97,16 @@ const CreateCategory = () => {
             setSelectedData(null);
         } catch (error) {
             console.error(error);
-            alert("Some error occurred");
+            toast.error("Something went wrong. Please try again later", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 
@@ -111,9 +136,13 @@ const CreateCategory = () => {
 
     useEffect(() => {
         const getData = async () => {
-            const res = await axios.get(BASE_URL + "/categorys");
-            console.log(res.data.data.categories);
-            setCategories(res.data.data.categories);
+            try {
+                const res = await axios.get(BASE_URL + "/categorys");
+                console.log(res.data.data.categories);
+                setCategories(res.data.data.categories);
+            } catch (error) {
+                console.log(error);
+            }
         };
         getData();
     }, []);

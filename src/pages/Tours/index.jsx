@@ -93,10 +93,14 @@ const Tours = () => {
     ];
     useEffect(() => {
         const getData = async () => {
-            const data = await axios.get(BASE_URL + "/categorys");
-            console.log(data.data.data.categories);
-            // setAlbum(data?.data?.images);
-            setCategorys(data?.data?.data?.categories);
+            try {
+                const data = await axios.get(BASE_URL + "/categorys");
+                console.log(data.data.data.categories);
+                // setAlbum(data?.data?.images);
+                setCategorys(data?.data?.data?.categories);
+            } catch (error) {
+                console.log(error);
+            }
         };
         getData();
     }, []);

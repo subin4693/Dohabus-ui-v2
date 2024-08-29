@@ -64,13 +64,32 @@ const Banner = () => {
         try {
             await axios.put(
                 `${BASE_URL}/banner/${updatedSlide._id}`,
-                updatedSlide,
+                updatedSlide
             );
             setSlide(updatedSlides);
-            alert("Banner updated successfully!");
+            toast.success("Banner updated successfully!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (err) {
             console.error("Error updating banner:", err);
-            alert("Failed to update banner.");
+
+            toast.error("Failed to update banner.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 
@@ -94,10 +113,29 @@ const Banner = () => {
             console.log(res.data.data.banner);
             const val = res.data.data.banner;
             setSlide([...slide, val]);
-            alert("New banner added successfully!");
+
+            toast.success("New banner added successfully!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (err) {
             console.error("Error adding new banner:", err);
-            alert("Failed to add new banner.");
+            toast.error("Failed to add new banner.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 

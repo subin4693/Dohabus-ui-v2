@@ -154,9 +154,13 @@ const Contact = () => {
         texts[lang] || texts.en;
     useEffect(() => {
         const getData = async () => {
-            const data = await axios.get(BASE_URL + "/locations");
-            console.log(data.data.data.locations);
-            setDatas(data.data.data.locations);
+            try {
+                const data = await axios.get(BASE_URL + "/locations");
+                console.log(data.data.data.locations);
+                setDatas(data.data.data.locations);
+            } catch (error) {
+                console.log(error);
+            }
         };
         getData();
     }, []);
