@@ -23,7 +23,7 @@ const Gallery = () => {
                         // Make a PUT request to your backend to update an existing image
                         response = await axios.put(
                             `${BASE_URL}/footer/${editingImageId}`,
-                            { imageUrl }
+                            { imageUrl },
                         );
 
                         const resData = response?.data?.response;
@@ -33,8 +33,8 @@ const Gallery = () => {
                             prevImages.map((image) =>
                                 image._id === editingImageId
                                     ? { ...image, image: imageUrl }
-                                    : image
-                            )
+                                    : image,
+                            ),
                         );
                         downloadURL = null;
                         toast.success(
@@ -48,7 +48,7 @@ const Gallery = () => {
                                 draggable: true,
                                 progress: undefined,
                                 theme: "dark",
-                            }
+                            },
                         );
                     } else if (!editingImageId && imageUrl) {
                         // Make a POST request to your backend to create a new image
@@ -58,7 +58,7 @@ const Gallery = () => {
                         console.log(response.data.iiimage);
                         const newImage = response.data.iiimage;
                         setImages((prevImages) => [...prevImages, newImage]);
-                        alert();
+
                         toast.success(
                             "Image uploaded and added to gallery successfully!",
                             {
@@ -70,7 +70,7 @@ const Gallery = () => {
                                 draggable: true,
                                 progress: undefined,
                                 theme: "dark",
-                            }
+                            },
                         );
                     }
 

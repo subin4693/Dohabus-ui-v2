@@ -77,7 +77,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             const res = await axios.post(
                 BASE_URL + "/users/signout",
                 {},
-                { withCredentials: true }
+                { withCredentials: true },
             );
             toast.success("Logout succesfully", {
                 position: "top-right",
@@ -183,7 +183,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                 aria-hidden="true"
                                 className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
                             >
-                                {categorys.map((tourCategory) => (
+                                {categorys?.map((tourCategory) => (
                                     <li
                                         key={tourCategory._id}
                                         className="relative group"
@@ -245,7 +245,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                     }
                                                                 </NavLink>
                                                             </li>
-                                                        )
+                                                        ),
                                                     )}
                                                 </ul>
                                             )}
@@ -334,7 +334,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         {user && user?.role === "admin" && (
                             <Link to="/admin">Admin</Link>
                         )}
-                        {!user || !user._id ? (
+                        {!user || !user?.email ? (
                             <Link to="/signin">Login</Link>
                         ) : (
                             <Link onClick={handleSignOut}>Logout</Link>
@@ -460,11 +460,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         >
                             <div className="relative flex items-center">
                                 <BiCart size={35} />
-                                {cartItemCount > 0 && (
+                                {/* {cartItemCount > 0 && (
                                     <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
                                         {cartItemCount}
                                     </span>
-                                )}
+                                )}*/}
                             </div>
                             <span>
                                 <svg
@@ -482,10 +482,20 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
                         >
                             <li className="px-3 py-1 hover:bg-gray-100">
-                                <Link to="/cart">Cart</Link>
+                                {user && user?.role == "admin" ? (
+                                    <Link to="/admin-cart">Cart</Link>
+                                ) : (
+                                    <Link to="/cart">Cart</Link>
+                                )}
                             </li>
                             <li className="px-3 py-1 hover:bg-gray-100">
-                                <Link to="/favourites">Favourites</Link>
+                                {user && user?.role == "admin" ? (
+                                    <Link to="/admin-favourites">
+                                        Favourites
+                                    </Link>
+                                ) : (
+                                    <Link to="/favourites">Favourites</Link>
+                                )}
                             </li>
                         </ul>
                     </div>
@@ -597,7 +607,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                             className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                                         >
                                             {expandedCategory?.includes(
-                                                index
+                                                index,
                                             ) ? (
                                                 <FaMinus />
                                             ) : (
@@ -622,23 +632,23 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 setSidebarOpen(
-                                                                    false
+                                                                    false,
                                                                 );
                                                                 setExpandedCategory(
-                                                                    []
+                                                                    [],
                                                                 );
                                                                 setTourOpen(
-                                                                    false
+                                                                    false,
                                                                 );
                                                                 navigate(
-                                                                    `/tours/${category._id}/${tour._id}`
+                                                                    `/tours/${category._id}/${tour._id}`,
                                                                 );
                                                             }}
                                                             className="block py-3 text-black px-4 hover:bg-custom-yellow w-full text-left duration-200 hover:text-white text-[18px] border-b border-slate-300"
                                                         >
                                                             {tour.text[lang]}
                                                         </button>
-                                                    )
+                                                    ),
                                                 )}
                                         </div>
                                     </div>
@@ -760,19 +770,58 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
           >
             F&Q
           </button> */}
-                    <button
-                        onClick={(e) => {
-                            setSidebarOpen(false);
-                            setExpandedCategory([]);
-                            setTourOpen(false);
-                            navigate("/admin");
-                        }}
-                        className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                    >
-                        Admin
-                    </button>
+                    {user && user?.role === "admin" && (
+                        <button
+                            onClick={(e) => {
+                                setSidebarOpen(false);
+                                setExpandedCategory([]);
+                                setTourOpen(false);
+                                navigate("/admin");
+                            }}
+                            className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                        >
+                            Admin
+                        </button>
+                    )}
+                    <div className="py-3 text-left  flex items-center text-black px-4   duration-200   text-[18px] border-b border-slate-300">
+                        <div
+                            className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"
+                            onClick={() => {
+                                // setSidebarOpen(false);
+                                // setExpandedCategory([]);
+                                // setTourOpen(false);
+                                toggleLanguage();
+                            }}
+                        >
+                            {/* Slider Circle */}
+                            <div
+                                className={`absolute w-8 h-8 bg-custom-yellow rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center ${
+                                    isEnglish
+                                        ? "translate-x-2"
+                                        : "translate-x-10"
+                                }`}
+                            >
+                                {/* Language inside the circle */}
+                                <span className="text-white font-semibold">
+                                    {isEnglish ? "en" : "ar"}
+                                </span>
+                            </div>
 
-                    <button
+                            {/* English Language Option */}
+                            <div className="flex-1 text-center text-white font-semibold">
+                                en
+                            </div>
+
+                            {/* Arabic Language Option */}
+                            <div className="flex-1 text-center text-white font-semibold">
+                                ar
+                            </div>
+                        </div>
+                        &nbsp;&nbsp;
+                        {isEnglish ? "English" : "Arabic"}
+                    </div>
+
+                    {/*    <button
                         onClick={(e) => {
                             setSidebarOpen(false);
                             setExpandedCategory([]);
@@ -782,7 +831,32 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                     >
                         العربية
-                    </button>
+                    </button>*/}
+                    {!user || !user?.email ? (
+                        <button
+                            onClick={(e) => {
+                                setSidebarOpen(false);
+                                setExpandedCategory([]);
+                                setTourOpen(false);
+                                navigate("/signin");
+                            }}
+                            className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                        >
+                            Login
+                        </button>
+                    ) : (
+                        <button
+                            onClick={(e) => {
+                                setSidebarOpen(false);
+                                setExpandedCategory([]);
+                                setTourOpen(false);
+                                handleSignOut();
+                            }}
+                            className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                        >
+                            Logout
+                        </button>
+                    )}
                 </div>
             </div>
 

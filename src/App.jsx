@@ -43,6 +43,7 @@ import Offers from "./pages/Admin/Offers";
 import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "./features/language/languageSlice";
+import { setUser } from "./features/Auth/userSlice";
 
 function App() {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -69,7 +70,8 @@ function App() {
                 const response = await axios.get(`${BASE_URL}/users/verify`, {
                     withCredentials: true,
                 });
-                console.log(response.data.data.user); // Use response.data to access the data
+                console.log(response?.data?.data?.user); // Use response.data to access the data
+                dispatch(setUser(response?.data?.data?.user));
             } catch (error) {
                 console.error("Error verifying user:", error); // Log the error
             }

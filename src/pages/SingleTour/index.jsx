@@ -32,6 +32,13 @@ import men from "../../assets/men.png";
 const SingleTour = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const navigate = useNavigate();
+
+    const [reviews, setReviews] = useState([]);
+    const [newReview, setNewReview] = useState({
+        reviewText: "",
+        imageURL: null,
+    });
+
     const [data, setData] = useState({});
     const lang = useSelector((state) => state.language.lang);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -39,6 +46,8 @@ const SingleTour = () => {
     const [adultCount, setAdultCount] = useState(0);
     const [childCount, setChildCount] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const [canWriteReview, setCanWriteReview] = useState(false);
     const [session, setSession] = useState(null);
     const { user } = useSelector((state) => state.user);
     const { singletour } = useParams();
@@ -55,7 +64,7 @@ const SingleTour = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
         );
     };
     const handleTicketCountChange = (type, isIncrement) => {
@@ -67,7 +76,7 @@ const SingleTour = () => {
             setAdultCount(newCount);
             // Calculate new total price
             setTotalPrice(
-                newCount * data.adultPrice + childCount * data.childPrice
+                newCount * data.adultPrice + childCount * data.childPrice,
             );
         } else if (type === "child") {
             // Calculate new child count
@@ -77,7 +86,7 @@ const SingleTour = () => {
             setChildCount(newCount);
             // Calculate new total price
             setTotalPrice(
-                adultCount * data.adultPrice + newCount * data.childPrice
+                adultCount * data.adultPrice + newCount * data.childPrice,
             );
         }
     };
@@ -95,13 +104,63 @@ const SingleTour = () => {
             Date.UTC(
                 localDate.getFullYear(),
                 localDate.getMonth(),
-                localDate.getDate()
-            )
+                localDate.getDate(),
+            ),
         );
 
         return utcDate.toISOString();
     };
+    const handleReviewSubmit = async () => {
+        console.log(data._id);
+        if (newReview.reviewText.trim() == "") {
+            return toast.error("Review text required ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+        }
+        try {
+            const res = await axios.post(
+                BASE_URL + "/reviews/" + data._id,
+                newReview,
+                {
+                    withCredentials: true,
+                },
+            );
+            const revvv = res.data.data.populatedReview;
+            console.log(res.data);
 
+            setReviews((prev) => [...prev, revvv]);
+            setNewReview({ reviewText: "", imageURL: null });
+            toast.success(" New review added", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+        } catch (error) {
+            toast.error("Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+            console.log(error);
+        }
+    };
     const handleBookNow = async () => {
         if (!user || !user.email) {
             navigate("/signin");
@@ -119,7 +178,7 @@ const SingleTour = () => {
                     category: data.category,
                     plan: data._id,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             );
 
             toast.success(
@@ -133,7 +192,7 @@ const SingleTour = () => {
                     draggable: true,
                     progress: undefined,
                     theme: "dark",
-                }
+                },
             );
         } catch (error) {
             toast.error("Something went wrong! ", {
@@ -157,12 +216,21 @@ const SingleTour = () => {
         const getData = async () => {
             try {
                 console.log("get data function clled **************");
-                const data = await axios.get(BASE_URL + "/plans/" + singletour);
-                console.log("*************");
-                console.log(data);
-                console.log("*************");
-
+                const data = await axios.get(
+                    BASE_URL + "/plans/" + singletour,
+                    { withCredentials: true },
+                );
+                const res = await axios.get(
+                    BASE_URL + "/reviews/" + singletour,
+                    newReview,
+                    {
+                        withCredentials: true,
+                    },
+                );
+                console.log(res.data.data);
+                setReviews(res.data.data);
                 setData(data.data.data.plan);
+                setCanWriteReview(data.data.data.canWriteReview);
                 // setAlbum(data?.data?.images);
                 // setTours(data.data.data.plans);
             } catch (error) {
@@ -175,7 +243,7 @@ const SingleTour = () => {
         <div>
             <Banner
                 image={data?.coverImage}
-                title={data.title[lang]}
+                title={data && data.title && data?.title[lang]}
                 subTitle={"Home | Tours"}
             />
 
@@ -442,7 +510,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "adult",
-                                                    false
+                                                    false,
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -458,7 +526,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "adult",
-                                                    true
+                                                    true,
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -485,7 +553,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "child",
-                                                    false
+                                                    false,
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -501,7 +569,7 @@ const SingleTour = () => {
                                             onClick={() =>
                                                 handleTicketCountChange(
                                                     "child",
-                                                    true
+                                                    true,
                                                 )
                                             }
                                             className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
@@ -558,6 +626,17 @@ const SingleTour = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="flex justify-center items-center  ">
+                <Reviews
+                    canWriteReview={canWriteReview}
+                    reviews={reviews}
+                    setReviews={setReviews}
+                    newReview={newReview}
+                    setNewReview={setNewReview}
+                    handleReviewSubmit={handleReviewSubmit}
+                    user={user}
+                />
             </div>
         </div>
     );

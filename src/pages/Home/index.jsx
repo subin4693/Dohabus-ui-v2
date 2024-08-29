@@ -41,12 +41,12 @@ const Home = () => {
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides?.length);
   };
 
   const prevSlide = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length,
+      (prevIndex) => (prevIndex - 1 + slides?.length) % slides?.length,
     );
   };
 
@@ -69,14 +69,18 @@ const Home = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get(BASE_URL + "/banner");
-      console.log("Banner : ", data?.data?.data?.banner);
-      setSlides(data?.data?.data?.banner);
+      try {
+        const data = await axios.get(BASE_URL + "/banner");
+        console.log("Banner : ", data?.data?.data?.banner);
+        setSlides(data?.data?.data?.banner);
 
-      const categoryData = await axios.get(BASE_URL + "/categorys");
-      console.log(categoryData.data.data.categories);
-      // setAlbum(data?.data?.images);
-      setCategorys(categoryData?.data?.data?.categories);
+        const categoryData = await axios.get(BASE_URL + "/categorys");
+        console.log(categoryData?.data?.data?.categories);
+        // setAlbum(data?.data?.images);
+        setCategorys(categoryData?.data?.data?.categories);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getData();
   }, []);
@@ -91,36 +95,37 @@ const Home = () => {
     >
       <div className="relative w-full h-screen overflow-hidden group">
         <AnimatePresence initial={false}>
-          {slides.map(
-            (slide, index) =>
-              currentIndex === index && (
-                <motion.div
-                  key={index}
-                  className="absolute w-full h-screen"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={
-                    index === 0
-                      ? firstImageVariants
-                      : index === 1
-                        ? secondImageVariants
-                        : {
-                            enter: { opacity: 0, x: 100 },
-                            center: { opacity: 1, x: 0 },
-                            exit: { opacity: 0, x: -100 },
-                          }
-                  }
-                  transition={{ duration: 0.5 }}
-                >
-                  <img
-                    src={slide.image}
-                    alt={slide.alt}
-                    className="w-full h-screen object-cover"
-                  />
-                </motion.div>
-              ),
-          )}
+          {slides &&
+            slides?.map(
+              (slide, index) =>
+                currentIndex === index && (
+                  <motion.div
+                    key={index}
+                    className="absolute w-full h-screen"
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    variants={
+                      index === 0
+                        ? firstImageVariants
+                        : index === 1
+                          ? secondImageVariants
+                          : {
+                              enter: { opacity: 0, x: 100 },
+                              center: { opacity: 1, x: 0 },
+                              exit: { opacity: 0, x: -100 },
+                            }
+                    }
+                    transition={{ duration: 0.5 }}
+                  >
+                    <img
+                      src={slide.image}
+                      alt={slide.alt}
+                      className="w-full h-screen object-cover"
+                    />
+                  </motion.div>
+                ),
+            )}
         </AnimatePresence>
 
         <button

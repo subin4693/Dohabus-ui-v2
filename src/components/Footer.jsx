@@ -47,7 +47,7 @@ const Footer = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
         );
     };
     useEffect(() => {
@@ -105,7 +105,9 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="mt-auto p-5  text-lg text-center">
-                        <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
+                        <p>
+                            © Copyright 2022 - Doha Bus - All Rights Reserved
+                        </p>
                     </div>
                 </div>
 
@@ -141,15 +143,18 @@ const Footer = () => {
                                 Media
                             </h2>
                             <div className="grid grid-cols-3 gap-3 max-w-[400px]">
-                                {album.map((photo, index) => (
-                                    <img
-                                        key={index}
-                                        src={photo.image}
-                                        alt={`Photo ${index}`}
-                                        className="object-cover w-full h-full cursor-pointer transition duration-300 hover:bg-custom-yellow hover:mix-blend-multiply"
-                                        onClick={() => setSelectedImage(index)}
-                                    />
-                                ))}
+                                {album &&
+                                    album?.map((photo, index) => (
+                                        <img
+                                            key={index}
+                                            src={photo.image}
+                                            alt={`Photo ${index}`}
+                                            className="object-cover w-full h-full cursor-pointer transition duration-300 hover:bg-custom-yellow hover:mix-blend-multiply"
+                                            onClick={() =>
+                                                setSelectedImage(index)
+                                            }
+                                        />
+                                    ))}
                             </div>
                             <div
                                 className={`fixed inset-0   flex justify-center items-center transition-opacity duration-300 ${

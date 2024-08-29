@@ -1,61 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useFirebaseUpload from "../../hooks/use-firebaseUpload";
 
-const Reviews = () => {
-  const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({
-    reviewText: "",
-    image: null,
-  });
+const Reviews = ({
+  canWriteReview,
+  reviews,
+  setReviews,
+  newReview,
+  setNewReview,
+  handleReviewSubmit,
+  user,
+}) => {
+  const [file, setFile] = useState(null);
   const [showReviews, setShowReviews] = useState(false);
-
-  const staticUserData = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-  };
 
   const handleInputChange = (e) => {
     setNewReview({ ...newReview, reviewText: e.target.value });
   };
 
   const handleImageUpload = (e) => {
-    setNewReview({ ...newReview, image: e.target.files[0] });
+    setFile(e.target.files[0]);
   };
 
-  const handleReviewSubmit = () => {
-    if (newReview.reviewText.trim() !== "") {
-      setReviews([...reviews, { ...newReview, ...staticUserData }]);
-      setNewReview({ reviewText: "", image: null });
-    }
-  };
+  const { progress, error, downloadURL } = useFirebaseUpload(file);
 
   const toggleReviews = () => {
     setShowReviews(!showReviews);
   };
 
+  useEffect(() => {
+    if (downloadURL) {
+      setNewReview({ ...newReview, imageURL: downloadURL });
+      // setFormData((prevData) => ({
+      //     ...prevData,
+      //     image: , // Update formData with the Firebase download URL
+      // }));
+    }
+  }, [downloadURL]);
+
+  // reviewText, imageURL
   return (
-    <div className="w-full mx-auto mt-10 p-4 border rounded shadow-lg my-10">
-      <h2 className="text-xl font-semibold mb-4">Write a Review</h2>
+    <div className="w-[80vw] mx-auto mt-10 p-4 border rounded shadow-lg my-10">
+      <h2 className="text-xl font-semibold mb-4"> Reviews</h2>
 
-      <textarea
-        className="w-full p-2 border rounded mb-4"
-        placeholder="Write your review here..."
-        value={newReview.reviewText}
-        onChange={handleInputChange}
-      />
-
-      <input
-        type="file"
-        accept="image/*"
-        className="mb-4"
-        onChange={handleImageUpload}
-      />
-
-      <button
-        className="bg-custom-yellow duration-300 hover:text-white px-4 py-2 rounded-md hover:bg-dark"
-        onClick={handleReviewSubmit}
-      >
-        Submit Review
-      </button>
+      {canWriteReview && (
+        <>
+          {" "}
+          <textarea
+            className="w-full p-2 border rounded mb-4"
+            placeholder="Write your review here..."
+            value={newReview.reviewText}
+            onChange={handleInputChange}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            className="mb-4"
+            onChange={handleImageUpload}
+          />
+          {progress > 0 && progress < 100 && (
+            <p>Upload Progress: {progress}%</p>
+          )}
+          {error && <p>Error: {error}</p>}
+          <button
+            className="bg-custom-yellow duration-300 hover:text-white px-4 py-2 rounded-md hover:bg-dark"
+            onClick={() => {
+              if (progress > 0 && progress < 100) return;
+              handleReviewSubmit();
+            }}
+          >
+            Submit Review
+          </button>
+        </>
+      )}
 
       <div className="mt-6">
         <button
@@ -73,12 +89,12 @@ const Reviews = () => {
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <li key={index} className="border p-4 rounded">
-                  <p className="font-semibold">{review.name}</p>
-                  <p className="text-sm text-gray-600">{review.email}</p>
-                  <p className="mt-2">{review.reviewText}</p>
-                  {review.image && (
+                  <p className="font-semibold">{review?.user?.name}</p>
+                  <p className="text-sm text-gray-600">{review?.user?.email}</p>
+                  <p className="mt-2">{review?.reviewText}</p>
+                  {review?.imageURL && (
                     <img
-                      src={URL.createObjectURL(review.image)}
+                      src={review?.imageURL}
                       alt="Review"
                       className="mt-4 w-full h-auto rounded"
                     />

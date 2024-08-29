@@ -49,7 +49,7 @@ const AboutUsForm = () => {
                 console.log(formData);
                 const response = await axios.put(
                     `${BASE_URL}/about/` + formData._id,
-                    formData
+                    formData,
                 );
 
                 toast.success("Successfully updated", {
@@ -83,7 +83,7 @@ const AboutUsForm = () => {
                 console.log(formData);
                 const response = await axios.post(
                     `${BASE_URL}/about/`,
-                    formData
+                    formData,
                 );
 
                 toast.success("Successfully updated", {
@@ -136,7 +136,7 @@ const AboutUsForm = () => {
                 setInitialData(true);
             } catch (error) {
                 console.log(error);
-                alert("Error occured");
+
                 setInitialData(false);
             }
         };
