@@ -33,7 +33,8 @@ import AdminCart from "./pages/Admin/AdminCart";
 import AdminFavourite from "./pages/Admin/AdminFavourite";
 import Hotels from "./pages/Admin/Hotels";
 import AdminAboutus from "./pages/Admin/Aboutus";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import Gallery from "./pages/Admin/Gallery";
 import Banner from "./pages/Admin/Banner";
@@ -167,6 +168,7 @@ function App() {
                     </Route>
                 </Routes>
             </Router>
+            <ToastContainer />{" "}
         </div>
     );
 }
