@@ -70,7 +70,7 @@ const Home = () => {
   useEffect(() => {
     const getData = async () => {
       const data = await axios.get(BASE_URL + "/banner");
-      console.log(data?.data?.data?.banner);
+      console.log("Banner : ", data?.data?.data?.banner);
       setSlides(data?.data?.data?.banner);
 
       const categoryData = await axios.get(BASE_URL + "/categorys");

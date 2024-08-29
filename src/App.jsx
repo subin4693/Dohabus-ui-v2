@@ -29,17 +29,31 @@ import AdminFavourite from "./pages/Admin/AdminFavourite";
 import Hotels from "./pages/Admin/Hotels";
 import AdminAboutus from "./pages/Admin/Aboutus";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Gallery from "./pages/Admin/Gallery";
 import Banner from "./pages/Admin/Banner";
 import Locations from "./pages/Admin/Locations";
 import Offers from "./pages/Admin/Offers";
 
 // import { useDispatch, useSelector } from "react-redux";
-// import { setLanguage } from "./features/language/languageSlice";
+import { setLanguage } from "./features/language/languageSlice";
 
 function App() {
     const lang = useSelector((state) => state.language.lang);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        // Check if a language preference is stored in localStorage
+        const storedLanguage = localStorage.getItem("language");
+
+        if (storedLanguage) {
+            // If a language is found in localStorage, use it to set the language in Redux
+            dispatch(setLanguage(storedLanguage));
+        } else {
+            // If no language is found in localStorage, default to 'en' and dispatch it
+            dispatch(setLanguage("en"));
+        }
+    }, []);
+
     return (
         <div className="font-custom">
             <Router>

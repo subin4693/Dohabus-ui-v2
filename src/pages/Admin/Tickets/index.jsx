@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TicketCard from "./TicketCard"; // Adjust the path as needed
 import DownloadModal from "./DowloadModal";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
@@ -26,12 +28,14 @@ const mockBookings = [
             "https://media.easemytrip.com/media/Blog/International/637597107367841576/637597107367841576IlmTQB.jpg",
         title: "Historical City Tour",
         description: "Explore the rich history and heritage of the city.",
-        tourPlaces: ["City Center", "Historical Museum", "Old Town"],
     },
 ];
 
 const ManageTickets = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+    const [details, setDetails] = useState([]);
+    const lang = useSelector((state) => state.language.lang);
 
     const openPopup = () => {
         setIsModalOpen(true);
@@ -43,27 +47,93 @@ const ManageTickets = () => {
 
     const handleDownload = (format) => {
         setIsModalOpen(false);
+
         if (format === "pdf") {
             console.log("Download as PDF");
             const doc = new jsPDF();
-            doc.text("Sample Data", 10, 10);
-            doc.text("Sample Data", 10, 10);
-            mockBookings.forEach((item, index) => {
-                doc.text(
-                    `${index + 1}. ${item.userName}, ${item.email}, ${item.ticketCount}, ${item.price}, ${item.title}, ${item.description}, ${item.tourPlaces}`,
-                    10,
-                    20 + index * 10,
-                );
+            let y = 10; // Initial vertical position
+
+            details.forEach((item, index) => {
+                const {
+                    user,
+                    category,
+                    plan,
+                    totalPrice,
+                    adultQuantity,
+                    childQuantity,
+                } = item;
+
+                doc.text(`Ticket ${index + 1}`, 10, y);
+                y += 10; // Move down for next line
+
+                doc.text("User Name: " + user.name, 10, y);
+                y += 10;
+                doc.text("User Email: " + user.email, 10, y);
+                y += 10;
+                doc.text("Category: " + category.title.en, 10, y);
+                y += 10;
+                doc.text("Plan Title: " + plan.title.en, 10, y);
+                y += 10;
+                doc.text("Total Price: " + totalPrice, 10, y);
+                y += 10;
+                doc.text("Adult Quantity: " + adultQuantity, 10, y);
+                y += 10;
+                doc.text("Child Quantity: " + childQuantity, 10, y);
+                y += 20; // Extra space between tickets
             });
-            doc.save("TicketSheet.pdf");
+
+            doc.save("TicketDetails.pdf");
         } else if (format === "excel") {
             console.log("Download as Excel");
-            const worksheet = XLSX.utils.json_to_sheet(mockBookings);
+            const data = details.map((item, index) => ({
+                "Ticket Number": index + 1,
+                "User Name": item.user.name,
+                "User Email": item.user.email,
+                Category: item.category.title.en,
+                "Plan Title": item.plan.title.en,
+                "Total Price": item.totalPrice,
+                "Adult Quantity": item.adultQuantity,
+                "Child Quantity": item.childQuantity,
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(data);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-            XLSX.writeFile(workbook, "TicketSheet.xlsx");
+            XLSX.writeFile(workbook, "TicketDetails.xlsx");
         }
     };
+
+    const handleCancelTicket = async (id) => {
+        try {
+            const res = await axios.put(
+                BASE_URL + "/admin/tickets-cancel/" + id,
+            );
+            const canceledTicket = res?.data?.data?.ticket;
+
+            // Update the state with the canceled ticket
+            setDetails((prevDetails) =>
+                prevDetails.map((ticket) =>
+                    ticket._id === canceledTicket._id
+                        ? { ...ticket, status: "Canceled" }
+                        : ticket,
+                ),
+            );
+        } catch (error) {
+            console.error("Error canceling ticket:", error);
+        }
+    };
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const res = await axios.get(BASE_URL + "/admin/tickets");
+                console.log(res?.data?.data);
+                setDetails(res?.data?.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getData();
+    }, []);
 
     return (
         <div className="p-5 bg-gray-100">
@@ -86,8 +156,13 @@ const ManageTickets = () => {
                 </div>
             </div>
             <div className="space-y-4">
-                {mockBookings.map((booking, index) => (
-                    <TicketCard key={index} booking={booking} />
+                {details.map((booking, index) => (
+                    <TicketCard
+                        key={index}
+                        booking={booking}
+                        lang={lang}
+                        handleCancelTicket={handleCancelTicket}
+                    />
                 ))}
             </div>
             <DownloadModal

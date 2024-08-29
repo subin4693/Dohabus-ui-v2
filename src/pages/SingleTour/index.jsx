@@ -13,7 +13,7 @@ import album3 from "../../assets/album3.jpg";
 import album4 from "../../assets/album4.jpg";
 import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import Slider from "./GallerySlider";
 import Faq from "./Faq";
@@ -28,116 +28,9 @@ import { useSelector } from "react-redux";
 import languagesss from "../../assets/lang.png";
 import men from "../../assets/men.png";
 
-const dataa = {
-    category: "64f8f2a6e75b3f00457e8abc", // Example ObjectId for the category
-    coverImage: "https://example.com/images/cover-image.jpg", // Example cover image URL
-    title: {
-        en: "Desert Safari Adventure",
-        ar: "مغامرة سفاري الصحراء",
-    },
-    duration: {
-        en: "3 Days 2 Nights",
-        ar: "3 أيام 2 ليالي",
-    },
-    typeOfTour: {
-        en: "Adventure",
-        ar: "مغامرة",
-    },
-    transportation: {
-        en: "4x4 Vehicle",
-        ar: "مركبة دفع رباعي",
-    },
-    language: {
-        en: "English, Arabic",
-        ar: "الإنجليزية، العربية",
-    },
-    description: {
-        en: "Experience the thrill of a desert safari with dune bashing, camel rides, and more.",
-        ar: "استمتع بإثارة رحلة السفاري في الصحراء مع ركوب الكثبان والجمال والمزيد.",
-    },
-    highlights: [
-        {
-            en: "Dune Bashing",
-            ar: "التزحلق على الكثبان الرملية",
-        },
-        {
-            en: "Camel Riding",
-            ar: "ركوب الجمال",
-        },
-    ],
-    includes: [
-        {
-            en: "Hotel pickup and drop-off",
-            ar: "التوصيل من وإلى الفندق",
-        },
-        {
-            en: "Meals and beverages",
-            ar: "الوجبات والمشروبات",
-        },
-    ],
-    adultPrice: 100,
-    childPrice: 50,
-    itinerary: [
-        {
-            en: "Day 1: Arrival and check-in at the camp",
-            ar: "اليوم 1: الوصول وتسجيل الدخول في المخيم",
-        },
-        {
-            en: "Day 2: Desert activities and BBQ dinner",
-            ar: "اليوم 2: الأنشطة الصحراوية وعشاء شواء",
-        },
-        {
-            en: "Day 1: Arrival and check-in at the camp",
-            ar: "اليوم 1: الوصول وتسجيل الدخول في المخيم",
-        },
-        {
-            en: "Day 1: Arrival and check-in at the camp",
-            ar: "اليوم 1: الوصول وتسجيل الدخول في المخيم",
-        },
-        {
-            en: "Day 1: Arrival and check-in at the camp",
-            ar: "اليوم 1: الوصول وتسجيل الدخول في المخيم",
-        },
-        {
-            en: "Day 1: Arrival and check-in at the camp",
-            ar: "اليوم 1: الوصول وتسجيل الدخول في المخيم",
-        },
-        {
-            en: "Day 1: Arrival and check-in at the camp",
-            ar: "اليوم 1: الوصول وتسجيل الدخول في المخيم",
-        },
-    ],
-    faq: [
-        {
-            question: {
-                en: "What is your return policy?",
-                ar: "ما هي سياسة الإرجاع الخاصة بكم؟",
-            },
-            answer: {
-                en: "Our return policy allows you to return items within 30 days of purchase.",
-                ar: "تسمح لك سياسة الإرجاع لدينا بإرجاع العناصر في غضون 30 يومًا من الشراء.",
-            },
-        },
-        {
-            question: {
-                en: "How can I track my order?",
-                ar: "كيف يمكنني تتبع طلبي؟",
-            },
-            answer: {
-                en: "You can track your order by logging into your account and navigating to 'Track Order'.",
-                ar: "يمكنك تتبع طلبك عن طريق تسجيل الدخول إلى حسابك والانتقال إلى 'تتبع الطلب'.",
-            },
-        },
-    ],
-    gallerys: [album1, album2, album3, album4, album5, album6],
-    availableDays: [1, 2, 4], // Days represented as numbers, e.g., 1 for Sunday, 2 for Monday, etc.
-    sessions: ["8:00 AM", "12:00 PM", "4:00 PM"], // Example session times
-    adultPrice: 400, // Price for adults
-    childPrice: 250, // Price for children
-};
-
 const SingleTour = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+    const navigate = useNavigate();
     const [data, setData] = useState({});
     const lang = useSelector((state) => state.language.lang);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -146,7 +39,7 @@ const SingleTour = () => {
     const [childCount, setChildCount] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
     const [session, setSession] = useState(null);
-
+    const { user } = useSelector((state) => state.user);
     const { singletour } = useParams();
     // Function to check if a date is Wednesday or Sunday
     const isAvailableDay = (date) => {
@@ -191,25 +84,71 @@ const SingleTour = () => {
     const handleSession = (sess) => {
         setSession(sess);
     };
+    const formatDateForBackend = (date) => {
+        // Convert to ISO string without time
+        const localDate = new Date(date);
+        localDate.setHours(0, 0, 0, 0); // Set time to midnight in local time
 
-    const handleBookNow = async () => {
-        alert("handle booknow");
+        // Convert to UTC date
+        const utcDate = new Date(
+            Date.UTC(
+                localDate.getFullYear(),
+                localDate.getMonth(),
+                localDate.getDate(),
+            ),
+        );
+
+        return utcDate.toISOString();
     };
 
+    const handleBookNow = async () => {
+        console.log(selectedDate);
+        // return;
+        if (!user || !user.email) {
+            navigate("/signin");
+            return;
+        }
+        const isoDate = formatDateForBackend(selectedDate);
+        try {
+            const res = await axios.post(
+                BASE_URL + "/tickets",
+                {
+                    date: isoDate,
+                    adultQuantity: adultCount,
+                    childQuantity: childCount,
+                    session: session,
+                    category: data.category,
+                    plan: data._id,
+                },
+                { withCredentials: true },
+            );
+            alert("ticket booked successflly check you email for more details");
+        } catch (error) {
+            console.log(error);
+        }
+        // console.log(data.category);
+        // console.log(data._id);
+        // console.log({ selectedDate, adultCount, childCount, session });
+    };
+    const minDate = new Date();
     useEffect(() => {
         const getData = async () => {
-            console.log("get data function clled **************");
-            const data = await axios.get(BASE_URL + "/plans/" + singletour);
-            console.log("*************");
-            console.log(data);
-            console.log("*************");
+            try {
+                console.log("get data function clled **************");
+                const data = await axios.get(BASE_URL + "/plans/" + singletour);
+                console.log("*************");
+                console.log(data);
+                console.log("*************");
 
-            setData(data.data.data.plan);
-            // setAlbum(data?.data?.images);
-            // setTours(data.data.data.plans);
+                setData(data.data.data.plan);
+                // setAlbum(data?.data?.images);
+                // setTours(data.data.data.plans);
+            } catch (error) {
+                console.log(error);
+            }
         };
         getData();
-    }, []);
+    }, [singletour]);
     return (
         <div>
             <Banner
@@ -326,7 +265,7 @@ const SingleTour = () => {
 
                             <div className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg ">
                                 <ul>
-                                    {data.itinerary &&
+                                    {data?.itinerary &&
                                         data.itinerary.map((item, index) => {
                                             if (
                                                 index ==
@@ -377,6 +316,7 @@ const SingleTour = () => {
                                 inline
                                 dateFormat="MMMM d, yyyy"
                                 className="w-full"
+                                minDate={minDate}
                             />
                         </div>
                         <div>
@@ -501,7 +441,12 @@ const SingleTour = () => {
                 </div>
             </div>
 
-            <Slider mediaUrls={data?.galleryimages && data?.galleryimages} />
+            <Slider
+                mediaUrls={data && data.galleryimages ? data.galleryimages : []}
+                mediaVideoUrls={
+                    data && data.galleryvideos ? data.galleryvideos : []
+                }
+            />
             <div className="flex justify-center items-center px-2  mb-10 ">
                 <div className="flex    flex-wrap  w-[80vw]">
                     <div className="w-full   space-y-10    flex flex-col justify-center ">

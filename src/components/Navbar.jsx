@@ -12,6 +12,7 @@ import { BiCart } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "../features/language/languageSlice";
 const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
+  const lang = useSelector((state) => state.language.lang);
   const { user } = useSelector((state) => state.user);
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [categorys, setCategorys] = useState([]);
@@ -88,13 +89,15 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   const [expandedCategory, setExpandedCategory] = useState([]);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isEnglish, setIsEnglish] = useState(true);
+
   const dispatch = useDispatch();
 
   const toggleLanguage = () => {
     setIsEnglish((prev) => {
-      if (prev) dispatch(setLanguage("ar"));
-      else dispatch(setLanguage("en"));
-      return !prev;
+      const newLanguage = prev ? "ar" : "en"; // Determine the new language
+      dispatch(setLanguage(newLanguage)); // Update the Redux state with the new language
+      localStorage.setItem("language", newLanguage); // Save the new language to localStorage
+      return !prev; // Toggle the language state
     });
   };
   const handleToggleCategory = (index) => {
@@ -128,18 +131,33 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     setIsVisible(false);
   };
 
-  const handleSignOut = () => {
-    dispatch(setUser({}));
-    navigate("/");
+  const handleSignOut = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/users/signout",
+        {},
+        { withCredentials: true },
+      );
+      console.log(res);
+
+      dispatch(setUser({}));
+    } catch (error) {
+      console.log(error);
+    }
+
     console.log("Logged Out");
   };
 
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get(BASE_URL + "/categorys");
-      console.log(data.data.data.categories);
-      // setAlbum(data?.data?.images);
-      setCategorys(data?.data?.data?.categories);
+      try {
+        const data = await axios.get(BASE_URL + "/categorys/cat-tour");
+        console.log(data.data?.data?.category);
+        // setAlbum(data?.data?.images);
+        setCategorys(data?.data?.data?.category);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getData();
   }, []);
@@ -211,7 +229,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 aria-hidden="true"
                 className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
               >
-                {tours.map((tourCategory) => (
+                {categorys.map((tourCategory) => (
                   <li
                     key={tourCategory._id}
                     className="relative group"
@@ -224,10 +242,10 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                       className="w-full text-left flex items-center px-3 py-1 hover:bg-gray-100"
                     >
                       <NavLink
-                        to={`/tours/${tourCategory.text}`}
+                        to={`/tours/${tourCategory._id}`}
                         className="pr-1 flex-1"
                       >
-                        {tourCategory.text}
+                        {tourCategory.text[lang]}
                       </NavLink>
                       {tourCategory.tours && (
                         <svg
@@ -240,7 +258,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                       )}
                     </button>
                     {hoveredCategory === tourCategory._id &&
-                      tourCategory.tours && (
+                      tourCategory.tours &&
+                      tourCategory.tours.length > 0 && (
                         <ul
                           id={`menu-category-${tourCategory._id}`}
                           aria-hidden="true"
@@ -253,11 +272,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             >
                               <NavLink
                                 to={`/tours/${
-                                  tourCategory.text + "/" + subTour.text
+                                  tourCategory._id + "/" + subTour._id
                                 }`}
                                 className="block text-black"
                               >
-                                {subTour.text}
+                                {subTour.text[lang]}
                               </NavLink>
                             </li>
                           ))}
@@ -338,7 +357,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
             {/* <Link to="/faq">F&Q</Link> */}
             {user && user?.role === "admin" && <Link to="/admin">Admin</Link>}
-            {user && !user._id ? (
+            {!user || !user._id ? (
               <Link to="/signin">Login</Link>
             ) : (
               <Link onClick={handleSignOut}>Logout</Link>
@@ -358,7 +377,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 {/* Language inside the circle */}
                 <span className="text-white font-semibold">
-                  {isEnglish ? "en" : "an"}
+                  {isEnglish ? "en" : "ar"}
                 </span>
               </div>
 
@@ -369,7 +388,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
               {/* Arabic Language Option */}
               <div className="flex-1 text-center text-white font-semibold">
-                an
+                ar
               </div>
             </div>
 
@@ -568,7 +587,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             }`}
           >
             <div className="bg-custom-yellow ml-5">
-              {tours.map((category, index) => (
+              {categorys?.map((category, index) => (
                 <div key={index}>
                   <button
                     className="py-3 text-black hover:text-white px-4 hover:bg-custom-yellow duration-200  group w-full flex justify-between items-center text-[18px] border-b border-slate-300"
@@ -577,10 +596,10 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                       setSidebarOpen(false);
                       setExpandedCategory([]);
                       setTourOpen(false);
-                      navigate("/tours/" + category.text);
+                      navigate("/tours/" + category._id);
                     }}
                   >
-                    {category.text}
+                    {category && category?.text[lang]}
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
@@ -608,10 +627,10 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                         category.tours.map((tour, tourIndex) => (
                           <Link
                             key={tourIndex}
-                            to={`/tours/${category.text}/${tour.text}`}
+                            to={`/tours/${category._id}/${tour._id}`}
                             className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                           >
-                            {tour.text}
+                            {tour.text[lang]}
                           </Link>
                         ))}
                     </div>
