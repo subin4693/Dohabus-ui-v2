@@ -573,13 +573,19 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                     <div className=" ml-5">
                       {category.tours &&
                         category.tours.map((tour, tourIndex) => (
-                          <Link
+                          <button
                             key={tourIndex}
-                            to={`/tours/${category._id}/${tour._id}`}
-                            className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSidebarOpen(false);
+                              setExpandedCategory([]);
+                              setTourOpen(false);
+                              navigate(`/tours/${category._id}/${tour._id}`);
+                            }}
+                            className="block py-3 text-black px-4 hover:bg-custom-yellow w-full text-left duration-200 hover:text-white text-[18px] border-b border-slate-300"
                           >
                             {tour.text[lang]}
-                          </Link>
+                          </button>
                         ))}
                     </div>
                   </div>

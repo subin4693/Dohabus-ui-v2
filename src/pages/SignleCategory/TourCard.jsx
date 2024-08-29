@@ -48,7 +48,7 @@ const TourCard = ({
               <Watch color="black" size={50} />{" "}
               <div>
                 <h2 className="text-3xl text-black font-bold">
-                  Tour Durations
+                  {lang === "ar" ? "مدة الجولة" : "Tour Durations"}
                 </h2>
 
                 <small className="text-2xl text-black font-semibold">
@@ -60,7 +60,7 @@ const TourCard = ({
               <LocationPin color="black" size={50} />{" "}
               <div>
                 <h2 className="text-3xl text-black font-bold">
-                  Starting Point
+                  {lang === "ar" ? "نقطة البداية" : "Starting Point"}
                 </h2>
 
                 <small className="text-2xl text-black font-semibold">
@@ -72,7 +72,7 @@ const TourCard = ({
               <Dollar color="black" size={50} />{" "}
               <div>
                 <h2 className="text-3xl text-black font-bold">
-                  Price Starts From
+                  {lang === "ar" ? "السعر يبدأ من" : "Price Starts From"}
                 </h2>
 
                 <small className="text-2xl text-black font-semibold">
@@ -99,7 +99,7 @@ const TourCard = ({
             <div className="">
               <Link to={link}>
                 <button className="p-5 text-black text-2xl font-semibold rounded-full bg-white w-[180px]">
-                  View Tour
+                  {lang === "ar" ? "عرض الجولة" : "View Tour"}
                 </button>
               </Link>
             </div>

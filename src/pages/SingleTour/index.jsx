@@ -151,7 +151,7 @@ const SingleTour = () => {
         <div>
             <Banner
                 image={data?.coverImage}
-                title={"Monster Bus Tour in the Desert"}
+                title={data.title[lang]}
                 subTitle={"Home | Tours"}
             />
 
@@ -160,16 +160,23 @@ const SingleTour = () => {
                     <div className="w-full md:w-3/4  space-y-10    flex flex-col justify-center ">
                         <div>
                             <h2 className="text-3xl font-bold">
-                                About this activity
+                                {lang === "ar"
+                                    ? "عرض الجولة"
+                                    : "About this activity"}
                             </h2>
 
-                            <div className="relative grid grid-cols-1 md:grid-cols-2 mt-5 bg-custom-yellow w-full md:w-4/5 p-5 gap-3 rounded-lg shadow-xl">
+                            <div
+                                className="relative grid grid-cols-1 md:grid-cols-2 mt-5 bg-custom-yellow w-full md:w-4/5 p-5 gap-3 rounded-lg shadow-xl"
+                                dir={lang === "ar" ? "rtl" : "ltr"}
+                            >
                                 {/* <div className=" rotate-[40deg] absolute w-[50px] h-[50px] bg-red-500 bottom-0 left-0"></div> */}
                                 <div className="flex  gap-5 items-center ">
                                     <BiTime className="w-[60px] h-[60px]" />
-                                    <div>
+                                    <div dir={lang === "ar" ? "rtl" : "ltr"}>
                                         <h4 className="font-bold text-lg">
-                                            Time Duration
+                                            {lang === "ar"
+                                                ? "مدة الوقت"
+                                                : "Time Duration"}
                                         </h4>
                                         <p>
                                             {data.duration &&
@@ -182,7 +189,9 @@ const SingleTour = () => {
 
                                     <div>
                                         <h4 className="font-bold text-lg">
-                                            Transportation
+                                            {lang === "ar"
+                                                ? "المواصلات"
+                                                : "Transportation"}
                                         </h4>
                                         <p>
                                             {data?.transportation &&
@@ -197,7 +206,9 @@ const SingleTour = () => {
                                     />
                                     <div>
                                         <h4 className="font-bold text-lg">
-                                            Type of Tour
+                                            {lang === "ar"
+                                                ? "نوع الجولة"
+                                                : "Type of Tour"}
                                         </h4>
                                         <p>
                                             {data?.language &&
@@ -213,7 +224,9 @@ const SingleTour = () => {
 
                                     <div>
                                         <h4 className="font-bold text-lg">
-                                            Language
+                                            {lang === "ar"
+                                                ? "اللغة"
+                                                : "Language"}
                                         </h4>
                                         <p>
                                             {data?.typeOfTour &&
@@ -224,18 +237,28 @@ const SingleTour = () => {
                             </div>
                         </div>
                         <div>
-                            <h2 className="text-3xl font-bold">Description</h2>
+                            <h2 className="text-3xl font-bold">
+                                {lang === "ar" ? "الوصف" : "Description"}
+                            </h2>
 
-                            <div className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl">
+                            <div
+                                className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl"
+                                dir={lang === "ar" ? "rtl" : "ltr"}
+                            >
                                 <p>
                                     {data.description && data.description[lang]}
                                 </p>
                             </div>
                         </div>
                         <div>
-                            <h2 className="text-3xl font-bold">Highlights</h2>
+                            <h2 className="text-3xl font-bold">
+                                {lang === "ar" ? "أبرز النقاط" : "Highlights"}
+                            </h2>
 
-                            <div className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl">
+                            <div
+                                className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl"
+                                dir={lang === "ar" ? "rtl" : "ltr"}
+                            >
                                 <ul className="list-disc pl-5">
                                     {data.highlights &&
                                         data.highlights.map((item) => (
@@ -246,10 +269,15 @@ const SingleTour = () => {
                         </div>
                         <div>
                             <h2 className="text-3xl font-bold">
-                                What’s Included?
+                                {lang === "ar"
+                                    ? "ما الذي يتضمنه؟"
+                                    : "What’s Included?"}
                             </h2>
 
-                            <div className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl">
+                            <div
+                                className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl"
+                                dir={lang === "ar" ? "rtl" : "ltr"}
+                            >
                                 <ul className="list-disc pl-5">
                                     {data.includes &&
                                         data.includes.map((item) => (
@@ -259,9 +287,14 @@ const SingleTour = () => {
                             </div>
                         </div>
                         <div>
-                            <h2 className="text-3xl font-bold">Itinerary</h2>
+                            <h2 className="text-3xl font-bold">
+                                {lang === "ar" ? "برنامج الرحلة" : "Itinerary"}
+                            </h2>
 
-                            <div className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg ">
+                            <div
+                                className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
+                                dir={lang === "ar" ? "rtl" : "ltr"}
+                            >
                                 <ul>
                                     {data?.itinerary &&
                                         data.itinerary.map((item, index) => {
@@ -304,7 +337,9 @@ const SingleTour = () => {
                     <div className="w-full md:w-1/4   relative">
                         <div>
                             <h2 className="text-xl font-bold">
-                                Choose date and time
+                                {lang === "ar"
+                                    ? "اختر التاريخ والوقت"
+                                    : "Choose date and time"}
                             </h2>
                             <br />
                             <DatePicker
@@ -318,7 +353,9 @@ const SingleTour = () => {
                             />
                         </div>
                         <div>
-                            <h2 className="text-xl mt-5 font-bold">Sessions</h2>
+                            <h2 className="text-xl mt-5 font-bold">
+                                {lang === "ar" ? "الجلسات" : "Sessions"}
+                            </h2>
                             <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
                                 {data.sessions &&
                                     data.sessions.map((sessionL) => (
@@ -337,14 +374,19 @@ const SingleTour = () => {
 
                         <div>
                             <h2 className="text-xl mt-5 font-bold">
-                                Participants
+                                {lang === "ar" ? "المشاركون" : "Participants"}
                             </h2>
-                            <div className="p-4 bg-gray-100 rounded-md max-w-md mx-auto">
+                            <div
+                                className="p-4 bg-gray-100 rounded-md max-w-md mx-auto"
+                                dir={lang === "ar" ? "rtl" : "ltr"}
+                            >
                                 {/* Adult Ticket Section */}
                                 <div className="flex justify-between items-center mb-4">
                                     <div>
                                         <h2 className="text-lg font-semibold">
-                                            Adult
+                                            {lang === "ar"
+                                                ? "البالغون"
+                                                : "Adult"}
                                         </h2>
                                         <p>Price: {data?.adultPrice} qar</p>
                                     </div>
@@ -381,10 +423,13 @@ const SingleTour = () => {
                                 </div>
 
                                 {/* Child Ticket Section */}
-                                <div className="flex justify-between items-center mb-4">
+                                <div
+                                    className="flex justify-between items-center mb-4"
+                                    dir={lang === "ar" ? "rtl" : "ltr"}
+                                >
                                     <div>
                                         <h2 className="text-lg font-semibold">
-                                            Child
+                                            {lang === "ar" ? "طفل" : "Child"}
                                         </h2>
                                         <p>Price: {data?.childPrice} qar</p>
                                     </div>
@@ -421,16 +466,24 @@ const SingleTour = () => {
                                 </div>
 
                                 {/* Total Price Display */}
-                                <div className="mt-4">
+                                <div
+                                    className="mt-4"
+                                    dir={lang === "ar" ? "rtl" : "ltr"}
+                                >
                                     <h2 className="text-xl font-bold">
-                                        Total Price: ${totalPrice}
+                                        {lang === "ar"
+                                            ? "السعر الإجمالي"
+                                            : "Total Price"}
+                                        : {totalPrice}
                                     </h2>
                                     <br />
                                     <button
                                         onClick={handleBookNow}
                                         className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300"
                                     >
-                                        Book Now
+                                        {lang === "ar"
+                                            ? "احجز الآن"
+                                            : "Book Now"}
                                     </button>
                                 </div>
                             </div>
@@ -449,7 +502,9 @@ const SingleTour = () => {
                 <div className="flex    flex-wrap  w-[80vw]">
                     <div className="w-full   space-y-10    flex flex-col justify-center ">
                         <div>
-                            <h2 className="text-3xl font-bold mb-5">FAQs</h2>
+                            <h2 className="text-3xl font-bold mb-5">
+                                {lang === "ar" ? "الأسئلة المتكررة" : "FAQs"}
+                            </h2>
                             <Faq
                                 faqData={data.faq ? data?.faq : []}
                                 lang={lang}
