@@ -4,27 +4,31 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 const Home = () => {
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [currentIndex, setCurrentIndex] = useState(0);
   const lang = useSelector((state) => state.language.lang);
   const [slides, setSlides] = useState([]);
   const [categorys, setCategorys] = useState([]);
-
-  // Slide transition variants
-  const firstImageVariants = {
-    enter: { opacity: 0, y: -100 },
-    center: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 100 },
-  };
-
-  const secondImageVariants = {
-    enter: { opacity: 0, scale: 0 },
-    center: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.5, rotate: 90 },
-  };
+  // const slides = [
+  //   {
+  //     url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
+  //     alt: "Slide 1",
+  //   },
+  //   {
+  //     url: "https://images.pexels.com/photos/11912983/pexels-photo-11912983.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  //     alt: "Slide 2",
+  //   },
+  //   {
+  //     url: "https://dohabus.com/wp-content/uploads/2020/05/DSC6346-scaled.jpg",
+  //     alt: "Slide 3",
+  //   },
+  //   {
+  //     url: "https://cdn.getyourguide.com/img/tour/63b3fd9ac54a9.jpeg/145.jpg",
+  //     alt: "Slide 4",
+  //   },
+  // ];
 
   useEffect(() => {
-    // Auto slide every 3 seconds
     const interval = setInterval(() => {
       nextSlide();
     }, 3000);
@@ -32,21 +36,9 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const { data } = await axios.get(`${BASE_URL}/banner`);
-        console.log(data.data.banner);
-        setSlides(data?.data?.banner);
-
-        const categoryData = await axios.get(`${BASE_URL}/categorys`);
-        setCategorys(categoryData?.data?.categories);
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-    getData();
-  }, [BASE_URL]);
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
 
   const nextSlide = () => {
     console.log("next slide called");
@@ -73,6 +65,41 @@ const Home = () => {
     });
   };
 
+  const firstImageVariants = {
+    enter: { opacity: 0, y: -100 },
+    center: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 100 },
+  };
+
+  const secondImageVariants = {
+    enter: { opacity: 0, scale: 0 },
+    center: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.5, rotate: 90 },
+  };
+
+  const cardContainerVariants = {
+    hidden: { opacity: 0, y: 100 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await axios.get(BASE_URL + "/banner");
+        console.log("Banner : ", data?.data?.data?.banner);
+        setSlides(data?.data?.data?.banner);
+
+        const categoryData = await axios.get(BASE_URL + "/categorys");
+        console.log(categoryData?.data?.data?.categories);
+        // setAlbum(data?.data?.images);
+        setCategorys(categoryData?.data?.data?.categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <div
       // style={{
@@ -83,45 +110,46 @@ const Home = () => {
     >
       <div className="relative w-full h-screen overflow-hidden group">
         <AnimatePresence initial={false}>
-          {slides.map(
-            (slide, index) =>
-              currentIndex === index && (
-                <motion.div
-                  key={index}
-                  className="absolute w-full h-screen"
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={
-                    index === 0
-                      ? firstImageVariants
-                      : index === 1
-                        ? secondImageVariants
-                        : {
-                            enter: { opacity: 0, x: 100 },
-                            center: { opacity: 1, x: 0 },
-                            exit: { opacity: 0, x: -100 },
-                          }
-                  }
-                  transition={{ duration: 0.5 }}
-                >
-                  <img
-                    src={slide.image} // Updated to match your previous example
-                    alt={slide.alt}
-                    className="w-full h-screen object-cover"
-                  />
-                </motion.div>
-              ),
-          )}
+          {slides &&
+            slides?.map(
+              (slide, index) =>
+                currentIndex === index && (
+                  <motion.div
+                    key={index}
+                    className="absolute w-full h-screen"
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    variants={
+                      index === 0
+                        ? firstImageVariants
+                        : index === 1
+                          ? secondImageVariants
+                          : {
+                              enter: { opacity: 0, x: 100 },
+                              center: { opacity: 1, x: 0 },
+                              exit: { opacity: 0, x: -100 },
+                            }
+                    }
+                    transition={{ duration: 0.5 }}
+                  >
+                    <img
+                      src={slide.image}
+                      alt={slide.alt}
+                      className="w-full h-screen object-cover"
+                    />
+                  </motion.div>
+                ),
+            )}
         </AnimatePresence>
 
-        {/* Navigation Buttons */}
         <button
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-700 text-white duration-500 p-5 opacity-0 group-hover:opacity-100"
+          className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-700 text-white duration-500 p-5 opacity-0 group-hover:opacity-100 "
           onClick={prevSlide}
         >
           &#10094;
         </button>
+
         <button
           className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-700 text-white p-5 opacity-0 group-hover:opacity-100 duration-500"
           onClick={nextSlide}
@@ -129,17 +157,17 @@ const Home = () => {
           &#10095;
         </button>
 
-        {/* Dot Navigation */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full ${
-                index === currentIndex ? "bg-gray-800" : "bg-gray-400"
-              }`}
-              onClick={() => goToSlide(index)}
-            ></button>
-          ))}
+          {slides &&
+            slides?.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full ${
+                  index === currentIndex ? "bg-gray-800" : "bg-gray-400"
+                }`}
+                onClick={() => goToSlide(index)}
+              ></button>
+            ))}
         </div>
       </div>
       <div
