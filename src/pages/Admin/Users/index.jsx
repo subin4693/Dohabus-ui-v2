@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 const ManageUser = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
     const openPopup = () => {
@@ -27,15 +29,13 @@ const ManageUser = () => {
         if (format === "pdf") {
             console.log("Download as PDF");
             const doc = new jsPDF();
-            doc.text("Sample Data", 10, 10);
-            doc.text("Sample Data", 10, 10);
+            doc.text("User Data", 10, 10);
+            doc.text("User Data", 10, 10);
             users.forEach((item, index) => {
                 doc.text(
-                    `${index + 1}. ${item.name}, ${item.email}, ${
-                        item.ticketCount
-                    }, ${item.role}, ${item.photo},   ${item.tourPlaces}`,
+                    `${index + 1}. ${item.name}, ${item.email}, ${item.role}`,
                     10,
-                    20 + index * 10
+                    20 + index * 10,
                 );
             });
             doc.save("TicketSheet.pdf");
@@ -61,6 +61,21 @@ const ManageUser = () => {
 
         fetchUsers();
     }, [BASE_URL]);
+
+    useEffect(() => {
+        const lowerCaseSearchQuery = searchQuery.toLowerCase();
+        const filtered = users.filter(
+            (user) =>
+                user.name.toLowerCase().includes(lowerCaseSearchQuery) ||
+                user.email.toLowerCase().includes(lowerCaseSearchQuery) ||
+                user.role.toLowerCase().includes(lowerCaseSearchQuery),
+        );
+        setFilteredUsers(filtered);
+    }, [searchQuery, users]);
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
 
     const handlePromote = async (userId) => {
         console.log(userId);
@@ -140,6 +155,8 @@ const ManageUser = () => {
                     <input
                         type="text"
                         placeholder="Search users"
+                        value={searchQuery} // Set value of input to searchQuery state
+                        onChange={handleSearchChange}
                         className="px-2 py-1 rounded-md shadow border-black "
                     />{" "}
                     <button
@@ -151,8 +168,8 @@ const ManageUser = () => {
                 </div>
             </div>
             <div className="flex justify-start flex-wrap items-center gap-5">
-                {users &&
-                    users.map((user) => (
+                {filteredUsers &&
+                    filteredUsers.map((user) => (
                         <UserCard
                             key={user._id}
                             user={user}
