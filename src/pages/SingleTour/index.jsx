@@ -303,8 +303,8 @@ const SingleTour = () => {
                                                 : "Type of Tour"}
                                         </h4>
                                         <p>
-                                            {data?.language &&
-                                                data?.language[lang]}
+                                            {data?.typeOfTour &&
+                                                data?.typeOfTour[lang]}
                                         </p>
                                     </div>
                                 </div>
@@ -321,8 +321,8 @@ const SingleTour = () => {
                                                 : "Language"}
                                         </h4>
                                         <p>
-                                            {data?.typeOfTour &&
-                                                data?.typeOfTour[lang]}
+                                            {data?.language &&
+                                                data?.language[lang]}
                                         </p>
                                     </div>
                                 </div>
