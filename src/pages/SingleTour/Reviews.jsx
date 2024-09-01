@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import useFirebaseUpload from "../../hooks/use-firebaseUpload";
+import { BsTrash } from "react-icons/bs";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Reviews = ({
   canWriteReview,
@@ -10,6 +13,7 @@ const Reviews = ({
   handleReviewSubmit,
   user,
 }) => {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [file, setFile] = useState(null);
   const [showReviews, setShowReviews] = useState(false);
 
@@ -21,6 +25,48 @@ const Reviews = ({
     setFile(e.target.files[0]);
   };
 
+  const handleRemoveReview = async (reviewId) => {
+    console.log("reviewId", reviewId);
+
+    try {
+      const res = await axios.delete(`${BASE_URL}/reviews/${reviewId}`, {
+        params: { userId: user.id }, // Send userId as a query parameter
+        withCredentials: true,
+      });
+
+      if (res.status === 204) {
+        setReviews((prevReviews) =>
+          prevReviews.filter((review) => review._id !== reviewId)
+        );
+        toast.success("Review Removed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Error deleting review:",
+        error.response?.data || error.message
+      );
+      toast.error("Failed to remove review", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
   const { progress, error, downloadURL } = useFirebaseUpload(file);
 
   const toggleReviews = () => {
@@ -30,21 +76,15 @@ const Reviews = ({
   useEffect(() => {
     if (downloadURL) {
       setNewReview({ ...newReview, imageURL: downloadURL });
-      // setFormData((prevData) => ({
-      //     ...prevData,
-      //     image: , // Update formData with the Firebase download URL
-      // }));
     }
   }, [downloadURL]);
 
-  // reviewText, imageURL
   return (
     <div className="w-[80vw] mx-auto mt-10 p-4 border rounded shadow-lg my-10">
-      <h2 className="text-xl font-semibold mb-4"> Reviews</h2>
+      <h2 className="text-xl font-semibold mb-4">Reviews</h2>
 
       {canWriteReview && (
         <>
-          {" "}
           <textarea
             className="w-full p-2 border rounded mb-4"
             placeholder="Write your review here..."
@@ -89,12 +129,29 @@ const Reviews = ({
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <li key={index} className="border p-4 rounded">
-                  <p className="font-semibold">{review?.user?.name}</p>
-                  <p className="text-sm text-gray-600">{review?.user?.email}</p>
-                  <p className="mt-2">{review?.reviewText}</p>
-                  {review?.imageURL && (
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="font-semibold">{review.user?.name}</p>
+                      <p className="text-sm text-gray-600">
+                        {review.user?.email}
+                      </p>
+                    </div>
+                    <div>
+                      {/* Conditionally render the delete button */}
+                      {(user.id === review.user?._id ||
+                        user.role === "admin") && (
+                        <BsTrash
+                          onClick={() => handleRemoveReview(review._id)}
+                          size={30}
+                          className="cursor-pointer"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <p className="mt-2">{review.reviewText}</p>
+                  {review.imageURL && (
                     <img
-                      src={review?.imageURL}
+                      src={review.imageURL}
                       alt="Review"
                       className="mt-4 w-full h-auto rounded"
                     />
