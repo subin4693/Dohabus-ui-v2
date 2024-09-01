@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from "react";
-import logo from "../assets/log.png";
-import footer from "../assets/lfooter.jpg";
+
 import axios from "axios";
 
-import trip from "../assets/trip.png";
-import youtube from "../assets/youtube.png";
-import insta from "../assets/instagram.png";
-import whatsapp from "../assets/whatsapp.png";
-import li from "../assets/linkedin.png";
-import facebook from "../assets/facebook.png";
-
-import album1 from "../assets/album1.jpg";
-import album2 from "../assets/album2.jpg";
-import album3 from "../assets/album3.jpg";
-import album4 from "../assets/album4.jpg";
-import album5 from "../assets/album5.jpg";
-import album6 from "../assets/album6.jpg";
 import aboutmd1 from "../assets/about-md-1.png";
 import travelaward from "../assets/travelaward-about.jpeg";
 import log from "../assets/logo.png";
@@ -47,7 +33,7 @@ const Footer = () => {
 
     const handlePreviousImage = () => {
         setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
+            (prevIndex) => (prevIndex - 1 + album.length) % album.length
         );
     };
     useEffect(() => {
@@ -65,7 +51,7 @@ const Footer = () => {
     }, []);
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20  bg-yellow-400">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20  place-items-center bg-yellow-400">
                 <div className="flex flex-col justify-between h-full ">
                     <div className="flex justify-between flex-wrap gap-10">
                         <div>
@@ -79,7 +65,9 @@ const Footer = () => {
                                 <li className="cursor-pointer mt-1">
                                     Guidlines
                                 </li>
-                                <li className="cursor-pointer mt-1">Blog</li>
+                                <li className="cursor-pointer mt-1">
+                                    <Link to="blogs">Blog</Link>
+                                </li>
                                 <li className="cursor-pointer mt-1">FAQ</li>
                                 <li className="cursor-pointer mt-1">
                                     Terms & Conditions
@@ -105,9 +93,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="mt-auto p-5  text-lg text-center">
-                        <p>
-                            © Copyright 2022 - Doha Bus - All Rights Reserved
-                        </p>
+                        <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
                     </div>
                 </div>
 

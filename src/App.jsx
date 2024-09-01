@@ -21,6 +21,8 @@ import Hotel from "./pages/Hotel";
 import Tours from "./pages/Tours";
 import Cart from "./pages/Cart";
 import Transportation from "./pages/Transportation";
+import Blogs from "./pages/Blogs";
+import SingleBlog from "./pages/SingleBlog";
 
 import AdminDashboard from "./pages/Admin/Dashboard";
 import Tickets from "./pages/Admin/Tickets";
@@ -124,6 +126,9 @@ function App() {
                             path="/tours/:category"
                             element={<SignleCategory />}
                         />
+
+                        <Route path="/blogs" element={<Blogs />} />
+                        <Route path="/blogs/:id" element={<SingleBlog />} />
                         <Route
                             path="/transportation"
                             element={<Transportation />}
