@@ -124,12 +124,12 @@ const Home = () => {
                       index === 0
                         ? firstImageVariants
                         : index === 1
-                          ? secondImageVariants
-                          : {
-                              enter: { opacity: 0, x: 100 },
-                              center: { opacity: 1, x: 0 },
-                              exit: { opacity: 0, x: -100 },
-                            }
+                        ? secondImageVariants
+                        : {
+                            enter: { opacity: 0, x: 100 },
+                            center: { opacity: 1, x: 0 },
+                            exit: { opacity: 0, x: -100 },
+                          }
                     }
                     transition={{ duration: 0.5 }}
                   >
@@ -139,7 +139,7 @@ const Home = () => {
                       className="w-full h-screen object-cover"
                     />
                   </motion.div>
-                ),
+                )
             )}
         </AnimatePresence>
 
@@ -181,15 +181,22 @@ const Home = () => {
           initial={{ opacity: 0, y: -100 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl p-5 text-center font-semibold">
+          <motion.h1
+          
+          className="text-4xl p-5 text-center font-semibold">
             {lang === "en" ? "Discover Our Tours" : "اكتشف جولاتنا"}
-          </h1>
+          </motion.h1>
           <p className="text-lg p-2 text-center text-gray-500">
             {lang === "en"
               ? "Explore Qatar to its fullest under our wing.."
               : "استكشف قطر على أكمل وجه تحت جناحنا.."}
           </p>
-          <div className="flex justify-center items-center  gap-5 flex-wrap mt-20">
+          <motion.div
+           initial={{ opacity: 0, y: 50 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ amount: 0.2 }}
+           transition={{ duration: 0.4, ease: "easeOut" }}
+          className="flex justify-center items-center  gap-5 flex-wrap mt-20">
             {console.log(categorys)}
             {categorys &&
               categorys?.map((data) => (
@@ -208,13 +215,13 @@ const Home = () => {
                     <h1 className="text-xl font-semibold text-center mt-4 transition-colors duration-300 hover:text-custom-yellow cursor-pointer">
                       {data?.title[lang]}
                     </h1>
-                    <p className="text-gray-500 text-center mt-2">
+                    <p className="text-gray-500 text-center mt-2 overflow-hidden h-19 text-ellipsis line-clamp-3">
                       {data?.description[lang]}
                     </p>
                   </div>
                 </Link>
               ))}
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 

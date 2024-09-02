@@ -58,12 +58,22 @@ const Transportation = () => {
       </div>*/}
 
       <div className="mt-10 mb-10">
-        <h1 className="text-4xl p-5 text-center font-semibold ">
+        <motion.h1
+        initial={{ opacity: 0, y: -50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ amount: 0.2 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="text-4xl p-5 text-center font-semibold ">
           TRANSPORTATION <span className="text-custom-yellow">FLEET</span>
-        </h1>
+        </motion.h1>
         <div className="cards flex justify-center items-center flex-wrap gap-5 p-3">
           {transportations.map((card, index) => (
-            <div className="card w-[500px] p-5 shadow-xl " key={index}>
+            <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ amount: 0.2 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="card w-[500px] p-5 shadow-xl " key={index}>
               <div className="">
                 <img
                   className="w-full h-[300px] object-cover border border-custom-yellow border-2xl"
@@ -98,7 +108,7 @@ const Transportation = () => {
                   Book Now
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
 
           {/* <motion.div
