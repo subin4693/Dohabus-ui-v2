@@ -5,6 +5,7 @@ import contactImg from "../../assets/contact.jpg";
 import { FaMapPin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Map from "./Map";
 const Contact = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const lang = useSelector((state) => state.language.lang);
@@ -262,6 +263,7 @@ const Contact = () => {
                     ))}
                 </div>
             </div>
+            <Map/>
         </div>
     );
 };
