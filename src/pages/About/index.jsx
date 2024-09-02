@@ -43,7 +43,7 @@ const About = () => {
                 subTitle={lang === "en" ? "Home | About" : "الرئيسية | حول"}
             />
             <div
-                className={`lg:w-[70%] mx-auto my-20 px-5 ${
+                className={`lg:w-[100%] mx-auto my-20 px-5 ${
                     lang === "ar" ? "text-right" : "text-left"
                 }`}
             >
