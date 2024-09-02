@@ -8,6 +8,8 @@ import about1 from "../../assets/about-md-1.png";
 import about2 from "../../assets/about-md-2.png";
 import about3 from "../../assets/about-md-3.png";
 import ticket from "../../assets/travelaward-about.jpeg";
+
+import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 
 const About = () => {
@@ -42,7 +44,10 @@ const About = () => {
         title={lang === "en" ? "About" : "حول"}
         subTitle={lang === "en" ? "Home | About" : "الرئيسية | حول"}
       />
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className={`lg:w-[100%] mx-auto my-20 px-5 ${
           lang === "ar" ? "text-right" : "text-left"
         }`}
@@ -118,7 +123,7 @@ const About = () => {
                 <div>
                     <img src={ticket} alt="Ticket" />
                 </div> */}
-      </div>
+      </motion.div>
     </div>
   );
 };
