@@ -97,7 +97,7 @@ const Transportation = () => {
                   {card.title[lang]}
                 </h1>
                 <small className="font-semibold text-[1.4rem] text-gray-500">
-                  Buss
+                  {card.type[lang]}
                 </small>
                 {/* <ul className="h-[200px] mt-2 overflow-hidden text-gray-700 list-disc pl-5 text-[1.2rem]">
                   {card.places.map((feature, idx) => (
@@ -108,19 +108,19 @@ const Transportation = () => {
                   <div className="box border p-1 px-4 flex items-center gap-2 h-full flex-grow">
                     <FaUser size={22} />
                     <small className="font-bold text-[1.2rem] text-gray-500">
-                      13
+                      {card.passenger}
                     </small>
                   </div>
                   <div className="box border p-1 px-4 flex items-center gap-2 h-full flex-grow">
                     <FaSuitcase size={22} />
                     <small className="font-bold text-[1.2rem] text-gray-500">
-                      7 Small Bags
+                      {card.luggage} Bags
                     </small>
                   </div>
                   <div className="box border p-1 px-4 flex items-center gap-2 h-full flex-grow">
                     <FaCogs size={25} />
                     <small className="font-bold text-[1.2rem] text-gray-500">
-                      AC
+                      {card.other[lang]}
                     </small>
                   </div>
                 </div>
