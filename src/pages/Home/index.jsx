@@ -181,9 +181,7 @@ const Home = () => {
           initial={{ opacity: 0, y: -100 }}
           transition={{ duration: 0.5 }}
         >
-          <motion.h1
-          
-          className="text-4xl p-5 text-center font-semibold">
+          <motion.h1 className="text-4xl p-5 text-center font-semibold">
             {lang === "en" ? "Discover Our Tours" : "اكتشف جولاتنا"}
           </motion.h1>
           <p className="text-lg p-2 text-center text-gray-500">
@@ -192,11 +190,12 @@ const Home = () => {
               : "استكشف قطر على أكمل وجه تحت جناحنا.."}
           </p>
           <motion.div
-           initial={{ opacity: 0, y: 50 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ amount: 0.2 }}
-           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="flex justify-center items-center  gap-5 flex-wrap mt-20">
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ amount: 0.2 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="flex justify-center items-center  gap-5 flex-wrap mt-20"
+          >
             {console.log(categorys)}
             {categorys &&
               categorys?.map((data) => (
@@ -231,7 +230,13 @@ const Home = () => {
         }}
         className="p-10 py-24 flex justify-center items-center flex-wrap"
       >
-        <div className="relative w-full lg:w-2/5 h-[400px] ">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ amount: 0.2 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="relative w-full lg:w-2/5 h-[400px] "
+        >
           <iframe
             className="absolute top-0 left-0 w-full h-full"
             src="https://www.youtube.com/embed/PoyyKl6uypA"
@@ -240,14 +245,25 @@ const Home = () => {
             allowFullScreen
             title="YouTube video"
           ></iframe>
-        </div>
+        </motion.div>
 
         <div className="w-full lg:w-1/5">
-          <h1 className="text-4xl p-5 text-center font-semibold">
+          <motion.h1
+            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: -100 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl p-5 text-center font-semibold"
+          >
             {lang === "en" ? "OVERALL TOUR EXPERIENCE" : "تجربة الجولة العامة"}
-          </h1>
+          </motion.h1>
         </div>
-        <div className="relative w-full lg:w-2/5 h-[400px]">
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ amount: 0.2 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="relative w-full lg:w-2/5 h-[400px]"
+        >
           <iframe
             className="absolute top-0 left-0 w-full h-full"
             src="https://www.youtube.com/embed/PoyyKl6uypA"
@@ -256,7 +272,7 @@ const Home = () => {
             allowFullScreen
             title="YouTube video"
           ></iframe>
-        </div>
+        </motion.div>
       </div>
       <div
         className="w-full py-20"
