@@ -8,7 +8,9 @@ import log from "../assets/logo.png";
 
 // import { CiMail } from "react-icons/ci";
 // import { FaPhoneAlt } from "react-icons/fa";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa"; // Call icon
 import { AiOutlineMail } from "react-icons/ai"; // Email icon
@@ -26,16 +28,9 @@ const Footer = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [selectedImage, setSelectedImage] = useState(null);
     // const album = [album1, album2, album3, album4, album5, album6];
-    const [album, setAlbum] = useState([]);
-    const handleNextImage = () => {
-        setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
-    };
 
-    const handlePreviousImage = () => {
-        setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
-        );
-    };
+    const [album, setAlbum] = useState([]);
+
     useEffect(() => {
         const getData = async () => {
             try {
@@ -49,10 +44,29 @@ const Footer = () => {
         };
         getData();
     }, []);
+    const getPreviousIndex = (currentIndex, length) => {
+        return currentIndex === 0 ? length - 1 : currentIndex - 1;
+    };
 
+    const getNextIndex = (currentIndex, length) => {
+        return currentIndex === length - 1 ? 0 : currentIndex + 1;
+    };
+    const settings = {
+        className: "slider variable-width",
+        dots: true,
+        speed: 500,
+        infinite: true,
+        centerMode: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        variableWidth: true,
+        cssEase: "ease-in-out",
+        nextArrow: <NextArrow />, // Custom Next Arrow
+        prevArrow: <PrevArrow />,
+    };
     return (
         <>
-            <div className="bg-yellow-400 p-10 md:px-20">
+            <div className="bg-yellow-400 p-10 md:px-20 flex flex-col justify-center items-center ">
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-start text-dark">
                     {/* Useful Pages Section */}
                     <div className="space-y-5">
@@ -108,31 +122,13 @@ const Footer = () => {
                                     onClick={() => setSelectedImage(index)}
                                 />
                             ))}{" "}
-                            {album?.map((photo, index) => (
-                                <img
-                                    key={index}
-                                    src={photo.image}
-                                    alt={`Photo ${index}`}
-                                    className="object-cover w-full h-[100px] cursor-pointer transition-transform hover:scale-105"
-                                    onClick={() => setSelectedImage(index)}
-                                />
-                            ))}{" "}
-                            {album?.map((photo, index) => (
-                                <img
-                                    key={index}
-                                    src={photo.image}
-                                    alt={`Photo ${index}`}
-                                    className="object-cover w-full h-[100px] cursor-pointer transition-transform hover:scale-105"
-                                    onClick={() => setSelectedImage(index)}
-                                />
-                            ))}
                         </div>
                     </div>
 
                     {/* Social Media Links */}
                     <div className="space-y-5 ">
                         <h2 className="text-2xl font-bold">Follow Us</h2>
-                        <div className="flex flex-wrap">
+                        <div className="flex flex-wrap gap-2">
                             <Link
                                 to="http://wa.me/97433246556"
                                 className="p-2 text-white bg-black rounded-full"
@@ -182,7 +178,7 @@ const Footer = () => {
                 </div>
 
                 {/* Footer Bottom */}
-                <div className="mt-10 text-center text-lg flex justify-between items-center ">
+                <div className="mt-10 text-center text-lg flex justify-between  w-full items-center ">
                     <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
 
                     <div className="w-[200px] hidden md:inline">
@@ -193,35 +189,34 @@ const Footer = () => {
 
             {/* Image Modal for Media Section */}
             {selectedImage !== null && (
-                <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70">
-                    <div className="relative max-w-2xl p-5 bg-white rounded-lg">
-                        <IoClose
-                            className="absolute top-2 right-2 cursor-pointer text-black"
-                            size={30}
-                            onClick={() => setSelectedImage(null)}
-                        />
-                        <img
-                            src={album[selectedImage].image}
-                            alt={`Selected ${selectedImage}`}
-                            className="w-full h-full object-cover rounded-md"
-                        />
-                        <div className="absolute inset-y-0 left-0 flex items-center">
-                            <button
-                                className="p-2 text-white bg-black rounded-full"
-                                onClick={handlePreviousImage}
+                <div className="slider-container fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70">
+                    <button
+                        className="absolute top-20 right-20  z-20"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <IoClose className="text-2xl text-white" />
+                    </button>
+                    <Slider {...settings} className="w-screen">
+                        {album.map((image, index) => (
+                            <div
+                                key={index}
+                                className={`h-[89vh] scale-75 flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
+                                    index === selectedImage ? "" : ""
+                                }`}
+                                style={{
+                                    width: "50vw",
+
+                                    margin: "0 20px", // Adjust the gap here
+                                }}
                             >
-                                <IoArrowBack size={20} />
-                            </button>
-                        </div>
-                        <div className="absolute inset-y-0 right-0 flex items-center">
-                            <button
-                                className="p-2 text-white bg-black rounded-full"
-                                onClick={handleNextImage}
-                            >
-                                <IoArrowForward size={20} />
-                            </button>
-                        </div>
-                    </div>
+                                <img
+                                    src={image.image}
+                                    alt={`Slide ${index}`}
+                                    className="w-full h-full object-cover hover:scale-105 duration-300"
+                                />
+                            </div>
+                        ))}
+                    </Slider>
                 </div>
             )}
         </>
@@ -229,61 +224,105 @@ const Footer = () => {
 };
 
 export default Footer;
+const NextArrow = ({ onClick }) => {
+    return (
+        <button
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+            onClick={onClick}
+        >
+            <IoArrowForward className="text-2xl" />
+        </button>
+    );
+};
 
-{
-    /* <div>
-          <h2 className="text-white text-2xl font-bold mb-5">Album</h2>
-          <div className="grid grid-cols-3 gap-1 max-w-[350px]">
-            {album.map((photo, index) => (
-              <img
-                key={index}
-                src={photo}
-                alt={`Photo ${index}`}
-                className="object-cover w-full h-full cursor-pointer"
-                onClick={() => setSelectedImage(index)}
-              />
-            ))}
-          </div>
-          <div
-            className={`fixed inset-0   flex justify-center items-center transition-opacity duration-300 ${
-              selectedImage !== null ? "z-10" : "-z-10 opacity-0"
-            }`}
-          >
-            <div
-              className={`fixed inset-0 bg-black  transition-opacity duration-300 ${
-                selectedImage !== null ? "opacity-70" : "-z-10 opacity-0"
-              }`}
-            >
-              {" "}
-            </div>
-            <div>
-              {" "}
-              {selectedImage !== null && (
-                <div className="relative w-[80vw] max-w-[800px] h-[80vh]">
-                  <IoClose
-                    className="w-10 h-10 text-white cursor-pointer absolute -right-10 -top-10 p-2"
-                    onClick={() => setSelectedImage(null)}
-                  />
-                  <img
-                    src={album[selectedImage]}
-                    alt={`Selected ${selectedImage}`}
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    className="absolute -left-12 top-1/2 transform -translate-y-1/2 p-2 text-white"
-                    onClick={handlePreviousImage}
-                  >
-                    <IoArrowBack className="w-8 h-8" />
-                  </button>
-                  <button
-                    className="absolute -right-12 top-1/2 transform -translate-y-1/2 p-2 text-white"
-                    onClick={handleNextImage}
-                  >
-                    <IoArrowForward className="w-8 h-8" />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div> */
-}
+const PrevArrow = ({ onClick }) => {
+    return (
+        <button
+            className="absolute z-10 left-2 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+            onClick={onClick}
+        >
+            <IoArrowBack className="text-2xl" />
+        </button>
+    );
+};
+
+// <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70">
+//     <Swiper
+//         effect={"coverflow"}
+//         grabCursor={true}
+//         centeredSlides={true}
+//         loop={true}
+//         slidesPerView={"auto"}
+//         modules={[EffectCoverflow, Pagination, Navigation]}
+//         className="swiper_container bg-red-500 w-[500px]"
+//     >
+// {album.map((image, index) => (
+//     <SwiperSlide
+//         key={index}
+//         className={`min-w-full flex-shrink-0 overflow-hidden flex justify-center items-center duration-500 ${
+//             index === selectedImage
+//                 ? "scale-50 mx-20"
+//                 : ""
+//         }`}
+//     >
+//         <img
+//             src={image.image}
+//             alt={`Slide ${index}`}
+//             className="w-full h-full object-cover hover:scale-105 duration-300"
+//         />
+//     </SwiperSlide>
+// ))}
+
+//         <div className="slider-controler">
+//             <div className="swiper-button-prev slider-arrow">
+//                 <IoArrowForward name="arrow-back-outline" />
+//             </div>
+//             <div className="swiper-button-next slider-arrow">
+//                 <IoArrowBack name="arrow-forward-outline" />
+//             </div>
+//             <div className="swiper-pagination"></div>
+//         </div>
+//     </Swiper>
+// </div>
+
+// /*
+// <div className="relative flex items-center justify-center w-full h-[65vh] overflow-hidden">
+//                         {/* Images Container */}
+//                         <div
+//                             className="flex transition-transform duration-500 ease-in-out w-[50%] bg-red-500  "
+//                             style={{
+//                                 transform: `translateX(-${selectedImage + selectedImage * 50}%)`,
+//                             }}
+//                         >
+//                             {" "}
+//                             {album.map((image, index) => (
+//                                 <div
+//                                     key={index}
+//                                     className={`min-w-full flex-shrink-0 overflow-hidden flex justify-center items-center duration-500 ${
+//                                         index === selectedImage
+//                                             ? "scale-50 mx-20"
+//                                             : ""
+//                                     }`}
+//                                 >
+//                                     <img
+//                                         src={image.image}
+//                                         alt={`Slide ${index}`}
+//                                         className="w-full h-full object-cover hover:scale-105 duration-300"
+//                                     />
+//                                 </div>
+//                             ))}
+//                         </div>
+//                         <button
+//                             className="absolute left-12 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+//                             onClick={handlePreviousImage}
+//                         >
+//                             <IoArrowBack size={24} />
+//                         </button>
+//                         <button
+//                             className="absolute right-12 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+//                             onClick={handleNextImage}
+//                         >
+//                             <IoArrowForward size={24} />
+//                         </button>
+//                     </div>
+//  */

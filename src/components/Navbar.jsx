@@ -140,7 +140,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                                 className="font-bold text-lg text-dark cursor-pointer"
                                 onClick={handleClose}
                             >
-                                X
+                                <IoClose />
                             </h1>
                         </div>
                     </div>
