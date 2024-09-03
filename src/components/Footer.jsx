@@ -203,15 +203,19 @@ const Footer = () => {
                         {album.map((image, index) => (
                             <div
                                 key={index}
-                                className={`h-[89vh] scale-75 flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
+                                className={`h-[89vh]   scale-75 flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
                                     index === selectedImage ? "" : ""
                                 }`}
                                 style={{
-                                    width: "50vw",
+                                    width:
+                                        window.innerWidth <= 640
+                                            ? "70vw"
+                                            : "50vw",
 
                                     margin: "0 20px", // Adjust the gap here
                                 }}
                             >
+                                {console.log(window.innerWidth)}
                                 <img
                                     src={image.image}
                                     alt={`Slide ${index}`}

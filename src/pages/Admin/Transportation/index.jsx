@@ -42,27 +42,27 @@ const Transportation = () => {
             luggage,
             other,
             coverImage: image,
-          }
+          },
         );
         updatedFleet = res.data.data.transportation;
 
         // Update the fleet in the state
         setTransportations((prevTransportations) =>
           prevTransportations.map((fleet) =>
-            fleet._id === updatedFleet._id ? updatedFleet : fleet
-          )
+            fleet._id === updatedFleet._id ? updatedFleet : fleet,
+          ),
         );
 
         toast.success("Transportation fleet updated");
       } else {
         // Create a new transportation fleet
-        if (!file) {
-          return toast.warn("Please select an image");
-        }
+        // if (!file) {
+        //   return toast.warn("Please select an image");
+        // }
 
-        if (!image) {
-          return toast.warn("Image is uploading, wait a second");
-        }
+        // if (!image) {
+        //   return toast.warn("Image is uploading, wait a second");
+        // }
         const res = await axios.post(`${BASE_URL}/transportations`, {
           title,
           type,
@@ -71,6 +71,7 @@ const Transportation = () => {
           other,
           coverImage: image,
         });
+
         updatedFleet = res.data.data.transportation;
 
         // Add the new fleet to the end of the state array
@@ -155,8 +156,8 @@ const Transportation = () => {
       // Update the fleet in the state
       setTransportations((prevTransportations) =>
         prevTransportations.map((fleet) =>
-          fleet._id === updatedFleet._id ? updatedFleet : fleet
-        )
+          fleet._id === updatedFleet._id ? updatedFleet : fleet,
+        ),
       );
     } catch (error) {
       toast.error("Something went wrong. Please try again later");
@@ -360,14 +361,14 @@ const Transportation = () => {
           />
 
           // key={card._id}
-          // 						transid={card._id}
-          // 						title={card.title[lang]}
-          // 						places={card.places}
-          // 						lang={lang}
-          // 						imageUrl={card.coverImage}
-          // 						onClick={() => handleDialog(card)}
-          // 						switchActive={switchActive}
-          // 						isActive={card.isActive}
+          //            transid={card._id}
+          //            title={card.title[lang]}
+          //            places={card.places}
+          //            lang={lang}
+          //            imageUrl={card.coverImage}
+          //            onClick={() => handleDialog(card)}
+          //            switchActive={switchActive}
+          //            isActive={card.isActive}
         ))}
       </div>
     </div>
