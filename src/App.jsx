@@ -45,6 +45,9 @@ import Locations from "./pages/Admin/Locations";
 import Offers from "./pages/Admin/Offers";
 import HotelBookings from "./pages/Admin/HotelBookings";
 import OfferPromo from "./pages/Offer&Promotion";
+import Guidelines from "./pages/Guidelines";
+import TermandCond from "./pages/Term&Conditions";
+
 
 import AdminTransportation from "./pages/Admin/Transportation";
 
@@ -113,7 +116,9 @@ function App() {
             <Route path="/hotel" element={<Hotel />} />
             <Route path="/tours" element={<Tours />} />
             <Route path="/offer-promo" element={<OfferPromo />} />
+            <Route path="/guidelines" element={<Guidelines />} />
             <Route path="/tours/:category" element={<SignleCategory />} />
+            <Route path="termandconditions" element={<TermandCond />} />
 
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/blogs/:id" element={<SingleBlog />} />
