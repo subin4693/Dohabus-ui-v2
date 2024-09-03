@@ -82,6 +82,9 @@ const Footer = () => {
                                 <Link to="/blogs">Blog</Link>
                             </li>
                             <li className="cursor-pointer hover:underline">
+                                <Link to="/blogs-create">Write Blog</Link>
+                            </li>
+                            <li className="cursor-pointer hover:underline">
                                 FAQ
                             </li>
                             <li className="cursor-pointer hover:underline">

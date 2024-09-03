@@ -23,6 +23,7 @@ import Cart from "./pages/Cart";
 import Transportation from "./pages/Transportation";
 import Blogs from "./pages/Blogs";
 import SingleBlog from "./pages/SingleBlog";
+import CreateBlog from "./pages/Create-Blog";
 
 import AdminDashboard from "./pages/Admin/Dashboard";
 import Tickets from "./pages/Admin/Tickets";
@@ -86,7 +87,7 @@ function App() {
         verify(); // Call verify on component mount
     }, []);
     return (
-        <div className="font-custom">
+        <div className="font-custom cursor-default">
             <Router>
                 <Routes>
                     <Route path="/signup" element={<Signup />} />
@@ -129,6 +130,17 @@ function App() {
 
                         <Route path="/blogs" element={<Blogs />} />
                         <Route path="/blogs/:id" element={<SingleBlog />} />
+                        <Route
+                            path="/blogs-create"
+                            element={
+                                user?.email ? (
+                                    <CreateBlog />
+                                ) : (
+                                    <Navigate to="/signin" />
+                                )
+                            }
+                        />
+
                         <Route
                             path="/transportation"
                             element={<Transportation />}
