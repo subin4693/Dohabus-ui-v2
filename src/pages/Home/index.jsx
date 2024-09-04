@@ -3,12 +3,50 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import logo from "../../assets/logo.png";
+import Slider from "react-slick";
+
+import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
+const reviews = [
+  {
+    name: "John Doe",
+    text: "This service exceeded my expectations. Highly recommend it!",
+    image:
+      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
+  },
+  {
+    name: "Jane Smith",
+    text: "Fantastic experience! The team was very professional and friendly.",
+    image:
+      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
+  },
+  {
+    name: "Sam Wilson",
+    text: "Great value for money. I will definitely use this service again.",
+    image:
+      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
+  },
+  {
+    name: "Sam Wilson",
+    text: "Great value for money. I will definitely use this service again.",
+    image:
+      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
+  },
+  {
+    name: "Sam Wilson",
+    text: "Great value for money. I will definitely use this service again.",
+    image:
+      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
+  },
+  // Add more reviews as needed
+];
 const Home = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [currentIndex, setCurrentIndex] = useState(0);
   const lang = useSelector((state) => state.language.lang);
   const [slides, setSlides] = useState([]);
   const [categorys, setCategorys] = useState([]);
+  // const [currentIndex, setCurrentIndex] = useState(0);
   // const slides = [
   //   {
   //     url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
@@ -27,6 +65,20 @@ const Home = () => {
   //     alt: "Slide 4",
   //   },
   // ];
+
+  const settings = {
+    className: "slider variable-width",
+    // dots: true,
+    speed: 500,
+    infinite: true,
+    centerMode: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    variableWidth: true,
+    cssEase: "ease-in-out",
+    nextArrow: <NextArrow />, // Custom Next Arrow
+    prevArrow: <PrevArrow />,
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -99,6 +151,16 @@ const Home = () => {
     };
     getData();
   }, []);
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % reviews.length);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length
+    );
+  };
 
   return (
     <div
@@ -233,7 +295,7 @@ const Home = () => {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="relative w-full lg:w-2/5 h-[400px] "
         >
@@ -273,6 +335,69 @@ const Home = () => {
             title="YouTube video"
           ></iframe>
         </motion.div>
+      </div>
+      <div
+        className="pb-6"
+        style={{
+          backgroundImage: "linear-gradient(138deg, #ffffff 50%, #fed92e 50%)",
+        }}
+      >
+        <div className="flex justify-between items-center flex-wrap gap-5">
+          <div className="flex-grow">
+            <hr className="border border-dark" />
+          </div>
+          <div className="px-4">
+            <h1 className="text-center text-5xl font-semibold">
+              What Our Customers Say!
+            </h1>
+          </div>
+          <div className="flex-grow ">
+            <hr className="border border-dark" />
+          </div>
+        </div>
+        <h3 className="text-center mt-5 text-3xl text-gray-700">
+          Inbound Tours Qatar - Most trusted website to book your Desert Safari
+          in Qatar
+        </h3>
+        <div className="pt-20 flex justify-center items-center pb-5 flex-wrap">
+          <div className="p-5 flex flex-col items-center">
+            <h1 className="text-3xl text-center">
+              Based on <b>816 reviews</b>
+            </h1>
+            <img className="w-[30vh] mt-2" src={logo} alt="logo" />
+          </div>
+          <div className="slider-container inset-0 z-10 flex items-center justify-center px-4">
+            <Slider
+              {...settings}
+              className="w-[90vw] max-w-[90vw] h-[40vh] md:w-[61.2vw] overflow-hidden"
+            >
+              {reviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 w-full max-w-[350px] h-[45vh] bg-white shadow-lg p-4 rounded-lg mx-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <img
+                      className="w-[50px] h-[50px] object-cover rounded-full"
+                      src={review.image}
+                      alt="reviewer"
+                    />
+                    <div>
+                      <h1 className="text-3xl font-semibold">{review.name}</h1>
+                      <p className="text-2xl">2-3-2024</p>
+                    </div>
+                  </div>
+                  <p className="mt-5 text-[1.2rem]">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Adipisci ab earum quibusdam ipsam corporis consectetur est,
+                    sed dolor nisi eligendi hic neque qui velit ut architecto
+                    ducimus enim eius expedita! lorem
+                  </p>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
       </div>
       <div
         className="w-full py-20"
@@ -316,3 +441,25 @@ const Home = () => {
 };
 
 export default Home;
+
+const NextArrow = ({ onClick }) => {
+  return (
+    <button
+      className="absolute right-2 mt-10 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+      onClick={onClick}
+    >
+      <IoArrowForward className="text-2xl" />
+    </button>
+  );
+};
+
+const PrevArrow = ({ onClick }) => {
+  return (
+    <button
+      className="absolute z-10 mt-10 left-2 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+      onClick={onClick}
+    >
+      <IoArrowBack className="text-2xl" />
+    </button>
+  );
+};
