@@ -20,6 +20,7 @@ const TourPlanForm = ({ onClose }) => {
     const [language, setLanguage] = useState({ en: "", ar: "" });
     const [description, setDescription] = useState({ en: "", ar: "" });
     const [highlights, setHighlights] = useState([{ en: "", ar: "" }]);
+    const [addOn, setAddOn] = useState([{ en: "", ar: "" }]);
     const [includes, setIncludes] = useState([{ en: "", ar: "" }]);
     const [itinerary, setItinerary] = useState([{ en: "", ar: "" }]);
     const [knowBeforeYouGo, setKnowBeforeYouGo] = useState([
@@ -361,6 +362,7 @@ const TourPlanForm = ({ onClose }) => {
                             onChange={handleInputChange(setter)}
                             className="p-2 border rounded-md w-full"
                             required
+                            dir="rtl"
                         />
                     </div>
                 ))}
@@ -376,6 +378,11 @@ const TourPlanForm = ({ onClose }) => {
                         label: "Itinerary",
                         state: itinerary,
                         setter: setItinerary,
+                    },
+                    {
+                        label: "AddOn",
+                        state: addOn,
+                        setter: setAddOn,
                     },
                 ].map(({ label, state, setter }) => (
                     <div key={label}>
@@ -399,6 +406,7 @@ const TourPlanForm = ({ onClose }) => {
                                     onChange={handleArrayChange(setter, index)}
                                     className="p-2 border rounded-md w-full"
                                     required
+                                    dir="rtl"
                                 />
                                 <button
                                     type="button"
@@ -671,6 +679,7 @@ const TourPlanForm = ({ onClose }) => {
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
+                                    dir="rtl"
                                 />
                             </div>
                             <button
@@ -728,6 +737,7 @@ const TourPlanForm = ({ onClose }) => {
                                             e.target.value,
                                         )
                                     }
+                                    dir="rtl"
                                     className="p-2 border rounded-md w-full"
                                 />
                             </div>
@@ -759,6 +769,7 @@ const TourPlanForm = ({ onClose }) => {
                                             e.target.value,
                                         )
                                     }
+                                    dir="rtl"
                                     className="p-2 border rounded-md w-full"
                                 />
                             </div>

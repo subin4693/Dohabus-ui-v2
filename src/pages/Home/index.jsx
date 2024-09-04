@@ -7,7 +7,7 @@ import logo from "../../assets/logo.png";
 import Slider from "react-slick";
 
 import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
-const reviews = [
+const reviewss = [
   {
     name: "John Doe",
     text: "This service exceeded my expectations. Highly recommend it!",
@@ -46,6 +46,7 @@ const Home = () => {
   const lang = useSelector((state) => state.language.lang);
   const [slides, setSlides] = useState([]);
   const [categorys, setCategorys] = useState([]);
+  const [reviews, setReviews] = useState([]);
   // const [currentIndex, setCurrentIndex] = useState(0);
   // const slides = [
   //   {
@@ -68,14 +69,14 @@ const Home = () => {
 
   const settings = {
     className: "slider variable-width",
-    // dots: true,
-    speed: 500,
+    dots: true,
     infinite: true,
-    centerMode: true,
-    slidesToShow: 1,
+    slidesToShow: 3,
     slidesToScroll: 1,
-    variableWidth: true,
-    cssEase: "ease-in-out",
+    autoplay: true,
+    speed: 2000,
+    autoplaySpeed: 2000,
+    cssEase: "linear",
     nextArrow: <NextArrow />, // Custom Next Arrow
     prevArrow: <PrevArrow />,
   };
@@ -93,16 +94,13 @@ const Home = () => {
   };
 
   const nextSlide = () => {
-    console.log("next slide called");
-    console.log(currentIndex);
-
     setCurrentIndex((prevIndex) => {
       // Check if prevIndex is not a number
       if (typeof prevIndex !== "number" || isNaN(prevIndex)) {
         return 0;
       }
 
-      return (prevIndex + 1) % slides.length;
+      return (prevIndex + 1) % slides?.length;
     });
   };
 
@@ -138,11 +136,12 @@ const Home = () => {
     const getData = async () => {
       try {
         const data = await axios.get(BASE_URL + "/banner");
-        console.log("Banner : ", data?.data?.data?.banner);
         setSlides(data?.data?.data?.banner);
-
+        const reviewData = await axios.get(BASE_URL + "/reviews/all");
+        console.log(reviewData.data.data);
+        setReviews(reviewData.data.data);
         const categoryData = await axios.get(BASE_URL + "/categorys");
-        console.log(categoryData?.data?.data?.categories);
+
         // setAlbum(data?.data?.images);
         setCategorys(categoryData?.data?.data?.categories);
       } catch (error) {
@@ -158,7 +157,7 @@ const Home = () => {
 
   const goToPrevious = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length
+      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length,
     );
   };
 
@@ -186,12 +185,12 @@ const Home = () => {
                       index === 0
                         ? firstImageVariants
                         : index === 1
-                        ? secondImageVariants
-                        : {
-                            enter: { opacity: 0, x: 100 },
-                            center: { opacity: 1, x: 0 },
-                            exit: { opacity: 0, x: -100 },
-                          }
+                          ? secondImageVariants
+                          : {
+                              enter: { opacity: 0, x: 100 },
+                              center: { opacity: 1, x: 0 },
+                              exit: { opacity: 0, x: -100 },
+                            }
                     }
                     transition={{ duration: 0.5 }}
                   >
@@ -201,7 +200,7 @@ const Home = () => {
                       className="w-full h-screen object-cover"
                     />
                   </motion.div>
-                )
+                ),
             )}
         </AnimatePresence>
 
@@ -258,7 +257,6 @@ const Home = () => {
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="flex justify-center items-center  gap-5 flex-wrap mt-20"
           >
-            {console.log(categorys)}
             {categorys &&
               categorys?.map((data) => (
                 <Link
@@ -370,8 +368,11 @@ const Home = () => {
             <Slider
               {...settings}
               className="w-[90vw] max-w-[90vw] h-[40vh] md:w-[61.2vw] overflow-hidden"
+              afterChange={(newIndex) => {
+                console.log(newIndex);
+              }}
             >
-              {reviews.map((review, index) => (
+              {reviewss.map((review, index) => (
                 <div
                   key={index}
                   className="flex-shrink-0 w-full max-w-[350px] h-[45vh] bg-white shadow-lg p-4 rounded-lg mx-4"

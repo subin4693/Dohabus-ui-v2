@@ -366,6 +366,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                             onChange={handleInputChange(setter)}
                             className="p-2 border rounded-md w-full"
                             required
+                            dir="rtl"
                         />
                     </div>
                 ))}
@@ -404,6 +405,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                     onChange={handleArrayChange(setter, index)}
                                     className="p-2 border rounded-md w-full"
                                     required
+                                    dir="rtl"
                                 />
                                 <button
                                     type="button"
@@ -676,6 +678,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
+                                    dir="rtl"
                                 />
                             </div>
                             <button
@@ -733,6 +736,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                             e.target.value,
                                         )
                                     }
+                                    dir="rtl"
                                     className="p-2 border rounded-md w-full"
                                 />
                             </div>
@@ -765,6 +769,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
+                                    dir="rtl"
                                 />
                             </div>
                             <button

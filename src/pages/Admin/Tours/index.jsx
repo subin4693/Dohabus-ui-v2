@@ -27,8 +27,8 @@ const Tours = () => {
             // Update the plans array with the updated plan
             setPlans((prevPlans) =>
                 prevPlans.map((plan) =>
-                    plan._id === updatedPlan._id ? updatedPlan : plan
-                )
+                    plan._id === updatedPlan._id ? updatedPlan : plan,
+                ),
             );
 
             toast.success("Plan status changed", {
@@ -89,7 +89,7 @@ const Tours = () => {
                     {plans.map((plan) => (
                         <div
                             key={plan._id}
-                            className="flex flex-col border border-slate-200 shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105 bg-white"
+                            className="flex flex-col h-fit border border-slate-200 shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105 bg-white"
                         >
                             <div className="relative h-56 w-full">
                                 <img

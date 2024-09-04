@@ -199,12 +199,20 @@ const Footer = () => {
                     >
                         <IoClose className="text-2xl text-white" />
                     </button>
-                    <Slider {...settings} className="w-screen">
+                    <Slider
+                        {...settings}
+                        className="w-screen"
+                        beforeChange={(currentSlide, nextSlide) =>
+                            setSelectedImage(nextSlide)
+                        }
+                    >
                         {album.map((image, index) => (
                             <div
                                 key={index}
                                 className={`h-[89vh]   scale-75 flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
-                                    index === selectedImage ? "" : ""
+                                    index === selectedImage
+                                        ? "scale-75 p-10 bg-red-500"
+                                        : ""
                                 }`}
                                 style={{
                                     width:
@@ -215,7 +223,9 @@ const Footer = () => {
                                     margin: "0 20px", // Adjust the gap here
                                 }}
                             >
-                                {console.log(window.innerWidth)}
+                                {console.log("index" + index)}
+                                {console.log("selected" + selectedImage)} }
+                                {console.log(index === selectedImage)}
                                 <img
                                     src={image.image}
                                     alt={`Slide ${index}`}

@@ -72,6 +72,7 @@ const Offers = () => {
                 setOffers(response.data.data.offers);
 
                 const res = await axios.get(BASE_URL + "/plans/plan-titles");
+                console.log("new plan--->");
                 console.log(res.data.data.plans);
                 setPlans(res.data.data.plans);
             } catch (error) {
