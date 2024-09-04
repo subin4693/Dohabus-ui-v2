@@ -32,6 +32,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     const [adultPrice, setAdultPrice] = useState("");
     const [childPrice, setChildPrice] = useState("");
     const [selectedSessions, setSelectedSessions] = useState([]);
+    const [isPickupRequired, setIsPickupRequired] = useState(false);
+    const [isDropOffRequired, setIsDropOffRequired] = useState(false);
 
     const [faq, setFaq] = useState([
         { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
@@ -176,6 +178,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             childPrice,
             faq,
             selectedSessions,
+            isPickupRequired,
+            isDropOffRequired,
         };
         try {
             const res = await axios.put(
@@ -250,7 +254,9 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 setAdultPrice(planData.adultPrice || "");
                 setChildPrice(planData.childPrice || "");
                 setSelectedSessions(planData.sessions || []);
-                console.log(planData.selectedSessions);
+
+                setIsPickupRequired(planData.isPickupRequired || false);
+                setIsDropOffRequired(planData.isDropOffRequired || false);
                 setFaq(
                     planData.faq || [
                         {
@@ -419,7 +425,36 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                             Add {label}
                         </button>
                     </div>
-                ))}
+                ))}{" "}
+                <label htmlFor="galleryImages" className="block mb-2">
+                    Pickup and Dropoff
+                </label>
+                <div className="flex gap-10 items-center">
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isPickupRequired}
+                                onChange={(e) =>
+                                    setIsPickupRequired(e.target.checked)
+                                }
+                            />{" "}
+                            &nbsp;&nbsp; Is pickup location required
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isDropOffRequired}
+                                onChange={(e) =>
+                                    setIsDropOffRequired(e.target.checked)
+                                }
+                            />
+                            &nbsp;&nbsp; Is drop off location required
+                        </label>
+                    </div>
+                </div>
                 {/* Gallery Images Input */}
                 <div>
                     <label htmlFor="galleryImages" className="block mb-2">

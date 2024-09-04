@@ -17,7 +17,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
     const { user } = useSelector((state) => state.user);
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [categorys, setCategorys] = useState([]);
-    console.log(user);
 
     let cartItemCount = 3;
     const navigate = useNavigate();
@@ -100,7 +99,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
         const getData = async () => {
             try {
                 const data = await axios.get(BASE_URL + "/categorys/cat-tour");
-                console.log(data.data?.data?.category);
+
                 // setAlbum(data?.data?.images);
                 setCategorys(data?.data?.data?.category);
             } catch (error) {

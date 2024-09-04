@@ -32,6 +32,8 @@ const TourPlanForm = ({ onClose }) => {
     const [adultPrice, setAdultPrice] = useState("");
     const [childPrice, setChildPrice] = useState("");
     const [selectedSessions, setSelectedSessions] = useState([]);
+    const [isPickupRequired, setIsPickupRequired] = useState(false);
+    const [isDropOffRequired, setIsDropOffRequired] = useState(false);
 
     const [faq, setFaq] = useState([
         { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
@@ -109,7 +111,7 @@ const TourPlanForm = ({ onClose }) => {
         setAvailableDays((prevDays) =>
             prevDays.includes(selectedDay)
                 ? prevDays.filter((day) => day !== selectedDay)
-                : [...prevDays, selectedDay]
+                : [...prevDays, selectedDay],
         );
     };
     const handleChange = (index, field, value) => {
@@ -133,7 +135,7 @@ const TourPlanForm = ({ onClose }) => {
         setSelectedSessions((prevSessions) =>
             prevSessions.includes(selectedSession)
                 ? prevSessions.filter((session) => session !== selectedSession)
-                : [...prevSessions, selectedSession]
+                : [...prevSessions, selectedSession],
         );
     };
     const handleChangefaq = (index, field, lang, value) => {
@@ -156,6 +158,29 @@ const TourPlanForm = ({ onClose }) => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (
+            !category ||
+            !coverImage ||
+            !title ||
+            !duration ||
+            !typeOfTour ||
+            !transportation ||
+            !language ||
+            !description ||
+            !highlights ||
+            !includes ||
+            !itinerary ||
+            !galleryImages ||
+            !availableDays ||
+            !adultPrice ||
+            !childPrice ||
+            !selectedSessions
+        ) {
+            toast.error("Please fill out all required fields.");
+            return;
+        }
+
         const formData = {
             category,
             coverImage,
@@ -176,6 +201,8 @@ const TourPlanForm = ({ onClose }) => {
             childPrice,
             faq,
             selectedSessions,
+            isPickupRequired,
+            isDropOffRequired,
         };
         // console.log(formData);
         // return;
@@ -183,7 +210,7 @@ const TourPlanForm = ({ onClose }) => {
             const res = await axios.post(
                 BASE_URL + "/plans",
                 { formData },
-                { withCredentials: true }
+                { withCredentials: true },
             );
             toast.success("  Plan created successfully...", {
                 position: "top-right",
@@ -377,7 +404,7 @@ const TourPlanForm = ({ onClose }) => {
                                     type="button"
                                     onClick={handleRemoveFromArray(
                                         setter,
-                                        index
+                                        index,
                                     )}
                                     className="text-red-500"
                                 >
@@ -393,7 +420,36 @@ const TourPlanForm = ({ onClose }) => {
                             Add {label}
                         </button>
                     </div>
-                ))}
+                ))}{" "}
+                <label htmlFor="galleryImages" className="block mb-2">
+                    Pickup and Dropoff
+                </label>
+                <div className="flex gap-10 items-center">
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isPickupRequired}
+                                onChange={(e) =>
+                                    setIsPickupRequired(e.target.checked)
+                                }
+                            />{" "}
+                            &nbsp;&nbsp; Is pickup location required
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isDropOffRequired}
+                                onChange={(e) =>
+                                    setIsDropOffRequired(e.target.checked)
+                                }
+                            />
+                            &nbsp;&nbsp; Is drop off location required
+                        </label>
+                    </div>
+                </div>
                 {/* Gallery Images Input */}
                 <div>
                     <label htmlFor="galleryImages" className="block mb-2">
@@ -500,7 +556,7 @@ const TourPlanForm = ({ onClose }) => {
                                         "Thursday",
                                         "Friday",
                                         "Saturday",
-                                    ][day]
+                                    ][day],
                             )
                             .join(", ")}
                     </div>
@@ -516,10 +572,10 @@ const TourPlanForm = ({ onClose }) => {
                                     index === 0
                                         ? "12 AM"
                                         : index < 12
-                                        ? `${index} AM`
-                                        : index === 12
-                                        ? `12 PM`
-                                        : `${index - 12} PM`;
+                                          ? `${index} AM`
+                                          : index === 12
+                                            ? `12 PM`
+                                            : `${index - 12} PM`;
 
                                 return (
                                     <React.Fragment key={sessionTime}>
@@ -533,7 +589,7 @@ const TourPlanForm = ({ onClose }) => {
                                                 id={`session-${sessionTime}`}
                                                 value={sessionTime}
                                                 checked={selectedSessions.includes(
-                                                    sessionTime
+                                                    sessionTime,
                                                 )}
                                                 onChange={handleSessionChange}
                                                 className="mr-2"
@@ -598,7 +654,7 @@ const TourPlanForm = ({ onClose }) => {
                                         handleChange(
                                             index,
                                             "en",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -611,7 +667,7 @@ const TourPlanForm = ({ onClose }) => {
                                         handleChange(
                                             index,
                                             "ar",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -655,7 +711,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "question",
                                             "en",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="p-2 border rounded-md w-full mb-2"
@@ -669,7 +725,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "question",
                                             "ar",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"
@@ -686,7 +742,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "answer",
                                             "en",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="p-2 border rounded-md w-full mb-2"
@@ -700,7 +756,7 @@ const TourPlanForm = ({ onClose }) => {
                                             index,
                                             "answer",
                                             "ar",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="p-2 border rounded-md w-full"

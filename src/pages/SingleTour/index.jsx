@@ -13,7 +13,7 @@ import album3 from "../../assets/album3.jpg";
 import album4 from "../../assets/album4.jpg";
 import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Slider from "./GallerySlider";
@@ -41,6 +41,7 @@ const SingleTour = () => {
 
     const [data, setData] = useState({});
     const lang = useSelector((state) => state.language.lang);
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [adultCount, setAdultCount] = useState(0);
@@ -592,7 +593,31 @@ const SingleTour = () => {
                                     </h2>
                                     <br />
                                     <button
-                                        onClick={handleBookNow}
+                                        onClick={() => {
+                                            if (!user?.email) {
+                                                toast.error(
+                                                    "Please login before book a plan!",
+                                                );
+                                                return;
+                                            }
+                                            if (
+                                                !selectedDate ||
+                                                (!adultCount && !childCount) ||
+                                                !session
+                                            ) {
+                                                toast.error(
+                                                    "Please fill all the booking fields before proceeding!",
+                                                );
+                                            } else {
+                                                const date =
+                                                    formatDateForBackend(
+                                                        selectedDate,
+                                                    );
+                                                navigate(
+                                                    `/checkout/${data._id}?date=${date}&adultCount=${adultCount}&childCount=${childCount}&session=${session}`,
+                                                );
+                                            }
+                                        }}
                                         className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300"
                                     >
                                         {lang === "ar"

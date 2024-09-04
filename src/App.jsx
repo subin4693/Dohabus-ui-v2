@@ -24,6 +24,7 @@ import Transportation from "./pages/Transportation";
 import Blogs from "./pages/Blogs";
 import SingleBlog from "./pages/SingleBlog";
 import CreateBlog from "./pages/Create-Blog";
+import Checkout from "./pages/Checkout";
 
 import AdminDashboard from "./pages/Admin/Dashboard";
 import Tickets from "./pages/Admin/Tickets";
@@ -104,6 +105,16 @@ function App() {
                             element={
                                 user?.email ? (
                                     <Cart />
+                                ) : (
+                                    <Navigate to="/signin" />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/checkout/:id"
+                            element={
+                                user?.email ? (
+                                    <Checkout />
                                 ) : (
                                     <Navigate to="/signin" />
                                 )
