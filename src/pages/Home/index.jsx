@@ -293,11 +293,11 @@ const Home = () => {
         className="p-10 py-24 flex justify-center items-center flex-wrap"
       >
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full lg:w-2/5 h-[400px] "
+           initial={{ opacity: 0, x: -20 }}
+           whileInView={{ opacity: 1, x: 0 }}
+           viewport={{ amount: 0.2 }}
+           transition={{ duration: 0.4, ease: "easeOut" }}
+           className="relative w-full lg:w-2/5 h-[400px] "
         >
           <iframe
             className="absolute top-0 left-0 w-full h-full"
@@ -320,7 +320,7 @@ const Home = () => {
           </motion.h1>
         </div>
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
+        initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ amount: 0.2 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
