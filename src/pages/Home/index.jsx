@@ -336,7 +336,7 @@ const Home = () => {
           ></iframe>
         </motion.div>
       </div>
-      <div
+      {/* <div
         className="pb-6"
         style={{
           backgroundImage: "linear-gradient(138deg, #ffffff 50%, #fed92e 50%)",
@@ -398,7 +398,7 @@ const Home = () => {
             </Slider>
           </div>
         </div>
-      </div>
+      </div> */}
       <div
         className="w-full py-20"
         style={{
