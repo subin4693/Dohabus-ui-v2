@@ -66,38 +66,35 @@ const Footer = () => {
     };
     return (
         <>
-            <div className="bg-yellow-400 p-10 md:px-20 flex flex-col justify-center items-center ">
+            <div className="bg-yellow-400 p-1 md:px-20 flex flex-col justify-center items-center ">
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-start text-dark">
                     {/* Useful Pages Section */}
                     <div className="space-y-5">
                         <h2 className="text-2xl font-bold">Useful Pages</h2>
                         <ul className="space-y-2 font-semibold text-lg">
-                            <Link to={"/offer-promo"}>
-                                <li className="cursor-pointer hover:underline">
+                            <li className="cursor-pointer hover:underline">
+                                <Link to={"/offer-promo"}>
                                     Offers & Promotions
-                                </li>
-                            </Link>
-                            <Link to={"/guidelines"}>
-                                <li className="cursor-pointer hover:underline">
-                                    Guidelines
-                                </li>
-                            </Link>
+                                </Link>
+                            </li>
+                            <li className="cursor-pointer hover:underline">
+                                <Link to={"/guidelines"}>Guidelines</Link>
+                            </li>
                             <li className="cursor-pointer hover:underline">
                                 <Link to="/blogs">Blog</Link>
                             </li>
                             <li className="cursor-pointer hover:underline">
                                 <Link to="/blogs-create">Write Blog</Link>
                             </li>
-                            <Link to={"/Faq"}>
-                                <li className="cursor-pointer hover:underline">
-                                    FAQ
-                                </li>
-                            </Link>
-                            <Link to={"/termandconditions"}>
-                                <li className="cursor-pointer hover:underline">
+
+                            <li className="cursor-pointer hover:underline">
+                                <Link to={"/Faq"}>FAQ</Link>
+                            </li>
+                            <li className="cursor-pointer hover:underline">
+                                <Link to={"/termandconditions"}>
                                     Terms & Conditions
-                                </li>
-                            </Link>
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 
@@ -189,7 +186,7 @@ const Footer = () => {
                 </div>
 
                 {/* Footer Bottom */}
-                <div className="mt-10 text-center text-lg flex justify-between  w-full items-center ">
+                <div className="mt-1 text-center text-lg flex justify-between  w-full items-center ">
                     <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
 
                     <div className="w-[200px] hidden md:inline">

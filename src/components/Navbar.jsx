@@ -13,314 +13,283 @@ import { BiCart } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "../features/language/languageSlice";
 const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
-    const lang = useSelector((state) => state.language.lang);
-    const { user } = useSelector((state) => state.user);
-    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
-    const [categorys, setCategorys] = useState([]);
+  const lang = useSelector((state) => state.language.lang);
+  const { user } = useSelector((state) => state.user);
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+  const [categorys, setCategorys] = useState([]);
 
-    let cartItemCount = 3;
-    const navigate = useNavigate();
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
+  let cartItemCount = 3;
+  const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
-    const [tourOpen, setTourOpen] = useState(false);
-    const [servicesOpen, setservicesOpen] = useState(false);
-    const inputref = useRef(null);
-    const [expandedCategory, setExpandedCategory] = useState([]);
-    const [hoveredCategory, setHoveredCategory] = useState(null);
-    const [isEnglish, setIsEnglish] = useState(true);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [servicesOpen, setservicesOpen] = useState(false);
+  const inputref = useRef(null);
+  const [expandedCategory, setExpandedCategory] = useState([]);
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [isEnglish, setIsEnglish] = useState(true);
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const toggleLanguage = () => {
-        setIsEnglish((prev) => {
-            const newLanguage = prev ? "ar" : "en"; // Determine the new language
-            dispatch(setLanguage(newLanguage)); // Update the Redux state with the new language
-            localStorage.setItem("language", newLanguage); // Save the new language to localStorage
-            return !prev; // Toggle the language state
-        });
+  const toggleLanguage = () => {
+    setIsEnglish((prev) => {
+      const newLanguage = prev ? "ar" : "en"; // Determine the new language
+      dispatch(setLanguage(newLanguage)); // Update the Redux state with the new language
+      localStorage.setItem("language", newLanguage); // Save the new language to localStorage
+      return !prev; // Toggle the language state
+    });
+  };
+  const handleToggleCategory = (index) => {
+    setExpandedCategory((prev) => {
+      let arr = [...prev];
+      if (prev.includes(index)) {
+        let ind = prev.indexOf(index);
+        console.log(ind);
+        arr.splice(ind, 1);
+        return arr;
+      } else {
+        arr.push(index);
+      }
+      return arr;
+    });
+  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
     };
-    const handleToggleCategory = (index) => {
-        setExpandedCategory((prev) => {
-            let arr = [...prev];
-            if (prev.includes(index)) {
-                let ind = prev.indexOf(index);
-                console.log(ind);
-                arr.splice(ind, 1);
-                return arr;
-            } else {
-                arr.push(index);
-            }
-            return arr;
-        });
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
-        window.addEventListener("scroll", handleScroll);
-        handleScroll();
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
+  }, []);
 
-    const handleClose = () => {
-        setIsVisible(false);
+  const handleClose = () => {
+    setIsVisible(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/users/signout",
+        {},
+        { withCredentials: true },
+      );
+      toast.success("Logout succesfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+      dispatch(setUser({}));
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log("Logged Out");
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await axios.get(BASE_URL + "/categorys/cat-tour");
+
+        // setAlbum(data?.data?.images);
+        setCategorys(data?.data?.data?.category);
+      } catch (error) {
+        console.log(error);
+      }
     };
+    getData();
+  }, []);
 
-    const handleSignOut = async () => {
-        try {
-            const res = await axios.post(
-                BASE_URL + "/users/signout",
-                {},
-                { withCredentials: true },
-            );
-            toast.success("Logout succesfully", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+  return (
+    <>
+      {isVisible && (
+        <div className=" bg-custom-yellow  px-2 md:px-10   h-[50px] z-10   fixed top-0 left-0 right-0 ">
+          <div className="flex justify-center items-center relative h-full">
+            {" "}
+            <h1 className="font-bold text-xl text-center text-dark flex-1 ">
+              <span className="hidden sm:inline"> Summer Sale!</span> Save up to
+              15%
+            </h1>
+            <div className="flex gap-5 md:gap-20 items-center absolute right-0">
+              <Link
+                to="/tours"
+                className="bg-light text-dark  hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold "
+              >
+                <span className="hidden md:flex"> Find Out More</span>
+                <span className="md:hidden">
+                  <FaArrowRightLong />
+                </span>
+              </Link>
+              <h1
+                className="font-bold text-lg text-dark cursor-pointer"
+                onClick={handleClose}
+              >
+                <IoClose />
+              </h1>
+            </div>
+          </div>
+        </div>
+      )}
+      <div
+        className={`z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
+          isVisible && " mt-[50px] "
+        } ${isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"}`}
+      >
+        <div className="lg:w-[100%] mx-auto flex justify-between items-center px-10 py-3">
+          <div className="min-w-[20mm] max-w-[20mm] h-fit">
+            <img src={logo} className="w-full h-full object-cover" alt="logo" />
+          </div>
 
-            dispatch(setUser({}));
-        } catch (error) {
-            console.log(error);
-        }
+          <div className="flex justify-center items-center gap-2 ">
+            <div className="hidden xl:flex justify-center items-center gap-5">
+              <Link to="/">Home</Link>
 
-        console.log("Logged Out");
-    };
+              {/* <Link to="/about">Experiences</Link> */}
+              {/* <Link to="/about">Services</Link> */}
 
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                const data = await axios.get(BASE_URL + "/categorys/cat-tour");
-
-                // setAlbum(data?.data?.images);
-                setCategorys(data?.data?.data?.category);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getData();
-    }, []);
-
-    return (
-        <>
-            {isVisible && (
-                <div className=" bg-custom-yellow  px-2 md:px-10   h-[50px] z-10   fixed top-0 left-0 right-0 ">
-                    <div className="flex justify-center items-center relative h-full">
-                        {" "}
-                        <h1 className="font-bold text-xl text-center text-dark flex-1 ">
-                            <span className="hidden sm:inline">
-                                {" "}
-                                Summer Sale!
-                            </span>{" "}
-                            Save up to 15%
-                        </h1>
-                        <div className="flex gap-5 md:gap-20 items-center absolute right-0">
-                            <Link
-                                to="/tours"
-                                className="bg-light text-dark  hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold "
-                            >
-                                <span className="hidden md:flex">
-                                    {" "}
-                                    Find Out More
-                                </span>
-                                <span className="md:hidden">
-                                    <FaArrowRightLong />
-                                </span>
-                            </Link>
-                            <h1
-                                className="font-bold text-lg text-dark cursor-pointer"
-                                onClick={handleClose}
-                            >
-                                <IoClose />
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-            )}
-            <div
-                className={`z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${isVisible && " mt-[50px] "} ${
-                    isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"
-                }`}
-            >
-                <div className="lg:w-[100%] mx-auto flex justify-between items-center px-10 py-3">
-                    <div className="min-w-[20mm] max-w-[20mm] h-fit">
-                        <img
-                            src={logo}
-                            className="w-full h-full object-cover"
-                            alt="logo"
-                        />
-                    </div>
-
-                    <div className="flex justify-center items-center gap-2 ">
-                        <div className="hidden xl:flex justify-center items-center gap-5">
-                            <Link to="/">Home</Link>
-                            <Link to="/about">About Us</Link>
-                            {/* <Link to="/about">Experiences</Link> */}
-                            {/* <Link to="/about">Services</Link> */}
-
-                            {/* =========================================================================================================================================================================================================== */}
-                            <div className="group inline-block relative">
-                                <button
-                                    aria-haspopup="true"
-                                    aria-controls="menu"
-                                    className="flex items-center relative"
+              {/* =========================================================================================================================================================================================================== */}
+              <div className="group inline-block relative">
+                <button
+                  aria-haspopup="true"
+                  aria-controls="menu"
+                  className="flex items-center relative"
+                >
+                  <NavLink
+                    to="/tours"
+                    className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
+                  >
+                    Experiences
+                  </NavLink>
+                  <span>
+                    <svg
+                      className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </span>
+                </button>
+                <ul
+                  id="menu"
+                  aria-hidden="true"
+                  className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                >
+                  {categorys?.map((tourCategory) => (
+                    <li
+                      key={tourCategory._id}
+                      className="relative group"
+                      onMouseEnter={() => setHoveredCategory(tourCategory._id)}
+                      onMouseLeave={() => setHoveredCategory(null)}
+                    >
+                      <button
+                        aria-haspopup="true"
+                        aria-controls={`menu-category-${tourCategory._id}`}
+                        className="w-full text-left flex items-center px-3 py-1 hover:bg-gray-100"
+                      >
+                        <NavLink
+                          to={`/tours/${tourCategory._id}`}
+                          className="pr-1 flex-1"
+                        >
+                          {tourCategory.text[lang]}
+                        </NavLink>
+                        {tourCategory.tours && (
+                          <svg
+                            className="fill-current h-4 w-4 transform transition-transform duration-300 ease-in-out"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                          </svg>
+                        )}
+                      </button>
+                      {hoveredCategory === tourCategory._id &&
+                        tourCategory.tours &&
+                        tourCategory.tours.length > 0 && (
+                          <ul
+                            id={`menu-category-${tourCategory._id}`}
+                            aria-hidden="true"
+                            className="bg-white shadow-xl border border-b-custom-yellow border-b-4 p-2  w-[250px] rounded-sm absolute left-full top-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black"
+                          >
+                            {tourCategory.tours.map((subTour, index) => (
+                              <li
+                                key={index}
+                                className="px-3 py-1 hover:bg-gray-100"
+                              >
+                                <NavLink
+                                  to={`/tours/${
+                                    tourCategory._id + "/" + subTour._id
+                                  }`}
+                                  className="block text-black"
                                 >
-                                    <NavLink
-                                        to="/tours"
-                                        className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
-                                    >
-                                        Experiences
-                                    </NavLink>
-                                    <span>
-                                        <svg
-                                            className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                        </svg>
-                                    </span>
-                                </button>
-                                <ul
-                                    id="menu"
-                                    aria-hidden="true"
-                                    className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
-                                >
-                                    {categorys?.map((tourCategory) => (
-                                        <li
-                                            key={tourCategory._id}
-                                            className="relative group"
-                                            onMouseEnter={() =>
-                                                setHoveredCategory(
-                                                    tourCategory._id,
-                                                )
-                                            }
-                                            onMouseLeave={() =>
-                                                setHoveredCategory(null)
-                                            }
-                                        >
-                                            <button
-                                                aria-haspopup="true"
-                                                aria-controls={`menu-category-${tourCategory._id}`}
-                                                className="w-full text-left flex items-center px-3 py-1 hover:bg-gray-100"
-                                            >
-                                                <NavLink
-                                                    to={`/tours/${tourCategory._id}`}
-                                                    className="pr-1 flex-1"
-                                                >
-                                                    {tourCategory.text[lang]}
-                                                </NavLink>
-                                                {tourCategory.tours && (
-                                                    <svg
-                                                        className="fill-current h-4 w-4 transform transition-transform duration-300 ease-in-out"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                    >
-                                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                                    </svg>
-                                                )}
-                                            </button>
-                                            {hoveredCategory ===
-                                                tourCategory._id &&
-                                                tourCategory.tours &&
-                                                tourCategory.tours.length >
-                                                    0 && (
-                                                    <ul
-                                                        id={`menu-category-${tourCategory._id}`}
-                                                        aria-hidden="true"
-                                                        className="bg-white shadow-xl border border-b-custom-yellow border-b-4 p-2  w-[250px] rounded-sm absolute left-full top-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black"
-                                                    >
-                                                        {tourCategory.tours.map(
-                                                            (
-                                                                subTour,
-                                                                index,
-                                                            ) => (
-                                                                <li
-                                                                    key={index}
-                                                                    className="px-3 py-1 hover:bg-gray-100"
-                                                                >
-                                                                    <NavLink
-                                                                        to={`/tours/${
-                                                                            tourCategory._id +
-                                                                            "/" +
-                                                                            subTour._id
-                                                                        }`}
-                                                                        className="block text-black"
-                                                                    >
-                                                                        {
-                                                                            subTour
-                                                                                .text[
-                                                                                lang
-                                                                            ]
-                                                                        }
-                                                                    </NavLink>
-                                                                </li>
-                                                            ),
-                                                        )}
-                                                    </ul>
-                                                )}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="group inline-block relative">
-                                <button
-                                    aria-haspopup="true"
-                                    aria-controls="menu"
-                                    className="flex items-center relative"
-                                >
-                                    <NavLink
-                                        to="/tours"
-                                        className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
-                                    >
-                                        Services
-                                    </NavLink>
-                                    <span>
-                                        <svg
-                                            className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                        </svg>
-                                    </span>
-                                </button>
-                                <ul
-                                    id="menu"
-                                    aria-hidden="true"
-                                    className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
-                                >
-                                    <Link to={"/transportation"}>
-                                        <li className="px-3 py-1 hover:bg-gray-100">
-                                            Transportation Fleet
-                                        </li>
-                                    </Link>
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        Meet & Assist
-                                    </li>
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        MICE
-                                    </li>
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        Cruise Packages
-                                    </li>
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        Visa
-                                    </li>
-                                </ul>
-                            </div>
+                                  {subTour.text[lang]}
+                                </NavLink>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="group inline-block relative">
+                <button
+                  aria-haspopup="true"
+                  aria-controls="menu"
+                  className="flex items-center relative"
+                >
+                  <NavLink
+                    to="/tours"
+                    className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
+                  >
+                    Services
+                  </NavLink>
+                  <span>
+                    <svg
+                      className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </span>
+                </button>
+                <ul
+                  id="menu"
+                  aria-hidden="true"
+                  className="bg-white shadow-xl border p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                >
+                  <Link to={"/transportation"}>
+                    <li className="px-3 py-1 hover:bg-gray-100">
+                      Transportation Fleet
+                    </li>
+                  </Link>
+                  <li className="px-3 py-1 hover:bg-gray-100">Meet & Assist</li>
+                  <Link to={"/mice"}>
+                    <li className="px-3 py-1 hover:bg-gray-100">MICE</li>
+                  </Link>
+                  <Link to={"/cruise"}>
+                    <li className="px-3 py-1 hover:bg-gray-100">
+                      Cruise Packages
+                    </li>
+                  </Link>
 
-                            {/* =========================================================================================================================================================================================================================== */}
+                  <li className="px-3 py-1 hover:bg-gray-100">Visa</li>
+                </ul>
+              </div>
 
-                            {/* <div className="relative group">
+              {/* =========================================================================================================================================================================================================================== */}
+
+              {/* <div className="relative group">
                             <Link
                                 to="/tours"
                                 className="flex items-center relative z-10"
@@ -343,53 +312,49 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                             </div>
                         </div> */}
 
-                            <Link to="/hotel">Hotels</Link>
+              <Link to="/hotel">Hotels</Link>
 
-                            <Link to="/contact">Contact Us</Link>
-                            {/* <Link to="/cart">Cart</Link> */}
+              <Link to="/contact">Contact Us</Link>
+              {/* <Link to="/cart">Cart</Link> */}
+              <Link to="/about">About Us</Link>
+              {/* <Link to="/faq">F&Q</Link> */}
+              {user && user?.role === "admin" && <Link to="/admin">Admin</Link>}
+              {!user || !user?.email ? (
+                <Link to="/signin">Login</Link>
+              ) : (
+                <Link onClick={handleSignOut}>Logout</Link>
+              )}
+              {/* <Link to="/signin">Login</Link> */}
+              {/* <Link to="/">العربية</Link> */}
 
-                            {/* <Link to="/faq">F&Q</Link> */}
-                            {user && user?.role === "admin" && (
-                                <Link to="/admin">Admin</Link>
-                            )}
-                            {!user || !user?.email ? (
-                                <Link to="/signin">Login</Link>
-                            ) : (
-                                <Link onClick={handleSignOut}>Logout</Link>
-                            )}
-                            {/* <Link to="/signin">Login</Link> */}
-                            {/* <Link to="/">العربية</Link> */}
+              <div
+                className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"
+                onClick={toggleLanguage}
+              >
+                {/* Slider Circle */}
+                <div
+                  className={`absolute w-8 h-8 bg-custom-yellow rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center ${
+                    isEnglish ? "translate-x-2" : "translate-x-10"
+                  }`}
+                >
+                  {/* Language inside the circle */}
+                  <span className="text-white font-semibold">
+                    {isEnglish ? "en" : "ar"}
+                  </span>
+                </div>
 
-                            <div
-                                className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"
-                                onClick={toggleLanguage}
-                            >
-                                {/* Slider Circle */}
-                                <div
-                                    className={`absolute w-8 h-8 bg-custom-yellow rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center ${
-                                        isEnglish
-                                            ? "translate-x-2"
-                                            : "translate-x-10"
-                                    }`}
-                                >
-                                    {/* Language inside the circle */}
-                                    <span className="text-white font-semibold">
-                                        {isEnglish ? "en" : "ar"}
-                                    </span>
-                                </div>
+                {/* English Language Option */}
+                <div className="flex-1 text-center text-white font-semibold">
+                  en
+                </div>
 
-                                {/* English Language Option */}
-                                <div className="flex-1 text-center text-white font-semibold">
-                                    en
-                                </div>
+                {/* Arabic Language Option */}
+                <div className="flex-1 text-center text-white font-semibold">
+                  ar
+                </div>
+              </div>
 
-                                {/* Arabic Language Option */}
-                                <div className="flex-1 text-center text-white font-semibold">
-                                    ar
-                                </div>
-                            </div>
-
-                            {/* <Link to="/cart" className="relative flex items-center">
+              {/* <Link to="/cart" className="relative flex items-center">
               <BiCart size={35} />
               {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
@@ -398,70 +363,66 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               )}
             </Link> */}
 
-                            <div className="group inline-block relative">
-                                <button
-                                    aria-haspopup="true"
-                                    aria-controls="menu"
-                                    className="flex items-center relative"
-                                >
-                                    <div className="relative flex items-center">
-                                        <BiCart size={35} />
-                                        {/*{cartItemCount > 0 && (
+              <div className="group inline-block relative">
+                <button
+                  aria-haspopup="true"
+                  aria-controls="menu"
+                  className="flex items-center relative"
+                >
+                  <div className="relative flex items-center">
+                    <BiCart size={35} />
+                    {/*{cartItemCount > 0 && (
                     <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
                       {cartItemCount}
                     </span>
                   )}*/}
-                                    </div>
-                                    <span>
-                                        <svg
-                                            className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                        </svg>
-                                    </span>
-                                </button>
-                                <ul
-                                    id="menu"
-                                    aria-hidden="true"
-                                    className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
-                                >
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        {user && user?.role == "admin" ? (
-                                            <Link to="/admin-cart">Cart</Link>
-                                        ) : (
-                                            <Link to="/cart">Cart</Link>
-                                        )}
-                                    </li>
-                                    <li className="px-3 py-1 hover:bg-gray-100">
-                                        {user && user?.role == "admin" ? (
-                                            <Link to="/admin-favourites">
-                                                Favourites
-                                            </Link>
-                                        ) : (
-                                            <Link to="/favourites">
-                                                Favourites
-                                            </Link>
-                                        )}
-                                    </li>
-                                </ul>
-                            </div>
+                  </div>
+                  <span>
+                    <svg
+                      className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </span>
+                </button>
+                <ul
+                  id="menu"
+                  aria-hidden="true"
+                  className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+                >
+                  <li className="px-3 py-1 hover:bg-gray-100">
+                    {user && user?.role == "admin" ? (
+                      <Link to="/admin-cart">Cart</Link>
+                    ) : (
+                      <Link to="/cart">Cart</Link>
+                    )}
+                  </li>
+                  <li className="px-3 py-1 hover:bg-gray-100">
+                    {user && user?.role == "admin" ? (
+                      <Link to="/admin-favourites">Favourites</Link>
+                    ) : (
+                      <Link to="/favourites">Favourites</Link>
+                    )}
+                  </li>
+                </ul>
+              </div>
 
-                            {/*<MdOutlineShoppingCart
+              {/*<MdOutlineShoppingCart
                             className="w-6 h-6 font-bold text-white"
                             onClick={() => setSearchOpen(!searchOpen)}
                         />*/}
-                        </div>
-                        <GiHamburgerMenu
-                            className="w-6 h-6 text-white xl:hidden"
-                            onClick={() => setSidebarOpen(true)}
-                        />{" "}
-                        {/* &nbsp;
+            </div>
+            <GiHamburgerMenu
+              className="w-6 h-6 text-white xl:hidden"
+              onClick={() => setSidebarOpen(true)}
+            />{" "}
+            {/* &nbsp;
           <Link to="/cart">
             <MdOutlineShoppingCart className="w-6 h-6 text-white xl:hidden" />
           </Link> */}
-                        {/* <Link
+            {/* <Link
             to="/cart"
             className="relative flex items-center hover:text-yellow-900 xl:hidden"
           >
@@ -472,312 +433,288 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               </span>
             )}
           </Link> */}
-                        <div className="group inline-block relative xl:hidden">
-                            <button
-                                aria-haspopup="true"
-                                aria-controls="menu"
-                                className="flex items-center relative"
-                            >
-                                <div className="relative flex items-center">
-                                    <BiCart size={35} />
-                                    {/* {cartItemCount > 0 && (
+            <div className="group inline-block relative xl:hidden">
+              <button
+                aria-haspopup="true"
+                aria-controls="menu"
+                className="flex items-center relative"
+              >
+                <div className="relative flex items-center">
+                  <BiCart size={35} />
+                  {/* {cartItemCount > 0 && (
                                     <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
                                         {cartItemCount}
                                     </span>
                                 )}*/}
-                                </div>
-                                <span>
-                                    <svg
-                                        className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </span>
-                            </button>
-                            <ul
-                                id="menu"
-                                aria-hidden="true"
-                                className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
-                            >
-                                <li className="px-3 py-1 hover:bg-gray-100">
-                                    {user && user?.role == "admin" ? (
-                                        <Link to="/admin-cart">Cart</Link>
-                                    ) : (
-                                        <Link to="/cart">Cart</Link>
-                                    )}
-                                </li>
-                                <li className="px-3 py-1 hover:bg-gray-100">
-                                    {user && user?.role == "admin" ? (
-                                        <Link to="/admin-favourites">
-                                            Favourites
-                                        </Link>
-                                    ) : (
-                                        <Link to="/favourites">Favourites</Link>
-                                    )}
-                                </li>
-                            </ul>
-                        </div>
-                        &nbsp;
-                        {searchOpen ? (
-                            <IoClose
-                                className="w-6 h-6 z-10 text-white"
-                                onClick={() => setSearchOpen(!searchOpen)}
-                            />
-                        ) : (
-                            <IoSearch
-                                className="w-6 h-6 text-white"
-                                onClick={() => setSearchOpen(!searchOpen)}
-                            />
-                        )}
-                    </div>
                 </div>
+                <span>
+                  <svg
+                    className="fill-current h-4 w-4 transform transition-transform duration-150 ease-in-out"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </span>
+              </button>
+              <ul
+                id="menu"
+                aria-hidden="true"
+                className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
+              >
+                <li className="px-3 py-1 hover:bg-gray-100">
+                  {user && user?.role == "admin" ? (
+                    <Link to="/admin-cart">Cart</Link>
+                  ) : (
+                    <Link to="/cart">Cart</Link>
+                  )}
+                </li>
+                <li className="px-3 py-1 hover:bg-gray-100">
+                  {user && user?.role == "admin" ? (
+                    <Link to="/admin-favourites">Favourites</Link>
+                  ) : (
+                    <Link to="/favourites">Favourites</Link>
+                  )}
+                </li>
+              </ul>
+            </div>
+            &nbsp;
+            {searchOpen ? (
+              <IoClose
+                className="w-6 h-6 z-10 text-white"
+                onClick={() => setSearchOpen(!searchOpen)}
+              />
+            ) : (
+              <IoSearch
+                className="w-6 h-6 text-white"
+                onClick={() => setSearchOpen(!searchOpen)}
+              />
+            )}
+          </div>
+        </div>
 
-                {/* Sidebar */}
-                <div
-                    className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-                        sidebarOpen ? "opacity-70" : "opacity-0"
-                    }`}
-                    style={{ pointerEvents: sidebarOpen ? "auto" : "none" }}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <div
-                    className={`fixed top-0 right-0 h-full w-[300px] bg-white shadow-lg transition-transform duration-300 ${
-                        sidebarOpen ? "translate-x-0" : "translate-x-full"
-                    }`}
-                >
-                    <div className="flex justify-end p-4 text-black">
-                        <IoClose
-                            className="w-8 h-8 text-black cursor-pointer"
-                            onClick={() => setSidebarOpen(false)}
-                        />
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-0 bg-black transition-opacity duration-300 ${
+            sidebarOpen ? "opacity-70" : "opacity-0"
+          }`}
+          style={{ pointerEvents: sidebarOpen ? "auto" : "none" }}
+          onClick={() => setSidebarOpen(false)}
+        />
+        <div
+          className={`fixed top-0 right-0 h-full w-[300px] bg-white shadow-lg transition-transform duration-300 ${
+            sidebarOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex justify-end p-4 text-black">
+            <IoClose
+              className="w-8 h-8 text-black cursor-pointer"
+              onClick={() => setSidebarOpen(false)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <button
+              onClick={(e) => {
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/");
+              }}
+              className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+            >
+              Home
+            </button>
+            <button
+              onClick={(e) => {
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/about");
+              }}
+              className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+            >
+              About Us
+            </button>
+            <button
+              className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/tours");
+              }}
+            >
+              Experience
+              <div
+                className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTourOpen(!tourOpen);
+                }}
+              >
+                {tourOpen ? <FaMinus /> : <FaPlus />}
+              </div>
+            </button>
+
+            <div
+              className={`transition-all  duration-300 ease-in-out overflow-hidden ${
+                tourOpen
+                  ? "max-h-[1000px] opacity-100" // Increase max-height to accommodate larger content
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              <div className="bg-custom-yellow ml-5">
+                {categorys?.map((category, index) => (
+                  <div key={index}>
+                    <button
+                      className="py-3 text-black hover:text-white px-4 hover:bg-custom-yellow duration-200  group w-full flex justify-between items-center text-[18px] border-b border-slate-300"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSidebarOpen(false);
+                        setExpandedCategory([]);
+                        setTourOpen(false);
+                        navigate("/tours/" + category._id);
+                      }}
+                    >
+                      {category && category?.text[lang]}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleCategory(index);
+                        }}
+                        className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
+                      >
+                        {expandedCategory?.includes(index) ? (
+                          <FaMinus />
+                        ) : (
+                          <FaPlus />
+                        )}
+                      </div>
+                    </button>
+
+                    <div
+                      className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                        expandedCategory?.includes(index)
+                          ? "max-h-[500px] opacity-100"
+                          : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      <div className=" ml-5">
+                        {category.tours &&
+                          category.tours.map((tour, tourIndex) => (
+                            <button
+                              key={tourIndex}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSidebarOpen(false);
+                                setExpandedCategory([]);
+                                setTourOpen(false);
+                                navigate(`/tours/${category._id}/${tour._id}`);
+                              }}
+                              className="block py-3 text-black px-4 hover:bg-custom-yellow w-full text-left duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                            >
+                              {tour.text[lang]}
+                            </button>
+                          ))}
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                        <button
-                            onClick={(e) => {
-                                setSidebarOpen(false);
-                                setExpandedCategory([]);
-                                setTourOpen(false);
-                                navigate("/");
-                            }}
-                            className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                        >
-                            Home
-                        </button>
-                        <button
-                            onClick={(e) => {
-                                setSidebarOpen(false);
-                                setExpandedCategory([]);
-                                setTourOpen(false);
-                                navigate("/about");
-                            }}
-                            className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                        >
-                            About Us
-                        </button>
-                        <button
-                            className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSidebarOpen(false);
-                                setExpandedCategory([]);
-                                setTourOpen(false);
-                                navigate("/tours");
-                            }}
-                        >
-                            Experience
-                            <div
-                                className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setTourOpen(!tourOpen);
-                                }}
-                            >
-                                {tourOpen ? <FaMinus /> : <FaPlus />}
-                            </div>
-                        </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button
+              className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/tours");
+              }}
+            >
+              Services
+              <div
+                className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setservicesOpen(!servicesOpen);
+                }}
+              >
+                {servicesOpen ? <FaMinus /> : <FaPlus />}
+              </div>
+            </button>
 
-                        <div
-                            className={`transition-all  duration-300 ease-in-out overflow-hidden ${
-                                tourOpen
-                                    ? "max-h-[1000px] opacity-100" // Increase max-height to accommodate larger content
-                                    : "max-h-0 opacity-0"
-                            }`}
-                        >
-                            <div className="bg-custom-yellow ml-5">
-                                {categorys?.map((category, index) => (
-                                    <div key={index}>
-                                        <button
-                                            className="py-3 text-black hover:text-white px-4 hover:bg-custom-yellow duration-200  group w-full flex justify-between items-center text-[18px] border-b border-slate-300"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSidebarOpen(false);
-                                                setExpandedCategory([]);
-                                                setTourOpen(false);
-                                                navigate(
-                                                    "/tours/" + category._id,
-                                                );
-                                            }}
-                                        >
-                                            {category && category?.text[lang]}
-                                            <div
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleToggleCategory(index);
-                                                }}
-                                                className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
-                                            >
-                                                {expandedCategory?.includes(
-                                                    index,
-                                                ) ? (
-                                                    <FaMinus />
-                                                ) : (
-                                                    <FaPlus />
-                                                )}
-                                            </div>
-                                        </button>
+            <div
+              className={`transition-all  duration-300 ease-in-out overflow-hidden ${
+                servicesOpen
+                  ? "max-h-[1000px] opacity-100" // Increase max-height to accommodate larger content
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              <div className="bg-custom-yellow ml-5">
+                <div>
+                  <div>
+                    <div className=" ml-5">
+                      <Link
+                        to={`/transportation`}
+                        className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                      >
+                        Transportation
+                      </Link>
+                      <Link
+                        to={`/tours`}
+                        className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                      >
+                        Meet & Assist
+                      </Link>
+                      <Link
+                        to={`/mice`}
+                        className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                      >
+                        MICE
+                      </Link>
+                      <Link
+                        to={`/cruise`}
+                        className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                      >
+                        Cruise Packages
+                      </Link>
+                      <Link
+                        to={`/tours`}
+                        className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                      >
+                        Visa
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={(e) => {
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/hotel");
+              }}
+              className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+            >
+              Hotels
+            </button>
+            <button
+              onClick={(e) => {
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/contact");
+              }}
+              className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+            >
+              Contact Us
+            </button>
 
-                                        <div
-                                            className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                                                expandedCategory?.includes(
-                                                    index,
-                                                )
-                                                    ? "max-h-[500px] opacity-100"
-                                                    : "max-h-0 opacity-0"
-                                            }`}
-                                        >
-                                            <div className=" ml-5">
-                                                {category.tours &&
-                                                    category.tours.map(
-                                                        (tour, tourIndex) => (
-                                                            <button
-                                                                key={tourIndex}
-                                                                onClick={(
-                                                                    e,
-                                                                ) => {
-                                                                    e.stopPropagation();
-                                                                    setSidebarOpen(
-                                                                        false,
-                                                                    );
-                                                                    setExpandedCategory(
-                                                                        [],
-                                                                    );
-                                                                    setTourOpen(
-                                                                        false,
-                                                                    );
-                                                                    navigate(
-                                                                        `/tours/${category._id}/${tour._id}`,
-                                                                    );
-                                                                }}
-                                                                className="block py-3 text-black px-4 hover:bg-custom-yellow w-full text-left duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                                                            >
-                                                                {
-                                                                    tour.text[
-                                                                        lang
-                                                                    ]
-                                                                }
-                                                            </button>
-                                                        ),
-                                                    )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <button
-                            className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSidebarOpen(false);
-                                setExpandedCategory([]);
-                                setTourOpen(false);
-                                navigate("/tours");
-                            }}
-                        >
-                            Services
-                            <div
-                                className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setservicesOpen(!servicesOpen);
-                                }}
-                            >
-                                {servicesOpen ? <FaMinus /> : <FaPlus />}
-                            </div>
-                        </button>
-
-                        <div
-                            className={`transition-all  duration-300 ease-in-out overflow-hidden ${
-                                servicesOpen
-                                    ? "max-h-[1000px] opacity-100" // Increase max-height to accommodate larger content
-                                    : "max-h-0 opacity-0"
-                            }`}
-                        >
-                            <div className="bg-custom-yellow ml-5">
-                                <div>
-                                    <div>
-                                        <div className=" ml-5">
-                                            <Link
-                                                to={`/transportation`}
-                                                className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                                            >
-                                                Transportation
-                                            </Link>
-                                            <Link
-                                                to={`/tours`}
-                                                className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                                            >
-                                                Meet & Assist
-                                            </Link>
-                                            <Link
-                                                to={`/tours`}
-                                                className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                                            >
-                                                MICE
-                                            </Link>
-                                            <Link
-                                                to={`/tours`}
-                                                className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                                            >
-                                                Cruise Packages
-                                            </Link>
-                                            <Link
-                                                to={`/tours`}
-                                                className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                                            >
-                                                Visa
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button
-                            onClick={(e) => {
-                                setSidebarOpen(false);
-                                setExpandedCategory([]);
-                                setTourOpen(false);
-                                navigate("/hotel");
-                            }}
-                            className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                        >
-                            Hotels
-                        </button>
-                        <button
-                            onClick={(e) => {
-                                setSidebarOpen(false);
-                                setExpandedCategory([]);
-                                setTourOpen(false);
-                                navigate("/contact");
-                            }}
-                            className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                        >
-                            Contact Us
-                        </button>
-
-                        {/* <button
+            {/* <button
             onClick={(e) => {
               setSidebarOpen(false);
               setExpandedCategory([]);
@@ -789,7 +726,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
             Favourites
           </button> */}
 
-                        {/* <button
+            {/* <button
             onClick={(e) => {
               setSidebarOpen(false);
               setExpandedCategory([]);
@@ -800,58 +737,56 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
           >
             F&Q
           </button> */}
-                        {user && user?.role === "admin" && (
-                            <button
-                                onClick={(e) => {
-                                    setSidebarOpen(false);
-                                    setExpandedCategory([]);
-                                    setTourOpen(false);
-                                    navigate("/admin");
-                                }}
-                                className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                            >
-                                Admin
-                            </button>
-                        )}
-                        <div className="py-3 text-left  flex items-center text-black px-4   duration-200   text-[18px] border-b border-slate-300">
-                            <div
-                                className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"
-                                onClick={() => {
-                                    // setSidebarOpen(false);
-                                    // setExpandedCategory([]);
-                                    // setTourOpen(false);
-                                    toggleLanguage();
-                                }}
-                            >
-                                {/* Slider Circle */}
-                                <div
-                                    className={`absolute w-8 h-8 bg-custom-yellow rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center ${
-                                        isEnglish
-                                            ? "translate-x-2"
-                                            : "translate-x-10"
-                                    }`}
-                                >
-                                    {/* Language inside the circle */}
-                                    <span className="text-white font-semibold">
-                                        {isEnglish ? "en" : "ar"}
-                                    </span>
-                                </div>
+            {user && user?.role === "admin" && (
+              <button
+                onClick={(e) => {
+                  setSidebarOpen(false);
+                  setExpandedCategory([]);
+                  setTourOpen(false);
+                  navigate("/admin");
+                }}
+                className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+              >
+                Admin
+              </button>
+            )}
+            <div className="py-3 text-left  flex items-center text-black px-4   duration-200   text-[18px] border-b border-slate-300">
+              <div
+                className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"
+                onClick={() => {
+                  // setSidebarOpen(false);
+                  // setExpandedCategory([]);
+                  // setTourOpen(false);
+                  toggleLanguage();
+                }}
+              >
+                {/* Slider Circle */}
+                <div
+                  className={`absolute w-8 h-8 bg-custom-yellow rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center ${
+                    isEnglish ? "translate-x-2" : "translate-x-10"
+                  }`}
+                >
+                  {/* Language inside the circle */}
+                  <span className="text-white font-semibold">
+                    {isEnglish ? "en" : "ar"}
+                  </span>
+                </div>
 
-                                {/* English Language Option */}
-                                <div className="flex-1 text-center text-white font-semibold">
-                                    en
-                                </div>
+                {/* English Language Option */}
+                <div className="flex-1 text-center text-white font-semibold">
+                  en
+                </div>
 
-                                {/* Arabic Language Option */}
-                                <div className="flex-1 text-center text-white font-semibold">
-                                    ar
-                                </div>
-                            </div>
-                            &nbsp;&nbsp;
-                            {isEnglish ? "English" : "Arabic"}
-                        </div>
+                {/* Arabic Language Option */}
+                <div className="flex-1 text-center text-white font-semibold">
+                  ar
+                </div>
+              </div>
+              &nbsp;&nbsp;
+              {isEnglish ? "English" : "Arabic"}
+            </div>
 
-                        {/*    <button
+            {/*    <button
                         onClick={(e) => {
                             setSidebarOpen(false);
                             setExpandedCategory([]);
@@ -862,63 +797,63 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     >
                         العربية
                     </button>*/}
-                        {!user || !user?.email ? (
-                            <button
-                                onClick={(e) => {
-                                    setSidebarOpen(false);
-                                    setExpandedCategory([]);
-                                    setTourOpen(false);
-                                    navigate("/signin");
-                                }}
-                                className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                            >
-                                Login
-                            </button>
-                        ) : (
-                            <button
-                                onClick={(e) => {
-                                    setSidebarOpen(false);
-                                    setExpandedCategory([]);
-                                    setTourOpen(false);
-                                    handleSignOut();
-                                }}
-                                className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-                            >
-                                Logout
-                            </button>
-                        )}
-                    </div>
-                </div>
+            {!user || !user?.email ? (
+              <button
+                onClick={(e) => {
+                  setSidebarOpen(false);
+                  setExpandedCategory([]);
+                  setTourOpen(false);
+                  navigate("/signin");
+                }}
+                className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+              >
+                Login
+              </button>
+            ) : (
+              <button
+                onClick={(e) => {
+                  setSidebarOpen(false);
+                  setExpandedCategory([]);
+                  setTourOpen(false);
+                  handleSignOut();
+                }}
+                className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+              >
+                Logout
+              </button>
+            )}
+          </div>
+        </div>
 
-                {/* Search overlay */}
-                <div
-                    className={`fixed inset-0 flex justify-center items-center transition-opacity duration-300 ${
-                        searchOpen ? "bg-black opacity-70" : "opacity-0"
-                    }`}
-                    style={{ pointerEvents: searchOpen ? "auto" : "none" }}
-                    onClick={() => setSearchOpen(false)}
-                >
-                    <div
-                        className="max-w-[500px] p-10  rounded-lg"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="flex items-center">
-                            <input
-                                type="text"
-                                className="text-3xl w-full bg-inherit border-b border-b-[px] border-white outline-none"
-                                placeholder="Search ..."
-                                ref={inputref}
-                            />
-                            <IoSearch className="w-8 h-8 text-white" />
-                        </div>
-                        <div className="h-full mt-3 h-1 bg-white"></div>
-                    </div>
-                </div>
-
-                {/* +++++++++++++++++=== */}
+        {/* Search overlay */}
+        <div
+          className={`fixed inset-0 flex justify-center items-center transition-opacity duration-300 ${
+            searchOpen ? "bg-black opacity-70" : "opacity-0"
+          }`}
+          style={{ pointerEvents: searchOpen ? "auto" : "none" }}
+          onClick={() => setSearchOpen(false)}
+        >
+          <div
+            className="max-w-[500px] p-10  rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center">
+              <input
+                type="text"
+                className="text-3xl w-full bg-inherit border-b border-b-[px] border-white outline-none"
+                placeholder="Search ..."
+                ref={inputref}
+              />
+              <IoSearch className="w-8 h-8 text-white" />
             </div>
-        </>
-    );
+            <div className="h-full mt-3 h-1 bg-white"></div>
+          </div>
+        </div>
+
+        {/* +++++++++++++++++=== */}
+      </div>
+    </>
+  );
 };
 
 export default Navbar;

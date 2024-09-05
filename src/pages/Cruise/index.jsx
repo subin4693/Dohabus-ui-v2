@@ -271,7 +271,7 @@ const index = () => {
       </section>
       <section className="mb-5 p-5">
         <h2 className="text-3xl font-semibold mb-4">Find Popular Tours</h2>
-        <div className="cards flex flex-wrap gap-4">
+        <div className="cards flex flex-wrap gap-4 justify-center items-center">
           {Tours.map((tour) => (
             <>
               <Link to={"/tours"}>

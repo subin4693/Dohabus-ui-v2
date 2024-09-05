@@ -29,7 +29,7 @@ const Signin = () => {
                     email,
                     password,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             );
             toast.success("Signin successfully", {
                 position: "top-right",
@@ -84,7 +84,7 @@ const Signin = () => {
                     <input
                         value={email}
                         onChange={(e) => {
-                            setEmail(e.target.value);
+                            setEmail(e.target.value.trim());
                         }}
                         type="email"
                         className="p-3 border-2 border-gray rounded-2xl outline-none w-full focus:border-custom-yellow"
@@ -97,7 +97,7 @@ const Signin = () => {
                         onChange={(e) => {
                             setPassword(e.target.value);
                         }}
-                        type="text"
+                        type="password"
                         className="p-3 border-2 border-gray rounded-2xl outline-none w-full focus:border-custom-yellow"
                         placeholder="Enter Password"
                     />

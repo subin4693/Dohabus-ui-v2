@@ -53,7 +53,7 @@ const Signup = () => {
                     email,
                     password: password,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             );
             console.log(res.data.data);
             toast.success("User created successfully  ", {
@@ -121,7 +121,7 @@ const Signup = () => {
                     <input
                         value={email}
                         onChange={(e) => {
-                            setEmail(e.target.value);
+                            setEmail(e.target.value.trim(0));
                         }}
                         type="text"
                         className="p-3 border-2 border-gray rounded-2xl outline-none w-full focus:border-custom-yellow"
@@ -134,7 +134,7 @@ const Signup = () => {
                         onChange={(e) => {
                             setPassword(e.target.value);
                         }}
-                        type="text"
+                        type="password"
                         className="p-3 border-2 border-gray rounded-2xl outline-none w-full focus:border-custom-yellow"
                         placeholder="Enter Password"
                     />

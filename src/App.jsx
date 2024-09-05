@@ -145,7 +145,7 @@ function App() {
 
                         <Route path="/offer-promo" element={<OfferPromo />} />
                         <Route path="/guidelines" element={<Guidelines />} />
-                        <Route path="mice" element={<MICE />} />
+                        <Route path="/mice" element={<MICE />} />
                         <Route path="/cruise" element={<Cruise/>} />
 
                         <Route
