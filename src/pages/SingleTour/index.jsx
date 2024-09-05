@@ -15,8 +15,6 @@ import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
 
 import Slider from "./GallerySlider";
 import Faq from "./Faq";
@@ -32,661 +30,540 @@ import languagesss from "../../assets/lang.png";
 import men from "../../assets/men.png";
 
 const SingleTour = () => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
-    const navigate = useNavigate();
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+  const navigate = useNavigate();
 
-    const [reviews, setReviews] = useState([]);
-    const [newReview, setNewReview] = useState({
-        reviewText: "",
-        imageURL: null,
-    });
-    const animatedComponents = makeAnimated();
-    const [data, setData] = useState({});
-    const lang = useSelector((state) => state.language.lang);
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({
+    reviewText: "",
+    imageURL: null,
+  });
 
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [adultCount, setAdultCount] = useState(0);
-    const [childCount, setChildCount] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0);
+  const [data, setData] = useState({});
+  const lang = useSelector((state) => state.language.lang);
 
-    const [canWriteReview, setCanWriteReview] = useState(false);
-    const [session, setSession] = useState(null);
-    const { user } = useSelector((state) => state.user);
-    const { singletour } = useParams();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [adultCount, setAdultCount] = useState(0);
+  const [childCount, setChildCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-    const isAvailableDay = (date) => {
-        const day = date.getDay(); // Get the day index (0 for Sunday, 1 for Monday, etc.)
-        return data?.availableDays?.includes(day); // Check if the day index is in the availableDays array
-    };
+  const [canWriteReview, setCanWriteReview] = useState(false);
+  const [session, setSession] = useState(null);
+  const { user } = useSelector((state) => state.user);
+  const { singletour } = useParams();
 
-    const album = [album1, album2, album3, album4, album5, album6];
-    const handleNextImage = () => {
-        setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
-    };
+  const isAvailableDay = (date) => {
+    const day = date.getDay(); // Get the day index (0 for Sunday, 1 for Monday, etc.)
+    return data?.availableDays?.includes(day); // Check if the day index is in the availableDays array
+  };
 
-    const handlePreviousImage = () => {
-        setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length,
+  const album = [album1, album2, album3, album4, album5, album6];
+  const handleNextImage = () => {
+    setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
+  };
+
+  const handlePreviousImage = () => {
+    setSelectedImage(
+      (prevIndex) => (prevIndex - 1 + album.length) % album.length
+    );
+  };
+  const handleTicketCountChange = (type, isIncrement) => {
+    if (type === "adult") {
+      // Calculate new adult count
+      const newCount = isIncrement
+        ? adultCount + 1
+        : Math.max(adultCount - 1, 0);
+      setAdultCount(newCount);
+      // Calculate new total price
+      setTotalPrice(newCount * data.adultPrice + childCount * data.childPrice);
+    } else if (type === "child") {
+      // Calculate new child count
+      const newCount = isIncrement
+        ? childCount + 1
+        : Math.max(childCount - 1, 0);
+      setChildCount(newCount);
+      // Calculate new total price
+      setTotalPrice(adultCount * data.adultPrice + newCount * data.childPrice);
+    }
+  };
+
+  const handleSession = (sess) => {
+    setSession(sess);
+  };
+  const formatDateForBackend = (date) => {
+    // Convert to ISO string without time
+    const localDate = new Date(date);
+    localDate.setHours(0, 0, 0, 0); // Set time to midnight in local time
+
+    // Convert to UTC date
+    const utcDate = new Date(
+      Date.UTC(
+        localDate.getFullYear(),
+        localDate.getMonth(),
+        localDate.getDate()
+      )
+    );
+
+    return utcDate.toISOString();
+  };
+  const handleReviewSubmit = async () => {
+    console.log(data._id);
+    if (newReview.reviewText.trim() == "") {
+      return toast.error("Review text required ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+    try {
+      const res = await axios.post(
+        BASE_URL + "/reviews/" + data._id,
+        newReview,
+        {
+          withCredentials: true,
+        }
+      );
+      const revvv = res.data.data.populatedReview;
+      console.log(res.data);
+
+      setReviews((prev) => [...prev, revvv]);
+      setNewReview({ reviewText: "", imageURL: null });
+      toast.success(" New review added", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      console.log(error);
+    }
+  };
+  const handleBookNow = async () => {
+    if (!user || !user.email) {
+      navigate("/signin");
+      return;
+    }
+    const isoDate = formatDateForBackend(selectedDate);
+    try {
+      const res = await axios.post(
+        BASE_URL + "/tickets",
+        {
+          date: isoDate,
+          adultQuantity: adultCount,
+          childQuantity: childCount,
+          session: session,
+          category: data.category,
+          plan: data._id,
+        },
+        { withCredentials: true }
+      );
+
+      toast.success(
+        "  ticket booked successflly check you email for more details",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
+    } catch (error) {
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      console.log(error);
+    }
+    // console.log(data.category);
+    // console.log(data._id);
+    // console.log({ selectedDate, adultCount, childCount, session });
+  };
+  const minDate = new Date();
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        console.log("get data function clled **************");
+        const data = await axios.get(BASE_URL + "/plans/" + singletour, {
+          withCredentials: true,
+        });
+        const res = await axios.get(
+          BASE_URL + "/reviews/" + singletour,
+          newReview,
+          {
+            withCredentials: true,
+          }
         );
+        console.log(res.data.data);
+        setReviews(res.data.data);
+        setData(data.data.data.plan);
+        setCanWriteReview(data.data.data.canWriteReview);
+        // setAlbum(data?.data?.images);
+        // setTours(data.data.data.plans);
+      } catch (error) {
+        console.log(error);
+      }
     };
-    const handleTicketCountChange = (type, isIncrement) => {
-        if (type === "adult") {
-            // Calculate new adult count
-            const newCount = isIncrement
-                ? adultCount + 1
-                : Math.max(adultCount - 1, 0);
-            setAdultCount(newCount);
-            // Calculate new total price
-            setTotalPrice(
-                newCount * data.adultPrice + childCount * data.childPrice,
-            );
-        } else if (type === "child") {
-            // Calculate new child count
-            const newCount = isIncrement
-                ? childCount + 1
-                : Math.max(childCount - 1, 0);
-            setChildCount(newCount);
-            // Calculate new total price
-            setTotalPrice(
-                adultCount * data.adultPrice + newCount * data.childPrice,
-            );
-        }
-    };
-    const convertAddOnData = (addOnData, lang) => {
-        console.log(addOnData);
-        return addOnData.map((item) => ({
-            label: item[lang],
-            value: item[lang],
-        }));
-    };
-    const handleSession = (sess) => {
-        setSession(sess);
-    };
-    const formatDateForBackend = (date) => {
-        // Convert to ISO string without time
-        const localDate = new Date(date);
-        localDate.setHours(0, 0, 0, 0); // Set time to midnight in local time
+    getData();
+  }, [singletour]);
+  return (
+    <div>
+      <Banner
+        image={data?.coverImage}
+        title={data && data.title && data?.title[lang]}
+        subTitle={"Home | Tours"}
+      />
 
-        // Convert to UTC date
-        const utcDate = new Date(
-            Date.UTC(
-                localDate.getFullYear(),
-                localDate.getMonth(),
-                localDate.getDate(),
-            ),
-        );
+      <div className="flex justify-center items-center px-2  pt-10">
+        <div className="flex w-screen md:w-[80vw]   flex-wrap">
+          <div className="w-full md:w-3/4  space-y-10    flex flex-col justify-center ">
+            <div>
+              <h2 className="text-3xl font-bold">
+                {lang === "ar" ? "عرض الجولة" : "About this activity"}
+              </h2>
 
-        return utcDate.toISOString();
-    };
-    const handleReviewSubmit = async () => {
-        console.log(data._id);
-        if (newReview.reviewText.trim() == "") {
-            return toast.error("Review text required ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-        try {
-            const res = await axios.post(
-                BASE_URL + "/reviews/" + data._id,
-                newReview,
-                {
-                    withCredentials: true,
-                },
-            );
-            const revvv = res.data.data.populatedReview;
-            console.log(res.data);
+              <div
+                className="relative grid grid-cols-1 md:grid-cols-2 mt-5 bg-custom-yellow w-full md:w-4/5 p-5 gap-3 rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
+                {/* <div className=" rotate-[40deg] absolute w-[50px] h-[50px] bg-red-500 bottom-0 left-0"></div> */}
+                <div className="flex  gap-5 items-center ">
+                  <BiTime className="w-[60px] h-[60px]" />
+                  <div dir={lang === "ar" ? "rtl" : "ltr"}>
+                    <h4 className="font-bold text-lg">
+                      {lang === "ar" ? "مدة الوقت" : "Time Duration"}
+                    </h4>
+                    <p>{data.duration && data?.duration[lang]}</p>
+                  </div>
+                </div>
+                <div className="flex  gap-5 items-center ">
+                  <FaBus className="w-[60px] h-[60px]" />
 
-            setReviews((prev) => [...prev, revvv]);
-            setNewReview({ reviewText: "", imageURL: null });
-            toast.success(" New review added", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } catch (error) {
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-            console.log(error);
-        }
-    };
-    const handleBookNow = async () => {
-        if (!user || !user.email) {
-            navigate("/signin");
-            return;
-        }
-        const isoDate = formatDateForBackend(selectedDate);
-        try {
-            const res = await axios.post(
-                BASE_URL + "/tickets",
-                {
-                    date: isoDate,
-                    adultQuantity: adultCount,
-                    childQuantity: childCount,
-                    session: session,
-                    category: data.category,
-                    plan: data._id,
-                },
-                { withCredentials: true },
-            );
+                  <div>
+                    <h4 className="font-bold text-lg">
+                      {lang === "ar" ? "المواصلات" : "Transportation"}
+                    </h4>
+                    <p>{data?.transportation && data?.transportation[lang]}</p>
+                  </div>
+                </div>
+                <div className="flex  gap-5 items-center ">
+                  <img src={men} className="w-[60px] h-[60px] object-cover" />
+                  <div>
+                    <h4 className="font-bold text-lg">
+                      {lang === "ar" ? "نوع الجولة" : "Type of Tour"}
+                    </h4>
+                    <p>{data?.typeOfTour && data?.typeOfTour[lang]}</p>
+                  </div>
+                </div>
+                <div className="flex  gap-5 items-center ">
+                  <img
+                    src={languagesss}
+                    className="w-[60px] h-[60px] object-cover"
+                  />
 
-            toast.success(
-                "  ticket booked successflly check you email for more details",
-                {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                },
-            );
-        } catch (error) {
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-            console.log(error);
-        }
-        // console.log(data.category);
-        // console.log(data._id);
-        // console.log({ selectedDate, adultCount, childCount, session });
-    };
-    const minDate = new Date();
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                console.log("get data function clled **************");
-                const data = await axios.get(
-                    BASE_URL + "/plans/" + singletour,
-                    { withCredentials: true },
-                );
-                const res = await axios.get(
-                    BASE_URL + "/reviews/" + singletour,
-                    newReview,
-                    {
-                        withCredentials: true,
-                    },
-                );
-                console.log(res.data.data);
-                setReviews(res.data.data);
-                setData(data.data.data.plan);
-                setCanWriteReview(data.data.data.canWriteReview);
-                // setAlbum(data?.data?.images);
-                // setTours(data.data.data.plans);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getData();
-    }, [singletour]);
-    return (
-        <div>
-            <Banner
-                image={data?.coverImage}
-                title={data && data.title && data?.title[lang]}
-                subTitle={"Home | Tours"}
-            />
+                  <div>
+                    <h4 className="font-bold text-lg">
+                      {lang === "ar" ? "اللغة" : "Language"}
+                    </h4>
+                    <p>{data?.language && data?.language[lang]}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold">
+                {lang === "ar" ? "الوصف" : "Description"}
+              </h2>
 
-            <div className="flex justify-center items-center px-2  pt-10">
-                <div className="flex w-screen md:w-[80vw]   flex-wrap">
-                    <div className="w-full md:w-3/4  space-y-10    flex flex-col justify-center ">
-                        <div>
-                            <h2 className="text-3xl font-bold">
-                                {lang === "ar"
-                                    ? "عرض الجولة"
-                                    : "About this activity"}
-                            </h2>
+              <div
+                className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
+                <p>{data.description && data.description[lang]}</p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold">
+                {lang === "ar" ? "أبرز النقاط" : "Highlights"}
+              </h2>
 
-                            <div
-                                className="relative grid grid-cols-1 md:grid-cols-2 mt-5 bg-custom-yellow w-full md:w-4/5 p-5 gap-3 rounded-lg shadow-xl"
-                                dir={lang === "ar" ? "rtl" : "ltr"}
-                            >
-                                {/* <div className=" rotate-[40deg] absolute w-[50px] h-[50px] bg-red-500 bottom-0 left-0"></div> */}
-                                <div className="flex  gap-5 items-center ">
-                                    <BiTime className="w-[60px] h-[60px]" />
-                                    <div dir={lang === "ar" ? "rtl" : "ltr"}>
-                                        <h4 className="font-bold text-lg">
-                                            {lang === "ar"
-                                                ? "مدة الوقت"
-                                                : "Time Duration"}
-                                        </h4>
-                                        <p>
-                                            {data.duration &&
-                                                data?.duration[lang]}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex  gap-5 items-center ">
-                                    <FaBus className="w-[60px] h-[60px]" />
+              <div
+                className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
+                <ul className="list-disc pl-5">
+                  {data.highlights &&
+                    data.highlights.map((item) => <li>{item[lang]}</li>)}
+                </ul>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold">
+                {lang === "ar" ? "ما الذي يتضمنه؟" : "What’s Included?"}
+              </h2>
 
-                                    <div>
-                                        <h4 className="font-bold text-lg">
-                                            {lang === "ar"
-                                                ? "المواصلات"
-                                                : "Transportation"}
-                                        </h4>
-                                        <p>
-                                            {data?.transportation &&
-                                                data?.transportation[lang]}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex  gap-5 items-center ">
-                                    <img
-                                        src={men}
-                                        className="w-[70px] h-[70px] object-cover"
-                                    />
-                                    <div>
-                                        <h4 className="font-bold text-lg">
-                                            {lang === "ar"
-                                                ? "نوع الجولة"
-                                                : "Type of Tour"}
-                                        </h4>
-                                        <p>
-                                            {data?.typeOfTour &&
-                                                data?.typeOfTour[lang]}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex  gap-5 items-center ">
-                                    <img
-                                        src={languagesss}
-                                        className="w-[70px] h-[70px] object-cover"
-                                    />
+              <div
+                className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
+                <ul className="list-disc pl-5">
+                  {data.includes &&
+                    data.includes.map((item) => <li>{item[lang]}</li>)}
+                </ul>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold">
+                {lang === "ar" ? "برنامج الرحلة" : "Itinerary"}
+              </h2>
 
-                                    <div>
-                                        <h4 className="font-bold text-lg">
-                                            {lang === "ar"
-                                                ? "اللغة"
-                                                : "Language"}
-                                        </h4>
-                                        <p>
-                                            {data?.language &&
-                                                data?.language[lang]}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">
-                                {lang === "ar" ? "الوصف" : "Description"}
-                            </h2>
+              <div
+                className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
+                <ul>
+                  {data?.itinerary &&
+                    data.itinerary.map((item, index) => {
+                      if (index == data?.itinerary.length - 2 || index == 1)
+                        return (
+                          <li
+                            className={` ${
+                              index == data?.itinerary.length - 1
+                                ? "pt-[90px]"
+                                : "pb-[90px]"
+                            }   border-l border-l-4   border-dashed border-black flex  items-center relative`}
+                          >
+                            <DiscImage />
+                            <span className="pl-10">{item[lang]}</span>
+                          </li>
+                        );
 
-                            <div
-                                className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl"
-                                dir={lang === "ar" ? "rtl" : "ltr"}
-                            >
-                                <p>
-                                    {data.description && data.description[lang]}
-                                </p>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">
-                                {lang === "ar" ? "أبرز النقاط" : "Highlights"}
-                            </h2>
-
-                            <div
-                                className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl"
-                                dir={lang === "ar" ? "rtl" : "ltr"}
-                            >
-                                <ul className="list-disc pl-5">
-                                    {data.highlights &&
-                                        data.highlights.map((item) => (
-                                            <li>{item[lang]}</li>
-                                        ))}
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">
-                                {lang === "ar"
-                                    ? "ما الذي يتضمنه؟"
-                                    : "What’s Included?"}
-                            </h2>
-
-                            <div
-                                className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl"
-                                dir={lang === "ar" ? "rtl" : "ltr"}
-                            >
-                                <ul className="list-disc pl-5">
-                                    {data.includes &&
-                                        data.includes.map((item) => (
-                                            <li>{item[lang]}</li>
-                                        ))}
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">
-                                {lang === "ar" ? "برنامج الرحلة" : "Itinerary"}
-                            </h2>
-
-                            <div
-                                className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
-                                dir={lang === "ar" ? "rtl" : "ltr"}
-                            >
-                                <ul>
-                                    {data?.itinerary &&
-                                        data.itinerary.map((item, index) => {
-                                            if (
-                                                index ==
-                                                    data?.itinerary.length -
-                                                        2 ||
-                                                index == 1
-                                            )
-                                                return (
-                                                    <li
-                                                        className={` ${
-                                                            index ==
-                                                            data?.itinerary
-                                                                .length -
-                                                                1
-                                                                ? "pt-[90px]"
-                                                                : "pb-[90px]"
-                                                        }   border-l border-l-4   border-dashed border-black flex  items-center relative`}
-                                                    >
-                                                        <DiscImage />
-                                                        <span className="pl-10">
-                                                            {item[lang]}
-                                                        </span>
-                                                    </li>
-                                                );
-
-                                            return (
-                                                <li
-                                                    className={`${
-                                                        index ==
-                                                        data?.itinerary.length -
-                                                            1
-                                                            ? " pb-0 "
-                                                            : " pb-[90px] "
-                                                    }  
+                      return (
+                        <li
+                          className={`${
+                            index == data?.itinerary.length - 1
+                              ? " pb-0 "
+                              : " pb-[90px] "
+                          }  
                                             ${
-                                                index == 0 ||
-                                                index ==
-                                                    data?.itinerary.length - 3
-                                                    ? " border-dashed  "
-                                                    : "border-solid "
+                                              index == 0 ||
+                                              index ==
+                                                data?.itinerary.length - 3
+                                                ? " border-dashed  "
+                                                : "border-solid "
                                             }  
 
 
                                              border-l border-l-4   border-solid border-black flex  items-center relative`}
-                                                >
-                                                    <Disc />
-                                                    <span className="pl-10">
-                                                        {item[lang]}
-                                                    </span>
-                                                </li>
-                                            );
-                                        })}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-full md:w-1/4   relative">
-                        <div>
-                            <h2 className="text-xl font-bold">
-                                {lang === "ar"
-                                    ? "اختر التاريخ والوقت"
-                                    : "Choose date and time"}
-                            </h2>
-                            <br />
-                            <DatePicker
-                                selected={selectedDate}
-                                onChange={(date) => setSelectedDate(date)}
-                                filterDate={isAvailableDay} // Disable all days not in availableDays
-                                inline
-                                dateFormat="MMMM d, yyyy"
-                                className="w-full"
-                                minDate={minDate}
-                            />
-                        </div>
+                        >
+                          <Disc />
+                          <span className="pl-10">{item[lang]}</span>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/4   relative">
+            <div>
+              <h2 className="text-xl font-bold">
+                {lang === "ar" ? "اختر التاريخ والوقت" : "Choose date and time"}
+              </h2>
+              <br />
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                filterDate={isAvailableDay} // Disable all days not in availableDays
+                inline
+                dateFormat="MMMM d, yyyy"
+                className="w-full"
+                minDate={minDate}
+              />
+            </div>
+            <div>
+              <h2 className="text-xl mt-5 font-bold">
+                {lang === "ar" ? "الجلسات" : "Sessions"}
+              </h2>
+              <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
+                {data.sessions &&
+                  data.sessions.map((sessionL) => (
+                    <button
+                      className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
+                        sessionL == session && " bg-custom-yellow "
+                      }`}
+                      onClick={() => handleSession(sessionL)}
+                    >
+                      <BiTime className="w-[25px] h-[25px]" /> {sessionL}
+                    </button>
+                  ))}
+              </div>
+            </div>
 
-                        <div>
-                            <h2 className="text-xl mt-5 font-bold">
-                                {lang === "ar" ? "الجلسات" : "Sessions"}
-                            </h2>
-                            <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
-                                {data.sessions &&
-                                    data.sessions.map((sessionL) => (
-                                        <button
-                                            className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
-                                                sessionL == session &&
-                                                " bg-custom-yellow "
-                                            }`}
-                                            onClick={() =>
-                                                handleSession(sessionL)
-                                            }
-                                        >
-                                            <BiTime className="w-[25px] h-[25px]" />{" "}
-                                            {sessionL}
-                                        </button>
-                                    ))}
-                            </div>
-                        </div>
-                        {data.addOn && data?.addOn?.length > 0 && (
-                            <div>
-                                {console.log(data.addOn)}
-                                <h2 className="text-xl my-5 font-bold">
-                                    {lang === "ar" ? "المشاركون" : "Add on"}
-                                </h2>{" "}
-                                <Select
-                                    className="w-full"
-                                    components={animatedComponents}
-                                    isMulti
-                                    options={convertAddOnData(data.addOn, lang)}
-                                />
-                            </div>
-                        )}
-                        <div>
-                            <h2 className="text-xl mt-5 font-bold">
-                                {lang === "ar" ? "المشاركون" : "Participants"}
-                            </h2>{" "}
-                            <div
-                                className="p-4 bg-gray-100 rounded-md max-w-md mx-auto"
-                                dir={lang === "ar" ? "rtl" : "ltr"}
-                            >
-                                {/* Adult Ticket Section */}
-                                <div className="flex justify-between items-center mb-4">
-                                    <div>
-                                        <h2 className="text-lg font-semibold">
-                                            {lang === "ar"
-                                                ? "البالغون"
-                                                : "Adult"}
-                                        </h2>
-                                        <p>Price: {data?.adultPrice} qar</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        {/* Minus Button */}
-                                        <button
-                                            onClick={() =>
-                                                handleTicketCountChange(
-                                                    "adult",
-                                                    false,
-                                                )
-                                            }
-                                            className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
-                                        >
-                                            -
-                                        </button>
-                                        {/* Display Adult Ticket Count */}
-                                        <span className="text-lg font-semibold">
-                                            {adultCount}
-                                        </span>
-                                        {/* Plus Button */}
-                                        <button
-                                            onClick={() =>
-                                                handleTicketCountChange(
-                                                    "adult",
-                                                    true,
-                                                )
-                                            }
-                                            className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Child Ticket Section */}
-                                <div
-                                    className="flex justify-between items-center mb-4"
-                                    dir={lang === "ar" ? "rtl" : "ltr"}
-                                >
-                                    <div>
-                                        <h2 className="text-lg font-semibold">
-                                            {lang === "ar" ? "طفل" : "Child"}
-                                        </h2>
-                                        <p>Price: {data?.childPrice} qar</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        {/* Minus Button */}
-                                        <button
-                                            onClick={() =>
-                                                handleTicketCountChange(
-                                                    "child",
-                                                    false,
-                                                )
-                                            }
-                                            className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
-                                        >
-                                            -
-                                        </button>
-                                        {/* Display Child Ticket Count */}
-                                        <span className="text-lg font-semibold">
-                                            {childCount}
-                                        </span>
-                                        {/* Plus Button */}
-                                        <button
-                                            onClick={() =>
-                                                handleTicketCountChange(
-                                                    "child",
-                                                    true,
-                                                )
-                                            }
-                                            className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Total Price Display */}
-                                <div
-                                    className="mt-4"
-                                    dir={lang === "ar" ? "rtl" : "ltr"}
-                                >
-                                    <h2 className="text-xl font-bold">
-                                        {lang === "ar"
-                                            ? "السعر الإجمالي"
-                                            : "Total Price"}
-                                        : {totalPrice}
-                                    </h2>
-                                    <br />
-                                    <button
-                                        onClick={() => {
-                                            if (!user?.email) {
-                                                toast.error(
-                                                    "Please login before book a plan!",
-                                                );
-                                                return;
-                                            }
-                                            if (
-                                                !selectedDate ||
-                                                (!adultCount && !childCount) ||
-                                                !session
-                                            ) {
-                                                toast.error(
-                                                    "Please fill all the booking fields before proceeding!",
-                                                );
-                                            } else {
-                                                const date =
-                                                    formatDateForBackend(
-                                                        selectedDate,
-                                                    );
-                                                navigate(
-                                                    `/checkout/${data._id}?date=${date}&adultCount=${adultCount}&childCount=${childCount}&session=${session}`,
-                                                );
-                                            }
-                                        }}
-                                        className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300"
-                                    >
-                                        {lang === "ar"
-                                            ? "احجز الآن"
-                                            : "Book Now"}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div className="">
+              <h2 className="text-xl mt-5 font-bold w-full mb-5">
+                {lang === "ar" ? "المشاركون" : "Participants"}
+              </h2>
+              <div
+                className="p-4 bg-gray-100 rounded-md max-w-md"
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
+                {/* Adult Ticket Section */}
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h2 className="text-lg font-semibold">
+                      {lang === "ar" ? "البالغون" : "Adult"}
+                    </h2>
+                    <p>Price: {data?.adultPrice} qar</p>
+                  </div>
+                  <div className="flex items-center">
+                    {/* Minus Button */}
+                    <button
+                      onClick={() => handleTicketCountChange("adult", false)}
+                      className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
+                    >
+                      -
+                    </button>
+                    {/* Display Adult Ticket Count */}
+                    <span className="text-lg font-semibold">{adultCount}</span>
+                    {/* Plus Button */}
+                    <button
+                      onClick={() => handleTicketCountChange("adult", true)}
+                      className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-            </div>
 
-            <Slider
-                mediaUrls={data && data.galleryimages ? data.galleryimages : []}
-                mediaVideoUrls={
-                    data && data.galleryvideos ? data.galleryvideos : []
-                }
-            />
-            <div className="flex justify-center items-center px-2  mb-10 ">
-                <div className="flex    flex-wrap  w-[80vw]">
-                    <div className="w-full   space-y-10    flex flex-col justify-center ">
-                        <div>
-                            <h2 className="text-3xl font-bold mb-5">
-                                {lang === "ar" ? "الأسئلة المتكررة" : "FAQs"}
-                            </h2>
-                            <Faq
-                                faqData={data.faq ? data?.faq : []}
-                                lang={lang}
-                            />
-                        </div>
-                    </div>
+                {/* Child Ticket Section */}
+                <div
+                  className="flex justify-between items-center mb-4"
+                  dir={lang === "ar" ? "rtl" : "ltr"}
+                >
+                  <div>
+                    <h2 className="text-lg font-semibold">
+                      {lang === "ar" ? "طفل" : "Child"}
+                    </h2>
+                    <p>Price: {data?.childPrice} qar</p>
+                  </div>
+                  <div className="flex items-center">
+                    {/* Minus Button */}
+                    <button
+                      onClick={() => handleTicketCountChange("child", false)}
+                      className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
+                    >
+                      -
+                    </button>
+                    {/* Display Child Ticket Count */}
+                    <span className="text-lg font-semibold">{childCount}</span>
+                    {/* Plus Button */}
+                    <button
+                      onClick={() => handleTicketCountChange("child", true)}
+                      className="w-10 h-10 bg-gray-300 rounded-full text-lg font-bold mx-2"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
+
+                {/* Total Price Display */}
+                <div className="mt-4" dir={lang === "ar" ? "rtl" : "ltr"}>
+                  <h2 className="text-xl font-bold">
+                    {lang === "ar" ? "السعر الإجمالي" : "Total Price"}:{" "}
+                    {totalPrice}
+                  </h2>
+                  <br />
+                  <button
+                    onClick={() => {
+                      if (!user?.email) {
+                        toast.error("Please login before book a plan!");
+                        return;
+                      }
+                      if (
+                        !selectedDate ||
+                        (!adultCount && !childCount) ||
+                        !session
+                      ) {
+                        toast.error(
+                          "Please fill all the booking fields before proceeding!"
+                        );
+                      } else {
+                        const date = formatDateForBackend(selectedDate);
+                        navigate(
+                          `/checkout/${data._id}?date=${date}&adultCount=${adultCount}&childCount=${childCount}&session=${session}`
+                        );
+                      }
+                    }}
+                    className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300"
+                  >
+                    {lang === "ar" ? "احجز الآن" : "Book Now"}
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-center items-center  ">
-                <Reviews
-                    canWriteReview={canWriteReview}
-                    reviews={reviews}
-                    setReviews={setReviews}
-                    newReview={newReview}
-                    setNewReview={setNewReview}
-                    handleReviewSubmit={handleReviewSubmit}
-                    user={user}
-                />
-            </div>
+          </div>
         </div>
-    );
+      </div>
+
+      <Slider
+        mediaUrls={data && data.galleryimages ? data.galleryimages : []}
+        mediaVideoUrls={data && data.galleryvideos ? data.galleryvideos : []}
+      />
+      <div className="flex justify-center items-center px-2  mb-10 ">
+        <div className="flex    flex-wrap  w-[80vw]">
+          <div className="w-full   space-y-10    flex flex-col justify-center ">
+            <div>
+              <h2 className="text-3xl font-bold mb-5">
+                {lang === "ar" ? "الأسئلة المتكررة" : "FAQs"}
+              </h2>
+              <Faq faqData={data.faq ? data?.faq : []} lang={lang} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center items-center  ">
+        <Reviews
+          canWriteReview={canWriteReview}
+          reviews={reviews}
+          setReviews={setReviews}
+          newReview={newReview}
+          setNewReview={setNewReview}
+          handleReviewSubmit={handleReviewSubmit}
+          user={user}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default SingleTour;
