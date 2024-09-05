@@ -182,7 +182,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-1 text-center text-lg flex justify-between gap-5 items-center w-full lg:w-[1150px] ">
+        <div className="mt-1 text-center text-lg flex justify-between gap-5 items-center w-full lg:w-[1415px] ">
           <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
 
           <div className="w-[200px] hidden md:inline">
