@@ -24,7 +24,6 @@ const Tours = () => {
             const res = await axios.patch(BASE_URL + "/plans/" + id);
             const updatedPlan = res.data.data.plan;
 
-            // Update the plans array with the updated plan
             setPlans((prevPlans) =>
                 prevPlans.map((plan) =>
                     plan._id === updatedPlan._id ? updatedPlan : plan,

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
 import { toast } from "react-toastify";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 const Card = ({ image, title, desc, lang, id }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,7 +63,7 @@ const Card = ({ image, title, desc, lang, id }) => {
       // Error handling: Log the full error response
       console.error(
         "Error details:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
 
       toast.error("Something went wrong", {
@@ -84,7 +85,7 @@ const Card = ({ image, title, desc, lang, id }) => {
   return (
     <div
       dir={lang === "ar" ? "rtl" : "ltr"}
-      className="hover:shadow-2xl border border-gray-lite duration-500"
+      className="hover:shadow-2xl border border-gray-lite duration-500 overflow-hidden cursor-pointer"
     >
       <div className="h-[250px]">
         <img src={image} className="object-cover w-full h-full" alt={title} />
@@ -93,6 +94,18 @@ const Card = ({ image, title, desc, lang, id }) => {
         <h2 className="text-lg font-bold md:text-xl text-gray">
           {lang === "ar" ? "العنوان" : title}
         </h2>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1">
+            <FaStar color="orange" />
+            <FaStar color="orange" />
+            <FaStar color="orange" />
+            <FaStar color="orange" />
+            <FaStar color="orange" />
+          </div>
+          <h1 className="font-semibold text-[1.2rem]">
+            5 Superb - <span className="text-gray">200 reviews</span>{" "}
+          </h1>
+        </div>
         <p className="text-sm text-gray text-justify leading-6">
           {lang === "ar" ? "الوصف" : desc}
         </p>

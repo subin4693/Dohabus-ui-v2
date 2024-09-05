@@ -25,7 +25,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     const [knowBeforeYouGo, setKnowBeforeYouGo] = useState([
         { en: "", an: "" },
     ]);
-
+    const [addOn, setAddOn] = useState([{ en: "", ar: "" }]);
     const [galleryImages, setGalleryImages] = useState([]);
     const [galleryVideos, setGalleryVideos] = useState([]);
     const [availableDays, setAvailableDays] = useState([]);
@@ -158,6 +158,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const formData = {
             category,
             coverImage,
@@ -180,6 +181,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             selectedSessions,
             isPickupRequired,
             isDropOffRequired,
+            addOn,
         };
         try {
             const res = await axios.put(
@@ -254,6 +256,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 setAdultPrice(planData.adultPrice || "");
                 setChildPrice(planData.childPrice || "");
                 setSelectedSessions(planData.sessions || []);
+
+                setAddOn(planData.addOn || [{ en: "", ar: "" }]);
 
                 setIsPickupRequired(planData.isPickupRequired || false);
                 setIsDropOffRequired(planData.isDropOffRequired || false);
@@ -382,6 +386,11 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         label: "Itinerary",
                         state: itinerary,
                         setter: setItinerary,
+                    },
+                    {
+                        label: "AddOn",
+                        state: addOn,
+                        setter: setAddOn,
                     },
                 ].map(({ label, state, setter }) => (
                     <div key={label}>

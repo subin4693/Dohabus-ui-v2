@@ -28,6 +28,7 @@ const TourCard = ({
     cartId,
     itinerary,
     childPrice,
+    category,
 }) => {
     const lang = useSelector((state) => state.language.lang);
     console.log({ favId, cartId });
@@ -99,7 +100,7 @@ const TourCard = ({
                             />
                         </button>*/}
                         <div className="">
-                            <Link to={link}>
+                            <Link to={`${"/tours/" + category + "/" + link}`}>
                                 <button className="p-5 text-black text-2xl font-semibold rounded-full bg-white w-[180px]">
                                     View Tour
                                 </button>

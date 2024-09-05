@@ -72,24 +72,32 @@ const Footer = () => {
                     <div className="space-y-5">
                         <h2 className="text-2xl font-bold">Useful Pages</h2>
                         <ul className="space-y-2 font-semibold text-lg">
-                            <li className="cursor-pointer hover:underline">
-                                Offers & Promotions
-                            </li>
-                            <li className="cursor-pointer hover:underline">
-                                Guidelines
-                            </li>
+                            <Link to={"/offer-promo"}>
+                                <li className="cursor-pointer hover:underline">
+                                    Offers & Promotions
+                                </li>
+                            </Link>
+                            <Link to={"/guidelines"}>
+                                <li className="cursor-pointer hover:underline">
+                                    Guidelines
+                                </li>
+                            </Link>
                             <li className="cursor-pointer hover:underline">
                                 <Link to="/blogs">Blog</Link>
                             </li>
                             <li className="cursor-pointer hover:underline">
                                 <Link to="/blogs-create">Write Blog</Link>
                             </li>
-                            <li className="cursor-pointer hover:underline">
-                                FAQ
-                            </li>
-                            <li className="cursor-pointer hover:underline">
-                                Terms & Conditions
-                            </li>
+                            <Link to={"/Faq"}>
+                                <li className="cursor-pointer hover:underline">
+                                    FAQ
+                                </li>
+                            </Link>
+                            <Link to={"/termandconditions"}>
+                                <li className="cursor-pointer hover:underline">
+                                    Terms & Conditions
+                                </li>
+                            </Link>
                         </ul>
                     </div>
 
@@ -199,20 +207,12 @@ const Footer = () => {
                     >
                         <IoClose className="text-2xl text-white" />
                     </button>
-                    <Slider
-                        {...settings}
-                        className="w-screen"
-                        beforeChange={(currentSlide, nextSlide) =>
-                            setSelectedImage(nextSlide)
-                        }
-                    >
+                    <Slider {...settings} className="w-screen">
                         {album.map((image, index) => (
                             <div
                                 key={index}
                                 className={`h-[89vh]   scale-75 flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
-                                    index === selectedImage
-                                        ? "scale-75 p-10 bg-red-500"
-                                        : ""
+                                    index === selectedImage ? "" : ""
                                 }`}
                                 style={{
                                     width:
@@ -223,9 +223,7 @@ const Footer = () => {
                                     margin: "0 20px", // Adjust the gap here
                                 }}
                             >
-                                {console.log("index" + index)}
-                                {console.log("selected" + selectedImage)} }
-                                {console.log(index === selectedImage)}
+                                {console.log(window.innerWidth)}
                                 <img
                                     src={image.image}
                                     alt={`Slide ${index}`}

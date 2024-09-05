@@ -71,7 +71,7 @@ const SignleCategory = () => {
             const res = await axios.post(
                 `${BASE_URL}/carts`,
                 { category: categoryId, tour: planId },
-                { withCredentials: true }
+                { withCredentials: true },
             );
 
             const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
@@ -85,8 +85,8 @@ const SignleCategory = () => {
                               isInCart: !tour.isInCart,
                               cartId: cartId ? cartId : null, // Conditionally set cartId
                           }
-                        : tour
-                )
+                        : tour,
+                ),
             );
             toast.success(" Added to Cart ", {
                 position: "top-right",
@@ -122,7 +122,7 @@ const SignleCategory = () => {
             const res = await axios.post(
                 `${BASE_URL}/favourites`,
                 { category: categoryId, tour: planId },
-                { withCredentials: true }
+                { withCredentials: true },
             );
 
             const favId = res.data.data.favourite?._id; // Safely access favourite._id
@@ -136,8 +136,8 @@ const SignleCategory = () => {
                               isInFavorites: !tour.isInFavorites,
                               favId: favId ? favId : null, // Conditionally set favId
                           }
-                        : tour
-                )
+                        : tour,
+                ),
             );
             toast.success(" Added to favourite ", {
                 position: "top-right",
@@ -175,7 +175,7 @@ const SignleCategory = () => {
 
             // Update the tours state to remove the tour with the given cartId
             setTours((prevTours) =>
-                prevTours.filter((tour) => tour._id !== cartId)
+                prevTours.filter((tour) => tour._id !== cartId),
             );
             toast.success("Removed from Cart  ", {
                 position: "top-right",
@@ -213,8 +213,8 @@ const SignleCategory = () => {
                 prevTours.map((tour) =>
                     tour.favId === favId
                         ? { ...tour, isInFavorites: false, favId: null }
-                        : tour
-                )
+                        : tour,
+                ),
             );
             toast.success(" Removed from favourite ", {
                 position: "top-right",
@@ -283,13 +283,14 @@ const SignleCategory = () => {
                         itinerary,
                         childPrice,
                     } = tour; // Destructure tour properties
+                    console.log(tour.category);
                     console.log({
                         lang: lang,
                         image: coverImage,
                         title: title[lang],
 
-                        link: _id,
-                        key: _id,
+                        link: tour._id,
+                        key: tour._id,
                         addToCart: addToCart,
                         addToFav: addToFav,
                         removeFromCart: removeFromCart,
@@ -306,8 +307,8 @@ const SignleCategory = () => {
                             lang={lang}
                             image={coverImage}
                             title={title[lang]}
-                            link={_id}
-                            key={_id}
+                            link={tour._id}
+                            key={tour._id}
                             addToCart={addToCart}
                             addToFav={addToFav}
                             removeFromCart={removeFromCart}
@@ -316,6 +317,7 @@ const SignleCategory = () => {
                             cartId={_id}
                             itinerary={itinerary && itinerary[0]}
                             childPrice={childPrice ? childPrice : 0}
+                            category={tour.category}
                         />
                     );
                 })}

@@ -15,6 +15,8 @@ import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 import Slider from "./GallerySlider";
 import Faq from "./Faq";
@@ -38,7 +40,7 @@ const SingleTour = () => {
         reviewText: "",
         imageURL: null,
     });
-
+    const animatedComponents = makeAnimated();
     const [data, setData] = useState({});
     const lang = useSelector((state) => state.language.lang);
 
@@ -91,7 +93,13 @@ const SingleTour = () => {
             );
         }
     };
-
+    const convertAddOnData = (addOnData, lang) => {
+        console.log(addOnData);
+        return addOnData.map((item) => ({
+            label: item[lang],
+            value: item[lang],
+        }));
+    };
     const handleSession = (sess) => {
         setSession(sess);
     };
@@ -464,6 +472,7 @@ const SingleTour = () => {
                                 minDate={minDate}
                             />
                         </div>
+
                         <div>
                             <h2 className="text-xl mt-5 font-bold">
                                 {lang === "ar" ? "الجلسات" : "Sessions"}
@@ -486,11 +495,24 @@ const SingleTour = () => {
                                     ))}
                             </div>
                         </div>
-
+                        {data.addOn && data?.addOn?.length > 0 && (
+                            <div>
+                                {console.log(data.addOn)}
+                                <h2 className="text-xl my-5 font-bold">
+                                    {lang === "ar" ? "المشاركون" : "Add on"}
+                                </h2>{" "}
+                                <Select
+                                    className="w-full"
+                                    components={animatedComponents}
+                                    isMulti
+                                    options={convertAddOnData(data.addOn, lang)}
+                                />
+                            </div>
+                        )}
                         <div>
                             <h2 className="text-xl mt-5 font-bold">
                                 {lang === "ar" ? "المشاركون" : "Participants"}
-                            </h2>
+                            </h2>{" "}
                             <div
                                 className="p-4 bg-gray-100 rounded-md max-w-md mx-auto"
                                 dir={lang === "ar" ? "rtl" : "ltr"}

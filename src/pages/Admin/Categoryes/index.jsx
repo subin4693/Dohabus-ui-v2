@@ -35,7 +35,7 @@ const CreateCategory = () => {
                         title,
                         description,
                         coverImage: image,
-                    }
+                    },
                 );
                 updatedCategory = res.data.data.category;
                 console.log(updatedCategory);
@@ -45,8 +45,8 @@ const CreateCategory = () => {
                     prevCategories.map((category) =>
                         category._id === updatedCategory._id
                             ? updatedCategory
-                            : category
-                    )
+                            : category,
+                    ),
                 );
 
                 toast.success("New category created ", {
@@ -153,16 +153,16 @@ const CreateCategory = () => {
                     <div className="bg-white shadow-lg rounded-lg flex flex-col md:flex-row w-full md:w-[800px] gap-4 p-5 border shadow-xl">
                         <div className="flex-1 flex items-center justify-center">
                             <label className="flex flex-col justify-center items-center cursor-pointer h-full">
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    id="coverImage"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                />{" "}
                                 {!image ? (
                                     <>
                                         <IoCameraOutline className="w-12 h-12 text-gray-500" />
-                                        <input
-                                            type="file"
-                                            className="hidden"
-                                            id="coverImage"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                        />
                                     </>
                                 ) : (
                                     <img

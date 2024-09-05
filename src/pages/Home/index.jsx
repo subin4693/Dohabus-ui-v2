@@ -136,7 +136,18 @@ const Home = () => {
     const getData = async () => {
       try {
         const data = await axios.get(BASE_URL + "/banner");
-        setSlides(data?.data?.data?.banner);
+        setSlides([
+          ...data?.data?.data?.banner,
+          // {
+          //   image:
+          //     "https://images.hdqwalls.com/wallpapers/planets-mountains-sea-sky-artwork-4k-wh.jpg",
+          // },
+
+          // {
+          //   image:
+          //     "https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?cs=srgb&dl=pexels-eberhardgross-443446.jpg&fm=jpg",
+          // },
+        ]);
         const reviewData = await axios.get(BASE_URL + "/reviews/all");
         console.log(reviewData.data.data);
         setReviews(reviewData.data.data);
@@ -291,9 +302,9 @@ const Home = () => {
         className="p-10 py-24 flex justify-center items-center flex-wrap"
       >
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ amount: 0.2 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="relative w-full lg:w-2/5 h-[400px] "
         >
@@ -318,7 +329,7 @@ const Home = () => {
           </motion.h1>
         </div>
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ amount: 0.2 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
@@ -334,7 +345,7 @@ const Home = () => {
           ></iframe>
         </motion.div>
       </div>
-      <div
+      {/* <div
         className="pb-6"
         style={{
           backgroundImage: "linear-gradient(138deg, #ffffff 50%, #fed92e 50%)",
@@ -399,7 +410,7 @@ const Home = () => {
             </Slider>
           </div>
         </div>
-      </div>
+      </div> */}
       <div
         className="w-full py-20"
         style={{

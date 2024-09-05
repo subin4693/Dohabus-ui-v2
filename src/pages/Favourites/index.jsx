@@ -9,7 +9,7 @@ import common from "../../assets/common-tourpage.jpg";
 import city from "../../assets/city-tourpage.jpg";
 import sea from "../../assets/sea-tourpage.jpg";
 import cultural from "../../assets/cultural-tourpage.jpg";
-
+import { toast } from "react-toastify";
 import catTop from "../../assets/city-tour-categorypage.jpg";
 import TourCard from "./TourCard";
 import { useSelector } from "react-redux";
@@ -139,10 +139,8 @@ const SignleCategory = () => {
             setTours((prevTours) =>
                 prevTours.filter((tour) => tour._id !== cartId),
             );
-
-            alert("Removed from Cart");
         } catch (error) {
-            console.log(error);
+            position: "top-right", console.log(error);
         }
     };
     const removeFromFav = async (favId) => {
@@ -156,9 +154,28 @@ const SignleCategory = () => {
             setTours((prevTours) =>
                 prevTours.filter((tour) => tour._id !== favId),
             );
-            alert("Removed from favourite");
+            toast.success(" Removed from favourite ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
             console.log(error);
+            toast.error(" Something went wrong! ", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 
@@ -225,8 +242,9 @@ const SignleCategory = () => {
                             lang={lang}
                             image={coverImage}
                             title={title[lang]}
-                            link={_id}
-                            key={_id}
+                            link={tour._id}
+                            key={tour._id}
+                            category={tour.category}
                             addToCart={addToCart}
                             addToFav={addToFav}
                             removeFromCart={removeFromCart}

@@ -48,7 +48,8 @@ import HotelBookings from "./pages/Admin/HotelBookings";
 import OfferPromo from "./pages/Offer&Promotion";
 import Guidelines from "./pages/Guidelines";
 import TermandCond from "./pages/Term&Conditions";
-
+import MICE from "./pages/MICE";
+import Cruise from "./pages/Cruise";
 import AdminTransportation from "./pages/Admin/Transportation";
 
 import axios from "axios";
@@ -144,6 +145,8 @@ function App() {
 
                         <Route path="/offer-promo" element={<OfferPromo />} />
                         <Route path="/guidelines" element={<Guidelines />} />
+                        <Route path="mice" element={<MICE />} />
+                        <Route path="/cruise" element={<Cruise/>} />
 
                         <Route
                             path="termandconditions"

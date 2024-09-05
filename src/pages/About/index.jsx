@@ -64,7 +64,7 @@ const About = () => {
               alt="About"
             />
           </div>
-          <div className="w-[75vh] pb-5" dir={lang === "ar" ? "rtl" : "ltr"}>
+          <div className="w-[70vh] pb-5" dir={lang === "ar" ? "rtl" : "ltr"}>
             <p className="text-justify">
               {data?.text && data?.text[lang]}
 

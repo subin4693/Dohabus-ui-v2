@@ -204,6 +204,7 @@ const TourPlanForm = ({ onClose }) => {
             selectedSessions,
             isPickupRequired,
             isDropOffRequired,
+            addOn,
         };
         // console.log(formData);
         // return;
@@ -372,17 +373,20 @@ const TourPlanForm = ({ onClose }) => {
                         label: "Highlights",
                         state: highlights,
                         setter: setHighlights,
+                        required: true,
                     },
                     { label: "Includes", state: includes, setter: setIncludes },
                     {
                         label: "Itinerary",
                         state: itinerary,
                         setter: setItinerary,
+                        required: true,
                     },
                     {
                         label: "AddOn",
                         state: addOn,
                         setter: setAddOn,
+                        required: false,
                     },
                 ].map(({ label, state, setter }) => (
                     <div key={label}>
@@ -396,7 +400,7 @@ const TourPlanForm = ({ onClose }) => {
                                     name="en"
                                     onChange={handleArrayChange(setter, index)}
                                     className="p-2 border rounded-md w-full"
-                                    required
+                                    required={item?.required}
                                 />
                                 <input
                                     type="text"
@@ -405,7 +409,7 @@ const TourPlanForm = ({ onClose }) => {
                                     name="ar"
                                     onChange={handleArrayChange(setter, index)}
                                     className="p-2 border rounded-md w-full"
-                                    required
+                                    required={item?.required}
                                     dir="rtl"
                                 />
                                 <button
