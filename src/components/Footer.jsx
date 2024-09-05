@@ -72,28 +72,25 @@ const Footer = () => {
           <div className="space-y-5">
             <h2 className="text-2xl font-bold">Useful Pages</h2>
             <ul className="space-y-2 font-semibold text-lg">
-              <Link to={"/offer-promo"}>
-                <li className="cursor-pointer hover:underline">
-                  Offers & Promotions
-                </li>
-              </Link>
-              <Link to={"/guidelines"}>
-                <li className="cursor-pointer hover:underline">Guidelines</li>
-              </Link>
+              <li className="cursor-pointer hover:underline">
+                <Link to={"/offer-promo"}>Offers & Promotions</Link>
+              </li>
+              <li className="cursor-pointer hover:underline">
+                <Link to={"/guidelines"}>Guidelines</Link>
+              </li>
               <li className="cursor-pointer hover:underline">
                 <Link to="/blogs">Blog</Link>
               </li>
               <li className="cursor-pointer hover:underline">
                 <Link to="/blogs-create">Write Blog</Link>
               </li>
-              <Link to={"/Faq"}>
-                <li className="cursor-pointer hover:underline">FAQ</li>
-              </Link>
-              <Link to={"/termandconditions"}>
-                <li className="cursor-pointer hover:underline">
-                  Terms & Conditions
-                </li>
-              </Link>
+              
+              <li className="cursor-pointer hover:underline">
+                <Link to={"/Faq"}>FAQ</Link>
+              </li>
+              <li className="cursor-pointer hover:underline">
+                <Link to={"/termandconditions"}>Terms & Conditions</Link>
+              </li>
             </ul>
           </div>
 

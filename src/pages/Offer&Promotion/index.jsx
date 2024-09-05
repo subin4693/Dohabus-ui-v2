@@ -4,18 +4,19 @@ import { Link } from "react-router-dom";
 const index = () => {
   return (
     <div
+      className="flex justify-center items-center"
       style={{
         backgroundImage:
           "url('https://dohabus.com/wp-content/uploads/2020/05/IMG_0367-scaled.jpg'), linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundBlendMode: "overlay", 
-        height: "100vh", 
+        backgroundBlendMode: "overlay",
+        height: "100%",
         width: "100%",
       }}
     >
       <div className="pt-20 flex justify-center items-center">
-        <div className="p-20">
+        <div className="py-5">
           <h3 className="text-4xl font-semibold text-white text-center">
             SPECIAL OFFER
           </h3>
