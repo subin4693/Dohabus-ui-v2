@@ -7,39 +7,6 @@ import logo from "../../assets/logo.png";
 import Slider from "react-slick";
 
 import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
-const reviewss = [
-  {
-    name: "John Doe",
-    text: "This service exceeded my expectations. Highly recommend it!",
-    image:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
-  },
-  {
-    name: "Jane Smith",
-    text: "Fantastic experience! The team was very professional and friendly.",
-    image:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
-  },
-  {
-    name: "Sam Wilson",
-    text: "Great value for money. I will definitely use this service again.",
-    image:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
-  },
-  {
-    name: "Sam Wilson",
-    text: "Great value for money. I will definitely use this service again.",
-    image:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
-  },
-  {
-    name: "Sam Wilson",
-    text: "Great value for money. I will definitely use this service again.",
-    image:
-      "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
-  },
-  // Add more reviews as needed
-];
 const Home = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,25 +14,60 @@ const Home = () => {
   const [slides, setSlides] = useState([]);
   const [categorys, setCategorys] = useState([]);
   const [reviews, setReviews] = useState([]);
-  // const [currentIndex, setCurrentIndex] = useState(0);
-  // const slides = [
-  //   {
-  //     url: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
-  //     alt: "Slide 1",
-  //   },
-  //   {
-  //     url: "https://images.pexels.com/photos/11912983/pexels-photo-11912983.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  //     alt: "Slide 2",
-  //   },
-  //   {
-  //     url: "https://dohabus.com/wp-content/uploads/2020/05/DSC6346-scaled.jpg",
-  //     alt: "Slide 3",
-  //   },
-  //   {
-  //     url: "https://cdn.getyourguide.com/img/tour/63b3fd9ac54a9.jpeg/145.jpg",
-  //     alt: "Slide 4",
-  //   },
-  // ];
+  const [currentSlide, setCurrentSlide] = useState(0);
+  // const [Reviews, setReviews]= useState([])
+
+  const Reviews = [
+    {
+      id: 1,
+      title: "Souq Waqif",
+      tours: "100+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659646/pexels-photo-14659646.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: 2,
+      title: "The Pearl-Qatar",
+      tours: "50+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659647/pexels-photo-14659647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: 3,
+      title: "Katara Cultural Village",
+      tours: "80+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659648/pexels-photo-14659648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: 4,
+      title: "National Museum of Qatar",
+      tours: "120+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659649/pexels-photo-14659649.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: 5,
+      title: "National Museum of Qatar",
+      tours: "120+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659649/pexels-photo-14659649.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: 6,
+      title: "National Museum of Qatar",
+      tours: "120+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659649/pexels-photo-14659649.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: 7,
+      title: "National Museum of Qatar",
+      tours: "120+ Tours",
+      imageUrl:
+        "https://images.pexels.com/photos/14659649/pexels-photo-14659649.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+  ];
 
   const settings = {
     className: "slider variable-width",
@@ -106,13 +108,24 @@ const Home = () => {
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => {
-      // Check if prevIndex is not a number
       if (typeof prevIndex !== "number" || isNaN(prevIndex)) {
         return 0;
       }
 
       return (prevIndex - 1 + slides.length) % slides.length;
     });
+  };
+  const itemsPerReview = window.innerWidth < 768 ? 1 : 3;
+  const prevReview = () => {
+    setCurrentSlide((prev) =>
+      prev === 0 ? Math.ceil(reviews.length / itemsPerReview) - 1 : prev - 1
+    );
+  };
+
+  const nextReview = () => {
+    setCurrentSlide((prev) =>
+      prev === Math.ceil(reviews.length / itemsPerReview) - 1 ? 0 : prev + 1
+    );
   };
 
   const firstImageVariants = {
@@ -149,8 +162,9 @@ const Home = () => {
           // },
         ]);
         const reviewData = await axios.get(BASE_URL + "/reviews/all");
-        console.log(reviewData.data.data);
+        console.log("Reviews???????????????????????", reviewData.data);
         setReviews(reviewData.data.data);
+
         const categoryData = await axios.get(BASE_URL + "/categorys");
 
         // setAlbum(data?.data?.images);
@@ -161,6 +175,7 @@ const Home = () => {
     };
     getData();
   }, []);
+  console.log("Reviewwwwsss>>>>>>>>>>>>>>>>>>>", reviews);
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % reviews.length);
@@ -168,7 +183,7 @@ const Home = () => {
 
   const goToPrevious = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length,
+      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length
     );
   };
 
@@ -196,12 +211,12 @@ const Home = () => {
                       index === 0
                         ? firstImageVariants
                         : index === 1
-                          ? secondImageVariants
-                          : {
-                              enter: { opacity: 0, x: 100 },
-                              center: { opacity: 1, x: 0 },
-                              exit: { opacity: 0, x: -100 },
-                            }
+                        ? secondImageVariants
+                        : {
+                            enter: { opacity: 0, x: 100 },
+                            center: { opacity: 1, x: 0 },
+                            exit: { opacity: 0, x: -100 },
+                          }
                     }
                     transition={{ duration: 0.5 }}
                   >
@@ -211,7 +226,7 @@ const Home = () => {
                       className="w-full h-screen object-cover"
                     />
                   </motion.div>
-                ),
+                )
             )}
         </AnimatePresence>
 
@@ -345,72 +360,100 @@ const Home = () => {
           ></iframe>
         </motion.div>
       </div>
-      {/* <div
-        className="pb-6"
-        style={{
-          backgroundImage: "linear-gradient(138deg, #ffffff 50%, #fed92e 50%)",
-        }}
-      >
-        <div className="flex justify-between items-center flex-wrap gap-5">
-          <div className="flex-grow">
-            <hr className="border border-dark" />
-          </div>
-          <div className="px-4">
-            <h1 className="text-center text-5xl font-semibold">
-              What Our Customers Say!
-            </h1>
-          </div>
-          <div className="flex-grow ">
-            <hr className="border border-dark" />
-          </div>
-        </div>
-        <h3 className="text-center mt-5 text-3xl text-gray-700">
-          Inbound Tours Qatar - Most trusted website to book your Desert Safari
-          in Qatar
-        </h3>
-        <div className="pt-20 flex justify-center items-center pb-5 flex-wrap">
-          <div className="p-5 flex flex-col items-center">
-            <h1 className="text-3xl text-center">
-              Based on <b>816 reviews</b>
-            </h1>
-            <img className="w-[30vh] mt-2" src={logo} alt="logo" />
-          </div>
-          <div className="slider-container inset-0 z-10 flex items-center justify-center px-4">
-            <Slider
-              {...settings}
-              className="w-[90vw] max-w-[90vw] h-[40vh] md:w-[61.2vw] overflow-hidden"
-              afterChange={(newIndex) => {
-                console.log(newIndex);
-              }}
+      {reviews.length !== 0 && (
+        <div
+          style={{
+            backgroundImage:
+              "linear-gradient(134deg, #ffffff 50%, #fed92e 50%)",
+          }}
+        >
+          <section className="">
+            <motion.h1
+              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: -100 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl p-5 text-center font-semibold"
             >
-              {reviewss.map((review, index) => (
+              {lang === "en" ? "What Our Customers Say" : "ماذا يقول عملاؤنا"}
+            </motion.h1>
+            <div className="relative w-full max-w-6xl mx-auto pb-10">
+              <div className="overflow-hidden">
                 <div
-                  key={index}
-                  className="flex-shrink-0 w-full max-w-[350px] h-[45vh] bg-white shadow-lg p-4 rounded-lg mx-4"
+                  className="flex transition-transform duration-500"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
-                  <div className="flex items-center gap-4">
-                    <img
-                      className="w-[50px] h-[50px] object-cover rounded-full"
-                      src={review.image}
-                      alt="reviewer"
-                    />
-                    <div>
-                      <h1 className="text-3xl font-semibold">{review.name}</h1>
-                      <p className="text-2xl">2-3-2024</p>
+                  {Array.from({
+                    length: Math.ceil(reviews.length / itemsPerReview),
+                  }).map((_, slideIndex) => (
+                    <div
+                      key={slideIndex}
+                      className="flex min-w-full gap-4 md:gap-0 justify-center "
+                    >
+                      {reviews
+                        .slice(
+                          slideIndex * itemsPerReview,
+                          slideIndex * itemsPerReview + itemsPerReview
+                        )
+                        .map((slide) => (
+                          <section class="bg-gray-50 bg-opacity-80 dark:bg-gray-800 overflow-hidden">
+                            <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-24 lg:px-6">
+                              <figure class="max-w-screen-md mx-auto">
+                                <svg
+                                  class="h-12 mx-auto mb-3 text-gray-400 dark:text-gray-600"
+                                  viewBox="0 0 24 27"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z"
+                                    fill="currentColor"
+                                  ></path>
+                                </svg>
+                                <blockquote className="h-[200px] overflow-hidden">
+                                  <p class="text-xl md:text-xl font-medium text-gray-900 md:text-2xl dark:text-white ">
+                                    "{slide.reviewText}"
+                                  </p>
+                                </blockquote>
+                                <figcaption class="flex items-center justify-center mt-6 space-x-3">
+                                  <div class="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
+                                    <div class="pr-3 font-medium text-gray-900 dark:text-white">
+                                      {slide.user.name}
+                                    </div>
+                                    <div class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
+                                      {lang === "en"
+                                        ? slide.plan.title.en
+                                        : slide.plan.title.ar}
+                                    </div>
+                                  </div>
+                                </figcaption>
+                              </figure>
+                            </div>
+                          </section>
+                        ))}
                     </div>
-                  </div>
-                  <p className="mt-5 text-[1.2rem]">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Adipisci ab earum quibusdam ipsam corporis consectetur est,
-                    sed dolor nisi eligendi hic neque qui velit ut architecto
-                    ducimus enim eius expedita! lorem
-                  </p>
+                  ))}
                 </div>
-              ))}
-            </Slider>
-          </div>
+              </div>
+              {reviews.length >= 3 && (
+                <div>
+                  <button
+                    onClick={prevReview}
+                    className="absolute left-0 top-1/3 transform translate-y-1/2 text-6xl text-dark p-2 rounded-full"
+                  >
+                    &#8249;
+                  </button>
+                  <button
+                    onClick={nextReview}
+                    className="absolute right-0 top-1/3 transform translate-y-1/2 p-2 text-6xl text-dark rounded-full"
+                  >
+                    &#8250;
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
         </div>
-      </div> */}
+      )}
       <div
         className="w-full py-20"
         style={{

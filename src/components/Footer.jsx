@@ -23,8 +23,10 @@ import {
   FaTripadvisor,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
+  const lang = useSelector((state) => state.language.lang);
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [selectedImage, setSelectedImage] = useState(null);
   // const album = [album1, album2, album3, album4, album5, album6];
@@ -70,33 +72,35 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-start text-dark">
           {/* Useful Pages Section */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">Useful Pages</h2>
+            <h2 className="text-2xl font-bold">
+            {lang === "en" ? "Useful Pages" : "صفحات مفيدة"}
+            </h2>
             <ul className="space-y-2 font-semibold text-lg">
               <li className="cursor-pointer hover:underline">
-                <Link to={"/offer-promo"}>Offers & Promotions</Link>
+                <Link to={"/offer-promo"}>{lang === "en" ? "Offers & Promotions" : "العروض والترويج"}</Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to={"/guidelines"}>Guidelines</Link>
+                <Link to={"/guidelines"}>{lang === "en" ? "Guidelines" : "الإرشادات"}</Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to="/blogs">Blog</Link>
+                <Link to="/blogs">{lang === "en" ? "Blog " : "مدونة"}</Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to="/blogs-create">Write Blog</Link>
+                <Link to="/blogs-create">{lang === "en" ? "Write Blog" : "كتابة مدونة"}</Link>
               </li>
               
               <li className="cursor-pointer hover:underline">
-                <Link to={"/Faq"}>FAQ</Link>
+                <Link to={"/Faq"}>{lang === "en" ? "FAQ" : "الأسئلة الشائعة"}</Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to={"/termandconditions"}>Terms & Conditions</Link>
+                <Link to={"/termandconditions"}>{lang === "en" ? "Terms & Conditions" : "الشروط والأحكام"}</Link>
               </li>
             </ul>
           </div>
 
           {/* Contact Us Section */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">Contact Us</h2>
+            <h2 className="text-2xl font-bold">{lang === "en" ? "Contact Us" : "اتصل بنا"}</h2>
             <ul className="space-y-2 font-semibold text-lg">
               <li className="flex items-center gap-2">
                 <FaPhoneAlt size={20} /> +974 4442 244
@@ -115,7 +119,7 @@ const Footer = () => {
 
           {/* Media Section */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">Media</h2>
+            <h2 className="text-2xl font-bold">{lang === "en" ? "Media" : "وسائل الإعلام"}</h2>
             <div className="grid grid-cols-3 gap-3">
               {album?.map((photo, index) => (
                 <img
@@ -131,7 +135,7 @@ const Footer = () => {
 
           {/* Social Media Links */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">Follow Us</h2>
+            <h2 className="text-2xl font-bold">{lang === "en" ? "Follow Us" :"تابعنا"}</h2>
             <div className="flex flex-wrap gap-2">
               <Link
                 to="http://wa.me/97433246556"
@@ -183,7 +187,9 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="mt-1 text-center text-lg flex justify-between gap-5 items-center w-full lg:w-[1415px] ">
-          <p>© Copyright 2022 - Doha Bus - All Rights Reserved</p>
+          <p>
+          {lang === "en" ? "© Copyright 2022 - Doha Bus - All Rights Reserved" : "© حقوق النشر 2022 - دوحة باص - جميع الحقوق محفوظة"}
+          </p>
 
           <div className="w-[200px] hidden md:inline">
             <img src={log} alt="" />
