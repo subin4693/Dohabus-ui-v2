@@ -74,7 +74,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
       const res = await axios.post(
         BASE_URL + "/users/signout",
         {},
-        { withCredentials: true },
+        { withCredentials: true }
       );
       toast.success("Logout succesfully", {
         position: "top-right",
@@ -115,10 +115,17 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
         <div className=" bg-custom-yellow  px-2 md:px-10   h-[50px] z-10   fixed top-0 left-0 right-0 ">
           <div className="flex justify-center items-center relative h-full">
             {" "}
-            <h1 className="font-bold text-xl text-center text-dark flex-1 ">
-              <span className="hidden sm:inline"> Summer Sale!</span> Save up to
-              15%
-            </h1>
+            {lang === "en" ? (
+              <h1 className="font-bold text-xl text-center text-dark flex-1 ">
+                <span className="hidden sm:inline"> Summer Sale!</span> Save up
+                to 15%
+              </h1>
+            ) : (
+              <h1 className="font-bold text-xl text-center text-dark flex-1">
+                <span className="hidden sm:inline"> عروض الصيف!</span> وفر حتى
+                15%
+              </h1>
+            )}
             <div className="flex gap-5 md:gap-20 items-center absolute right-0">
               <Link
                 to="/tours"
@@ -151,7 +158,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
 
           <div className="flex justify-center items-center gap-2 ">
             <div className="hidden xl:flex justify-center items-center gap-5">
-              <Link to="/">Home</Link>
+              <Link to="/">{lang === "en" ? "Home" : "الصفحة الرئيسية"}</Link>
 
               {/* <Link to="/about">Experiences</Link> */}
               {/* <Link to="/about">Services</Link> */}
@@ -167,7 +174,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     to="/tours"
                     className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
                   >
-                    Experiences
+                    {lang === "en" ? "Experiences" : "تجارب"}
                   </NavLink>
                   <span>
                     <svg
@@ -251,7 +258,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     to="/tours"
                     className="pr-1   text-white py-4 flex-1 h-full flex items-center justify-center"
                   >
-                    Services
+                    {lang === "en" ? "Services" : "خدمات"}
                   </NavLink>
                   <span>
                     <svg
@@ -270,20 +277,30 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 >
                   <Link to={"/transportation"}>
                     <li className="px-3 py-1 hover:bg-gray-100">
-                      Transportation Fleet
+                      {lang === "en" ? " Transportation Fleet" : "أسطول النقل"}
                     </li>
                   </Link>
-                  <li className="px-3 py-1 hover:bg-gray-100">Meet & Assist</li>
+                  <li className="px-3 py-1 hover:bg-gray-100">
+                    {lang === "en" ? "Meet & Assist" : "الاستقبال والمساعدة"}
+                  </li>
                   <Link to={"/mice"}>
-                    <li className="px-3 py-1 hover:bg-gray-100">MICE</li>
+                    <li className="px-3 py-1 hover:bg-gray-100">
+                      {lang === "en"
+                        ? "MICE"
+                        : "الاجتماعات والحوافز والمؤتمرات والمعارض"}
+                    </li>
                   </Link>
                   <Link to={"/cruise"}>
                     <li className="px-3 py-1 hover:bg-gray-100">
-                      Cruise Packages
+                      {lang === "en"
+                        ? "                      Cruise Packages"
+                        : "رحلات الكروز"}
                     </li>
                   </Link>
 
-                  <li className="px-3 py-1 hover:bg-gray-100">Visa</li>
+                  <li className="px-3 py-1 hover:bg-gray-100">
+                    {lang === "en" ? "Visa" : "تأشيرة"}
+                  </li>
                 </ul>
               </div>
 
@@ -312,21 +329,27 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                             </div>
                         </div> */}
 
-              <Link to="/hotel">Hotels</Link>
+              <Link to="/hotel">{lang === "en" ? "Hotels" : "فنادق"}</Link>
 
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact">
+                {lang === "en" ? "Contact Us" : "اتصل بنا"}
+              </Link>
               {/* <Link to="/cart">Cart</Link> */}
-              <Link to="/about">About Us</Link>
+              <Link to="/about">{lang === "en" ? "About Us" : "عنّا"}</Link>
               {/* <Link to="/faq">F&Q</Link> */}
               {user &&
                 (user.role === "admin" || user.role === "super-admin") && (
-                  <Link to="/admin">Admin</Link>
+                  <Link to="/admin">{lang === "en" ? "Admin" : "الإدارة"}</Link>
                 )}
 
               {!user || !user?.email ? (
-                <Link to="/signin">Login</Link>
+                <Link to="/signin">
+                  {lang === "en" ? "Login" : "تسجيل الدخول"}
+                </Link>
               ) : (
-                <Link onClick={handleSignOut}>Logout</Link>
+                <Link onClick={handleSignOut}>
+                  {lang === "en" ? "Logout" : "تسجيل الخروج"}
+                </Link>
               )}
               {/* <Link to="/signin">Login</Link> */}
               {/* <Link to="/">العربية</Link> */}
@@ -400,11 +423,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     {user &&
                     (user.role === "admin" || user.role === "super-admin") ? (
                       <Link to="/admin-cart" className="w-full">
-                        Cart
+                        {lang === "en" ? "Cart" : "عربة التسوق"}
                       </Link>
                     ) : (
                       <Link to="/cart" className="w-full">
-                        Cart
+                        {lang === "en" ? "Cart" : "عربة التسوق"}
                       </Link>
                     )}
                   </li>
@@ -415,11 +438,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                         to="/admin-favourites"
                         className="w-full  px-3 py-1"
                       >
-                        Favourites
+                        {lang === "en" ? "Favourites" : "المفضلات"}
                       </Link>
                     ) : (
-                      <Link to="/favourites" className="w-full ">
-                        Favourites
+                      <Link to="/favourites" className="w-full  px-3 py-1">
+                        {lang === "en" ? "Favourites" : "المفضلات"}
                       </Link>
                     )}
                   </li>
@@ -482,17 +505,29 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 <li className="px-3 py-1 hover:bg-gray-100">
                   {user &&
                   (user.role === "admin" || user.role === "super-admin") ? (
-                    <Link to="/admin-cart">Cart</Link>
+                    <Link to="/admin-cart">
+                      {" "}
+                      {lang === "en" ? "Cart" : "عربة التسوق"}
+                    </Link>
                   ) : (
-                    <Link to="/cart">Cart</Link>
+                    <Link to="/cart">
+                      {" "}
+                      {lang === "en" ? "Cart" : "عربة التسوق"}
+                    </Link>
                   )}
                 </li>
                 <li className="px-3 py-1 hover:bg-gray-100">
                   {user &&
                   (user.role === "admin" || user.role === "super-admin") ? (
-                    <Link to="/admin-favourites">Favourites</Link>
+                    <Link to="/admin-favourites">
+                      {" "}
+                      {lang === "en" ? "Favourites" : "المفضلات"}
+                    </Link>
                   ) : (
-                    <Link to="/favourites">Favourites</Link>
+                    <Link to="/favourites">
+                      {" "}
+                      {lang === "en" ? "Favourites" : "المفضلات"}
+                    </Link>
                   )}
                 </li>
               </ul>
@@ -541,7 +576,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               }}
               className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
             >
-              Home
+              {lang === "en" ? "Home" : "الصفحة الرئيسية"}
             </button>
 
             <button
@@ -554,7 +589,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 navigate("/tours");
               }}
             >
-              Experience
+              {lang === "en" ? "Experiences" : "تجارب"}
+
               <div
                 className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                 onClick={(e) => {
@@ -642,7 +678,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 navigate("/tours");
               }}
             >
-              Services
+              {lang === "en" ? "Services" : "خدمات"}
               <div
                 className="flex p-1 justify-center items-center w-5 h-5 rounded-full bg-custom-yellow group-hover:bg-white group-hover:text-custom-yellow font-bold"
                 onClick={(e) => {
@@ -669,31 +705,39 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                         to={`/transportation`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
-                        Transportation
+                        {lang === "en"
+                          ? " Transportation Fleet"
+                          : "أسطول النقل"}
                       </Link>
                       <Link
                         to={`/tours`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
-                        Meet & Assist
+                        {lang === "en"
+                          ? "Meet & Assist"
+                          : "الاستقبال والمساعدة"}
                       </Link>
                       <Link
                         to={`/mice`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
-                        MICE
+                        {lang === "en"
+                          ? "MICE"
+                          : "الاجتماعات والحوافز والمؤتمرات والمعارض"}
                       </Link>
                       <Link
                         to={`/cruise`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
-                        Cruise Packages
+                        {lang === "en"
+                          ? "                      Cruise Packages"
+                          : "رحلات الكروز"}{" "}
                       </Link>
                       <Link
                         to={`/tours`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
-                        Visa
+                        {lang === "en" ? "Visa" : "تأشيرة"}
                       </Link>
                     </div>
                   </div>
@@ -709,7 +753,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               }}
               className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
             >
-              Hotels
+              {lang === "en" ? "Hotels" : "فنادق"}
             </button>
             <button
               onClick={(e) => {
@@ -720,8 +764,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               }}
               className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
             >
-              Contact Us
-            </button>
+{lang === "en" ? "Contact Us" : "اتصل بنا"}            </button>
             <button
               onClick={(e) => {
                 setSidebarOpen(false);
@@ -731,8 +774,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               }}
               className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
             >
-              About Us
-            </button>
+{lang === "en" ? "About Us" : "عنّا"}            </button>
 
             {/* <button
             onClick={(e) => {
@@ -768,7 +810,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                   }}
                   className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                 >
-                  Admin
+                  {lang === "en" ? "Admin" : "الإدارة"}
                 </button>
               )}
             <div className="py-3 text-left  flex items-center text-black px-4   duration-200   text-[18px] border-b border-slate-300">
@@ -828,7 +870,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 }}
                 className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
               >
-                Login
+                                  {lang === "en" ? "Login" : "تسجيل الدخول"}
+
               </button>
             ) : (
               <button
@@ -840,7 +883,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 }}
                 className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
               >
-                Logout
+                                  {lang === "en" ? "Logout" : "تسجيل الخروج"}
+
               </button>
             )}
           </div>
