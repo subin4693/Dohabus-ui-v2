@@ -1,14 +1,17 @@
 import React from "react";
 import Banner from "../../components/Banner";
 import contactImg from "../../assets/contact.jpg";
+import img from "../../assets/single-tour.jpg"
 import { Link } from "react-router-dom";
 const index = () => {
   return (
     <div>
       <Banner image={contactImg} title={"MICE"} subTitle={"Home | MICE"} />
+
       <div className="p-8 max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6 text-center">MICE Services</h1>
-        <p className="mb-8 text-lg text-center">
+        <img src={img} alt="" />
+        <h1 className="text-4xl font-bold mb-6 text-center mt-5">MICE Services</h1>
+        <p className="mb-8 text-lg">
           Transform your corporate events into unforgettable experiences with
           DohaBuss. We specialize in Meetings, Incentives, Conferences, and
           Exhibitions (MICE) services in the vibrant city of Doha.

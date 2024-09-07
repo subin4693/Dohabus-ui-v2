@@ -281,7 +281,7 @@ function Map() {
         <GoogleMap
           center={center}
           zoom={13}
-          mapContainerStyle={{ width: "70vh", height: "600px" }}
+          mapContainerStyle={{ width: "100%", height: "600px" }}
           options={{
             styles: mapStyles,
             zoomControl: false,

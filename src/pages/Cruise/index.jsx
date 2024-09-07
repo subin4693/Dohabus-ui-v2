@@ -152,8 +152,8 @@ const index = () => {
         subTitle={"Home | Cruise Packages "}
       />
 
-      <section className="mb-5 p-5">
-        <h2 className="text-3xl font-semibold mb-4">Why Choose DohaBuss?</h2>
+      <section className="mb-5 px-16 mt-5">
+        <h2 className="text-3xl font-semibold mb-4">Why Choose DohaBus?</h2>
         <div className="cards flex  justify-around flex-wrap gap-3">
           <div className="card w-[40vh] h-[300px] overflow-hidden">
             <img
@@ -209,8 +209,8 @@ const index = () => {
           </div>
         </div>
       </section>
-      <section className="mb-12 p-5">
-        <h2 className="text-3xl font-semibold mb-4">Trending destinations</h2>
+      <section className="mb-12 ">
+        <h2 className="text-3xl font-semibold mb-4 px-16 mt-5 mb-5">Trending destinations</h2>
         <div className="relative w-full max-w-6xl mx-auto">
           <div className="overflow-hidden">
             <div
@@ -269,7 +269,7 @@ const index = () => {
           </button>
         </div>
       </section>
-      <section className="mb-5 p-5">
+      <section className="mb-5 px-16 mt-5">
         <h2 className="text-3xl font-semibold mb-4">Find Popular Tours</h2>
         <div className="cards flex flex-wrap gap-4 justify-center items-center">
           {Tours.map((tour) => (
@@ -277,7 +277,7 @@ const index = () => {
               <Link to={"/tours"}>
                 <div
                   key={tour.id}
-                  className="card w-[50vh] h-[350px] overflow-hidden p-5 border rounded-2xl cursor-pointer"
+                  className="card w-[380px] h-[350px] overflow-hidden p-5 border rounded-2xl cursor-pointer"
                 >
                   <img
                     className="h-[200px] w-full object-cover rounded transform transition-all duration-300 ease-in-out hover:h-[190px] sm:hover:h-[190px]"
@@ -300,9 +300,7 @@ const index = () => {
           ))}
         </div>
       </section>
-      <section className="">
-        <Offers />
-      </section>
+     
     </div>
   );
 };
