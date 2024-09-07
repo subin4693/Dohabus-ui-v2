@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.0.2",
+    "@mui/x-date-pickers": "^7.16.0",
     "@react-google-maps/api": "^2.19.3",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.5",
+    "dayjs": "^1.11.13",
     "firebase": "^10.13.0",
     "flatpickr": "^4.6.13",
     "framer-motion": "^11.3.28",

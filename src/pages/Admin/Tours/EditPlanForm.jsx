@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
+import { TextField, Box, Button, Chip } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from "dayjs";
+import PricingComponent from "./PricingComponent";
+import AddonComponent from "./AddonComponent";
+import SinglePriceComponent from "./SinglePriceComponent";
+import { toast } from "react-toastify";
 
 const TourPlanForm = ({ onClose, editPlan }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -25,7 +34,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     const [knowBeforeYouGo, setKnowBeforeYouGo] = useState([
         { en: "", an: "" },
     ]);
-    const [addOn, setAddOn] = useState([{ en: "", ar: "" }]);
+    const [addon, setAddon] = useState([{ en: "", ar: "", price: "" }]);
+
     const [galleryImages, setGalleryImages] = useState([]);
     const [galleryVideos, setGalleryVideos] = useState([]);
     const [availableDays, setAvailableDays] = useState([]);
@@ -34,6 +44,14 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     const [selectedSessions, setSelectedSessions] = useState([]);
     const [isPickupRequired, setIsPickupRequired] = useState(false);
     const [isDropOffRequired, setIsDropOffRequired] = useState(false);
+    const [adultData, setAdultData] = useState([{ pax: null, price: null }]);
+    const [childData, setChildData] = useState([
+        { pax: null, price: null }, // Default values should be null or a distinct value to indicate no user input yet
+    ]);
+    const [showPricing, setShowPricing] = useState(false);
+
+    const [limit, setLimit] = useState(0);
+    const [selectedTime, setSelectedTime] = useState(null); // To store current time selection
 
     const [faq, setFaq] = useState([
         { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
@@ -45,6 +63,28 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     //     reader.onload = () => cb(null, reader.result);
     //     reader.onerror = (error) => cb(error, null);
     // };
+
+    const handleTimeChange = (newTime) => {
+        setSelectedTime(newTime);
+    };
+
+    // Add the selected time to the list and format it to "h:mm A" format
+    const handleAddSession = () => {
+        if (selectedTime) {
+            const formattedTime = dayjs(selectedTime).format("h:mm A");
+            if (!selectedSessions.includes(formattedTime)) {
+                setSelectedSessions([...selectedSessions, formattedTime]);
+            }
+        }
+    };
+
+    // Remove a selected session from the array
+    const handleRemoveSession = (session) => {
+        setSelectedSessions(
+            selectedSessions.filter((selected) => selected !== session),
+        );
+    };
+
     const {
         progress: progress,
         error: error,
@@ -181,7 +221,10 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             selectedSessions,
             isPickupRequired,
             isDropOffRequired,
-            addOn,
+            childData,
+            adultData,
+            addOn: addon,
+            limit,
         };
         try {
             const res = await axios.put(
@@ -190,7 +233,53 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 { withCredentials: true },
             );
             console.log(res);
+            toast.success("Plan edited successfully...", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         } catch (error) {
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+                    .toLowerCase()
+                    .includes(
+                        "provide either single price fields or detailed pricing data, not both.",
+                    )
+            ) {
+                // Display a specific toast for this error
+                toast.error(
+                    "Please provide either single price fields or detailed pricing data, not both.",
+                    {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    },
+                );
+            } else {
+                // Display a generic toast for other errors
+                toast.error("Something went wrong!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            }
             console.log(error);
         } finally {
             onClose(null);
@@ -236,14 +325,16 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 const planData = response.data.data.plan;
 
                 // Set state variables with fetched data
-                setCategory(planData.category);
-                setCoverImage(planData.coverImage);
-                setTitle(planData.title);
-                setDuration(planData.duration);
-                setTypeOfTour(planData.typeOfTour);
-                setTransportation(planData.transportation);
-                setLanguage(planData.language);
-                setDescription(planData.description);
+                setCategory(planData.category || "");
+                setCoverImage(planData.coverImage || "");
+                setTitle(planData.title || { en: "", ar: "" });
+                setDuration(planData.duration || { en: "", ar: "" });
+                setTypeOfTour(planData.typeOfTour || { en: "", ar: "" });
+                setTransportation(
+                    planData.transportation || { en: "", ar: "" },
+                );
+                setLanguage(planData.language || { en: "", ar: "" });
+                setDescription(planData.description || { en: "", ar: "" });
                 setHighlights(planData.highlights || [{ en: "", ar: "" }]);
                 setIncludes(planData.includes || [{ en: "", ar: "" }]);
                 setItinerary(planData.itinerary || [{ en: "", ar: "" }]);
@@ -257,7 +348,15 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 setChildPrice(planData.childPrice || "");
                 setSelectedSessions(planData.sessions || []);
 
-                setAddOn(planData.addOn || [{ en: "", ar: "" }]);
+                setAddon(planData.addOn || [{ en: "", ar: "" }]);
+                childData,
+                    setChildData(
+                        planData.childData || [{ pax: null, price: null }],
+                    );
+                setAdultData(
+                    planData.adultData || [{ pax: null, price: null }],
+                );
+                setLimit(planData.limit || "");
 
                 setIsPickupRequired(planData.isPickupRequired || false);
                 setIsDropOffRequired(planData.isDropOffRequired || false);
@@ -287,14 +386,13 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 {/* Category Dropdown */}
                 <div>
                     <label htmlFor="category" className="block mb-2">
-                        Category
+                        Category{" "}
                     </label>
                     <select
                         id="category"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         className="p-2 border rounded-md w-full"
-                        required
                     >
                         <option value="">Select a category</option>
                         {categoryOptions?.map((cat) => (
@@ -332,44 +430,67 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 {/* Text Inputs for Title, Duration, Type of Tour, Transportation, Language, Description */}
                 {[
-                    { label: "Title", state: title, setter: setTitle },
-                    { label: "Duration", state: duration, setter: setDuration },
+                    {
+                        label: "Title",
+                        state: title,
+                        setter: setTitle,
+                        optional: false,
+                    },
+                    {
+                        label: "Duration",
+                        state: duration,
+                        setter: setDuration,
+                        optional: true,
+                    },
                     {
                         label: "Type of Tour",
                         state: typeOfTour,
                         setter: setTypeOfTour,
+                        optional: true,
                     },
                     {
                         label: "Transportation",
                         state: transportation,
                         setter: setTransportation,
+                        optional: true,
                     },
-                    { label: "Language", state: language, setter: setLanguage },
+                    {
+                        label: "Language",
+                        state: language,
+                        setter: setLanguage,
+                        optional: true,
+                    },
                     {
                         label: "Description",
                         state: description,
                         setter: setDescription,
+                        optional: false,
                     },
-                ].map(({ label, state, setter }) => (
+                ].map(({ label, state, setter, optional }) => (
                     <div key={label}>
-                        <label className="block mb-2">{label}</label>
+                        <label className="block mb-2">
+                            {label}{" "}
+                            {optional && (
+                                <span className="text-gray-600 ml-2">
+                                    (optional)
+                                </span>
+                            )}
+                        </label>
                         <input
                             type="text"
                             placeholder={`English ${label}`}
-                            value={state?.en}
+                            value={state.en}
                             name="en"
                             onChange={handleInputChange(setter)}
                             className="p-2 border rounded-md mb-2 w-full"
-                            required
                         />
                         <input
                             type="text"
                             placeholder={`Arabic ${label}`}
-                            value={state?.ar}
+                            value={state.ar}
                             name="ar"
                             onChange={handleInputChange(setter)}
                             className="p-2 border rounded-md w-full"
-                            required
                             dir="rtl"
                         />
                     </div>
@@ -387,14 +508,14 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         state: itinerary,
                         setter: setItinerary,
                     },
-                    {
-                        label: "AddOn",
-                        state: addOn,
-                        setter: setAddOn,
-                    },
                 ].map(({ label, state, setter }) => (
                     <div key={label}>
-                        <label className="block mb-2">{label}</label>
+                        <label className="block mb-2">
+                            {label}{" "}
+                            <span className="text-gray-600 ml-2">
+                                (optional)
+                            </span>
+                        </label>
                         {state.map((item, index) => (
                             <div key={index} className="flex space-x-2 mb-2">
                                 <input
@@ -404,7 +525,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                     name="en"
                                     onChange={handleArrayChange(setter, index)}
                                     className="p-2 border rounded-md w-full"
-                                    required
                                 />
                                 <input
                                     type="text"
@@ -413,7 +533,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                     name="ar"
                                     onChange={handleArrayChange(setter, index)}
                                     className="p-2 border rounded-md w-full"
-                                    required
                                     dir="rtl"
                                 />
                                 <button
@@ -437,8 +556,16 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         </button>
                     </div>
                 ))}{" "}
+                <div>
+                    <AddonComponent
+                        label="Addon"
+                        state={addon}
+                        setter={setAddon}
+                    />
+                </div>
                 <label htmlFor="galleryImages" className="block mb-2">
-                    Pickup and Dropoff
+                    Pickup and Dropoff{" "}
+                    <span className="text-gray-600 ml-2">(optional)</span>
                 </label>
                 <div className="flex gap-10 items-center">
                     <div>
@@ -469,7 +596,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 {/* Gallery Images Input */}
                 <div>
                     <label htmlFor="galleryImages" className="block mb-2">
-                        Gallery Images
+                        Gallery Images{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     <input
                         type="file"
@@ -500,7 +628,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 {/* Gallery Videos Input */}
                 <div>
                     <label htmlFor="galleryVideos" className="block mb-2">
-                        Gallery Videos
+                        Gallery Videos{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     <input
                         type="file"
@@ -559,105 +688,152 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                             </div>
                         ))}
                     </div>
-                    <div className="mt-2">
-                        Selected Days:{" "}
-                        {availableDays
-                            .map(
-                                (day) =>
-                                    [
-                                        "Sunday",
-                                        "Monday",
-                                        "Tuesday",
-                                        "Wednesday",
-                                        "Thursday",
-                                        "Friday",
-                                        "Saturday",
-                                    ][day],
-                            )
-                            .join(", ")}
-                    </div>
+                    {availableDays.length == 0 ? (
+                        <p>No dates selected</p>
+                    ) : (
+                        <>
+                            {" "}
+                            <div className="mt-2">
+                                Selected Days:{" "}
+                                {availableDays
+                                    .map(
+                                        (day) =>
+                                            [
+                                                "Sunday",
+                                                "Monday",
+                                                "Tuesday",
+                                                "Wednesday",
+                                                "Thursday",
+                                                "Friday",
+                                                "Saturday",
+                                            ][day],
+                                    )
+                                    .join(", ")}
+                            </div>
+                        </>
+                    )}
                 </div>
                 <div className="mt-4">
-                    <div className="mt-4">
-                        <label htmlFor="sessions" className="block mb-2">
-                            Select Sessions
-                        </label>
-                        <div className="flex flex-wrap">
-                            {Array.from({ length: 24 }, (_, index) => {
-                                const sessionTime =
-                                    index === 0
-                                        ? "12 AM"
-                                        : index < 12
-                                          ? `${index} AM`
-                                          : index === 12
-                                            ? `12 PM`
-                                            : `${index - 12} PM`;
+                    <div className="">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Box>
+                                <h3>
+                                    Select Sessions{" "}
+                                    <span className="text-gray-600 ml-2">
+                                        (optional)
+                                    </span>
+                                </h3>
 
-                                return (
-                                    <React.Fragment key={sessionTime}>
-                                        {index === 12 && (
-                                            <div className="w-full"></div>
-                                        )}{" "}
-                                        {/* Line break after 12 items */}
-                                        <div className="flex items-center mr-4 mb-2">
-                                            <input
-                                                type="checkbox"
-                                                id={`session-${sessionTime}`}
-                                                value={sessionTime}
-                                                checked={selectedSessions.includes(
-                                                    sessionTime,
-                                                )}
-                                                onChange={handleSessionChange}
-                                                className="mr-2"
-                                            />
-                                            <label
-                                                htmlFor={`session-${sessionTime}`}
-                                            >
-                                                {sessionTime}
-                                            </label>
-                                        </div>
-                                    </React.Fragment>
-                                );
-                            })}
-                        </div>
-                    </div>
+                                <div className="flex items-center gap-5 flex-wrap  mt-4">
+                                    <TimePicker
+                                        label="Select Time"
+                                        value={selectedTime}
+                                        onChange={handleTimeChange}
+                                        renderInput={(params) => (
+                                            <TextField {...params} />
+                                        )}
+                                        ampm={true} // Ensure AM/PM format
+                                    />
 
-                    <div className="mt-2">
-                        Selected Sessions: {selectedSessions.join(", ")}
+                                    {/* Button to add the selected time to sessions */}
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleAddSession}
+                                    >
+                                        Add Session
+                                    </Button>
+                                </div>
+
+                                {/* Display the list of selected sessions */}
+                                <Box mt={2}>
+                                    <h4>Selected Sessions</h4>
+                                    <Box display="flex" flexWrap="wrap" gap={1}>
+                                        {selectedSessions.length === 0 ? (
+                                            <p>No sessions selected</p>
+                                        ) : (
+                                            selectedSessions.map(
+                                                (session, index) => (
+                                                    <Chip
+                                                        key={index}
+                                                        label={session}
+                                                        onDelete={() =>
+                                                            handleRemoveSession(
+                                                                session,
+                                                            )
+                                                        }
+                                                        color="primary"
+                                                    />
+                                                ),
+                                            )
+                                        )}
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </LocalizationProvider>
                     </div>
                 </div>
                 {/* Price Inputs */}
-                <div className="flex space-x-4">
-                    <div>
-                        <label htmlFor="adultPrice" className="block mb-2">
-                            Adult Price
+                <div>
+                    {/* Toggle Switch */}
+                    <div className="mb-4">
+                        <label className="inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only"
+                                checked={showPricing}
+                                onChange={() => setShowPricing(!showPricing)}
+                            />
+                            <div className="w-11 h-6 bg-gray-200 rounded-full shadow-inner"></div>
+                            <div
+                                className={`${
+                                    showPricing
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                } absolute w-5 h-5 bg-white rounded-full shadow transform transition-transform`}
+                            ></div>
+                            <span className="ml-3 text-gray-700">
+                                {showPricing
+                                    ? "Dynamic Pricing"
+                                    : "Single Pricing"}
+                            </span>
                         </label>
-                        <input
-                            type="number"
-                            id="adultPrice"
-                            value={adultPrice}
-                            onChange={(e) => setAdultPrice(e.target.value)}
-                            className="p-2 border rounded-md w-full"
-                            required
-                        />
                     </div>
-                    <div>
-                        <label htmlFor="childPrice" className="block mb-2">
-                            Child Price
-                        </label>
-                        <input
-                            type="number"
-                            id="childPrice"
-                            value={childPrice}
-                            onChange={(e) => setChildPrice(e.target.value)}
-                            className="p-2 border rounded-md w-full"
-                            required
+
+                    {/* Conditional Rendering */}
+                    {showPricing ? (
+                        <PricingComponent
+                            adultData={adultData}
+                            setAdultData={setAdultData}
+                            childData={childData}
+                            setChildData={setChildData}
                         />
-                    </div>
-                </div>{" "}
+                    ) : (
+                        <SinglePriceComponent
+                            adultPrice={adultPrice}
+                            setAdultPrice={setAdultPrice}
+                            childPrice={childPrice}
+                            setChildPrice={setChildPrice}
+                        />
+                    )}
+                </div>
+                <div className="mt-4">
+                    <label htmlFor="limit" className="block mb-2">
+                        Set ticket limit
+                        <span className="text-gray-600 ml-2">(optional)</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="limit"
+                        value={limit}
+                        onChange={(e) => setLimit(e.target.value)}
+                        className="p-2 border rounded-md w-full"
+                    />
+                </div>
                 <div className="mt-4">
                     <label htmlFor="knowBeforeYouGo" className="block mb-2">
-                        Know Before You Go
+                        Know Before You Go{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     {knowBeforeYouGo.map((item, index) => (
                         <div key={index} className="flex flex- w-full  mb-2">
@@ -710,7 +886,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 {/* Submit Button */}
                 <div className="mt-4">
                     <label htmlFor="faq" className="block mb-2">
-                        FAQs
+                        FAQs{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     {faq.map((faqItem, index) => (
                         <div
@@ -777,8 +954,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                                             e.target.value,
                                         )
                                     }
-                                    className="p-2 border rounded-md w-full"
                                     dir="rtl"
+                                    className="p-2 border rounded-md w-full"
                                 />
                             </div>
                             <button
@@ -800,7 +977,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 <button
                     type="submit"
-                    className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                    className="bg-green-500 text-white py-2 px-4 rounded-md"
                 >
                     Submit
                 </button>
@@ -808,7 +985,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 <button
                     type="submit"
                     onClick={onClose}
-                    className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                    className="bg-red-500 text-white py-2 px-4 rounded-md"
                 >
                     Close
                 </button>

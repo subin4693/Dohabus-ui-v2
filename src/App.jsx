@@ -92,7 +92,7 @@ function App() {
         verify(); // Call verify on component mount
     }, []);
     return (
-        <div className="font-custom cursor-default">
+        <div className="font-custom cursor-default overflow-x-hidden">
             <Router>
                 <Routes>
                     <Route path="/signup" element={<Signup />} />
