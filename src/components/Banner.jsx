@@ -11,7 +11,7 @@ const Banner = ({ image, title, subTitle }) => {
           {title}
         </h1>
 
-        <p className="text-custom-yellow text-lg md:text-xl mt-5">
+        <p className="text-custom-yellow text-lg md:text-xl mt-5 ">
           {subTitle.split("|")[0]}|
           <span className=" text-white">{subTitle.split("|")[1]}</span>
         </p>
