@@ -10,7 +10,7 @@ import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
 const reviewss = [
   {
     name: "John Doe",
-    text: "This service exceeded my expectations. Highly recommend it!",
+    text: "This service exceeded my expectations. Highly recommend it! ",
     image:
       "https://lh3.googleusercontent.com/a-/ALV-UjWViiXvxkA_Tih2Fp6Ja9hHtrJaj301BQWGqNOK31N9RQ=s120-c-rp-mo-ba2-br100",
   },
