@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 const Tours = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [plans, setPlans] = useState([]);
+    const mainUser = useSelector((state) => state.user.user);
 
     const [editPlan, setEditPlan] = useState(null);
 
@@ -120,25 +121,35 @@ const Tours = () => {
                                 >
                                     View Details
                                 </Link>
-                                <button
-                                    onClick={() => {
-                                        console.log(plan._id);
-                                        setEditPlan(plan._id);
-                                    }}
-                                    className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className={`mt-4 p-2 text-center text-white rounded-md transition duration-200 ${
-                                        plan.isActive
-                                            ? "bg-green-500 hover:bg-green-600"
-                                            : "bg-red-500 hover:bg-red-600"
-                                    }`}
-                                    onClick={() => switchActive(plan._id)}
-                                >
-                                    {plan.isActive ? "Active" : "Inactive"}
-                                </button>
+                                {mainUser &&
+                                    mainUser.role === "super-admin" && (
+                                        <>
+                                            {" "}
+                                            <button
+                                                onClick={() => {
+                                                    console.log(plan._id);
+                                                    setEditPlan(plan._id);
+                                                }}
+                                                className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                className={`mt-4 p-2 text-center text-white rounded-md transition duration-200 ${
+                                                    plan.isActive
+                                                        ? "bg-green-500 hover:bg-green-600"
+                                                        : "bg-red-500 hover:bg-red-600"
+                                                }`}
+                                                onClick={() =>
+                                                    switchActive(plan._id)
+                                                }
+                                            >
+                                                {plan.isActive
+                                                    ? "Active"
+                                                    : "Inactive"}
+                                            </button>
+                                        </>
+                                    )}
                             </div>
                         </div>
                     ))}

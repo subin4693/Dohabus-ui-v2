@@ -7,6 +7,7 @@ import Card from "./Card";
 import { toast } from "react-toastify";
 
 const CreateCategory = () => {
+    const mainUser = useSelector((state) => state.user.user);
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [image, setImage] = useState(null);
     const lang = useSelector((state) => state.language.lang);
@@ -25,6 +26,7 @@ const CreateCategory = () => {
     };
 
     const handleCreate = async (isEdit) => {
+        if (mainUser.role !== "super-admin") return;
         try {
             let updatedCategory;
             if (isEdit) {
@@ -35,7 +37,7 @@ const CreateCategory = () => {
                         title,
                         description,
                         coverImage: image,
-                    }
+                    },
                 );
                 console.log(res.data.data);
 
@@ -48,8 +50,8 @@ const CreateCategory = () => {
                     prevCategories.map((category) =>
                         category._id === updatedCategory._id
                             ? updatedCategory
-                            : category
-                    )
+                            : category,
+                    ),
                 );
                 toast.success("New hotel created", {
                     position: "top-right",
@@ -120,6 +122,7 @@ const CreateCategory = () => {
     };
 
     const handleDialog = (data = null) => {
+        if (mainUser.role !== "super-admin") return;
         if (data) {
             // Edit mode
             console.log(data);
@@ -180,10 +183,9 @@ const CreateCategory = () => {
                                         className="w-full h-full object-cover rounded-md"
                                     />
                                 )}{" "}
-                                {progress > 0 ||
-                                    (progress !== 100 && (
-                                        <p>Upload progress: {progress}%</p>
-                                    ))}
+                                {progress > 0 && progress !== 100 && (
+                                    <p>Upload progress: {progress}%</p>
+                                )}
                                 {error && (
                                     <p className="text-red-500">
                                         Error: {error.message}
@@ -285,12 +287,14 @@ const CreateCategory = () => {
                     </p>
                 </div>
                 <div>
-                    <button
-                        className="px-5 bg-custom-yellow py-2 rounded-md duration-300 hover:bg-black hover:text-white"
-                        onClick={() => handleDialog()}
-                    >
-                        Create Hotel
-                    </button>
+                    {mainUser && mainUser.role === "super-admin" && (
+                        <button
+                            className="px-5 bg-custom-yellow py-2 rounded-md duration-300 hover:bg-black hover:text-white"
+                            onClick={() => handleDialog()}
+                        >
+                            Create Hotel
+                        </button>
+                    )}
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-10 flex-wrap">

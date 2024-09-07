@@ -9,6 +9,7 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 
 const ManageTickets = () => {
+    const mainUser = useSelector((state) => state.user.user);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [details, setDetails] = useState([]);
@@ -182,6 +183,7 @@ const ManageTickets = () => {
                         booking={booking}
                         lang={lang}
                         handleCancelTicket={handleCancelTicket}
+                        mainUserRole={mainUser.role}
                     />
                 ))}
             </div>

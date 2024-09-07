@@ -146,7 +146,7 @@ function App() {
                         <Route path="/offer-promo" element={<OfferPromo />} />
                         <Route path="/guidelines" element={<Guidelines />} />
                         <Route path="/mice" element={<MICE />} />
-                        <Route path="/cruise" element={<Cruise/>} />
+                        <Route path="/cruise" element={<Cruise />} />
 
                         <Route
                             path="termandconditions"
@@ -173,7 +173,8 @@ function App() {
                         <Route
                             path="/admin-cart"
                             element={
-                                user && user.role === "admin" ? (
+                                (user && user.role === "admin") ||
+                                (user && user.role === "super-admin") ? (
                                     <AdminCart />
                                 ) : (
                                     <Navigate to="/" />
@@ -183,7 +184,8 @@ function App() {
                         <Route
                             path="/admin-favourites"
                             element={
-                                user && user.role === "admin" ? (
+                                (user && user.role === "admin") ||
+                                (user && user.role === "super-admin") ? (
                                     <AdminFavourite />
                                 ) : (
                                     <Navigate to="/" />
@@ -193,7 +195,8 @@ function App() {
                         <Route
                             path="/admin"
                             element={
-                                user && user.role === "admin" ? (
+                                (user && user.role === "admin") ||
+                                (user && user.role === "super-admin") ? (
                                     <AdminLayout />
                                 ) : (
                                     <Navigate to="/" />

@@ -3,8 +3,12 @@ import LocalizedInput from "./LocalizedInput";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload";
 import { toast } from "react-toastify";
 import axios from "axios";
+
+import { useSelector } from "react-redux";
+
 const AboutUsForm = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const mainUser = useSelector((state) => state.user.user);
     const [initialData, setInitialData] = useState(false);
     const [formData, setFormData] = useState({
         image: "",
@@ -166,6 +170,7 @@ const AboutUsForm = () => {
                             accept="image/*"
                             style={{ display: "none" }}
                             onChange={handleImageChange} // Handle file selection
+                            disabled={mainUser.role !== "super-admin"}
                         />
                     </label>
 
@@ -180,6 +185,7 @@ const AboutUsForm = () => {
                     onChange={handleChange}
                     lang="en"
                     placeholder="Enter About Us text in English"
+                    disabled={mainUser.role !== "super-admin"}
                 />
                 <LocalizedInput
                     label="about"
@@ -187,6 +193,7 @@ const AboutUsForm = () => {
                     onChange={handleChange}
                     lang="ar"
                     placeholder="Enter About Us text in Arabic"
+                    disabled={mainUser.role !== "super-admin"}
                 />
                 <LocalizedInput
                     label="mission"
@@ -194,6 +201,7 @@ const AboutUsForm = () => {
                     onChange={handleChange}
                     lang="en"
                     placeholder="Enter Mission text in English"
+                    disabled={mainUser.role !== "super-admin"}
                 />
                 <LocalizedInput
                     label="mission"
@@ -201,6 +209,7 @@ const AboutUsForm = () => {
                     onChange={handleChange}
                     lang="ar"
                     placeholder="Enter Mission text in Arabic"
+                    disabled={mainUser.role !== "super-admin"}
                 />
                 <LocalizedInput
                     label="vision"
@@ -208,6 +217,7 @@ const AboutUsForm = () => {
                     onChange={handleChange}
                     lang="en"
                     placeholder="Enter Vision text in English"
+                    disabled={mainUser.role !== "super-admin"}
                 />
                 <LocalizedInput
                     label="vision"
@@ -215,14 +225,17 @@ const AboutUsForm = () => {
                     onChange={handleChange}
                     lang="ar"
                     placeholder="Enter Vision text in Arabic"
+                    disabled={mainUser.role !== "super-admin"}
                 />
 
-                <button
-                    type="submit"
-                    className="bg-custom-yellow text-black duration-300 hover:text-white px-4 py-2 mt-4 rounded hover:bg-black"
-                >
-                    {initialData ? "Update About Us" : "Create About Us"}
-                </button>
+                {mainUser && mainUser.role === "super-admin" && (
+                    <button
+                        type="submit"
+                        className="bg-custom-yellow text-black duration-300 hover:text-white px-4 py-2 mt-4 rounded hover:bg-black"
+                    >
+                        {initialData ? "Update About Us" : "Create About Us"}
+                    </button>
+                )}
             </form>
         </div>
     );

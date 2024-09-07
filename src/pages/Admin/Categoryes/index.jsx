@@ -10,6 +10,7 @@ const CreateCategory = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [image, setImage] = useState(null);
     const lang = useSelector((state) => state.language.lang);
+    const mainUser = useSelector((state) => state.user.user);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [title, setTitle] = useState({ en: "", ar: "" });
@@ -111,6 +112,7 @@ const CreateCategory = () => {
     };
 
     const handleDialog = (data = null) => {
+        if (mainUser && mainUser.role !== "super-admin") return;
         if (data) {
             // Edit mode
             console.log(data);
@@ -171,10 +173,9 @@ const CreateCategory = () => {
                                         className="w-full h-full object-cover rounded-md"
                                     />
                                 )}{" "}
-                                {progress > 0 ||
-                                    (progress !== 100 && (
-                                        <p>Upload progress: {progress}%</p>
-                                    ))}
+                                {progress > 0 && progress !== 100 && (
+                                    <p>Upload progress: {progress}%</p>
+                                )}
                                 {error && (
                                     <p className="text-red-500">
                                         Error: {error.message}
@@ -276,12 +277,14 @@ const CreateCategory = () => {
                     </p>
                 </div>
                 <div>
-                    <button
-                        className="px-5 bg-custom-yellow py-2 rounded-md duration-300 hover:bg-black hover:text-white"
-                        onClick={() => handleDialog()}
-                    >
-                        Create Category
-                    </button>
+                    {mainUser && mainUser.role === "super-admin" && (
+                        <button
+                            className="px-5 bg-custom-yellow py-2 rounded-md duration-300 hover:bg-black hover:text-white"
+                            onClick={() => handleDialog()}
+                        >
+                            Create Category
+                        </button>
+                    )}
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-10 flex-wrap">

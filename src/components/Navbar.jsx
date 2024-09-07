@@ -28,7 +28,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
   const inputref = useRef(null);
   const [expandedCategory, setExpandedCategory] = useState([]);
   const [hoveredCategory, setHoveredCategory] = useState(null);
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [isEnglish, setIsEnglish] = useState(lang == "en" ? true : false);
 
   const dispatch = useDispatch();
 
@@ -318,7 +318,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               {/* <Link to="/cart">Cart</Link> */}
               <Link to="/about">About Us</Link>
               {/* <Link to="/faq">F&Q</Link> */}
-              {user && user?.role === "admin" && <Link to="/admin">Admin</Link>}
+              {user &&
+                (user.role === "admin" || user.role === "super-admin") && (
+                  <Link to="/admin">Admin</Link>
+                )}
+
               {!user || !user?.email ? (
                 <Link to="/signin">Login</Link>
               ) : (
@@ -392,18 +396,31 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                   aria-hidden="true"
                   className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
                 >
-                  <li className="px-3 py-1 hover:bg-gray-100">
-                    {user && user?.role == "admin" ? (
-                      <Link to="/admin-cart">Cart</Link>
+                  <li className="px-3 py-1 hover:bg-gray-100 w-full">
+                    {user &&
+                    (user.role === "admin" || user.role === "super-admin") ? (
+                      <Link to="/admin-cart" className="w-full">
+                        Cart
+                      </Link>
                     ) : (
-                      <Link to="/cart">Cart</Link>
+                      <Link to="/cart" className="w-full">
+                        Cart
+                      </Link>
                     )}
                   </li>
-                  <li className="px-3 py-1 hover:bg-gray-100">
-                    {user && user?.role == "admin" ? (
-                      <Link to="/admin-favourites">Favourites</Link>
+                  <li className=" hover:bg-gray-100 w-full ">
+                    {user &&
+                    (user.role === "admin" || user.role === "super-admin") ? (
+                      <Link
+                        to="/admin-favourites"
+                        className="w-full  px-3 py-1"
+                      >
+                        Favourites
+                      </Link>
                     ) : (
-                      <Link to="/favourites">Favourites</Link>
+                      <Link to="/favourites" className="w-full ">
+                        Favourites
+                      </Link>
                     )}
                   </li>
                 </ul>
@@ -463,14 +480,16 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
               >
                 <li className="px-3 py-1 hover:bg-gray-100">
-                  {user && user?.role == "admin" ? (
+                  {user &&
+                  (user.role === "admin" || user.role === "super-admin") ? (
                     <Link to="/admin-cart">Cart</Link>
                   ) : (
                     <Link to="/cart">Cart</Link>
                   )}
                 </li>
                 <li className="px-3 py-1 hover:bg-gray-100">
-                  {user && user?.role == "admin" ? (
+                  {user &&
+                  (user.role === "admin" || user.role === "super-admin") ? (
                     <Link to="/admin-favourites">Favourites</Link>
                   ) : (
                     <Link to="/favourites">Favourites</Link>
@@ -524,17 +543,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
             >
               Home
             </button>
-            <button
-              onClick={(e) => {
-                setSidebarOpen(false);
-                setExpandedCategory([]);
-                setTourOpen(false);
-                navigate("/about");
-              }}
-              className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-            >
-              About Us
-            </button>
+
             <button
               className="py-3 text-black px-4 hover:bg-custom-yellow duration-200 flex justify-between group items-center hover:text-white text-[18px] border-b border-slate-300"
               onClick={(e) => {
@@ -713,6 +722,17 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
             >
               Contact Us
             </button>
+            <button
+              onClick={(e) => {
+                setSidebarOpen(false);
+                setExpandedCategory([]);
+                setTourOpen(false);
+                navigate("/about");
+              }}
+              className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+            >
+              About Us
+            </button>
 
             {/* <button
             onClick={(e) => {
@@ -737,19 +757,20 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
           >
             F&Q
           </button> */}
-            {user && user?.role === "admin" && (
-              <button
-                onClick={(e) => {
-                  setSidebarOpen(false);
-                  setExpandedCategory([]);
-                  setTourOpen(false);
-                  navigate("/admin");
-                }}
-                className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
-              >
-                Admin
-              </button>
-            )}
+            {user &&
+              (user?.role === "admin" || user?.role === "super-admin") && (
+                <button
+                  onClick={(e) => {
+                    setSidebarOpen(false);
+                    setExpandedCategory([]);
+                    setTourOpen(false);
+                    navigate("/admin");
+                  }}
+                  className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
+                >
+                  Admin
+                </button>
+              )}
             <div className="py-3 text-left  flex items-center text-black px-4   duration-200   text-[18px] border-b border-slate-300">
               <div
                 className="relative bg-blue-500 h-10 w-20 rounded-full cursor-pointer flex items-center justify-between"

@@ -20,11 +20,12 @@ const Card = ({
                         : "bg-red-500 hover:bg-red-600"
                 }`}
                 onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering the onClick for the card
+                    e.stopPropagation();
+
                     switchActive(transid);
                 }}
             >
-                {isActive ? "Active" : "Block"}
+                {isActive ? "Active" : "In active"}
             </button>
 
             {/* Image Section */}

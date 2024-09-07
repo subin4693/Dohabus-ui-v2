@@ -50,7 +50,7 @@ const Signup = () => {
                 BASE_URL + "/users/signup",
                 {
                     name: name,
-                    email,
+                    email: email.trim(),
                     password: password,
                 },
                 { withCredentials: true },
@@ -121,7 +121,7 @@ const Signup = () => {
                     <input
                         value={email}
                         onChange={(e) => {
-                            setEmail(e.target.value.trim(0));
+                            setEmail(e.target.value);
                         }}
                         type="text"
                         className="p-3 border-2 border-gray rounded-2xl outline-none w-full focus:border-custom-yellow"

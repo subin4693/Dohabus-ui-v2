@@ -19,6 +19,7 @@ const Transportation = () => {
   const [other, setOther] = useState({ en: "", ar: "" });
   const [file, setFile] = useState(null);
   const [transportations, setTransportations] = useState([]);
+  const mainUser = useSelector((state) => state.user.user);
 
   const handleImageChange = (e) => {
     console.log("Working IMG");
@@ -123,7 +124,7 @@ const Transportation = () => {
   //   };
 
   const handleDialog = (data = null) => {
-    console.log("Working");
+    if (mainUser.role !== "super-admin") return;
     if (data) {
       // Edit mode
       console.log(data);
@@ -148,6 +149,7 @@ const Transportation = () => {
   };
 
   const switchActive = async (id) => {
+    if (mainUser.role !== "super-admin") return;
     try {
       // Edit an existing transportation fleet
       const res = await axios.patch(`${BASE_URL}/transportations/${id}`);
@@ -341,12 +343,14 @@ const Transportation = () => {
         </div>
       )}
 
-      <button
-        onClick={() => handleDialog(null)}
-        className="bg-blue-500 text-white p-2 rounded-lg mb-4 hover:bg-blue-600"
-      >
-        Create New Transportation
-      </button>
+      {mainUser && mainUser.role === "super-admin" && (
+        <button
+          onClick={() => handleDialog(null)}
+          className="bg-blue-500 text-white p-2 rounded-lg mb-4 hover:bg-blue-600"
+        >
+          Create New Transportation
+        </button>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {transportations.map((transport) => (

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 const CreateOffer = ({ closeModal, plans, handleSubmit }) => {
 	// State for form fields
@@ -11,8 +13,37 @@ const CreateOffer = ({ closeModal, plans, handleSubmit }) => {
 	const [adultDiscountPrice, setAdultDiscountPrice] = useState("");
 	const [selectedPlan, setSelectedPlan] = useState("");
 
-	// Function to handle form submission
+	const options = plans?.map((plan) => ({
+		value: plan._id,
+		label: plan?.title?.en,
+	}));
 
+	// Add a "Select All" option at the beginning
+	const allOption = { value: "all", label: "Select All" };
+	const optionsWithSelectAll = [allOption, ...options];
+
+	// Handle change event
+	const handleChange = (selectedOptions) => {
+		console.log(selectedPlan);
+		if (
+			selectedOptions &&
+			selectedOptions.some((option) => option.value === "all")
+		) {
+			if (selectedPlan.length === options.length) {
+				// If all options are already selected, deselect all
+				setSelectedPlan([]);
+			} else {
+				// Select all options if not already selected
+				setSelectedPlan(options.map((option) => option.value));
+			}
+		} else {
+			// Set selected options when "Select All" isn't involved
+			const selectedValues = selectedOptions
+				? selectedOptions.map((option) => option.value)
+				: [];
+			setSelectedPlan(selectedValues);
+		}
+	};
 	return (
 		<div>
 			<h2 className="text-2xl font-bold mb-4">Create a New Offer</h2>
@@ -143,21 +174,18 @@ const CreateOffer = ({ closeModal, plans, handleSubmit }) => {
 					<label className="block text-sm font-medium mb-2">
 						Select Plan
 					</label>
-					<select
-						value={selectedPlan}
-						onChange={(e) => setSelectedPlan(e.target.value)}
-						className="border border-gray-300 rounded px-3 py-2 w-full"
+					<Select
+						isMulti
+						value={optionsWithSelectAll.filter((option) =>
+							selectedPlan.includes(option.value),
+						)}
+						onChange={handleChange}
+						options={optionsWithSelectAll}
+						className="  px-3 py-2 w-full"
+						placeholder="Select a plan"
 						required
-					>
-						<option value="">Select a plan</option>
-						{plans?.map((plan) => (
-							<option key={plan._id} value={plan._id}>
-								{plan?.title?.en}
-							</option>
-						))}
-					</select>
+					/>
 				</div>
-
 				{/* Submit and Cancel Buttons */}
 				<div className="flex justify-end">
 					<button

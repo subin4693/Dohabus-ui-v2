@@ -1,7 +1,7 @@
 import React from "react";
 import { BiTrash } from "react-icons/bi";
 
-const TicketCard = ({ booking, lang, handleCancelTicket }) => {
+const TicketCard = ({ booking, lang, handleCancelTicket, mainUserRole }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     return (
@@ -26,21 +26,23 @@ const TicketCard = ({ booking, lang, handleCancelTicket }) => {
                     <h3 className="text-xl font-semibold mb-1">
                         {booking && booking?.plan?.title[lang]}
                     </h3>
-                    {booking.status.toLowerCase() === "booked" ? (
-                        <div
-                            className="p-1 rounded-md bg-gray-100 text-red-500  cursor-pointer flex items-center space-x-2"
-                            onClick={() => handleCancelTicket(booking._id)}
-                        >
-                            <BiTrash className="w-6 h-6" />
-                            <span>cancel</span>
-                        </div>
-                    ) : (
-                        <div
-                            className="p-1 rounded-md  text-white px-2  cursor-pointer flex items-center space-x-2 bg-red-500"
-                            onClick={() => handleCancelTicket(booking._id)}
-                        >
+
+                    {console.log(mainUserRole)}
+                    {booking.status.toLowerCase() === "canceled" ? (
+                        <div className="p-1 rounded-md text-white px-2 cursor-pointer flex items-center space-x-2 bg-red-500">
                             Canceled
                         </div>
+                    ) : (
+                        mainUserRole === "super-admin" &&
+                        booking.status.toLowerCase() === "booked" && (
+                            <div
+                                className="p-1 rounded-md bg-gray-100 text-red-500 cursor-pointer flex items-center space-x-2"
+                                onClick={() => handleCancelTicket(booking._id)}
+                            >
+                                <BiTrash className="w-6 h-6" />
+                                <span>Cancel</span>
+                            </div>
+                        )
                     )}
                 </div>
                 <p className="text-stone-600 mb-2">

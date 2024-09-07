@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload"; // Import your custom Firebase hook
 import { toast } from "react-toastify";
-
+import { useSelector } from "react-redux";
 const Gallery = () => {
+    const mainUser = useSelector((state) => state.user.user);
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [images, setImages] = useState([]);
     const [file, setFile] = useState(null);
@@ -25,6 +26,7 @@ const Gallery = () => {
                             `${BASE_URL}/footer/${editingImageId}`,
                             { imageUrl },
                         );
+                        console.log(editingImageId);
 
                         const resData = response?.data?.response;
 
@@ -124,12 +126,14 @@ const Gallery = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <button
-                onClick={handleCreateNew}
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            >
-                Create New
-            </button>
+            {mainUser && mainUser.role === "super-admin" && (
+                <button
+                    onClick={handleCreateNew}
+                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                    Create New
+                </button>
+            )}
             <input
                 type="file"
                 id="fileInput-new"
@@ -156,6 +160,7 @@ const Gallery = () => {
                             accept="image/*"
                             style={{ display: "none" }}
                             onChange={(e) => handleImageChange(e, image._id)}
+                            disabled={mainUser.role !== "super-admin"}
                         />
                     </div>
                 ))}

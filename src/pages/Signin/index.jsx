@@ -26,7 +26,7 @@ const Signin = () => {
             const res = await axios.post(
                 BASE_URL + "/users/signin",
                 {
-                    email,
+                    email: email.trim(),
                     password,
                 },
                 { withCredentials: true },
@@ -84,7 +84,7 @@ const Signin = () => {
                     <input
                         value={email}
                         onChange={(e) => {
-                            setEmail(e.target.value.trim());
+                            setEmail(e.target.value);
                         }}
                         type="email"
                         className="p-3 border-2 border-gray rounded-2xl outline-none w-full focus:border-custom-yellow"

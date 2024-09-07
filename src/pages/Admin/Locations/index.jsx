@@ -16,6 +16,7 @@ const initialDetails = [
 ];
 
 const DetailsManager = () => {
+    const mainUser = useSelector((state) => state.user.user);
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [details, setDetails] = useState([]);
     const [isEditing, setIsEditing] = useState(false); // State to track if we're editing an existing item
@@ -35,15 +36,15 @@ const DetailsManager = () => {
             try {
                 const data = await axios.put(
                     BASE_URL + "/locations/" + detail._id,
-                    detail
+                    detail,
                 );
 
                 const resData = data.data.data.location;
 
                 setDetails((prevDetails) =>
                     prevDetails.map((d) =>
-                        d._id === resData._id ? resData : d
-                    )
+                        d._id === resData._id ? resData : d,
+                    ),
                 );
 
                 toast.success("Location edited Successfully", {
@@ -97,11 +98,11 @@ const DetailsManager = () => {
         try {
             const data = await axios.delete(
                 BASE_URL + "/locations/" + id,
-                detail
+                detail,
             );
 
             setDetails((prevDetails) =>
-                prevDetails.map((d) => (d._id === resData._id ? resData : d))
+                prevDetails.map((d) => (d._id === resData._id ? resData : d)),
             );
             toast.success("Deleted successfully", {
                 position: "top-right",
@@ -118,7 +119,7 @@ const DetailsManager = () => {
         }
 
         setDetails((prevDetails) =>
-            prevDetails.filter((detail) => detail._id !== id)
+            prevDetails.filter((detail) => detail._id !== id),
         );
     };
 
@@ -144,12 +145,14 @@ const DetailsManager = () => {
         <div>
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl font-semibold mb-2">Details</h1>
-                <button
-                    className="bg-custom-yellow px-3 py-2 rounded-md duration-300 hover:text-white hover:bg-black"
-                    onClick={handleCreate} // Open create form
-                >
-                    Create new
-                </button>
+                {mainUser && mainUser.role === "super-admin" && (
+                    <button
+                        className="bg-custom-yellow px-3 py-2 rounded-md duration-300 hover:text-white hover:bg-black"
+                        onClick={handleCreate} // Open create form
+                    >
+                        Create new
+                    </button>
+                )}
             </div>
             <div className="flex flex-wrap gap-2">
                 {details.map((detail) => (
@@ -157,7 +160,6 @@ const DetailsManager = () => {
                         key={detail._id} // Added key prop
                         className="bg-gray-100 rounded-md shadow-md p-5 w-[400px] relative"
                     >
-                        {console.log(detail)}
                         <>
                             <h4 className="text-xl font-semibold mb-2">
                                 {detail.title[lang]}
@@ -172,21 +174,23 @@ const DetailsManager = () => {
                                 </div>
                             ))}
                         </>
-                        <div className="absolute top-5 right-5">
-                            <button
-                                className="px-2 py-1 bg-custom-red text-white rounded-md"
-                                onClick={() => handleDelete(detail._id)}
-                            >
-                                Delete
-                            </button>
-                            &nbsp;&nbsp;&nbsp;
-                            <button
-                                className="px-2 py-1 bg-custom-yellow rounded-md"
-                                onClick={() => handleEdit(detail)}
-                            >
-                                Edit
-                            </button>
-                        </div>
+                        {mainUser && mainUser.role === "super-admin" && (
+                            <div className="absolute top-5 right-5">
+                                <button
+                                    className="px-2 py-1 bg-custom-red text-white rounded-md"
+                                    onClick={() => handleDelete(detail._id)}
+                                >
+                                    Delete
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button
+                                    className="px-2 py-1 bg-custom-yellow rounded-md"
+                                    onClick={() => handleEdit(detail)}
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

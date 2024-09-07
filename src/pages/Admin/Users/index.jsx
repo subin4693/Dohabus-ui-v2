@@ -7,12 +7,17 @@ import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ManageUser = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedOption, setSelectedOption] = useState("user");
+
+    const mainUser = useSelector((state) => state.user.user);
+
     const navigate = useNavigate();
 
     const openPopup = () => {
@@ -77,14 +82,20 @@ const ManageUser = () => {
         setSearchQuery(event.target.value);
     };
 
-    const handlePromote = async (userId) => {
-        console.log(userId);
+    const handlePromote = async (userId, role) => {
         try {
             const response = await axios.post(`${BASE_URL}/admin/promote`, {
                 userId,
+                role,
             });
-            console.log("Promotion successful:", response.data);
+            const updatedUser = response.data.user;
 
+            // Update the user in the state
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user._id === updatedUser._id ? updatedUser : user,
+                ),
+            );
             toast.success("User promoted successfully  ", {
                 position: "top-right",
                 autoClose: 5000,
@@ -95,32 +106,52 @@ const ManageUser = () => {
                 progress: undefined,
                 theme: "dark",
             });
-
-            navigate("/admin");
         } catch (error) {
             console.error("Error promoting user:", error);
-
-            toast.error("There was an error promoting the user. ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+            if (
+                error.response.data.message ===
+                "Cannot promote more than 3 super-admins."
+            ) {
+                toast.error("Cannot promote more than 3 super-admins.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            } else
+                toast.error("There was an error promoting the user. ", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
         }
     };
 
-    const handleDemote = async (userId) => {
+    const handleDemote = async (userId, role) => {
+        console.log(role);
         console.log(userId);
         try {
             const response = await axios.post(`${BASE_URL}/admin/demote`, {
                 userId,
+                role,
             });
-            console.log("Demotion successful:", response.data);
+            const updatedUser = response.data.user;
 
+            // Update the user in the state
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user._id === updatedUser._id ? updatedUser : user,
+                ),
+            );
             toast.success(" User demoted successfully ", {
                 position: "top-right",
                 autoClose: 5000,
@@ -131,7 +162,6 @@ const ManageUser = () => {
                 progress: undefined,
                 theme: "dark",
             });
-            navigate("/admin");
         } catch (error) {
             console.error("Error demoting user:", error);
             toast.error(" There was an error demoting the user. ", {
@@ -147,10 +177,32 @@ const ManageUser = () => {
         }
     };
 
+    const handleChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
     return (
         <div className="p-5 bg-gray-100  rounded-md">
             <div className="flex justify-between items-center flex-wrap mb-3">
-                <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
+                <h1 className="text-3xl font-bold mb-6">
+                    Manage{" "}
+                    <select
+                        value={selectedOption}
+                        onChange={handleChange}
+                        className="font-bold bg-transparent underline"
+                    >
+                        <option className="text-sm" value="user">
+                            Users
+                        </option>
+
+                        <option className="text-sm" value="admin">
+                            Admin
+                        </option>
+                        <option className="text-sm" value="super-admin">
+                            Super Admin
+                        </option>
+                    </select>
+                </h1>
+
                 <div>
                     <input
                         type="text"
@@ -169,14 +221,17 @@ const ManageUser = () => {
             </div>
             <div className="flex justify-start flex-wrap items-center gap-5">
                 {filteredUsers &&
-                    filteredUsers.map((user) => (
-                        <UserCard
-                            key={user._id}
-                            user={user}
-                            onPromote={handlePromote}
-                            onDemote={handleDemote}
-                        />
-                    ))}
+                    filteredUsers
+                        .filter((user) => user.role === selectedOption) // Filter users based on selected role
+                        .map((user) => (
+                            <UserCard
+                                key={user._id}
+                                user={user}
+                                onPromote={handlePromote} // Pass user ID to promote function
+                                onDemote={handleDemote} // Pass user ID to demote function
+                                currentUserRole={mainUser.role}
+                            />
+                        ))}
             </div>
             <DownloadModal
                 isOpen={isModalOpen}

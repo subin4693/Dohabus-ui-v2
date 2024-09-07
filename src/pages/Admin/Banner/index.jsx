@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import Axios for API calls
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload"; // Import your custom Firebase hook
+import { useSelector } from "react-redux";
 
 const Banner = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const [slide, setSlide] = useState([
-        {
-            _id: "asdfa1",
-            url: "https://example1.com",
-            image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
-        },
-        {
-            _id: "asdfa2",
-            url: "https://example2.com",
-            image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
-        },
-        {
-            _id: "asdfa3",
-            url: "https://example3.com",
-            image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
-        },
-        {
-            _id: "asdfa4",
-            url: "https://example4.com",
-            image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/9b/de/55/doha-bus.jpg?w=1200&h=-1&s=1",
-        },
-    ]);
-
+    const mainUser = useSelector((state) => state.user.user);
+    const [slide, setSlide] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [editIndex, setEditIndex] = useState(null);
     const [newImage, setNewImage] = useState("");
@@ -64,7 +44,7 @@ const Banner = () => {
         try {
             await axios.put(
                 `${BASE_URL}/banner/${updatedSlide._id}`,
-                updatedSlide
+                updatedSlide,
             );
             setSlide(updatedSlides);
             toast.success("Banner updated successfully!", {
@@ -163,29 +143,36 @@ const Banner = () => {
                     <div
                         key={item._id}
                         className="relative cursor-pointer"
-                        onClick={() => handleEdit(index)}
+                        onClick={() => {
+                            if (mainUser && mainUser.role === "super-admin")
+                                handleEdit(index);
+                        }}
                     >
                         <img
                             src={item.image}
                             alt={`Slide ${index + 1}`}
                             className="w-full h-40 object-cover"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-opacity">
-                            Edit
-                        </div>
+                        {mainUser && mainUser.role === "super-admin" && (
+                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-opacity">
+                                Edit
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
 
             {/* Add New Image Button */}
-            <div className="mt-6">
-                <button
-                    onClick={handleAddNew}
-                    className="bg-custom-yellow text-black duration-300 hover:bg-black hover:text-white px-4 py-2 rounded mr-2"
-                >
-                    Add New Image
-                </button>
-            </div>
+            {mainUser && mainUser.role === "super-admin" && (
+                <div className="mt-6">
+                    <button
+                        onClick={handleAddNew}
+                        className="bg-custom-yellow text-black duration-300 hover:bg-black hover:text-white px-4 py-2 rounded mr-2"
+                    >
+                        Add New Image
+                    </button>
+                </div>
+            )}
 
             {/* Editing/Adding Form */}
             {isEditing && (

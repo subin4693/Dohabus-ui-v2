@@ -1,7 +1,14 @@
 import React from "react";
 
 // Component for localized input fields
-const LocalizedInput = ({ label, value, onChange, lang, placeholder }) => {
+const LocalizedInput = ({
+    label,
+    value,
+    onChange,
+    lang,
+    placeholder,
+    disabled,
+}) => {
     const isArabic = lang === "ar";
 
     return (
@@ -18,6 +25,7 @@ const LocalizedInput = ({ label, value, onChange, lang, placeholder }) => {
                 data-lang={lang}
                 placeholder={placeholder}
                 dir={isArabic ? "rtl" : "ltr"}
+                disabled={disabled}
             />
         </div>
     );

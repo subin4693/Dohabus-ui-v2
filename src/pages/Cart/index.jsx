@@ -216,7 +216,7 @@ const SignleCategory = () => {
                         : tour,
                 ),
             );
-            toast.success(" Removed from favourite ", {
+            toast.success(" Removed from Carts ", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
