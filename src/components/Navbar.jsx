@@ -29,6 +29,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
   const [expandedCategory, setExpandedCategory] = useState([]);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isEnglish, setIsEnglish] = useState(lang == "en" ? true : false);
+  const [offer, setOffer] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -67,6 +68,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
 
   const handleClose = () => {
     setIsVisible(false);
+    setOffer([])
   };
 
   const handleSignOut = async () => {
@@ -108,44 +110,55 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
     };
     getData();
   }, []);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await axios.get(BASE_URL + "/offerbanner/getactive");
+        setOffer(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
+  }, []);
+  console.log("offer", offer);
 
   return (
     <>
-      {isVisible && (
-        <div className=" bg-custom-yellow  px-2 md:px-10   h-[50px] z-10   fixed top-0 left-0 right-0 ">
-          <div className="flex justify-center items-center relative h-full">
-            {" "}
-            {lang === "en" ? (
-              <h1 className="font-bold text-xl text-center text-dark flex-1 ">
-                <span className="hidden sm:inline"> Summer Sale!</span> Save up
-                to 15%
-              </h1>
-            ) : (
+      {offer.length > 0 ? (
+        <>
+          {setIsVisible(true)}
+          <div className="bg-custom-yellow px-2 md:px-10 h-[50px] z-10 fixed top-0 left-0 right-0">
+            <div className="flex justify-center items-center relative h-full">
               <h1 className="font-bold text-xl text-center text-dark flex-1">
-                <span className="hidden sm:inline"> عروض الصيف!</span> وفر حتى
-                15%
+                <span className="hidden sm:inline">{offer[0].title[lang]}</span>{" "}
+                Save up to {offer[0].percentage}%
               </h1>
-            )}
-            <div className="flex gap-5 md:gap-20 items-center absolute right-0">
-              <Link
-                to="/tours"
-                className="bg-light text-dark  hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold "
-              >
-                <span className="hidden md:flex"> Find Out More</span>
-                <span className="md:hidden">
-                  <FaArrowRightLong />
-                </span>
-              </Link>
-              <h1
-                className="font-bold text-lg text-dark cursor-pointer"
-                onClick={handleClose}
-              >
-                <IoClose />
-              </h1>
+
+              <div className="flex gap-5 md:gap-20 items-center absolute right-0">
+                <Link
+                  to="/tours"
+                  className="bg-light text-dark hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold"
+                >
+                  <span className="hidden md:flex">Find Out More</span>
+                  <span className="md:hidden">
+                    <FaArrowRightLong />
+                  </span>
+                </Link>
+                <h1
+                  className="font-bold text-lg text-dark cursor-pointer"
+                  onClick={handleClose}
+                >
+                  <IoClose />
+                </h1>
+              </div>
             </div>
           </div>
-        </div>
+        </>
+      ) : (
+        setIsVisible(false)
       )}
+
       <div
         className={`z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
           isVisible && " mt-[50px] "
@@ -280,9 +293,9 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                       {lang === "en" ? " Transportation Fleet" : "أسطول النقل"}
                     </li>
                   </Link>
-                  <li className="px-3 py-1 hover:bg-gray-100">
+                  {/* <li className="px-3 py-1 hover:bg-gray-100">
                     {lang === "en" ? "Meet & Assist" : "الاستقبال والمساعدة"}
-                  </li>
+                  </li> */}
                   <Link to={"/mice"}>
                     <li className="px-3 py-1 hover:bg-gray-100">
                       {lang === "en"
@@ -298,9 +311,9 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     </li>
                   </Link>
 
-                  <li className="px-3 py-1 hover:bg-gray-100">
+                  {/* <li className="px-3 py-1 hover:bg-gray-100">
                     {lang === "en" ? "Visa" : "تأشيرة"}
-                  </li>
+                  </li> */}
                 </ul>
               </div>
 
@@ -709,14 +722,14 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                           ? " Transportation Fleet"
                           : "أسطول النقل"}
                       </Link>
-                      <Link
+                      {/* <Link
                         to={`/tours`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
                         {lang === "en"
                           ? "Meet & Assist"
                           : "الاستقبال والمساعدة"}
-                      </Link>
+                      </Link> */}
                       <Link
                         to={`/mice`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
@@ -733,12 +746,12 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                           ? "                      Cruise Packages"
                           : "رحلات الكروز"}{" "}
                       </Link>
-                      <Link
+                      {/* <Link
                         to={`/tours`}
                         className="block py-3 text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                       >
                         {lang === "en" ? "Visa" : "تأشيرة"}
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>
@@ -764,7 +777,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               }}
               className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
             >
-{lang === "en" ? "Contact Us" : "اتصل بنا"}            </button>
+              {lang === "en" ? "Contact Us" : "اتصل بنا"}{" "}
+            </button>
             <button
               onClick={(e) => {
                 setSidebarOpen(false);
@@ -774,7 +788,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               }}
               className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
             >
-{lang === "en" ? "About Us" : "عنّا"}            </button>
+              {lang === "en" ? "About Us" : "عنّا"}{" "}
+            </button>
 
             {/* <button
             onClick={(e) => {
@@ -870,8 +885,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 }}
                 className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
               >
-                                  {lang === "en" ? "Login" : "تسجيل الدخول"}
-
+                {lang === "en" ? "Login" : "تسجيل الدخول"}
               </button>
             ) : (
               <button
@@ -883,8 +897,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 }}
                 className="py-3 text-left text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
               >
-                                  {lang === "en" ? "Logout" : "تسجيل الخروج"}
-
+                {lang === "en" ? "Logout" : "تسجيل الخروج"}
               </button>
             )}
           </div>
