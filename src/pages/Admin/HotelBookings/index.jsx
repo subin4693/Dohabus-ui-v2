@@ -55,7 +55,7 @@ const HotelBookings = () => {
 									{booking._id}
 								</td>
 								<td className="border-b px-4 py-2">
-									{booking.hotelId.name}
+									{booking.hotelId.title.en}
 								</td>
 								<td className="border-b px-4 py-2">
 									{booking.userId.name}
