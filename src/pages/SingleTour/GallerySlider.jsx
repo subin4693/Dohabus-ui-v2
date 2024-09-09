@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
-  console.log({ mediaUrls, mediaVideoUrls });
   const media = [...mediaUrls, ...mediaVideoUrls];
   const [currentIndex, setCurrentIndex] = useState(0);
 

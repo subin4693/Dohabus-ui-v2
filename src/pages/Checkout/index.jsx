@@ -20,11 +20,19 @@ const Checkout = () => {
     const [totalDiscountedAmount, setTotalDiscountedAmount] = useState(null);
 
     const [coupon, setCoupon] = useState("");
+
+    const [totalAdultPrice, setTotalAdultPrice] = useState(0);
+    const [totalChildPrice, setTotalChildPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
+
     // Extract individual query parameters
     const selectedDate = searchParams.get("date");
     const adultCount = Number(searchParams.get("adultCount") || 0);
     const childCount = Number(searchParams.get("childCount") || 0);
     const session = searchParams.get("session");
+    const childData = searchParams.get("selectedChild");
+    const adultData = searchParams.get("selectedAdult");
+    const addons = searchParams.get("addOns") || "";
 
     const checkOffer = async () => {
         if (!coupon) {
@@ -35,25 +43,35 @@ const Checkout = () => {
             toast.error("Plan ID is missing");
             return;
         }
-        if (!childCount && !adultCount) {
-            toast.error("Person count is missing");
-            return;
+        // if ((!childCount && !adultCount) || (!adultData && !childData)) {
+        //     toast.error("Person count is missing");
+        //     return;
+        // }
+        let requestData = {
+            couponCode: coupon,
+            planId: data._id,
+        };
+
+        if (childCount || adultCount || addons) {
+            if (childCount) requestData.childCount = childCount;
+            if (adultCount) requestData.adultCount = adultCount;
+            if (addons) requestData.addons = addons.split(",");
         }
+        // else {
+        //     if (childData) requestData.childData = childData;
+        //     if (adultData) requestData.adultData = adultData;
+        // }
 
         try {
             const res = await axios.post(
                 `${BASE_URL}/offers/apply-discount`,
-                {
-                    couponCode: coupon,
-                    planId: data._id,
-                    childCount,
-                    adultCount,
-                },
+                requestData,
                 { withCredentials: true },
             );
+            console.log(res);
 
-            setDiscountedPrice(res.data.data.discountedPrice);
-            setTotalDiscountedAmount(res.data.data.totalDiscountAmount);
+            setDiscountedPrice(res?.data?.data?.discountedPrice);
+            setTotalDiscountedAmount(res?.data?.data?.totalDiscountAmount);
         } catch (error) {
             console.log(error);
             toast.error("Coupon code is not valid");
@@ -102,25 +120,37 @@ const Checkout = () => {
             toast.error("Plan ID is missing!");
             return;
         }
+
+        // const childData = searchParams.get("selectedChild");
+        // const adultData = searchParams.get("selectedAdult");
+
+        let dataa = {
+            firstName,
+            lastName,
+            email,
+            pickupLocation,
+            dropLocation,
+            coupon,
+            date: selectedDate,
+            session: session,
+            category: data.category,
+            plan: data._id,
+        };
+
+        if (childCount || adultCount) {
+            if (adultCount) dataa.adultQuantity = adultCount;
+            if (childCount) dataa.childQuantity = childCount;
+            if (addons) dataa.addons = addons?.split(",");
+        }
+        // else if (adultData || childData) {
+        //     if (adultData) dataa.adultData = adultData;
+        //     if (childData) dataa.childData = childData;
+        // }
+
         try {
-            const res = await axios.post(
-                BASE_URL + "/tickets",
-                {
-                    firstName,
-                    lastName,
-                    email,
-                    pickupLocation,
-                    dropLocation,
-                    coupon,
-                    date: selectedDate,
-                    adultQuantity: adultCount,
-                    childQuantity: childCount,
-                    session: session,
-                    category: data.category,
-                    plan: data._id,
-                },
-                { withCredentials: true },
-            );
+            const res = await axios.post(BASE_URL + "/tickets", dataa, {
+                withCredentials: true,
+            });
             toast.success("Ticket booked successfully");
         } catch (error) {
             console.log(error);
@@ -140,11 +170,91 @@ const Checkout = () => {
         };
 
         fetchData();
-    }, [id, selectedDate, adultCount, childCount, BASE_URL]); // Add dependencies
-    const totalAdultPrice = data.adultPrice ? data.adultPrice * adultCount : 0;
-    const totalChildPrice = data.childPrice ? data.childPrice * childCount : 0;
-    const totalPrice = totalAdultPrice + totalChildPrice;
+    }, [id, selectedDate, adultCount, childCount, BASE_URL]);
 
+    useEffect(() => {
+        let calculatedTotalAdultPrice = 0;
+        let calculatedTotalChildPrice = 0;
+        let addOnTotalPrice = 0;
+
+        if (adultCount > 0) {
+            if (data?.adultPrice) {
+                calculatedTotalAdultPrice = data?.adultPrice * adultCount;
+            } else if (data?.adultData?.length > 0) {
+                const sortedAdultData = data.adultData.sort(
+                    (a, b) => a.pax - b.pax,
+                );
+                let foundAdultPrice = null;
+
+                const nearestAdultPax = sortedAdultData
+                    .filter((adult) => adult.pax <= adultCount)
+                    .pop();
+
+                if (nearestAdultPax) {
+                    foundAdultPrice = nearestAdultPax.price;
+                } else {
+                    foundAdultPrice = sortedAdultData[0].price;
+                }
+
+                calculatedTotalAdultPrice = foundAdultPrice * adultCount;
+            }
+        }
+
+        if (childCount > 0) {
+            if (data?.childPrice) {
+                calculatedTotalChildPrice = data?.childPrice * childCount;
+            } else if (data?.childData?.length > 0) {
+                const sortedChildData = data.childData.sort(
+                    (a, b) => a.pax - b.pax,
+                );
+                let foundChildPrice = null;
+
+                const nearestChildPax = sortedChildData
+                    .filter((child) => child.pax <= childCount)
+                    .pop();
+
+                if (nearestChildPax) {
+                    foundChildPrice = nearestChildPax.price;
+                } else {
+                    foundChildPrice = sortedChildData[0].price;
+                }
+
+                calculatedTotalChildPrice = foundChildPrice * childCount;
+            }
+        }
+
+        if (addons) {
+            const selectedAddOns = addons.split(","); // Array of add-on IDs
+
+            // Loop through add-on IDs and find matches in data.addOn
+            selectedAddOns.forEach((addOnId) => {
+                const matchingAddOn = data?.addOn?.find(
+                    (addOn) => addOn._id === addOnId,
+                );
+                if (matchingAddOn) {
+                    // Add the price of the matched add-on
+                    addOnTotalPrice += matchingAddOn.price;
+                }
+            });
+
+            // Multiply the add-on total by the adultCount and childCount
+            addOnTotalPrice = addOnTotalPrice * (adultCount + childCount);
+        }
+
+        // Set total prices
+        setTotalAdultPrice(calculatedTotalAdultPrice);
+        setTotalChildPrice(calculatedTotalChildPrice);
+
+        // Set final total price including add-ons
+        setTotalPrice(
+            calculatedTotalAdultPrice +
+                calculatedTotalChildPrice +
+                addOnTotalPrice,
+        );
+        // setTotalAdultPrice(calculatedTotalAdultPrice);
+        // setTotalChildPrice(calculatedTotalChildPrice);
+        // setTotalPrice(calculatedTotalAdultPrice + calculatedTotalChildPrice);
+    }, [data, adultCount, childCount]);
     return (
         <div className="md:container mx-auto px-4 py-8 md:flex md:gap-8 mt-20">
             {/* Left side: Input form */}
@@ -190,7 +300,7 @@ const Checkout = () => {
                         className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
                     />
                 </div>
-                {console.log(data)}
+
                 {data?.isDropOffRequired && (
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -228,7 +338,7 @@ const Checkout = () => {
                     <img
                         src={data.coverImage}
                         alt="Plan Cover"
-                        className="w-full h-auto mb-4 rounded-lg"
+                        className="w-full max-h-[200px] mb-4 rounded-lg"
                     />
                 )}
                 <p className="text-lg font-medium mb-2">
@@ -272,21 +382,67 @@ const Checkout = () => {
                     </div>
                 </div>
                 <div className="flex flex-col p-4 border border-gray-300 rounded-md">
-                    <div className="flex justify-between mb-2">
-                        <span>Adult Price x {adultCount}</span>
-                        <span>${totalAdultPrice}</span>
-                    </div>
-                    <div className="flex justify-between mb-2">
-                        <span>Child Price x {childCount}</span>
-                        <span>${totalChildPrice}</span>
-                    </div>
+                    {adultData || childData ? (
+                        <>
+                            {data?.adultData?.map((adult, index) => (
+                                <>
+                                    {/* Match adult data with data.adultData[index]._id and replace adultCount with pax */}
+                                    {adult._id === adultData && (
+                                        <div
+                                            className="flex justify-between mb-2"
+                                            key={adult._id}
+                                        >
+                                            <span>
+                                                {console.log()}
+                                                Adult Price x {adult?.pax}
+                                            </span>{" "}
+                                            {/* Replace with pax */}
+                                            <span>{adult.price} Qar</span>{" "}
+                                            {/* Calculate total price */}
+                                        </div>
+                                    )}
+                                </>
+                            ))}
+
+                            {data?.childData?.map((child, index) => (
+                                <>
+                                    {/* Match child data with data.childData[index]._id and replace childCount with pax */}
+                                    {child._id === childData && (
+                                        <div
+                                            className="flex justify-between mb-2"
+                                            key={child._id}
+                                        >
+                                            <span>
+                                                Child Price x {child?.pax}
+                                            </span>{" "}
+                                            {/* Replace with pax */}
+                                            <span> {child.price} Qar</span>{" "}
+                                            {/* Calculate total price */}
+                                        </div>
+                                    )}
+                                </>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            {" "}
+                            <div className="flex justify-between mb-2">
+                                <span>Adult Price x {adultCount}</span>
+                                <span>{totalAdultPrice} Qar</span>
+                            </div>
+                            <div className="flex justify-between mb-2">
+                                <span>Child Price x {childCount}</span>
+                                <span>{totalChildPrice} Qar</span>
+                            </div>
+                        </>
+                    )}
                     {discountedPrice && (
                         <div className="flex justify-between mt-4">
                             <span className="font-semibold text-red-500">
                                 Total Discount Amount
                             </span>
                             <span className="font-semibold text-red-500">
-                                ${discountedPrice}
+                                {discountedPrice} Qar
                             </span>
                         </div>
                     )}
@@ -296,7 +452,7 @@ const Checkout = () => {
                                 Discounted Price
                             </span>
                             <span className="font-bold text-green-600">
-                                ${totalDiscountedAmount}
+                                {totalDiscountedAmount} Qar
                             </span>
                         </div>
                     )}
@@ -308,12 +464,12 @@ const Checkout = () => {
                             <span
                                 className={`${discountedPrice && "text-red-500 line-through"}`}
                             >
-                                ${totalPrice}
+                                {totalPrice} Qar
                             </span>{" "}
                             &nbsp;&nbsp;
-                            {totalDiscountedAmount && (
+                            {discountedPrice && (
                                 <span className="font-bold text-green-600">
-                                    ${totalDiscountedAmount}
+                                    {discountedPrice} Qar
                                 </span>
                             )}
                         </div>

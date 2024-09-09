@@ -110,27 +110,18 @@ function App() {
                                 user?.email ? (
                                     <Cart />
                                 ) : (
-                                    <Navigate to="/signin" />
+                                    <Navigate to="/signin" replace />
                                 )
                             }
                         />
-                        <Route
-                            path="/checkout/:id"
-                            element={
-                                user?.email ? (
-                                    <Checkout />
-                                ) : (
-                                    <Navigate to="/signin" />
-                                )
-                            }
-                        />
+                        <Route path="/checkout/:id" element={<Checkout />} />
                         <Route
                             path="/favourites"
                             element={
                                 user?.email ? (
                                     <Favourites />
                                 ) : (
-                                    <Navigate to="/signin" />
+                                    <Navigate to="/signin" replace />
                                 )
                             }
                         />
@@ -161,7 +152,7 @@ function App() {
                                 user?.email ? (
                                     <CreateBlog />
                                 ) : (
-                                    <Navigate to="/signin" />
+                                    <Navigate to="/signin" replace />
                                 )
                             }
                         />
