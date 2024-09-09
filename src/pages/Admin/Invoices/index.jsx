@@ -49,7 +49,7 @@ const Index = () => {
         {data.map((invoice) => (
           <div
             key={invoice._id}
-            className="card border-2 w-[400px] h-[370px] p-5 rounded-2xl shadow-lg bg-gray-200"
+            className="card border-2 w-[400px] h-[390px] p-5 rounded-2xl shadow-lg bg-gray-200"
           >
             <h1 className="text-3xl mt-1">{invoice.plan.title[lang]}</h1>
             <h2 className="text-xl mt-1">{invoice.category.title[lang]}</h2>
