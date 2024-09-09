@@ -3,20 +3,32 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
-  const media = [...mediaUrls, ...mediaVideoUrls];
+  let media = [
+    ...mediaUrls,
+    ...mediaVideoUrls,
+    ...mediaUrls,
+    ...mediaVideoUrls,
+    ...mediaUrls,
+    ...mediaVideoUrls,
+    ...mediaUrls,
+    ...mediaVideoUrls,
+    ...mediaUrls,
+    ...mediaVideoUrls,
+  ];
+  media = [...media];
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Adjust slidesToShow based on media length
-  const slidesToShow = media.length <= 3 ? media.length : 3;
+  // Calculate dynamic slidesToShow
+  const slidesToShow = media.length < 3 ? media.length : 3;
+
   // Slider settings
   const settings = {
     className: "center",
-    centerMode: slidesToShow > 1, // Only enable center mode if there are enough slides
-    infinite: media.length > slidesToShow, // Disable infinite scroll if there are fewer items
-    centerPadding: "60px",
-    slidesToShow, // Use dynamic slidesToShow
+    centerMode: media.length > 1, // Only enable center mode if there's more than 1 item
+    infinite: media.length > 3, // Disable infinite scrolling if there are <= 3 items
+    centerPadding: media.length > 1 ? "60px" : "0px", // Adjust padding based on media length
+    slidesToShow: slidesToShow, // Show either the total number of media or 3
     speed: 500,
     nextArrow: <NextArrow className="text-white   z-20 w-10 h-10" />,
     prevArrow: <PrevArrow className="text-white w-10 h-10" />,
@@ -29,21 +41,25 @@ const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
         },
       },
     ],
-    beforeChange: (index) => {
-      if (media.length - 1 === index) setActiveIndex(0);
-      else setActiveIndex(index + 1);
+    beforeChange: (oldIndex, newIndex) => {
+      setActiveIndex(newIndex);
     },
   };
+  if (media.length == 0) return <></>;
 
   return (
-    <div className="h-96 bg-red-500  w-screen flex justify-center items-center my-10 px-5">
-      <div className="w-full md:w-2/3 ">
+    <div className="h-96   w-screen flex justify-center items-center my-10 px-5">
+      <div className="w-full md:w-2/3">
         {/* Slider Container */}
         <Slider {...settings}>
           {media.map((item, index) => (
             <div key={index} className="px-2">
               <div
-                className={`w-full h-80 overflow-visible rounded-3xl shadow-xl duration-300 transform ${index === activeIndex ? "scale-110 z-10" : "scale-90"} `}
+                className={`w-full h-80 overflow-visible rounded-3xl shadow-xl duration-300 transform ${
+                  index === activeIndex && media.length > 1
+                    ? "scale-110 z-10"
+                    : "scale-90"
+                }`}
                 style={{
                   transition: "transform 0.5s ease",
                   transformOrigin: "center",
@@ -61,7 +77,7 @@ const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
                 ) : (
                   <img
                     src={item}
-                    className="w-full h-full object-cover rounded-3xl  "
+                    className="w-full h-full object-cover rounded-3xl"
                     alt={`Media ${index}`}
                   />
                 )}
