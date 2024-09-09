@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"; // Import necessary hooks
+import {
+    Link,
+    useNavigate,
+    useParams,
+    useSearchParams,
+} from "react-router-dom"; // Import necessary hooks
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -25,6 +30,8 @@ const Checkout = () => {
     const [totalChildPrice, setTotalChildPrice] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
     const [invoiceID, setinvoiceID] = useState("");
+
+    const [showAddons, setShowAddons] = useState([]);
 
     // Extract individual query parameters
     const selectedDate = searchParams.get("date");
@@ -156,7 +163,7 @@ const Checkout = () => {
             toast.success(
                 "Your ticket has been successfully booked. You can now download your invoice",
             );
-            navigate(`/invoice/${res.data.data.bookedTickets._id}`)
+            navigate(`/invoice/${res.data.data.bookedTickets._id}`);
         } catch (error) {
             console.log(error);
             toast.error("Something went wrong. Please try again later");
@@ -237,7 +244,7 @@ const Checkout = () => {
                     (addOn) => addOn._id === addOnId,
                 );
                 if (matchingAddOn) {
-                    // Add the price of the matched add-on
+                    setShowAddons((prev) => [...prev, matchingAddOn]);
                     addOnTotalPrice += matchingAddOn.price;
                 }
             });
@@ -441,6 +448,20 @@ const Checkout = () => {
                             </div>
                         </>
                     )}
+
+                    <>
+                        {showAddons.map((addon) => (
+                            <div className="flex justify-between mb-2">
+                                <span>
+                                    {addon[lang]} x {adultCount + childCount}
+                                </span>
+                                <span>
+                                    {addon.price * (adultCount + childCount)}{" "}
+                                    Qar
+                                </span>
+                            </div>
+                        ))}
+                    </>
                     {/* {discountedPrice && (
                         <div className="flex justify-between mt-4">
                             <span className="font-semibold text-red-500">
