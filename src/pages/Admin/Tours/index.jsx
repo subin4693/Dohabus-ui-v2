@@ -75,12 +75,14 @@ const Tours = () => {
         <div>
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Current Plans</h1>
-                <button
-                    className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
-                    onClick={handleDialog}
-                >
-                    Add Plan
-                </button>
+                {mainUser && mainUser?.role == "super-admin" && (
+                    <button
+                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                        onClick={handleDialog}
+                    >
+                        Add Plan
+                    </button>
+                )}
             </div>
 
             <div className="mt-5 space-y-5">
