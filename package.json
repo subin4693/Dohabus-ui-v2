@@ -22,6 +22,7 @@
     "firebase": "^10.13.0",
     "flatpickr": "^4.6.13",
     "framer-motion": "^11.3.28",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.3",
     "react": "^18.3.1",

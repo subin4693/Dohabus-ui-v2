@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, useSearchParams } from "react-router-dom"; // Import necessary hooks
+import { Link, useParams, useSearchParams } from "react-router-dom"; // Import necessary hooks
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -24,6 +24,7 @@ const Checkout = () => {
     const [totalAdultPrice, setTotalAdultPrice] = useState(0);
     const [totalChildPrice, setTotalChildPrice] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [invoiceID, setinvoiceID] = useState("");
 
     // Extract individual query parameters
     const selectedDate = searchParams.get("date");
@@ -151,7 +152,10 @@ const Checkout = () => {
             const res = await axios.post(BASE_URL + "/tickets", dataa, {
                 withCredentials: true,
             });
-            toast.success("Ticket booked successfully");
+            setinvoiceID(res.data.data.bookedTickets._id);
+            toast.success(
+                "Your ticket has been successfully booked. You can now download your invoice",
+            );
         } catch (error) {
             console.log(error);
             toast.error("Something went wrong. Please try again later");
@@ -442,7 +446,7 @@ const Checkout = () => {
                                 Total Discount Amount
                             </span>
                             <span className="font-semibold text-red-500">
-                                {totalDiscountedAmount} Qar
+                                {discountedPrice} Qar
                             </span>
                         </div>
                     )}*/}
@@ -452,7 +456,7 @@ const Checkout = () => {
                                 Discounted Price
                             </span>
                             <span className="font-bold text-green-600">
-                                {discountedPrice} Qar
+                                {totalDiscountedAmount} Qar
                             </span>
                         </div>
                     )}
@@ -462,7 +466,10 @@ const Checkout = () => {
                         <span>Total</span>
                         <div>
                             <span
-                                className={`${discountedPrice && "text-red-500 line-through"}`}
+                                className={`${
+                                    discountedPrice &&
+                                    "text-red-500 line-through"
+                                }`}
                             >
                                 {totalPrice} Qar
                             </span>{" "}
@@ -474,12 +481,20 @@ const Checkout = () => {
                             )}
                         </div>
                     </div>
-                    <button
-                        className="py-2 w-full bg-custom-yellow duration-300 hover:bg-dark hover:text-white mt-4 rounded-md"
-                        onClick={handleTicketBooking}
-                    >
-                        Complete booking
-                    </button>
+                    {!invoiceID ? (
+                        <button
+                            className="py-2 w-full bg-custom-yellow duration-300 hover:bg-dark hover:text-white mt-4 rounded-md"
+                            onClick={handleTicketBooking}
+                        >
+                            Complete booking
+                        </button>
+                    ) : (
+                        <Link to={`/invoice/${invoiceID}`}>
+                            <button className="py-2 w-full bg-custom-yellow duration-300 hover:bg-dark hover:text-white mt-4 rounded-md">
+                                Get Invoice
+                            </button>
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>
