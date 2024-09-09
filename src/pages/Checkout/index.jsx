@@ -490,7 +490,7 @@ const Checkout = () => {
                         </button>
                     ) : (
                         <Link to={`/invoice/${invoiceID}`}>
-                            <button className="py-2 w-full bg-custom-yellow duration-300 hover:bg-dark hover:text-white mt-4 rounded-md">
+                            <button className="py-2 w-full bg-blue-500 duration-300 text-white mt-4 rounded-md">
                                 Get Invoice
                             </button>
                         </Link>
