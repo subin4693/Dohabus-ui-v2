@@ -148,7 +148,6 @@ const Invoice = () => {
                   <h2 className="mt-2">Name</h2>
                   <h2 className="mt-2">Status</h2>
                   <h2 className="mt-2">Total</h2>
-                  <h2 className="mt-2">Payment method</h2>
                 </div>
                 <div className="w-[50%]">
                   <h2 className="mt-2">
@@ -156,7 +155,6 @@ const Invoice = () => {
                   </h2>
                   <h2 className="mt-2">{data.status}</h2>
                   <h2 className="mt-2">{data.price} QAR</h2>
-                  <h2 className="mt-2">Paypal</h2>
                 </div>
               </div>
             </div>
