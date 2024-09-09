@@ -188,7 +188,7 @@ const ManageUser = () => {
                     <select
                         value={selectedOption}
                         onChange={handleChange}
-                        className="font-bold bg-transparent underline"
+                        className="font-bold  underline bg-white px-2 py-1 rounded-md shadow-lg border border-gray-200"
                     >
                         <option className="text-sm" value="user">
                             Users

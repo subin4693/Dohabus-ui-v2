@@ -1,93 +1,95 @@
 import React, { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
   const media = [...mediaUrls, ...mediaVideoUrls];
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleNext = () => {
-    if (currentIndex < media.length - 1) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-    }
+  const [activeIndex, setActiveIndex] = useState(0);
+  // Slider settings
+  const settings = {
+    className: "center",
+    centerMode: true,
+    infinite: true,
+    centerPadding: "60px",
+    slidesToShow: 3, // Show 3 items at a time
+    speed: 500,
+    nextArrow: <NextArrow className="text-white bg-red-500 z-20 w-10 h-10" />, // Custom Next Arrow
+    prevArrow: <PrevArrow className="text-white w-10 h-10" />, // Custom Previous Arrow
+    responsive: [
+      {
+        breakpoint: 1524,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+    beforeChange: (index) => {
+      if (media.length - 1 == index) setActiveIndex(0);
+      else setActiveIndex(index + 1);
+    },
   };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prevIndex) => prevIndex - 1);
-    }
-  };
-
-  const isVideo = media[currentIndex]?.includes(".mp4"); // Assuming video URLs end with '.mp4'
 
   return (
     <div className="h-96 w-screen flex justify-center items-center my-10 px-5">
-      <div className="h-full w-full md:w-2/3 flex justify-center items-center relative">
-        {/* Previous Media Preview */}
-        {currentIndex > 0 && (
-          <div className="w-1/2 h-80 rounded-3xl overflow-hidden -z-10 absolute -left-10 hidden sm:inline">
-            {media[currentIndex - 1]?.includes(".mp4") ? (
-              <video
-                src={media[currentIndex - 1]}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <img
-                src={media[currentIndex - 1]}
-                className="w-full h-full object-cover"
-              />
-            )}
-          </div>
-        )}
-
-        {/* Main Media */}
-        <div className="w-full sm:w-2/3 h-full overflow-hidden rounded-3xl shadow-xl relative">
-          {/* Previous Icon */}
-          <IoIosArrowBack
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-white w-10 h-10"
-            onClick={handlePrev}
-          />
-
-          {isVideo ? (
-            <video
-              src={media[currentIndex]}
-              className="w-full h-full object-cover"
-              controls
-              autoPlay
-            />
-          ) : (
-            <img
-              src={media[currentIndex]}
-              className="w-full h-full object-cover"
-              alt={`Media ${currentIndex}`}
-            />
-          )}
-
-          {/* Next Icon */}
-          <IoIosArrowForward
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-white w-10 h-10"
-            onClick={handleNext}
-          />
-        </div>
-
-        {/* Next Media Preview */}
-        {currentIndex < media.length - 1 && (
-          <div className="w-1/2 h-80 rounded-3xl overflow-hidden -z-10 absolute -right-10 hidden sm:inline">
-            {media[currentIndex + 1]?.includes(".mp4") ? (
-              <video
-                src={media[currentIndex + 1]}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <img
-                src={media[currentIndex + 1]}
-                className="w-full h-full object-cover"
-              />
-            )}
-          </div>
-        )}
+      <div className="w-full md:w-2/3">
+        {/* Slider Container */}
+        <Slider {...settings}>
+          {media.map((item, index) => (
+            <div key={index} className="px-2">
+              <div
+                className={`w-full h-80 overflow-visible rounded-3xl shadow-xl duration-300 transform ${index === activeIndex ? "scale-110 z-10" : "scale-90"} `}
+                style={{
+                  transition: "transform 0.5s ease",
+                  transformOrigin: "center",
+                }}
+              >
+                {/* Check if the media is video or image */}
+                {item.includes(".mp4") ? (
+                  <video
+                    src={item}
+                    className="w-full h-full object-cover rounded-3xl"
+                    controls
+                    autoPlay
+                    muted
+                  />
+                ) : (
+                  <img
+                    src={item}
+                    className="w-full h-full object-cover rounded-3xl  "
+                    alt={`Media ${index}`}
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </Slider>
       </div>
     </div>
   );
 };
 
 export default MediaGallery;
+const NextArrow = ({ onClick }) => {
+  return (
+    <button
+      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+      onClick={onClick}
+    >
+      <IoIosArrowForward className="text-2xl" />
+    </button>
+  );
+};
+
+const PrevArrow = ({ onClick }) => {
+  return (
+    <button
+      className="absolute z-10 left-2 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+      onClick={onClick}
+    >
+      <IoIosArrowBack className="text-2xl" />
+    </button>
+  );
+};

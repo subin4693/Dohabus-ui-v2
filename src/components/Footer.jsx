@@ -53,18 +53,32 @@ const Footer = () => {
   const getNextIndex = (currentIndex, length) => {
     return currentIndex === length - 1 ? 0 : currentIndex + 1;
   };
+  const [activeIndex, setActiveIndex] = useState(0);
   const settings = {
     className: "slider variable-width",
+    centerMode: true,
+    infinite: true,
     dots: true,
     speed: 500,
-    infinite: true,
-    centerMode: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     variableWidth: true,
     cssEase: "ease-in-out",
     nextArrow: <NextArrow />, // Custom Next Arrow
     prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1524,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+    beforeChange: (index) => {
+      if (album.length - 1 == index) setActiveIndex(0);
+      else setActiveIndex(index + 1);
+    },
   };
   return (
     <>
@@ -73,34 +87,46 @@ const Footer = () => {
           {/* Useful Pages Section */}
           <div className="space-y-5 mt-5">
             <h2 className="text-2xl font-bold">
-            {lang === "en" ? "Useful Pages" : "صفحات مفيدة"}
+              {lang === "en" ? "Useful Pages" : "صفحات مفيدة"}
             </h2>
             <ul className="space-y-2 font-semibold text-lg">
               <li className="cursor-pointer hover:underline">
-                <Link to={"/offer-promo"}>{lang === "en" ? "Offers & Promotions" : "العروض والترويج"}</Link>
+                <Link to={"/offer-promo"}>
+                  {lang === "en" ? "Offers & Promotions" : "العروض والترويج"}
+                </Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to={"/guidelines"}>{lang === "en" ? "Guidelines" : "الإرشادات"}</Link>
+                <Link to={"/guidelines"}>
+                  {lang === "en" ? "Guidelines" : "الإرشادات"}
+                </Link>
               </li>
               <li className="cursor-pointer hover:underline">
                 <Link to="/blogs">{lang === "en" ? "Blog " : "مدونة"}</Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to="/blogs-create">{lang === "en" ? "Write Blog" : "كتابة مدونة"}</Link>
+                <Link to="/blogs-create">
+                  {lang === "en" ? "Write Blog" : "كتابة مدونة"}
+                </Link>
               </li>
-              
+
               <li className="cursor-pointer hover:underline">
-                <Link to={"/Faq"}>{lang === "en" ? "FAQ" : "الأسئلة الشائعة"}</Link>
+                <Link to={"/Faq"}>
+                  {lang === "en" ? "FAQ" : "الأسئلة الشائعة"}
+                </Link>
               </li>
               <li className="cursor-pointer hover:underline">
-                <Link to={"/termandconditions"}>{lang === "en" ? "Terms & Conditions" : "الشروط والأحكام"}</Link>
+                <Link to={"/termandconditions"}>
+                  {lang === "en" ? "Terms & Conditions" : "الشروط والأحكام"}
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* Contact Us Section */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">{lang === "en" ? "Contact Us" : "اتصل بنا"}</h2>
+            <h2 className="text-2xl font-bold">
+              {lang === "en" ? "Contact Us" : "اتصل بنا"}
+            </h2>
             <ul className="space-y-2 font-semibold text-lg">
               <li className="flex items-center gap-2">
                 <FaPhoneAlt size={20} /> +974 4442 244
@@ -119,9 +145,11 @@ const Footer = () => {
 
           {/* Media Section */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">{lang === "en" ? "Media" : "وسائل الإعلام"}</h2>
+            <h2 className="text-2xl font-bold">
+              {lang === "en" ? "Media" : "وسائل الإعلام"}
+            </h2>
             <div className="grid grid-cols-3 gap-3">
-              {album?.map((photo, index) => (
+              {album?.slice(0, 6).map((photo, index) => (
                 <img
                   key={index}
                   src={photo.image}
@@ -135,7 +163,9 @@ const Footer = () => {
 
           {/* Social Media Links */}
           <div className="space-y-5 mt-5">
-            <h2 className="text-2xl font-bold">{lang === "en" ? "Follow Us" :"تابعنا"}</h2>
+            <h2 className="text-2xl font-bold">
+              {lang === "en" ? "Follow Us" : "تابعنا"}
+            </h2>
             <div className="flex flex-wrap gap-2">
               <Link
                 to="http://wa.me/97433246556"
@@ -188,7 +218,9 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="mt-1 text-center text-lg flex justify-between gap-5 items-center w-full lg:w-[1415px] ">
           <p>
-          {lang === "en" ? "© Copyright 2022 - Doha Bus - All Rights Reserved" : "© حقوق النشر 2022 - دوحة باص - جميع الحقوق محفوظة"}
+            {lang === "en"
+              ? "© Copyright 2022 - Doha Bus - All Rights Reserved"
+              : "© حقوق النشر 2022 - دوحة باص - جميع الحقوق محفوظة"}
           </p>
 
           <div className="w-[200px] hidden md:inline">
@@ -210,8 +242,8 @@ const Footer = () => {
             {album.map((image, index) => (
               <div
                 key={index}
-                className={`h-[89vh]   scale-75 flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
-                  index === selectedImage ? "" : ""
+                className={`h-[50vh] md:h-[89vh]    flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
+                  index === activeIndex ? "scale-50" : "scale-75"
                 }`}
                 style={{
                   width: window.innerWidth <= 640 ? "70vw" : "50vw",

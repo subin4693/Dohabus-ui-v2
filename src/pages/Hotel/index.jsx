@@ -33,7 +33,7 @@ const Hotel = () => {
         title={lang === "en" ? "Hotels" : "الفنادق"}
         subTitle={lang === "en" ? "Home | Hotels" : "الرئيسية | الفنادق"}
       />
-      <div className="px-1 md:px-10 xl:w-[70%] mx-auto my-10">
+      <div className="px-1 md:px-10 xl:w-[70%] mx-auto ">
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}

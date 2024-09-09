@@ -29,13 +29,13 @@ const OfferCard = ({ offer, handleStatus }) => {
 				Child Discount:{" "}
 				{offer.childDiscountType === "percentage"
 					? `${offer.childDiscountPrice}%`
-					: `$${offer.childDiscountPrice}`}
+					: `${offer.childDiscountPrice} Qar`}
 			</p>
 			<p className="text-sm text-gray-600">
 				Adult Discount:{" "}
 				{offer.adultDiscountType === "percentage"
 					? `${offer.adultDiscountPrice}%`
-					: `$${offer.adultDiscountPrice}`}
+					: `${offer.adultDiscountPrice} Qar`}
 			</p>
 			{/* Status Button */}
 			<button

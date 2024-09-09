@@ -48,22 +48,25 @@ const Card = ({ image, title, desc, lang, id }) => {
       const res = await axios.post(BASE_URL + "/hotels/" + id, formData, {
         withCredentials: true,
       });
-      toast.success("Hotel booked successfully", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      toast.success(
+        "Thank you for booking! Our support team will reach out to you.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        },
+      );
       console.log(res.data);
     } catch (error) {
       // Error handling: Log the full error response
       console.error(
         "Error details:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
 
       toast.error("Something went wrong", {
@@ -85,7 +88,7 @@ const Card = ({ image, title, desc, lang, id }) => {
   return (
     <div
       dir={lang === "ar" ? "rtl" : "ltr"}
-      className="hover:shadow-2xl border border-gray-lite duration-500 overflow-hidden cursor-pointer"
+      className="hover:shadow-2xl border border-gray-lite duration-500 overflow-hidden cursor-pointer my-10"
     >
       <div className="h-[250px]">
         <img src={image} className="object-cover w-full h-full" alt={title} />
@@ -94,7 +97,7 @@ const Card = ({ image, title, desc, lang, id }) => {
         <h2 className="text-lg font-bold md:text-xl text-gray">
           {lang === "ar" ? "العنوان" : title}
         </h2>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <div className="flex gap-1">
             <FaStar color="orange" />
             <FaStar color="orange" />
@@ -105,7 +108,7 @@ const Card = ({ image, title, desc, lang, id }) => {
           <h1 className="font-semibold text-[1.2rem]">
             5 Superb - <span className="text-gray">200 reviews</span>{" "}
           </h1>
-        </div>
+        </div>*/}
         <p className="text-sm text-gray text-justify leading-6">
           {lang === "ar" ? "الوصف" : desc}
         </p>
@@ -113,13 +116,13 @@ const Card = ({ image, title, desc, lang, id }) => {
         {/* Modal */}
         <AnimatePresence>
           {isModalOpen && (
-            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="fixed inset-0  bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 mx-4 md:mx-0 h-[90vh] overflow-y-auto"
+                className="bg-white rounded-lg shadow-lg p-6 w-fit md:mx-0 max-h-[90vh] overflow-y-auto"
               >
                 <div className="mt-4">
                   <div className="text-center">
@@ -144,7 +147,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                   <div className="mt-4">
                     <form onSubmit={handleSubmit}>
                       <div className="flex justify-between items-center gap-3">
-                        <div className="mt-10">
+                        <div className="mt-10 w-full">
                           <label className="text-lg font-semibold">
                             {lang === "ar" ? "تاريخ الوصول" : "Check-in Date"}
                           </label>
@@ -153,11 +156,11 @@ const Card = ({ image, title, desc, lang, id }) => {
                             name="checkInDate"
                             value={formData.checkInDate}
                             onChange={handleChange}
-                            className="border-2 border-gray-300 rounded outline-none px-3 p-3 w-[23vh]"
+                            className="border-2 border-gray-300 rounded outline-none px-3 p-3 w-full"
                             type="date"
                           />
                         </div>
-                        <div className="mt-10">
+                        <div className="mt-10 w-full">
                           <label className="text-lg font-semibold">
                             {lang === "ar"
                               ? "تاريخ المغادرة"
@@ -168,14 +171,14 @@ const Card = ({ image, title, desc, lang, id }) => {
                             name="checkOutDate"
                             value={formData.checkOutDate}
                             onChange={handleChange}
-                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-[23vh]"
+                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                             type="date"
                           />
                         </div>
                       </div>
 
-                      <div className="flex justify-between items-center gap-3 mt-3">
-                        <div className="">
+                      <div className="flex justify-between items-center gap-3 mt-3 w-full">
+                        <div className="w-full">
                           <label className="text-lg font-semibold">
                             {lang === "ar"
                               ? "عدد البالغين"
@@ -187,7 +190,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                             value={formData.numberOfAdults}
                             onChange={handleChange}
                             type="number"
-                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-[23vh]"
+                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                             placeholder={
                               lang === "ar"
                                 ? "عدد البالغين"
@@ -195,7 +198,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                             }
                           />
                         </div>
-                        <div className="">
+                        <div className="w-full">
                           <label className="text-lg font-semibold">
                             {lang === "ar"
                               ? "عدد الأطفال"
@@ -207,7 +210,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                             value={formData.numberOfChildren}
                             onChange={handleChange}
                             type="number"
-                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-[23vh]"
+                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                             placeholder={
                               lang === "ar"
                                 ? "عدد الأطفال"
@@ -216,7 +219,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                           />
                         </div>
                       </div>
-                      <div className="flex justify-between items-center gap-3 mt-3">
+                      <div className="flex justify-between items-center gap-3 mt-3 w-full">
                         <div className="">
                           <label className="text-lg font-semibold">
                             {lang === "ar" ? "عدد الغرف" : "Number of Rooms"}
@@ -309,8 +312,8 @@ const Card = ({ image, title, desc, lang, id }) => {
                         ></textarea>
                       </div>
 
-                      <div className="flex justify-between items-center gap-3 mt-3">
-                        <div className="">
+                      <div className="flex justify-between items-center gap-3 mt-3 w-full">
+                        <div className="w-full">
                           <label className="text-lg font-semibold">
                             {lang === "ar" ? "البريد الإلكتروني" : "Email"}
                           </label>
@@ -320,7 +323,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                             value={formData.email}
                             onChange={handleChange}
                             type="email"
-                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-[23vh]"
+                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                             placeholder={
                               lang === "ar"
                                 ? "أدخل البريد الإلكتروني"
@@ -328,7 +331,7 @@ const Card = ({ image, title, desc, lang, id }) => {
                             }
                           />
                         </div>
-                        <div className="">
+                        <div className="w-full">
                           <label className="text-lg font-semibold">
                             {lang === "ar" ? "الاسم" : "Name"}
                           </label>
@@ -338,24 +341,24 @@ const Card = ({ image, title, desc, lang, id }) => {
                             value={formData.name}
                             onChange={handleChange}
                             type="text"
-                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-[23vh]"
+                            className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                             placeholder={
                               lang === "ar" ? "أدخل الاسم" : "Enter name"
                             }
                           />
                         </div>
                       </div>
-                      <div className="flex justify-between pt-5">
+                      <div className="flex justify-between pt-5 bg-opacity-50 gap-3">
                         <button
                           type="button"
-                          className="bg-yellow-500 text-white px-4 py-2 w-[150px] font-semibold text-lg rounded hover:bg-dark"
+                          className="bg-yellow-500 text-white px-4 py-2 w-full font-semibold text-lg rounded hover:bg-dark"
                           onClick={closeModal}
                         >
                           {lang === "ar" ? "إغلاق" : "Close"}
                         </button>
                         <button
                           type="submit"
-                          className="bg-yellow-500 text-white w-[150px] px-4 p-3 font-semibold text-lg rounded hover:bg-dark"
+                          className="bg-yellow-500 text-white w-full px-4 p-3 font-semibold text-lg rounded hover:bg-dark"
                         >
                           {lang === "ar" ? "احجز الآن" : "Book Now"}
                         </button>
@@ -371,7 +374,7 @@ const Card = ({ image, title, desc, lang, id }) => {
         <div className="flex items-center justify-center">
           <button
             onClick={openModal}
-            className="text-2xl text-custom-yellow text-center block mt-4 underline"
+            className="bg-custom-yellow text-center block mt-4  px-2 py-1 text-lg rounded-md w-full hover:bg-dark text-white duration-300"
           >
             {lang === "ar" ? "احجز الآن" : "Book now"}
           </button>

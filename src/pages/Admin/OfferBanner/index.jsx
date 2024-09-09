@@ -13,6 +13,7 @@ const Index = () => {
   const [percentage, setPercentage] = useState("");
   const [selectedPlan, setSelectedPlan] = useState("");
   const lang = useSelector((state) => state.language.lang);
+  const user = useSelector((state) => state.user.user);
 
   const openModal = () => {
     setIsOpen(true);
@@ -60,7 +61,7 @@ const Index = () => {
     } catch (error) {
       console.error(
         "Error creating offer banner:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   };
@@ -75,26 +76,29 @@ const Index = () => {
     } catch (error) {
       console.error(
         "Error fetching offers:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   };
 
   const toggleStatus = async (offerId, currentStatus) => {
     try {
+      if (user?.role !== "super-admin") {
+        return;
+      }
       const newStatus = currentStatus === "Active" ? "Inactive" : "Active";
       await axios.patch(
         `${BASE_URL}/offerbanner/${offerId}/status`,
         { status: newStatus },
         {
           withCredentials: true,
-        }
+        },
       );
       fetchOffers(); // Refresh the list to reflect the updated status
     } catch (error) {
       console.error(
         "Error updating status:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   };
@@ -108,7 +112,7 @@ const Index = () => {
     } catch (error) {
       console.error(
         "Error deleting offer:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   };
@@ -124,7 +128,7 @@ const Index = () => {
       } catch (error) {
         console.error(
           "Error fetching plans:",
-          error.response ? error.response.data : error.message
+          error.response ? error.response.data : error.message,
         );
       }
     };
@@ -136,12 +140,15 @@ const Index = () => {
   return (
     <>
       <div className="text-end">
-        <button
-          onClick={openModal}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Add offer
-        </button>
+        {console.log(user)}
+        {user && user?.role === "super-admin" && (
+          <button
+            onClick={openModal}
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Add offer
+          </button>
+        )}
       </div>
 
       <div className="flex justify-center items-center">
@@ -237,11 +244,13 @@ const Index = () => {
                 >
                   {offer.status}
                 </h1>
-                <FaTrashAlt
-                  size={25}
-                  className="cursor-pointer"
-                  onClick={() => handleDelete(offer._id)}
-                />
+                {user && user?.role === "super-admin" && (
+                  <FaTrashAlt
+                    size={25}
+                    className="cursor-pointer"
+                    onClick={() => handleDelete(offer._id)}
+                  />
+                )}
               </div>
             </div>
           ))

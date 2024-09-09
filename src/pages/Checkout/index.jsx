@@ -436,23 +436,23 @@ const Checkout = () => {
                             </div>
                         </>
                     )}
-                    {discountedPrice && (
+                    {/* {discountedPrice && (
                         <div className="flex justify-between mt-4">
                             <span className="font-semibold text-red-500">
                                 Total Discount Amount
                             </span>
                             <span className="font-semibold text-red-500">
-                                {discountedPrice} Qar
+                                {totalDiscountedAmount} Qar
                             </span>
                         </div>
-                    )}
+                    )}*/}
                     {totalDiscountedAmount && (
                         <div className="flex justify-between mt-2">
                             <span className="font-bold text-green-600">
                                 Discounted Price
                             </span>
                             <span className="font-bold text-green-600">
-                                {totalDiscountedAmount} Qar
+                                {discountedPrice} Qar
                             </span>
                         </div>
                     )}

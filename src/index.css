@@ -37,11 +37,11 @@ td {
 		width: 300px; /* Fixed width for medium screens and above */
 	}
 }
-.slick-slide {
+.sslick-slide {
 	transition: transform 0.5s ease-in-out; /* Adjust duration and easing here */
 }
 
-.slick-active {
+.sslick-active {
 	transform: scale(0.8);
 
 	transition: transform 0.5s ease-in-out; /* Adjust duration and easing here */
