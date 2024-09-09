@@ -7,16 +7,19 @@ import "slick-carousel/slick/slick-theme.css";
 const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
   const media = [...mediaUrls, ...mediaVideoUrls];
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Adjust slidesToShow based on media length
+  const slidesToShow = media.length <= 3 ? media.length : 3;
   // Slider settings
   const settings = {
     className: "center",
-    centerMode: true,
-    infinite: true,
+    centerMode: slidesToShow > 1, // Only enable center mode if there are enough slides
+    infinite: media.length > slidesToShow, // Disable infinite scroll if there are fewer items
     centerPadding: "60px",
-    slidesToShow: 3, // Show 3 items at a time
+    slidesToShow, // Use dynamic slidesToShow
     speed: 500,
-    nextArrow: <NextArrow className="text-white bg-red-500 z-20 w-10 h-10" />, // Custom Next Arrow
-    prevArrow: <PrevArrow className="text-white w-10 h-10" />, // Custom Previous Arrow
+    nextArrow: <NextArrow className="text-white bg-red-500 z-20 w-10 h-10" />,
+    prevArrow: <PrevArrow className="text-white w-10 h-10" />,
     responsive: [
       {
         breakpoint: 1524,
@@ -27,14 +30,14 @@ const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
       },
     ],
     beforeChange: (index) => {
-      if (media.length - 1 == index) setActiveIndex(0);
+      if (media.length - 1 === index) setActiveIndex(0);
       else setActiveIndex(index + 1);
     },
   };
 
   return (
-    <div className="h-96 w-screen flex justify-center items-center my-10 px-5">
-      <div className="w-full md:w-2/3">
+    <div className="h-96 bg-red-500  w-screen flex justify-center items-center my-10 px-5">
+      <div className="w-full md:w-2/3 ">
         {/* Slider Container */}
         <Slider {...settings}>
           {media.map((item, index) => (
@@ -86,10 +89,10 @@ const NextArrow = ({ onClick }) => {
 const PrevArrow = ({ onClick }) => {
   return (
     <button
-      className="absolute z-10 left-2 top-1/2 transform -translate-y-1/2 text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
+      className="absolute z-10 left-2 top-1/2 transform -translate-y-1/2  z-[1] text-white bg-black p-2 rounded-full opacity-75 hover:opacity-100"
       onClick={onClick}
     >
-      <IoIosArrowBack className="text-2xl" />
+      <IoIosArrowBack className="text-2xl " />
     </button>
   );
 };
