@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams, useSearchParams } from "react-router-dom"; // Import necessary hooks
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"; // Import necessary hooks
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ const Checkout = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const { id } = useParams(); // Get the route parameter (e.g., checkout/:id)
     const [searchParams] = useSearchParams(); // Get the search/query parameters
-
+    const navigate = useNavigate();
     const [data, setData] = useState({});
     const lang = useSelector((state) => state.language.lang);
     const [firstName, setFirstName] = useState("");
@@ -156,6 +156,7 @@ const Checkout = () => {
             toast.success(
                 "Your ticket has been successfully booked. You can now download your invoice",
             );
+            navigate(`/invoice/${res.data.data.bookedTickets._id}`)
         } catch (error) {
             console.log(error);
             toast.error("Something went wrong. Please try again later");
