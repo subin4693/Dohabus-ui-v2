@@ -116,13 +116,17 @@ const Card = ({ image, title, desc, lang, id }) => {
         {/* Modal */}
         <AnimatePresence>
           {isModalOpen && (
-            <div className="fixed inset-0  bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+            <div
+              className="fixed inset-0  bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+              onClick={closeModal}
+            >
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: 0.3 }}
                 className="bg-white rounded-lg shadow-lg p-6 w-fit md:mx-0 max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
               >
                 <div className="mt-4">
                   <div className="text-center">
