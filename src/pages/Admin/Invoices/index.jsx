@@ -63,7 +63,7 @@ const Index = () => {
             <h2 className="text-xl mt-1">Status: {invoice.status}</h2>
             <button
               onClick={() => generatePDF(invoice)}
-              className="mt-20 w-full p-3 border bg-custom-yellow text-xl font-semibold"
+              className="mt-16 w-full p-3 border bg-custom-yellow text-xl font-semibold"
             >
               Download
             </button>
