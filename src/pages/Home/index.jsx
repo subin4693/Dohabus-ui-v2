@@ -69,20 +69,6 @@ const Home = () => {
     },
   ];
 
-  const settings = {
-    className: "slider variable-width",
-    dots: true,
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 2000,
-    cssEase: "linear",
-    nextArrow: <NextArrow />, // Custom Next Arrow
-    prevArrow: <PrevArrow />,
-  };
-
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
@@ -118,13 +104,13 @@ const Home = () => {
   const itemsPerReview = window.innerWidth < 768 ? 1 : 3;
   const prevReview = () => {
     setCurrentSlide((prev) =>
-      prev === 0 ? Math.ceil(reviews.length / itemsPerReview) - 1 : prev - 1
+      prev === 0 ? Math.ceil(reviews.length / itemsPerReview) - 1 : prev - 1,
     );
   };
 
   const nextReview = () => {
     setCurrentSlide((prev) =>
-      prev === Math.ceil(reviews.length / itemsPerReview) - 1 ? 0 : prev + 1
+      prev === Math.ceil(reviews.length / itemsPerReview) - 1 ? 0 : prev + 1,
     );
   };
 
@@ -183,8 +169,33 @@ const Home = () => {
 
   const goToPrevious = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length
+      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length,
     );
+  };
+  const settings = {
+    infinite: true,
+    slidesToShow: 3, // Number of slides to show at once
+    slidesToScroll: 1,
+    autoplay: true,
+    speed: 2000,
+    autoplaySpeed: 4000,
+    cssEase: "linear",
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
@@ -211,12 +222,12 @@ const Home = () => {
                       index === 0
                         ? firstImageVariants
                         : index === 1
-                        ? secondImageVariants
-                        : {
-                            enter: { opacity: 0, x: 100 },
-                            center: { opacity: 1, x: 0 },
-                            exit: { opacity: 0, x: -100 },
-                          }
+                          ? secondImageVariants
+                          : {
+                              enter: { opacity: 0, x: 100 },
+                              center: { opacity: 1, x: 0 },
+                              exit: { opacity: 0, x: -100 },
+                            }
                     }
                     transition={{ duration: 0.5 }}
                   >
@@ -226,7 +237,7 @@ const Home = () => {
                       className="w-full h-screen object-cover"
                     />
                   </motion.div>
-                )
+                ),
             )}
         </AnimatePresence>
 
@@ -377,79 +388,45 @@ const Home = () => {
               {lang === "en" ? "What Our Customers Say" : "ماذا يقول عملاؤنا"}
             </motion.h1>
             <div className="relative w-full max-w-6xl mx-auto pb-10">
-              <div className="overflow-hidden">
-                <div
-                  className="flex transition-transform duration-500"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                >
-                  {Array.from({
-                    length: Math.ceil(reviews.length / itemsPerReview),
-                  }).map((_, slideIndex) => (
-                    <div
-                      key={slideIndex}
-                      className="flex min-w-full gap-4 md:gap-0 justify-center "
-                    >
-                      {reviews
-                        .slice(
-                          slideIndex * itemsPerReview,
-                          slideIndex * itemsPerReview + itemsPerReview
-                        )
-                        .map((slide) => (
-                          <section class="bg-gray-50 bg-opacity-80 dark:bg-gray-800 overflow-hidden">
-                            <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-24 lg:px-6">
-                              <figure class="max-w-screen-md mx-auto">
-                                <svg
-                                  class="h-12 mx-auto mb-3 text-gray-400 dark:text-gray-600"
-                                  viewBox="0 0 24 27"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z"
-                                    fill="currentColor"
-                                  ></path>
-                                </svg>
-                                <blockquote className="h-[200px] overflow-hidden">
-                                  <p class="text-xl md:text-xl font-medium text-gray-900 md:text-2xl dark:text-white ">
-                                    "{slide.reviewText}"
-                                  </p>
-                                </blockquote>
-                                <figcaption class="flex items-center justify-center mt-6 space-x-3">
-                                  <div class="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
-                                    <div class="pr-3 font-medium text-gray-900 dark:text-white">
-                                      {slide.user.name}
-                                    </div>
-                                    <div class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                                      {lang === "en"
-                                        ? slide.plan.title.en
-                                        : slide.plan.title.ar}
-                                    </div>
-                                  </div>
-                                </figcaption>
-                              </figure>
+              <Slider {...settings}>
+                {reviews.map((slide) => (
+                  <div key={slide._id} className="px-2">
+                    <section className="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg">
+                      <div className="px-6 py-4 mx-auto text-center">
+                        <figure className="max-w-screen-md mx-auto">
+                          {/* Image */}
+                          <blockquote className="h-[200px] w-full overflow-hidden rounded-lg mb-4">
+                            <img
+                              src={slide?.imageURL}
+                              alt="Review"
+                              className="object-cover h-full w-full rounded-md"
+                            />
+                          </blockquote>
+
+                          {/* Review Text */}
+                          <figcaption className="flex flex-col   mt-4 ">
+                            <p className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white text-center line-clamp-3 ">
+                              "{slide.reviewText}"
+                            </p>
+
+                            {/* User and Plan Info */}
+                            <div className="flex flex-col  items-center mt-4 space-x-0 md:space-x-3">
+                              <span className="text-md font-medium text-gray-900 ">
+                                {slide.user.name}
+                              </span>
+                              <span className="text-sm font-light text-gray-500 ">
+                                {lang === "en"
+                                  ? slide.plan.title.en
+                                  : slide.plan.title.ar}
+                              </span>
                             </div>
-                          </section>
-                        ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {reviews.length >= 3 && (
-                <div>
-                  <button
-                    onClick={prevReview}
-                    className="absolute left-0 top-1/3 transform translate-y-1/2 text-6xl text-dark p-2 rounded-full"
-                  >
-                    &#8249;
-                  </button>
-                  <button
-                    onClick={nextReview}
-                    className="absolute right-0 top-1/3 transform translate-y-1/2 p-2 text-6xl text-dark rounded-full"
-                  >
-                    &#8250;
-                  </button>
-                </div>
-              )}
+                          </figcaption>
+                        </figure>
+                      </div>
+                    </section>
+                  </div>
+                ))}
+              </Slider>
             </div>
           </section>
         </div>
