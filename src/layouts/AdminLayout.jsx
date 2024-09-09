@@ -52,6 +52,10 @@ const AdminLayout = () => {
                             text: "offer banner",
                             link: "/admin/offerbanner",
                         },
+                        {
+                            text: "Invoice",
+                            link: "/admin/invoice",
+                        },
                         // {
                         //     text: "hotel bookings",
                         //     link: "/admin/hotel-bookings",

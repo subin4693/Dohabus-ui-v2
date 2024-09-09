@@ -58,6 +58,7 @@ import axios from "axios";
 import { setLanguage } from "./features/language/languageSlice";
 import { setUser } from "./features/Auth/userSlice";
 import Invoice from "./pages/Invoice";
+import Invoices from "./pages/Admin/Invoices";
 
 function App() {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -213,6 +214,7 @@ function App() {
                             <Route path="locations" element={<Locations />} />
                             <Route path="offers" element={<Offers />} />
                             <Route path="offerbanner" element={<OfferBanner />} />
+                            <Route path="invoice" element={<Invoices />} />
                             <Route
                                 path="hotel-bookings"
                                 element={<HotelBookings />}
