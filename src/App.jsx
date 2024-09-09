@@ -57,6 +57,7 @@ import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "./features/language/languageSlice";
 import { setUser } from "./features/Auth/userSlice";
+import Invoice from "./pages/Invoice";
 
 function App() {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -139,6 +140,7 @@ function App() {
                         <Route path="/guidelines" element={<Guidelines />} />
                         <Route path="/mice" element={<MICE />} />
                         <Route path="/cruise" element={<Cruise />} />
+                        <Route path="/invoice/:id" element={<Invoice />} />
 
                         <Route
                             path="termandconditions"
