@@ -52,9 +52,7 @@ const Index = () => {
             className="card border-2 w-[400px] h-[390px] p-5 rounded-2xl shadow-lg bg-gray-200"
           >
             <div className="w-full h-[200px]">
-              <h1 className="text-3xl mt-1">
-                {invoice.plan.title[lang]}jsdhkjhsjh
-              </h1>
+              <h1 className="text-3xl mt-1">{invoice.plan.title[lang]}</h1>
               <h2 className="text-xl mt-1">{invoice.category.title[lang]}</h2>
               <h2 className="text-xl mt-1">
                 Name: {invoice.firstName + " " + invoice.lastName}
@@ -67,7 +65,7 @@ const Index = () => {
             </div>
             <button
               onClick={() => generatePDF(invoice)}
-              className="mt-20 w-full p-3 border bg-custom-yellow text-xl font-semibold"
+              className="mt-16 w-full p-3 border bg-custom-yellow text-xl font-semibold"
             >
               Download
             </button>
