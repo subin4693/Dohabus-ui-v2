@@ -18,7 +18,7 @@ const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
     centerPadding: "60px",
     slidesToShow, // Use dynamic slidesToShow
     speed: 500,
-    nextArrow: <NextArrow className="text-white bg-red-500 z-20 w-10 h-10" />,
+    nextArrow: <NextArrow className="text-white   z-20 w-10 h-10" />,
     prevArrow: <PrevArrow className="text-white w-10 h-10" />,
     responsive: [
       {

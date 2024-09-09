@@ -68,7 +68,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
 
   const handleClose = () => {
     setIsVisible(false);
-    setOffer([])
+    setOffer([]);
   };
 
   const handleSignOut = async () => {
@@ -76,7 +76,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
       const res = await axios.post(
         BASE_URL + "/users/signout",
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       toast.success("Logout succesfully", {
         position: "top-right",
@@ -166,7 +166,13 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
       >
         <div className="lg:w-[100%] mx-auto flex justify-between items-center px-10 py-3">
           <div className="min-w-[20mm] max-w-[20mm] h-fit">
-            <img src={logo} className="w-full h-full object-cover" alt="logo" />
+            <Link to="/">
+              <img
+                src={logo}
+                className="w-full h-full object-cover"
+                alt="logo"
+              />
+            </Link>
           </div>
 
           <div className="flex justify-center items-center gap-2 ">
