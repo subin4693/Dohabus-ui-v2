@@ -39,8 +39,12 @@ const Transportation = () => {
         image={
           "https://images.pexels.com/photos/19096944/pexels-photo-19096944/free-photo-of-hot-air-balloons-in-the-yellow-sky-over-a-desert-and-people-standing-on-a-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
         }
-        title={"Transportation fleet"}
-        subTitle={"Home | Transportation fleet"}
+        title={lang === "ar" ? "أسطول النقل" : "Transportation fleet"}
+        subTitle={
+          lang === "ar"
+            ? "الرئيسية | أسطول النقل"
+            : "Home | Transportation fleet"
+        }
       />
 
       {/*      <div className="relative">
@@ -68,7 +72,7 @@ const Transportation = () => {
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-4xl p-5 text-center font-semibold "
         >
-          TRANSPORTATION <span className="text-custom-yellow">FLEET</span>
+          {lang === "ar" ? "أسطول النقل" : "TRANSPORTATION FLEET"}
         </motion.h1>
 
         <div className="cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-10 md:px-20">

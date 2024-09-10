@@ -44,8 +44,10 @@ const index = () => {
     <div>
       <Banner
         image="https://images.pexels.com/photos/9394657/pexels-photo-9394657.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-        title={"Your world of joy"}
-        subTitle={"Home | Cruise Packages "}
+        title={lang === "ar" ? "عالمك من السعادة" : "Your world of joy"}
+        subTitle={
+          lang === "ar" ? "الرئيسية | باقات الرحلات" : "Home | Cruise Packages"
+        }
       />
 
       <section className="mb-5 px-16 mt-5">

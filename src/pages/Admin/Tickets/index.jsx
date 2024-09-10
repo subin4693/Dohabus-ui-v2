@@ -39,6 +39,7 @@ const ManageTickets = () => {
                     totalPrice,
                     adultQuantity,
                     childQuantity,
+                    email,
                 } = item;
 
                 doc.text(`Ticket ${index + 1}`, 10, y);
@@ -46,7 +47,7 @@ const ManageTickets = () => {
 
                 doc.text("User Name: " + user.name, 10, y);
                 y += 10;
-                doc.text("User Email: " + user.email, 10, y);
+                doc.text("User Email: " + email, 10, y);
                 y += 10;
                 doc.text("Category: " + category.title.en, 10, y);
                 y += 10;
@@ -66,7 +67,7 @@ const ManageTickets = () => {
             const data = details.map((item, index) => ({
                 "Ticket Number": index + 1,
                 "User Name": item.user.name,
-                "User Email": item.user.email,
+                "User Email": item.email,
                 Category: item.category.title.en,
                 "Plan Title": item.plan.title.en,
                 "Total Price": item.totalPrice,
@@ -141,18 +142,18 @@ const ManageTickets = () => {
     const filteredDetails = details.filter(
         (ticket) =>
             ticket?.user?.name
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
+                ?.toLowerCase()
+                ?.includes(searchQuery.toLowerCase()) ||
             ticket?.user?.email
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
+                ?.toLowerCase()
+                ?.includes(searchQuery.toLowerCase()) ||
             ticket?.category?.title?.en
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
+                ?.toLowerCase()
+                ?.includes(searchQuery.toLowerCase()) ||
             ticket?.plan?.title?.en
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-            ticket?.status?.toLowerCase().includes(searchQuery.toLowerCase()),
+                ?.toLowerCase()
+                ?.includes(searchQuery.toLowerCase()) ||
+            ticket?.status?.toLowerCase()?.includes(searchQuery.toLowerCase()),
     );
     return (
         <div className="p-5 bg-gray-100">
