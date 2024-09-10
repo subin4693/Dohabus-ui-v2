@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import logo from "../../assets/DOHA Bus Logo YB large.png";
 
 const Invoice = () => {
   const lang = useSelector((state) => state.language.lang);
@@ -33,60 +34,135 @@ const Invoice = () => {
   const generatePDF = () => {
     const invoiceElement = document.getElementById("invoice");
 
-    const downloadButton = document.getElementById("download-button");
-    if (downloadButton) downloadButton.style.display = "none";
+    html2canvas(invoiceElement).then((canvas) => {
+      const pdf = new jsPDF("p", "mm", "a4");
 
-    const images = invoiceElement.getElementsByTagName("img");
-    let loadedImages = 0;
-    const totalImages = images.length;
+      const borderWidth = 10;
+      const borderColor = [255, 255, 0];
+      const titleColor = [255, 178, 44];
+      const contactColor = [255, 178, 44];
+      const payableToColor = titleColor;
 
-    if (totalImages === 0) {
-      createPDF();
-    } else {
-      for (let img of images) {
-        if (img.complete) {
-          loadedImages++;
-          if (loadedImages === totalImages) {
-            createPDF();
-          }
-        } else {
-          img.onload = () => {
-            loadedImages++;
-            if (loadedImages === totalImages) {
-              createPDF();
-            }
-          };
-        }
-      }
-    }
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    function createPDF() {
-      html2canvas(invoiceElement, { scale: 2 })
-        .then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jsPDF("p", "mm", "a4");
-          const imgWidth = 210;
-          const pageHeight = 295;
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          let heightLeft = imgHeight;
+      pdf.setFillColor(...borderColor);
+      pdf.rect(0, 5, borderWidth, pdfHeight, "F");
 
-          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(...borderColor);
 
-          while (heightLeft >= 0) {
-            pdf.addPage();
-            pdf.addImage(imgData, "PNG", 0, -heightLeft, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
+      const dateIssued = `Issued Date: ${new Date().toLocaleDateString(
+        "en-GB",
+        { day: "numeric", month: "long", year: "numeric" }
+      )}`;
+      const invoiceNumber = `INVOICE#: ${data._id}`;
 
-          pdf.save("invoice.pdf");
+      const invoiceText = "INVOICE";
+      const invoiceTextWidth = pdf.getTextWidth(invoiceText);
 
-          if (downloadButton) downloadButton.style.display = "block";
-        })
-        .catch((error) => {
-          console.error("Error generating PDF:", error);
-        });
-    }
+      pdf.setFontSize(30);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(...borderColor);
+      pdf.text(invoiceText, borderWidth + 10, 40);
+
+      const verticalOffset = 5;
+      const rightAlignX = pdfWidth - borderWidth - 100;
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(...borderColor);
+      pdf.text(dateIssued, rightAlignX, 35 - verticalOffset);
+      pdf.text(invoiceNumber, rightAlignX, 45 - verticalOffset);
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(...borderColor);
+      pdf.text("CUSTOMER CONTACT", borderWidth + 10, 55);
+
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(
+        `Name: ${data.firstName} ${data.lastName}`,
+        borderWidth + 10,
+        65
+      );
+      pdf.text(`Email: ${data.email}`, borderWidth + 10, 75);
+
+      pdf.autoTable({
+        startY: 80,
+        head: [["Booking Details", ""]],
+        body: [
+          [
+            "Booked Day:",
+            new Date(data.date).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          ],
+          ["Guest:", `${data.adultQuantity + data.childQuantity}`],
+          ["Name:", `${data.firstName} ${data.lastName}`],
+          ["Plan Title:", plan.title?.[lang] || "N/A"],
+          ["Category Title:", category.title?.[lang] || "N/A"],
+          ["Pickup:", data.pickupLocation || "N/A"],
+          ["Drop:", data.dropLocation || "N/A"],
+          [
+            "Add Ons:",
+            data?.addonFeatures?.length > 0
+              ? data.addonFeatures.join(", ")
+              : "No Add-ons",
+          ],
+          ["Status:", data.status],
+          ["Total:", `${data.price} QAR`],
+        ],
+        theme: "striped",
+        styles: {
+          cellPadding: 5,
+          fontSize: 12,
+          font: "helvetica",
+          halign: "left",
+          valign: "middle",
+        },
+        headStyles: {
+          fillColor: [255, 255, 0],
+          textColor: [255, 255, 255],
+          fontSize: 14,
+          fontStyle: "bold",
+        },
+        margin: { left: borderWidth + 10 },
+      });
+
+      const tableHeight = pdf.autoTable.previous.finalY;
+      const payableToY = pdfHeight - 45;
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(...borderColor);
+      pdf.text("PAYABLE TO:", borderWidth + 10, payableToY);
+
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("Company: BOHABUS", borderWidth + 10, payableToY + 7);
+      pdf.text("Phone: +974 4442 244", borderWidth + 10, payableToY + 17);
+      pdf.text("Location: Doha, Qatar", borderWidth + 10, payableToY + 27);
+      pdf.text("Website: www.dohabus.com", borderWidth + 10, payableToY + 37);
+
+      const logoImage = new Image();
+      logoImage.src = logo;
+      logoImage.onload = () => {
+        const logoWidth = 40;
+        const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
+        const logoX = borderWidth + 140;
+        const logoY = pdfHeight - logoHeight - 12;
+
+        pdf.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
+
+        pdf.save("invoice.pdf");
+      };
+    });
   };
 
   return (
@@ -147,7 +223,6 @@ const Invoice = () => {
                 <div>
                   <h2 className="mt-2">Name</h2>
                   <h2 className="mt-2">Add Ons</h2>
-                  
                   <h2 className="mt-2">Status</h2>
                   <h2 className="mt-2">Total</h2>
                 </div>
