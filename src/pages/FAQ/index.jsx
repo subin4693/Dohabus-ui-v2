@@ -1,35 +1,56 @@
 import React from "react";
 import Banner from "../../components/Banner";
 import contactImg from "../../assets/contact.jpg";
-
-import { BiBorderBottom } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Faq = () => {
+  const lang = useSelector((state) => state.language.lang); // Get the current language (e.g., 'en' or 'ar')
   const data = [
     {
-      question: "How does the billing work?",
+      question:
+        lang === "ar" ? "كيف تعمل الفواتير؟" : "How does the billing work?",
       answer:
-        "Springerdata offers a variety of billing options, including monthly and annual subscription plans, as well as pay-as-you-go pricing for certain services.",
+        lang === "ar"
+          ? "تقدم Springerdata مجموعة متنوعة من خيارات الفوترة، بما في ذلك خطط الاشتراك الشهرية والسنوية، بالإضافة إلى التسعير حسب الاستخدام لبعض الخدمات."
+          : "Springerdata offers a variety of billing options, including monthly and annual subscription plans, as well as pay-as-you-go pricing for certain services.",
     },
     {
-      question: "What is the refund policy?",
+      question:
+        lang === "ar" ? "ما هي سياسة الاسترداد؟" : "What is the refund policy?",
       answer:
-        "We offer a 30-day money-back guarantee on all our services. If you're not satisfied, you can request a refund within 30 days of purchase.",
+        lang === "ar"
+          ? "نحن نقدم ضمان استرداد الأموال لمدة 30 يومًا على جميع خدماتنا. إذا لم تكن راضيًا، يمكنك طلب استرداد الأموال في غضون 30 يومًا من الشراء."
+          : "We offer a 30-day money-back guarantee on all our services. If you're not satisfied, you can request a refund within 30 days of purchase.",
     },
     {
-      question: "How can I contact support?",
+      question:
+        lang === "ar"
+          ? "كيف يمكنني الاتصال بالدعم؟"
+          : "How can I contact support?",
       answer:
-        "You can reach our support team via email at support@example.com or through our contact form on the website.",
+        lang === "ar"
+          ? "يمكنك التواصل مع فريق الدعم عبر البريد الإلكتروني على support@example.com أو من خلال نموذج الاتصال على الموقع."
+          : "You can reach our support team via email at support@example.com or through our contact form on the website.",
     },
   ];
 
   return (
-    <div>
+    <div
+      style={{
+        direction: lang === "ar" ? "rtl" : "ltr",
+      }}
+    >
       <Banner
         image={contactImg}
-        title={"Find Answers to Frequently Asked Questions"}
-        subTitle={"Home | FAQ"}
+        title={
+          lang === "ar"
+            ? "اعثر على إجابات للأسئلة الشائعة"
+            : "Find Answers to Frequently Asked Questions"
+        }
+        subTitle={
+          lang === "ar" ? "الصفحة الرئيسية | الأسئلة الشائعة" : "Home | FAQ"
+        }
       />
 
       <div className="p-6">
@@ -69,13 +90,13 @@ const Faq = () => {
             </div>
           ))}
         </div>
-        <p class="text-center text-gray-600 textbase mt-9">
-          Still have questions?
+        <p className="text-center text-gray-600 textbase mt-9">
+          {lang === "ar" ? "لا تزال لديك أسئلة؟" : "Still have questions?"}
           <Link
             to="/contact"
-            class="cursor-pointer font-medium text-tertiary transition-all duration-200 hover:text-tertiary focus:text-tertiary hover-underline"
+            className="cursor-pointer font-medium text-tertiary transition-all duration-200 hover:text-tertiary focus:text-tertiary hover-underline"
           >
-            Contact
+            {lang === "ar" ? "اتصل بنا" : "Contact"}
           </Link>
         </p>
       </div>

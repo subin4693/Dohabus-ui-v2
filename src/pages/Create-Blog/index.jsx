@@ -140,29 +140,51 @@ const Write = () => {
         getData();
     }, []);
     return (
-        <section className="   px-10 py-[150px]">
-            <h1 className="text-3xl font-bold ">Write blog</h1>
+        <section
+            className="px-10 py-[150px] h-screen"
+            style={{
+                direction: lang === "ar" ? "rtl" : "ltr",
+            }}
+        >
+            <h1 className="text-3xl font-bold">
+                {lang === "ar" ? "اكتب مدونة" : "Write blog"}
+            </h1>
             <br />
+
             <select
                 onChange={(e) => setCat(e.target.value)}
                 className="px-4 py-2 rounded-md"
             >
-                <option value="">Select Category</option>
+                <option value="">
+                    {lang === "ar" ? "اختر الفئة" : "Select Category"}
+                </option>
                 {categorys.map((val) => (
                     <option value={val?._id}>{val?.title[lang]}</option>
                 ))}
             </select>
             <br />
             <br />
+
             <label
                 htmlFor="image"
                 className="bg-yellow-200 px-3 py-2 cursor-pointer"
             >
-                {url ? "Change image" : "Cover image"}
+                {url
+                    ? lang === "ar"
+                        ? "تغيير الصورة"
+                        : "Change image"
+                    : lang === "ar"
+                      ? "صورة الغلاف"
+                      : "Cover image"}
             </label>
 
             {progress > 0 && progress < 100 && (
-                <h2 className="mt-5 ">{progress} % Image uploading...</h2>
+                <h2 className="mt-5 ">
+                    {progress} %
+                    {lang === "ar"
+                        ? "جاري تحميل الصورة..."
+                        : "Image uploading..."}
+                </h2>
             )}
             <input
                 type="file"
@@ -185,7 +207,7 @@ const Write = () => {
 
             <input
                 type="text"
-                placeholder="Title..."
+                placeholder={lang === "ar" ? "العنوان..." : "Title..."}
                 className="text-xl border-2 outline-none p-2 w-full"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -195,18 +217,23 @@ const Write = () => {
             <br />
 
             <ReactQuill
+                style={{
+                    direction: lang === "ar" ? "rtl" : "ltr",
+                }}
                 theme="bubble"
                 value={value}
                 onChange={setValue}
-                placeholder="Start blog here..."
-                className="w-full h-[40vh] border-2"
+                placeholder={
+                    lang === "ar" ? "ابدأ المدونة هنا..." : "Start blog here..."
+                }
+                className="w-full h-[40vh] border-2 "
             />
             <div className="text-right mt-5">
                 <button
-                    className="bg-green-500  text-white py-2 rounded-sm px-5 "
+                    className="bg-green-500 text-white py-2 rounded-sm px-5"
                     onClick={handleSubmit}
                 >
-                    Post
+                    {lang === "ar" ? "انشر" : "Post"}
                 </button>
             </div>
         </section>
