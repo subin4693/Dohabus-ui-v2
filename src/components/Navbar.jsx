@@ -358,7 +358,9 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               {/* <Link to="/faq">F&Q</Link> */}
               {user &&
                 (user.role === "admin" || user.role === "super-admin") && (
-                  <Link to="/admin">{lang === "en" ? "Admin" : "الإدارة"}</Link>
+                  <Link to="/admin/dashboard">
+                    {lang === "en" ? "Admin" : "الإدارة"}
+                  </Link>
                 )}
 
               {!user || !user?.email ? (
@@ -833,7 +835,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     setSidebarOpen(false);
                     setExpandedCategory([]);
                     setTourOpen(false);
-                    navigate("/admin");
+                    navigate("/admin/dashboard");
                   }}
                   className="py-3 text-left  text-black px-4 hover:bg-custom-yellow duration-200 hover:text-white text-[18px] border-b border-slate-300"
                 >

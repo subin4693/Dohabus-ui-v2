@@ -51,7 +51,7 @@ import TermandCond from "./pages/Term&Conditions";
 import MICE from "./pages/MICE";
 import Cruise from "./pages/Cruise";
 import AdminTransportation from "./pages/Admin/Transportation";
-import OfferBanner from "./pages/Admin/OfferBanner"
+import OfferBanner from "./pages/Admin/OfferBanner";
 
 import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
@@ -198,7 +198,10 @@ function App() {
                                 )
                             }
                         >
-                            <Route path="/admin" element={<AdminDashboard />} />
+                            <Route
+                                path="/admin/dashboard"
+                                element={<AdminDashboard />}
+                            />
                             <Route path="tickets" element={<Tickets />} />
                             <Route path="categorys" element={<Categorys />} />
                             <Route path="tours" element={<ToursAdmin />} />
@@ -213,7 +216,10 @@ function App() {
                             <Route path="banner" element={<Banner />} />
                             <Route path="locations" element={<Locations />} />
                             <Route path="offers" element={<Offers />} />
-                            <Route path="offerbanner" element={<OfferBanner />} />
+                            <Route
+                                path="offerbanner"
+                                element={<OfferBanner />}
+                            />
                             <Route path="invoice" element={<Invoices />} />
                             <Route
                                 path="hotel-bookings"
