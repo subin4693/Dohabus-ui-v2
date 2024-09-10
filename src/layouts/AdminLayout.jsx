@@ -26,7 +26,7 @@ const AdminLayout = () => {
                         See how your experiences are doing
                     </h5>
                 </div>
-                <div className="flex flex-wrap gap-2 lg:gap-4 w-1/2">
+                <div className="flex flex-wrap gap-2 lg:gap-4 w-full md:w-1/2">
                     {[
                         { text: "dashboard", link: "/admin/dashboard" },
                         { text: "categories", link: "/admin/categorys" },

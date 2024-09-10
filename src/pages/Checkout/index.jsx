@@ -166,6 +166,13 @@ const Checkout = () => {
             navigate(`/invoice/${res.data.data.bookedTickets._id}`);
         } catch (error) {
             console.log(error);
+            if (
+                error?.response?.data?.message?.includes(
+                    "tickets are available for this session",
+                )
+            ) {
+                return toast.error(error?.response?.data?.message);
+            }
             toast.error("Something went wrong. Please try again later");
         }
     };

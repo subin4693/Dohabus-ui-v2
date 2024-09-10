@@ -134,6 +134,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 <span className="hidden sm:inline">{offer[0].title[lang]}</span>{" "}
                 Save up to {offer[0].percentage}%
               </h1>
+              {console.log(offer)}
 
               <div className="flex gap-5 md:gap-20 items-center absolute right-0">
                 <Link
@@ -445,7 +446,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     (user.role === "admin" || user.role === "super-admin") ? (
                       <Link
                         to="/admin-cart"
-                        className="w-full block  px-3 py-1"
+                        className="w-full block  px-3 py-1 "
                       >
                         {lang === "en" ? "Cart" : "عربة التسوق"}
                       </Link>
@@ -529,29 +530,29 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 aria-hidden="true"
                 className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
               >
-                <li className="px-3 py-1 hover:bg-gray-100">
+                <li className="hover:bg-gray-100">
                   {user &&
                   (user.role === "admin" || user.role === "super-admin") ? (
-                    <Link to="/admin-cart">
+                    <Link to="/admin-cart" className="px-3 py-1 block">
                       {" "}
                       {lang === "en" ? "Cart" : "عربة التسوق"}
                     </Link>
                   ) : (
-                    <Link to="/cart">
+                    <Link to="/cart" className="px-3 py-1 block">
                       {" "}
                       {lang === "en" ? "Cart" : "عربة التسوق"}
                     </Link>
                   )}
                 </li>
-                <li className="px-3 py-1 hover:bg-gray-100">
+                <li className=" hover:bg-gray-100">
                   {user &&
                   (user.role === "admin" || user.role === "super-admin") ? (
-                    <Link to="/admin-favourites">
+                    <Link to="/admin-favourites" className="px-3 py-1 block">
                       {" "}
                       {lang === "en" ? "Favourites" : "المفضلات"}
                     </Link>
                   ) : (
-                    <Link to="/favourites">
+                    <Link to="/favourites" className="px-3 py-1 block">
                       {" "}
                       {lang === "en" ? "Favourites" : "المفضلات"}
                     </Link>
