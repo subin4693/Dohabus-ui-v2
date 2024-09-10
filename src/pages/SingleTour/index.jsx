@@ -17,6 +17,8 @@ import album6 from "../../assets/album6.jpg";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import DatePickerr from "./DatePicker";
 import { toast } from "react-toastify";
+import { GrUserWorker } from "react-icons/gr";
+// import { LuLanguages } from "react-icons/lu";
 
 import Slider from "./GallerySlider";
 import Faq from "./Faq";
@@ -432,10 +434,12 @@ const SingleTour = () => {
                   {/* Render Type of Tour if available */}
                   {data?.typeOfTour?.[lang] && (
                     <div className="flex  gap-5 items-center">
-                      <img
+                      {/*<img
                         src={men}
                         className="w-[60px] h-[60px] object-cover"
-                      />
+                      />*/}
+                      <GrUserWorker className="w-[60px] h-[60px]" />
+
                       <div>
                         <h4 className="font-bold text-lg">
                           {lang === "ar" ? "نوع الجولة" : "Type of Tour"}
@@ -448,10 +452,12 @@ const SingleTour = () => {
                   {/* Render Language if available */}
                   {data?.language?.[lang] && (
                     <div className="flex  gap-5 items-center">
-                      <img
+                      {/*   <img
                         src={languagesss}
                         className="w-[60px] h-[60px] object-cover"
-                      />
+                      />*/}
+                      <LuLanguages className="w-[60px] h-[60px]" />
+
                       <div>
                         <h4 className="font-bold text-lg">
                           {lang === "ar" ? "اللغة" : "Language"}

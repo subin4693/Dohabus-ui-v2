@@ -114,6 +114,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
     const getData = async () => {
       try {
         const data = await axios.get(BASE_URL + "/offerbanner/getactive");
+        console.log(data);
         setOffer(data.data);
       } catch (error) {
         console.log(error);
@@ -137,15 +138,29 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
               {console.log(offer)}
 
               <div className="flex gap-5 md:gap-20 items-center absolute right-0">
-                <Link
-                  to="/tours"
-                  className="bg-light text-dark hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold"
-                >
-                  <span className="hidden md:flex">Find Out More</span>
-                  <span className="md:hidden">
-                    <FaArrowRightLong />
-                  </span>
-                </Link>
+                {console.log("tour s")}
+                {console.log(offer[0]?.tourId[0])}
+                {offer[0]?.planId?.length == 1 ? (
+                  <Link
+                    to={`/tours/${offer[0]?.tourId[0]?.category}/${offer[0]?.tourId[0]?._id}`}
+                    className="bg-light text-dark hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold"
+                  >
+                    <span className="hidden md:flex">Find Out More</span>
+                    <span className="md:hidden">
+                      <FaArrowRightLong />
+                    </span>
+                  </Link>
+                ) : (
+                  <Link
+                    to={`/tours`}
+                    className="bg-light text-dark hover:bg-dark hover:text-white duration-300 py-1 px-2 rounded-3xl font-bold"
+                  >
+                    <span className="hidden md:flex">Find Out More</span>
+                    <span className="md:hidden">
+                      <FaArrowRightLong />
+                    </span>
+                  </Link>
+                )}
                 <h1
                   className="font-bold text-lg text-dark cursor-pointer"
                   onClick={handleClose}
