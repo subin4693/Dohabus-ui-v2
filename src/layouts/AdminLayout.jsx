@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, NavLink } from "react-router-dom";
 
 const AdminLayout = () => {
     const [activeMenu, setActiveMenu] = useState("dashboard"); // State to track active menu
@@ -26,9 +26,9 @@ const AdminLayout = () => {
                         See how your experiences are doing
                     </h5>
                 </div>
-                <div className="flex flex-wrap gap-2 lg:gap-4">
+                <div className="flex flex-wrap gap-2 lg:gap-4 w-full md:w-1/2">
                     {[
-                        { text: "dashboard", link: "/admin" },
+                        { text: "dashboard", link: "/admin/dashboard" },
                         { text: "categories", link: "/admin/categorys" },
                         { text: "plans", link: "/admin/tours" },
                         { text: "users", link: "/admin/users" },
@@ -61,19 +61,21 @@ const AdminLayout = () => {
                         //     link: "/admin/hotel-bookings",
                         // },
                     ].map((menu) => (
-                        <Link
+                        <NavLink
                             to={menu.link}
                             key={menu.text}
-                            className={`p-2 text-sm sm:text-base cursor-pointer ${
-                                activeMenu === menu.text
-                                    ? "bg-custom-yellow text-black"
-                                    : "text-gray"
-                            } rounded-lg transition-all duration-300`}
+                            className={({ isActive }) =>
+                                `p-2 text-sm sm:text-base cursor-pointer ${
+                                    isActive
+                                        ? "bg-custom-yellow text-black"
+                                        : "text-gray"
+                                } rounded-lg transition-all duration-300`
+                            }
                             onClick={() => handleMenuClick(menu.text)}
                         >
                             {menu.text.charAt(0).toUpperCase() +
                                 menu.text.slice(1)}
-                        </Link>
+                        </NavLink>
                     ))}
                 </div>
             </div>

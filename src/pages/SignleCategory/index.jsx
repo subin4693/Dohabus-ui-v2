@@ -303,7 +303,7 @@ const SignleCategory = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ amount: 0.2 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex flex-wrap gap-5 justify-center items-center mt-5"
+        className="flex flex-wrap gap-5 mx-2 justify-center items-center mt-5"
       >
         {tours.map(
           ({
