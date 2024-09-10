@@ -13,7 +13,6 @@ const Invoice = () => {
   const [data, setData] = useState([]);
   const [plan, setPlan] = useState([]);
   const [category, setCategory] = useState([]);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -147,6 +146,8 @@ const Invoice = () => {
               <div className="flex items-center justify-between mt-3 text-gray-500 font-semibold mb-5">
                 <div>
                   <h2 className="mt-2">Name</h2>
+                  <h2 className="mt-2">Add Ons</h2>
+                  
                   <h2 className="mt-2">Status</h2>
                   <h2 className="mt-2">Total</h2>
                 </div>
@@ -154,6 +155,19 @@ const Invoice = () => {
                   <h2 className="mt-2">
                     {data.firstName + " " + data.lastName}
                   </h2>
+                  <h2 className="mt-2">
+                    {data?.addonFeatures?.length > 0 ? (
+                      data.addonFeatures.map((addon, index) => (
+                        <span key={index}>
+                          {addon}
+                          {index < data.addonFeatures.length - 1 && ", "}
+                        </span>
+                      ))
+                    ) : (
+                      <span>No Add-ons</span>
+                    )}
+                  </h2>
+
                   <h2 className="mt-2">{data.status}</h2>
                   <h2 className="mt-2">{data.price} QAR</h2>
                 </div>
