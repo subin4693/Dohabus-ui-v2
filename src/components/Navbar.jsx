@@ -415,7 +415,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                   aria-controls="menu"
                   className="flex items-center relative"
                 >
-                  <div className="relative flex items-center">
+                  <div className="relative flex items-center ">
                     <BiCart size={35} />
                     {/*{cartItemCount > 0 && (
                     <span className="absolute top-0 right-0 bg-yellow-500 text-white text-lg font-semibold rounded-full w-6 h-6 flex items-center justify-center -mr-2 -mt-2">
@@ -438,14 +438,17 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                   aria-hidden="true"
                   className="bg-white shadow-xl border w-[50px] p-2 border-b-custom-yellow border-b-4 rounded-sm absolute left-0 top-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out origin-top min-w-32 text-black w-[250px] text-sm "
                 >
-                  <li className="px-3 py-1 hover:bg-gray-100 w-full">
+                  <li className="hover:bg-gray-100 w-full">
                     {user &&
                     (user.role === "admin" || user.role === "super-admin") ? (
-                      <Link to="/admin-cart" className="w-full">
+                      <Link
+                        to="/admin-cart"
+                        className="w-full block  px-3 py-1"
+                      >
                         {lang === "en" ? "Cart" : "عربة التسوق"}
                       </Link>
                     ) : (
-                      <Link to="/cart" className="w-full">
+                      <Link to="/cart" className="w-full block  px-3 py-1">
                         {lang === "en" ? "Cart" : "عربة التسوق"}
                       </Link>
                     )}
@@ -455,12 +458,15 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                     (user.role === "admin" || user.role === "super-admin") ? (
                       <Link
                         to="/admin-favourites"
-                        className="w-full  px-3 py-1"
+                        className="w-full  px-3 py-1 block"
                       >
                         {lang === "en" ? "Favourites" : "المفضلات"}
                       </Link>
                     ) : (
-                      <Link to="/favourites" className="w-full  px-3 py-1">
+                      <Link
+                        to="/favourites"
+                        className="w-full  px-3 py-1 block"
+                      >
                         {lang === "en" ? "Favourites" : "المفضلات"}
                       </Link>
                     )}

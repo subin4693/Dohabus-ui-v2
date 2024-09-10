@@ -631,6 +631,10 @@ const SingleTour = () => {
                             }`}
                             onClick={() => {
                               if (isAvailable) handleSession(sessionL);
+                              else
+                                toast.error(
+                                  "Tickets for this session are sold out.",
+                                );
                             }}
                           >
                             <BiTime className="w-[25px] h-[25px]" /> {sessionL}

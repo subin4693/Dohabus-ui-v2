@@ -1,26 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const WriteReview = ({ blogId, handleSubmit }) => {
+const WriteReview = ({ blogId, handleSubmit, lang }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [comment, setComment] = useState("");
     const [error, setError] = useState("");
 
     return (
-        <div className="bg-white p-6 rounded-md shadow-md">
-            <h3 className="text-lg font-bold mb-4">Write a Comment</h3>
+        <div
+            className="bg-white p-6 rounded-md shadow-md"
+            style={{
+                direction: lang === "ar" ? "rtl" : "ltr",
+            }}
+        >
+            {lang == "ar" ? "اكتب تعليق" : "Write a Comment"}
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    return handleSubmit(name, email, comment);
+                    handleSubmit(name, email, comment);
                 }}
             >
                 <div className="mb-4">
                     <input
                         type="text"
-                        placeholder="Name"
+                        placeholder={lang == "ar" ? "اسم" : "Name"}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -29,7 +34,9 @@ const WriteReview = ({ blogId, handleSubmit }) => {
                 <div className="mb-4">
                     <input
                         type="email"
-                        placeholder="Email"
+                        placeholder={
+                            lang == "ar" ? "البريد الإلكتروني" : "Email"
+                        }
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -37,18 +44,19 @@ const WriteReview = ({ blogId, handleSubmit }) => {
                 </div>
                 <div className="mb-4">
                     <textarea
-                        placeholder="Comment"
+                        placeholder={lang == "ar" ? "تعليق" : "Comment"}
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded"
                         rows="4"
                     />
                 </div>
+
                 <button
                     type="submit"
                     className="w-full p-2 bg-custom-yellow duration-300 hover:text-white hover:bg-dark text-black font-bold rounded"
                 >
-                    Submit Comment
+                    {lang == "ar" ? "إرسال التعليق" : "Submit Comment"}
                 </button>
             </form>
         </div>

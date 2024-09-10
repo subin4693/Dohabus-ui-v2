@@ -6,30 +6,12 @@ const CommentsList = ({ blogId, comments }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // useEffect(() => {
-    //     const fetchComments = async () => {
-    //         try {
-    //             const response = await axios.get(
-    //                 `${BASE_URL}/blogs/${blogId}/comments`,
-    //             );
-    //             // setComments(response.data.data.comments);
-    //         } catch (error) {
-    //             setError("Failed to fetch comments.");
-    //             console.error(error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchComments();
-    // }, [blogId]);
-
     if (loading) return <p>Loading comments...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
 
     return (
         <div className="bg-white p-6 rounded-md shadow-md my-6">
-            <h3 className="text-lg font-bold mb-4">Comments</h3>
+            <h3 className="text-lg font-bold mb-4">Comments / التعليقات</h3>
             {comments.length > 0 ? (
                 comments.map((comment) => (
                     <div
@@ -42,7 +24,10 @@ const CommentsList = ({ blogId, comments }) => {
                     </div>
                 ))
             ) : (
-                <p>No comments yet. Be the first to comment!</p>
+                <p>
+                    No comments yet. Be the first to comment! / لا توجد تعليقات
+                    حتى الآن. كن أول من يعلق!
+                </p>
             )}
         </div>
     );

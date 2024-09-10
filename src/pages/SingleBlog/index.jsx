@@ -168,6 +168,7 @@ const SingleBlog = () => {
                     <WriteReview
                         blogId={blog?._id}
                         handleSubmit={handleSubmit}
+                        lang={lang}
                     />
 
                     <ViewComments
@@ -182,14 +183,26 @@ const SingleBlog = () => {
                     <div className="mb-6">
                         <input
                             type="text"
-                            placeholder="Search..."
+                            placeholder={lang === "ar" ? "بحث..." : "Search..."}
                             className="w-full p-2 border border-gray-300 rounded"
+                            style={{
+                                direction: lang === "ar" ? "rtl" : "ltr",
+                            }}
                         />
                     </div>
 
                     {/* Recent Posts */}
                     <div className="recent-posts mb-6">
-                        <h3 className="text-lg font-bold mb-4">Recent Posts</h3>
+                        <h3
+                            className="text-lg font-bold mb-4"
+                            style={{
+                                direction: lang === "ar" ? "rtl" : "ltr", // Apply text direction based on the language
+                            }}
+                        >
+                            {lang === "ar"
+                                ? "المنشورات الأخيرة"
+                                : "Recent Posts"}
+                        </h3>
                         {recent?.map((post) => (
                             <Link
                                 to={`/blogs/${post?._id}`}
@@ -202,7 +215,7 @@ const SingleBlog = () => {
                                     className="w-16 h-16 object-cover rounded-md mr-4"
                                 />
                                 <div>
-                                    <h4 className="text-sm ">
+                                    <h4 className="text-sm">
                                         {post.plan?.title[lang]}
                                     </h4>
                                     <p className="text-xs text-gray-500">
@@ -218,17 +231,24 @@ const SingleBlog = () => {
 
                     {/* Categories */}
                     <div className="categories mb-6">
-                        <h3 className="text-lg font-bold mb-4">Categories</h3>
+                        <h3
+                            className="text-lg font-bold mb-4 "
+                            style={{
+                                direction: lang === "ar" ? "rtl" : "ltr", // Apply text direction based on the language
+                            }}
+                        >
+                            {lang === "ar" ? "الفئات" : "Categories"}
+                        </h3>
                         <ul className="flex flex-wrap gap-3 pl-2 text-sm text-gray-700">
                             {categorys.map((category) => (
                                 <li
                                     key={category._id}
-                                    className="border border-gray-200 px-3 py-2 rounded-md"
+                                    className="border border-gray-200 px-3 py-2 rounded-md cursor-pointer"
                                     onClick={() =>
                                         navigate(`/blogs?cat=${category._id}`)
                                     }
                                 >
-                                    {category?.title[lang]}
+                                    {category.title[lang]}
                                 </li>
                             ))}
                         </ul>
@@ -236,27 +256,44 @@ const SingleBlog = () => {
 
                     {/* Subscription Field */}
                     <div className="subscription mb-6">
-                        <h3 className="text-lg font-bold mb-4">
-                            Subscribe to Our Newsletter
+                        <h3
+                            className="text-lg font-bold mb-4"
+                            style={{
+                                direction: lang === "ar" ? "rtl" : "ltr", // Apply text direction based on the language
+                            }}
+                        >
+                            {lang === "ar"
+                                ? "اشترك في نشرتنا الإخبارية"
+                                : "Subscribe to Our Newsletter"}
                         </h3>
                         <form>
                             <input
                                 type="text"
                                 name="name"
-                                placeholder="Name"
+                                placeholder={lang === "ar" ? "الاسم" : "Name"}
                                 className="w-full p-2 mb-2 border border-gray-300 rounded"
+                                style={{
+                                    direction: lang === "ar" ? "rtl" : "ltr",
+                                }}
                             />
                             <input
                                 type="email"
                                 name="email"
-                                placeholder="Email"
+                                placeholder={
+                                    lang === "ar"
+                                        ? "البريد الإلكتروني"
+                                        : "Email"
+                                }
                                 className="w-full p-2 mb-2 border border-gray-300 rounded"
+                                style={{
+                                    direction: lang === "ar" ? "rtl" : "ltr",
+                                }}
                             />
                             <button
                                 type="submit"
                                 className="w-full p-2 bg-custom-yellow text-white font-bold rounded"
                             >
-                                Subscribe
+                                {lang === "ar" ? "اشترك" : "Subscribe"}
                             </button>
                         </form>
                     </div>
