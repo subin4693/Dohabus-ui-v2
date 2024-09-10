@@ -46,8 +46,8 @@ const Index = () => {
               .includes(searchQuery.toLowerCase()) ||
             (invoice.firstName + " " + invoice.lastName)
               .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-        )
+              .includes(searchQuery.toLowerCase()),
+        ),
       );
     }
   }, [searchQuery, data, lang]);
@@ -95,7 +95,7 @@ const Index = () => {
 
       const dateIssued = `Issued Date: ${new Date().toLocaleDateString(
         "en-GB",
-        { day: "numeric", month: "long", year: "numeric" }
+        { day: "numeric", month: "long", year: "numeric" },
       )}`;
       const invoiceNumber = `INVOICE#: ${invoice._id}`;
 
@@ -126,7 +126,7 @@ const Index = () => {
       pdf.text(
         `Name: ${invoice.firstName} ${invoice.lastName}`,
         borderWidth + 10,
-        65
+        65,
       );
       pdf.text(`Email: ${invoice.email}`, borderWidth + 10, 75);
 
@@ -216,7 +216,7 @@ const Index = () => {
           className="shadow-md px-2 py-1"
         />
       </div>
-      <div className="cards grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mt-10">
+      <div className="cards grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3   gap-5 mt-10">
         {filteredData.length > 0 ? (
           filteredData.map((invoice) => (
             <div
@@ -237,9 +237,7 @@ const Index = () => {
                 <h2 className="text-xl mt-1">
                   Name: {invoice.firstName + " " + invoice.lastName}
                 </h2>
-                <h2 className="text-xl mt-1">
-                  Email: {invoice.email}
-                </h2>
+                <h2 className="text-xl mt-1">Email: {invoice.email}</h2>
                 <h2 className="text-xl mt-1">
                   Guest: {invoice.adultQuantity + invoice.childQuantity}
                 </h2>
