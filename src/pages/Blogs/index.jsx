@@ -58,7 +58,7 @@ const Blogs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${BASE_URL}/subscribe/create`, {
+      const response = await axios.post(`${BASE_URL}/subscribe`, {
         name,
         email,
       });

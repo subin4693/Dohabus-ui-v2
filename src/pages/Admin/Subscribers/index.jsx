@@ -13,7 +13,7 @@ const Index = () => {
   useEffect(() => {
     const fetchSubscribers = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/subscribe/all`);
+        const response = await axios.get(`${BASE_URL}/subscribe`);
         setSubscribers(response.data.data.subscribers);
         setFilteredSubscribers(response.data.data.subscribers);
         console.log("subscribers", response.data.data.subscribers);
