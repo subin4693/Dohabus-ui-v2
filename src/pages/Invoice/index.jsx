@@ -200,7 +200,7 @@ const Invoice = () => {
           <div className="mt-5">
             <div className="border-2 p-3">
               <h1 className="font-semibold text-[1.2rem]">Booking Details</h1>
-              <div className="flex items-center justify-between mt-3 text-gray-500 font-semibold mb-5">
+              <div className="flex items-center justify-between mt-3  text-gray-500 font-semibold mb-5">
                 <div>
                   <h2 className="mt-2">Booked Day</h2>
                   <h2 className="mt-2">Guest</h2>
