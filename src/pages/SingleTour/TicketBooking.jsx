@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import Loader from "../../components/Loader";
 
 // Popup component for showing adultData and childData
 const DataPopup = ({
@@ -99,7 +100,10 @@ export default function TicketBooking({
   setAdultPrice,
   childPrice,
   setChildPrice,
+  loading
 }) {
+
+
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedAdult, setSelectedAdult] = useState(null);
   const [selectedChild, setSelectedChild] = useState(null);
@@ -260,9 +264,15 @@ export default function TicketBooking({
           <br />
           <button
             onClick={handleBooking}
-            className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300"
+            className="px-4 py-2 font-bold rounded-md bg-custom-yellow text-black hover:text-white hover:bg-black duration-300 flex items-center justify-center w-[150px]"
           >
-            {lang === "ar" ? "احجز الآن" : "Book Now"}
+            {loading ? (
+              <Loader />
+            ) : (
+              <div className="p-1">
+                {lang === "ar" ? "احجز الآن" : "Book Now"}
+              </div>
+            )}
           </button>
         </div>
       </div>

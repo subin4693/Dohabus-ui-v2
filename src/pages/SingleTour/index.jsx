@@ -57,6 +57,7 @@ const SingleTour = () => {
   const [canWriteReview, setCanWriteReview] = useState(false);
   const [session, setSession] = useState(null);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { user } = useSelector((state) => state.user);
   const { singletour } = useParams();
@@ -97,7 +98,7 @@ const SingleTour = () => {
 
   const handlePreviousImage = () => {
     setSelectedImage(
-      (prevIndex) => (prevIndex - 1 + album.length) % album.length,
+      (prevIndex) => (prevIndex - 1 + album.length) % album.length
     );
   };
   const handleTicketCountChange = (type, isIncrement) => {
@@ -141,7 +142,7 @@ const SingleTour = () => {
 
         // Calculate new total price based on the updated adult price
         setTotalPrice(
-          (prev) => newCount * foundPrice + childCount * data.childPrice,
+          (prev) => newCount * foundPrice + childCount * data.childPrice
         );
       }
     } else if (type === "child") {
@@ -186,7 +187,7 @@ const SingleTour = () => {
 
         // Calculate new total price based on the updated child price
         setTotalPrice(
-          (prev) => adultCount * data.adultPrice + newCount * foundPrice,
+          (prev) => adultCount * data.adultPrice + newCount * foundPrice
         );
       }
     }
@@ -206,8 +207,8 @@ const SingleTour = () => {
       Date.UTC(
         localDate.getFullYear(),
         localDate.getMonth(),
-        localDate.getDate(),
-      ),
+        localDate.getDate()
+      )
     );
 
     return utcDate.toISOString();
@@ -232,7 +233,7 @@ const SingleTour = () => {
         newReview,
         {
           withCredentials: true,
-        },
+        }
       );
       const revvv = res.data.data.populatedReview;
       console.log(res.data);
@@ -265,12 +266,15 @@ const SingleTour = () => {
   };
 
   const handleBooking = () => {
+    setLoading(true);
     if (!selectedDate || !session) {
+      setLoading(false);
       toast.error("Please select data and sessoin before proceeding!");
       return;
     }
 
     if (!adultCount && !childCount) {
+      setLoading(false);
       toast.error("Please fill all the booking fields before proceeding!");
       return;
     }
@@ -290,6 +294,8 @@ const SingleTour = () => {
           .join(",");
         query += `&addOns=${addOnValues}`; // Add add-on values to the query
       }
+
+      setLoading(false);
       return navigate(`/checkout/${data._id}?${query}`);
     }
 
@@ -328,7 +334,7 @@ const SingleTour = () => {
           newReview,
           {
             withCredentials: true,
-          },
+          }
         );
 
         setSessionStatus({});
@@ -632,14 +638,14 @@ const SingleTour = () => {
                               isSelected
                                 ? "bg-yellow-500" // Highlight selected session with yellow
                                 : isAvailable
-                                  ? "bg-green-500" // Green for available sessions
-                                  : "bg-red-500" // Red for unavailable sessions
+                                ? "bg-green-500" // Green for available sessions
+                                : "bg-red-500" // Red for unavailable sessions
                             }`}
                             onClick={() => {
                               if (isAvailable) handleSession(sessionL);
                               else
                                 toast.error(
-                                  "Tickets for this session are sold out.",
+                                  "Tickets for this session are sold out."
                                 );
                             }}
                           >
@@ -686,6 +692,7 @@ const SingleTour = () => {
               setSelectedChildData={setSelectedChildData}
               addOnTotalCost={addOnTotalCost}
               handleBooking={handleBooking}
+              loading={loading}
               adultPrice={adultPrice}
               setAdultPrice={setAdultPrice}
               childPrice={childPrice}
