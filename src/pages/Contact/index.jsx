@@ -10,117 +10,7 @@ const Contact = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const lang = useSelector((state) => state.language.lang);
   const [datas, setDatas] = useState([]);
-  const locations = [
-    {
-      id: 1,
-      title: {
-        en: "IDoha Bus Head Office",
-        ar: "مكتب حافلات إيدوها",
-      },
-      times: [
-        {
-          day: { en: "Sun to Thu", ar: "من الأحد إلى الخميس" },
-          hours: { en: "8:00 AM - 5:00 PM", ar: "8:00 ص - 5:00 م" },
-        },
-        {
-          day: { en: "Sat", ar: "السبت" },
-          hours: { en: "8:00 AM - 2:00 PM", ar: "8:00 ص - 2:00 م" },
-        },
-        {
-          day: { en: "Fri", ar: "الجمعة" },
-          hours: { en: "CLOSED", ar: "مغلق" },
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: {
-        en: "Souq Waqif Kiosk",
-        ar: "كشك سوق واقف",
-      },
-      times: [
-        {
-          day: { en: "Daily", ar: "يوميًا" },
-          hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: {
-        en: "National Museum Kiosk",
-        ar: "كشك المتحف الوطني",
-      },
-      times: [
-        {
-          day: { en: "Daily", ar: "يوميًا" },
-          hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: {
-        en: "Sheraton Hotel Park Kiosk",
-        ar: "كشك منتزه فندق شيراتون",
-      },
-      times: [
-        {
-          day: { en: "Daily", ar: "يوميًا" },
-          hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
-        },
-      ],
-    },
-    {
-      id: 5,
-      title: {
-        en: "Katara Cultural Village Kiosk",
-        ar: "كشك قرية كتارا الثقافية",
-      },
-      times: [
-        {
-          day: { en: "Daily", ar: "يوميًا" },
-          hours: { en: "10:00 AM - 5:00 PM", ar: "10:00 ص - 5:00 م" },
-        },
-      ],
-    },
-    {
-      id: 6,
-      title: {
-        en: "Sealine Kiosk",
-        ar: "كشك سيلين",
-      },
-      times: [
-        {
-          day: { en: "Daily", ar: "يوميًا" },
-          hours: { en: "9:00 AM - 5:00 PM", ar: "9:00 ص - 5:00 م" },
-        },
-      ],
-    },
-    {
-      id: 7,
-      title: {
-        en: "Al Majles Resort",
-        ar: "منتجع المجلس",
-      },
-      times: [
-        {
-          day: {
-            en: "Saturday to Wednesday",
-            ar: "من السبت إلى الأربعاء",
-          },
-          hours: { en: "9:00 AM - 7:00 PM", ar: "9:00 ص - 7:00 م" },
-        },
-        {
-          day: { en: "Thursday & Friday", ar: "الخميس والجمعة" },
-          hours: {
-            en: "10:00 AM - 12:00 AM",
-            ar: "10:00 ص - 12:00 ص",
-          },
-        },
-      ],
-    },
-  ];
+
   const texts = {
     en: {
       heading: "How can we help?",
@@ -253,7 +143,14 @@ const Contact = () => {
             </div>
           ))}
         </div>
-        <div className="px-5 w-[600px]">
+      </div>
+      <div className="flex justify-center items-center mt-10">
+        <div className="px-5 w-[99vw] md:w-[70vw] ">
+          {" "}
+          <h2 className="text-3xl font-bold text-center mb-4">
+            {lang == "ar" ? "موقعنا" : "Our Location"}
+          </h2>{" "}
+          {/* Add your heading here */}
           <Map />
         </div>
       </div>
