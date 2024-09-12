@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 
-const Loader = () => {
+const Loader = ({ w, h, b }) => {
   return (
     <div className="loader-container flex justify-center">
       <motion.div
@@ -12,7 +12,7 @@ const Loader = () => {
           repeatType: "loop", // Loop the animation
           ease: "linear", // Linear easing for smooth rotation
         }}
-        className="w-[50px] h-[50px]"
+        className={`w-[${w}px] h-[${h}px]`}
       >
         <motion.div
           animate={{ rotate: 360 }}
@@ -22,8 +22,11 @@ const Loader = () => {
             repeatType: "loop", // Loop the animation
             // Linear easing for smooth rotation
           }}
-          className="w-[50px] h-[50px] rounded-full "
-          style={{ border: "10px solid white", borderTop: "10px solid yellow" }}
+          className={`w-[${w}px] h-[${h}px] rounded-full`}
+          style={{
+            border: `${b}px solid white`,
+            borderTop: `${b}px solid #45474B`,
+          }}
         ></motion.div>
       </motion.div>
     </div>

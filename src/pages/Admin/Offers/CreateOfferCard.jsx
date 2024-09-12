@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import Loader from "../../../components/Loader";
 
-const CreateOffer = ({ closeModal, plans, handleSubmit }) => {
+const CreateOffer = ({ closeModal, plans, handleSubmit, loading }) => {
 	// State for form fields
 	const [couponCode, setCouponCode] = useState("");
 	const [startingDate, setStartingDate] = useState("");
@@ -199,7 +200,13 @@ const CreateOffer = ({ closeModal, plans, handleSubmit }) => {
 						type="submit"
 						className="bg-blue-500 text-white px-4 py-2 rounded"
 					>
-						Save Offer
+						  {loading ? (
+                      <div className="">
+                        <Loader w={20} h={20} b={5} />
+                      </div>
+                    ) : (
+                      "Save Offer"
+                    )}
 					</button>
 				</div>
 			</form>

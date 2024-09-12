@@ -124,12 +124,12 @@ const Signin = () => {
         <button
           type="button"
           onClick={handleSignin}
-          className="w-full mt-10 py-2 bg-custom-yellow hover:bg-black hover:text-white duration-300 rounded-lg relative"
+          className="w-full mt-10 py-2 bg-custom-yellow duration-300 rounded-lg relative"
           disabled={loading} // Disable button while loading
         >
           {loading ? (
             <div className="">
-              <Loader />
+              <Loader w={50} h={50} b={10} />
             </div>
           ) : (
             "Login"

@@ -10,6 +10,8 @@ const Offers = () => {
     const [plans, setPlans] = useState([]);
     const [offers, setOffers] = useState([]);
     const mainUser = useSelector((state) => state.user.user);
+    const [loading, setLoading] = useState(false);
+
 
     const handleStatus = async (id) => {
         if (mainUser.role !== "super-admin") return;
@@ -37,6 +39,7 @@ const Offers = () => {
         adultDiscountPrice,
         selectedPlan,
     ) => {
+        setLoading(true)
         if (mainUser.role !== "super-admin") return;
 
         try {
@@ -54,7 +57,11 @@ const Offers = () => {
 
             setOffers((prev) => [...prev, ...res.data.data.offers]);
             setIsOpen(false);
+            setLoading(false)
+
         } catch (err) {
+            setLoading(false)
+
             console.log(err);
         }
     };
@@ -108,6 +115,7 @@ const Offers = () => {
                             closeModal={() => setIsOpen(false)}
                             plans={plans}
                             handleSubmit={handleSubmit}
+                            loading={loading}
                         />
                     </div>
                 </div>

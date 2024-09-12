@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
 import { toast } from "react-toastify";
+import Loader from "../../../components/Loader";
 
 const Transportation = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Ensure BASE_URL is set properly
@@ -20,6 +21,7 @@ const Transportation = () => {
   const [file, setFile] = useState(null);
   const [transportations, setTransportations] = useState([]);
   const mainUser = useSelector((state) => state.user.user);
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     console.log("Working IMG");
@@ -30,6 +32,7 @@ const Transportation = () => {
   };
 
   const handleCreate = async (isEdit) => {
+    setLoading(true)
     try {
       let updatedFleet;
       if (isEdit) {
@@ -43,19 +46,23 @@ const Transportation = () => {
             luggage,
             other,
             coverImage: image,
-          },
+          }
         );
         updatedFleet = res.data.data.transportation;
 
         // Update the fleet in the state
         setTransportations((prevTransportations) =>
           prevTransportations.map((fleet) =>
-            fleet._id === updatedFleet._id ? updatedFleet : fleet,
-          ),
+            fleet._id === updatedFleet._id ? updatedFleet : fleet
+          )
         );
 
         toast.success("Transportation fleet updated");
+        setLoading(false)
+
       } else {
+       
+
         // Create a new transportation fleet
         // if (!file) {
         //   return toast.warn("Please select an image");
@@ -82,11 +89,13 @@ const Transportation = () => {
         ]);
 
         toast.success("New transportation fleet created");
+        setLoading(false)
       }
+      
 
       // Close the modal or form
       setIsOpen(false);
-
+      setLoading(false)
       // Reset form fields
       setTitle({ en: "", ar: "" });
       setType({ en: "", ar: "" });
@@ -96,6 +105,7 @@ const Transportation = () => {
       setImage(null);
       setSelectedData(null);
     } catch (error) {
+      setLoading(false)
       toast.error("Something went wrong. Please try again later");
     }
   };
@@ -158,8 +168,8 @@ const Transportation = () => {
       // Update the fleet in the state
       setTransportations((prevTransportations) =>
         prevTransportations.map((fleet) =>
-          fleet._id === updatedFleet._id ? updatedFleet : fleet,
-        ),
+          fleet._id === updatedFleet._id ? updatedFleet : fleet
+        )
       );
     } catch (error) {
       toast.error("Something went wrong. Please try again later");
@@ -329,7 +339,21 @@ const Transportation = () => {
                   onClick={() => handleCreate(selectedData !== null)}
                   className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
                 >
-                  {selectedData ? "Update" : "Create"}
+                  {selectedData ? (
+                    loading ? (
+                      <div className="">
+                        <Loader w={20} h={20} b={5} />
+                      </div>
+                    ) : (
+                      "Update"
+                    )
+                  ) : loading ? (
+                    <div className="">
+                      <Loader w={20} h={20} b={5} />
+                    </div>
+                  ) : (
+                    "Create"
+                  )}
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}

@@ -27,7 +27,6 @@ const Signup = () => {
       ) {
         setLoading(false);
         toast.error(" Enter valid credentials ", {
-
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -162,12 +161,12 @@ const Signup = () => {
         <button
           type="button"
           onClick={handleSignup}
-          className="w-full mt-10 py-2 bg-custom-yellow hover:bg-black hover:text-white duration-300 rounded-lg relative"
+          className="w-full mt-10 py-2 bg-custom-yellow duration-300 rounded-lg relative"
           disabled={loading} // Disable button while loading
         >
           {loading ? (
             <div className="">
-              <Loader />
+              <Loader w={50} h={50} b={10}/>
             </div>
           ) : (
             "Signup"

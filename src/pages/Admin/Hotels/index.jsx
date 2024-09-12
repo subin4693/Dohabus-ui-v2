@@ -6,6 +6,7 @@ import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import Loader from "../../../components/Loader";
 
 const CreateCategory = () => {
   const mainUser = useSelector((state) => state.user.user);
@@ -18,6 +19,7 @@ const CreateCategory = () => {
   const [description, setDescription] = useState({ en: "", ar: "" });
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -27,8 +29,10 @@ const CreateCategory = () => {
   };
 
   const handleCreate = async (isEdit) => {
+    setLoading(true)
     if (mainUser.role !== "super-admin") return;
     try {
+
       let updatedCategory;
       if (isEdit) {
         // Edit an existing category
@@ -59,6 +63,7 @@ const CreateCategory = () => {
           progress: undefined,
           theme: "dark",
         });
+        setLoading(false)
       } else {
         // Create a new category
         const res = await axios.post(`${BASE_URL}/hotels`, {
@@ -98,7 +103,11 @@ const CreateCategory = () => {
         progress: undefined,
         theme: "dark",
       });
+      setLoading(false)
+
     } catch (error) {
+      setLoading(false)
+
       console.error(error);
 
       toast.error("Some error occurred", {
@@ -261,14 +270,26 @@ const CreateCategory = () => {
                     className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
                     onClick={() => handleCreate(true)}
                   >
-                    Update
+                    {loading ? (
+                      <div className="">
+                        <Loader w={20} h={20} b={5} />
+                      </div>
+                    ) : (
+                      "Update"
+                    )}
                   </button>
                 ) : (
                   <button
                     className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
                     onClick={() => handleCreate(false)}
                   >
-                    Create
+                     {loading ? (
+                      <div className="">
+                        <Loader w={20} h={20} b={5} />
+                      </div>
+                    ) : (
+                      "Create"
+                    )}
                   </button>
                 )}
               </div>
