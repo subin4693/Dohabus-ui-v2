@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import logo from "../../assets/DOHA Bus Logo YB large.png";
+import Loader from "../../components/Loader";
 
 const Invoice = () => {
   const lang = useSelector((state) => state.language.lang);
@@ -14,6 +15,7 @@ const Invoice = () => {
   const [data, setData] = useState([]);
   const [plan, setPlan] = useState([]);
   const [category, setCategory] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +34,7 @@ const Invoice = () => {
   }, [BASE_URL, id]);
 
   const generatePDF = () => {
+    setLoading(true);
     const invoiceElement = document.getElementById("invoice");
 
     html2canvas(invoiceElement).then((canvas) => {
@@ -159,6 +162,7 @@ const Invoice = () => {
         const logoY = pdfHeight - logoHeight - 12;
 
         pdf.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
+        setLoading(false);
 
         pdf.save("invoice.pdf");
       };
@@ -254,7 +258,13 @@ const Invoice = () => {
                 onClick={generatePDF}
                 className="mt-5 bg-custom-yellow p-3 text-xl font-semibold w-[200px]"
               >
-                Download Invoice
+                {loading ? (
+                  <div className="">
+                    <Loader w={50} h={50} b={10} />
+                  </div>
+                ) : (
+                  "Download Invoice"
+                )}
               </button>
             </div>
           </div>
