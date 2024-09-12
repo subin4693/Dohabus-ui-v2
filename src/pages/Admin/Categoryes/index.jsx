@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
 import { toast } from "react-toastify";
+import Loader from "../../../components/Loader";
 
 const CreateCategory = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -17,6 +18,7 @@ const CreateCategory = () => {
     const [description, setDescription] = useState({ en: "", ar: "" });
     const [file, setFile] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -27,6 +29,7 @@ const CreateCategory = () => {
 
     const handleCreate = async (isEdit) => {
         try {
+            setLoading(true);
             let updatedCategory;
             if (isEdit) {
                 // Edit an existing category
@@ -36,7 +39,7 @@ const CreateCategory = () => {
                         title,
                         description,
                         coverImage: image,
-                    },
+                    }
                 );
                 updatedCategory = res.data.data.category;
                 console.log(updatedCategory);
@@ -46,11 +49,12 @@ const CreateCategory = () => {
                     prevCategories.map((category) =>
                         category._id === updatedCategory._id
                             ? updatedCategory
-                            : category,
-                    ),
+                            : category
+                    )
                 );
-
-                toast.success("New category created ", {
+                setLoading(false);
+                setIsOpen(false);
+                return toast.success("Category edited ", {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -78,7 +82,7 @@ const CreateCategory = () => {
             }
 
             // Log the creation/update
-            toast.success("Category edited ", {
+            toast.success("New category created ", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -88,6 +92,7 @@ const CreateCategory = () => {
                 progress: undefined,
                 theme: "dark",
             });
+            setLoading(false);
             // Close the modal or form
             setIsOpen(false);
 
@@ -97,6 +102,7 @@ const CreateCategory = () => {
             setImage(null);
             setSelectedData(null);
         } catch (error) {
+            setLoading(false);
             console.error(error);
             toast.error("Something went wrong. Please try again later", {
                 position: "top-right",
@@ -108,6 +114,8 @@ const CreateCategory = () => {
                 progress: undefined,
                 theme: "dark",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -130,6 +138,7 @@ const CreateCategory = () => {
         setIsOpen((prev) => !prev);
     };
     const { progress, error, downloadURL } = useFirebaseUpload(file);
+
     useEffect(() => {
         if (downloadURL) {
             setImage(downloadURL); // Update formData with the Firebase download URL
@@ -249,19 +258,41 @@ const CreateCategory = () => {
                                 </button>
 
                                 {selectedData ? (
-                                    <button
-                                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
-                                        onClick={() => handleCreate(true)}
-                                    >
-                                        Update
-                                    </button>
+                                    <>
+                                        {(progress > 1 && progress < 100) ||
+                                        loading ? (
+                                            <button className="px-8 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white">
+                                                <Loader />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                                                onClick={() =>
+                                                    handleCreate(true)
+                                                }
+                                            >
+                                                Update
+                                            </button>
+                                        )}
+                                    </>
                                 ) : (
-                                    <button
-                                        className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
-                                        onClick={() => handleCreate(false)}
-                                    >
-                                        Create
-                                    </button>
+                                    <>
+                                        {(progress > 1 && progress < 100) ||
+                                        loading ? (
+                                            <button className="px-8 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white">
+                                                <Loader />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                                                onClick={() =>
+                                                    handleCreate(false)
+                                                }
+                                            >
+                                                Create
+                                            </button>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>

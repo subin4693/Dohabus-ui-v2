@@ -80,7 +80,7 @@ const UserCard = ({
                                     user._id,
                                     user.role === "super-admin"
                                         ? "admin"
-                                        : "user",
+                                        : "user"
                                 )
                             }
                             className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
@@ -92,14 +92,14 @@ const UserCard = ({
                 )}
 
                 {/* Buttons for Admin */}
-                {currentUserRole === "admin" && user.role === "user" && (
+                {/* {currentUserRole === "admin" && user.role === "user" && (
                     <button
                         onClick={() => onPromote(user._id, "admin")}
                         className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
                     >
                         Promote to Admin
                     </button>
-                )}
+                )} */}
                 {currentUserRole === "super-admin" &&
                     user.role === "super-admin" && (
                         <button
