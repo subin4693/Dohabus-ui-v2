@@ -2,13 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import jsPDF from "jspdf";
-import 'jspdf-autotable'; // Add this for table support
+import "jspdf-autotable"; // Add this for table support
+import Loader from "../../../components/Loader";
 
 const Index = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [subscribers, setSubscribers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSubscribers, setFilteredSubscribers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSubscribers = async () => {
@@ -40,16 +42,18 @@ const Index = () => {
   };
 
   const handleDownload = () => {
+    setLoading(true);
     const doc = new jsPDF();
     doc.text("Subscribers List", 10, 10);
-    
+
     const tableColumn = ["Name", "Email"];
-    const tableRows = filteredSubscribers.map(subscriber => [
+    const tableRows = filteredSubscribers.map((subscriber) => [
       subscriber.name,
-      subscriber.email
+      subscriber.email,
     ]);
 
     doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    setLoading(false);
     doc.save("subscribers.pdf");
   };
 
@@ -65,9 +69,15 @@ const Index = () => {
         />
         <button
           onClick={handleDownload}
-          className="border p-3 w-[200px] text-xl font-semibold bg-custom-yellow rounded-xl"
+          className="border p-2 w-[200px] text-xl font-semibold bg-custom-yellow rounded-xl"
         >
-          Download
+          {loading ? (
+            <div className="">
+              <Loader w={50} h={50} b={10} />
+            </div>
+          ) : (
+            "Download"
+          )}
         </button>
       </div>
       <div className="flex flex-wrap gap-5 justify-center items-center mt-5">

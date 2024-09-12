@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FaTrashAlt } from "react-icons/fa";
+import Loader from "../../../components/Loader";
 
 const Index = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -14,6 +15,7 @@ const Index = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
   const lang = useSelector((state) => state.language.lang);
   const user = useSelector((state) => state.user.user);
+  const [loading, setLoading] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
@@ -30,6 +32,7 @@ const Index = () => {
   };
 
   const handleInputChange = (e) => {
+    
     const { name, value } = e.target;
     if (name === "title") setTitle(value);
     if (name === "titleAr") setTitleAr(value);
@@ -38,6 +41,7 @@ const Index = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true)
     console.log("Button clicked"); // Debug log
     try {
       const payload = {
@@ -57,11 +61,14 @@ const Index = () => {
 
       console.log("Response:", response.data);
       closeModal();
-      fetchOffers(); // Fetch offers again to update the list
+      fetchOffers(); 
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
+
       console.error(
         "Error creating offer banner:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
     }
   };
@@ -76,7 +83,7 @@ const Index = () => {
     } catch (error) {
       console.error(
         "Error fetching offers:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
     }
   };
@@ -92,13 +99,13 @@ const Index = () => {
         { status: newStatus },
         {
           withCredentials: true,
-        },
+        }
       );
       fetchOffers(); // Refresh the list to reflect the updated status
     } catch (error) {
       console.error(
         "Error updating status:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
     }
   };
@@ -112,7 +119,7 @@ const Index = () => {
     } catch (error) {
       console.error(
         "Error deleting offer:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
     }
   };
@@ -128,7 +135,7 @@ const Index = () => {
       } catch (error) {
         console.error(
           "Error fetching plans:",
-          error.response ? error.response.data : error.message,
+          error.response ? error.response.data : error.message
         );
       }
     };
@@ -208,7 +215,13 @@ const Index = () => {
                 onClick={handleSubmit}
                 className="px-4 py-2 bg-green-600 text-white rounded mt-3"
               >
-                Add
+                {loading ? (
+                  <div className="">
+                    <Loader w={50} h={50} b={12} />
+                  </div>
+                ) : (
+                  "Add"
+                )}
               </button>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import logo from "../../../assets/DOHA Bus Logo YB large.png";
+import Loader from "../../../components/Loader";
 
 const Index = () => {
   const lang = useSelector((state) => state.language.lang);
@@ -14,7 +15,7 @@ const Index = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-
+  const [loadingInvoice, setLoadingInvoice] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,8 +47,8 @@ const Index = () => {
               .includes(searchQuery.toLowerCase()) ||
             (invoice.firstName + " " + invoice.lastName)
               .toLowerCase()
-              .includes(searchQuery.toLowerCase()),
-        ),
+              .includes(searchQuery.toLowerCase())
+        )
       );
     }
   }, [searchQuery, data, lang]);
@@ -72,6 +73,7 @@ const Index = () => {
   // };
 
   const generatePDF = (invoice) => {
+    setLoadingInvoice((prevState) => ({ ...prevState, [invoice._id]: true }));
     const invoiceElement = document.getElementById("invoice");
 
     html2canvas(invoiceElement).then((canvas) => {
@@ -95,7 +97,7 @@ const Index = () => {
 
       const dateIssued = `Issued Date: ${new Date().toLocaleDateString(
         "en-GB",
-        { day: "numeric", month: "long", year: "numeric" },
+        { day: "numeric", month: "long", year: "numeric" }
       )}`;
       const invoiceNumber = `INVOICE#: ${invoice._id}`;
 
@@ -126,7 +128,7 @@ const Index = () => {
       pdf.text(
         `Name: ${invoice.firstName} ${invoice.lastName}`,
         borderWidth + 10,
-        65,
+        65
       );
       pdf.text(`Email: ${invoice.email}`, borderWidth + 10, 75);
 
@@ -199,7 +201,10 @@ const Index = () => {
         const logoY = pdfHeight - logoHeight - 12;
 
         pdf.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
-
+        setLoadingInvoice((prevState) => ({
+          ...prevState,
+          [invoice._id]: false,
+        }));
         pdf.save("invoice.pdf");
       };
     });
@@ -248,7 +253,13 @@ const Index = () => {
                 onClick={() => generatePDF(invoice)}
                 className="mt-16 w-full p-1 border rounded-md hover:bg-dark hover:text-white duration-300 bg-custom-yellow text-xl "
               >
-                Download
+                {loadingInvoice[invoice._id] ? (
+                  <div>
+                    <Loader w={50} h={50} b={10} />
+                  </div>
+                ) : (
+                  "Download"
+                )}
               </button>
             </div>
           ))

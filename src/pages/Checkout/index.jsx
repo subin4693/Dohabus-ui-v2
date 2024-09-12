@@ -503,9 +503,9 @@ const Checkout = () => {
               className="py-2 w-full bg-custom-yellow duration-300 mt-4 rounded-md"
               onClick={handleTicketBooking}
             >
-              {!loading ? (
+              {loading ? (
                 <div className="">
-                  <Loader w={20} h={20} b={5} />
+                  <Loader w={50} h={50} b={10} />
                 </div>
               ) : (
                 "Complete booking"
