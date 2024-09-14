@@ -32,13 +32,16 @@ const Footer = () => {
   // const album = [album1, album2, album3, album4, album5, album6];
 
   const [album, setAlbum] = useState([]);
+  const [awards, setAwards] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const data = await axios.get(BASE_URL + "/footer");
+        const award = await axios.get(`${BASE_URL}/award`);
         console.log(data?.data?.images);
         setAlbum(data?.data?.images);
+        setAwards(award.data.images || []);
       } catch (error) {
         console.log(error);
       }
@@ -49,7 +52,7 @@ const Footer = () => {
   const getPreviousIndex = (currentIndex, length) => {
     return currentIndex === 0 ? length - 1 : currentIndex - 1;
   };
-
+  console.log("AWARDS", awards);
   const getNextIndex = (currentIndex, length) => {
     return currentIndex === length - 1 ? 0 : currentIndex + 1;
   };
@@ -205,13 +208,12 @@ const Footer = () => {
                   <FaYoutube size={20} />
                 </Link>
               </div>{" "}
-              <div className="gap-5 flex">
-                <div className="w-[90px]">
-                  <img src={aboutmd1} alt="" />
-                </div>
-                <div className="w-[90px]">
-                  <img src={aboutmd1} alt="" />
-                </div>
+              <div className="gap-5 flex items-center">
+                {awards?.map((award, index) => (
+                  <div key={index} className="w-[90px]">
+                    <img src={award.image} alt={`Award ${index + 1}`} />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
