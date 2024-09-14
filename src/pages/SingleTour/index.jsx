@@ -537,42 +537,51 @@ const SingleTour = () => {
                   <ul>
                     {data?.itinerary &&
                       data?.itinerary?.map((item, index) => {
-                        if (index == data?.itinerary.length - 2 || index == 1)
+                        if (item.en.charAt(0) == "#") {
+                          let paddingImg = "";
+                          if (data.itinerary.length > 1 && index == 0)
+                            paddingImg = "pb-[90px]";
+                          else if (
+                            data.itinerary.length > 1 &&
+                            index == data?.itinerary.length - 1
+                          )
+                            paddingImg = "pt-[90px]";
+                          else paddingImg = "pb-[90px] pt-[90px]";
+
+                          if (data.itinerary.length <= 1) paddingImg = "";
+
                           return (
                             <li
-                              className={` ${
-                                index == data?.itinerary.length - 1
-                                  ? "pt-[90px]"
-                                  : "pb-[90px]"
-                              }   border-l border-l-4   border-dashed border-black flex  items-center relative`}
+                              className={` ${paddingImg}   border-l border-l-4 group  border-dashed border-black flex  items-center relative`}
                             >
                               <DiscImage />
-                              <span className="pl-10">{item[lang]}</span>
+                              <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
+                                {item[lang]}
+                              </span>
                             </li>
                           );
-
+                        }
+                        let padding = "";
+                        if (data?.itinerary[index + 1]?.en.charAt(0) == "#")
+                          padding = "pb-0";
+                        else padding = "pb-[90px]";
                         return (
                           <li
-                            className={`${
+                            className={`group ${
                               index == data?.itinerary.length - 1
                                 ? " pb-0 "
-                                : " pb-[90px] "
+                                : padding
                             }  
-                                                        ${
-                                                          index == 0 ||
-                                                          index ==
-                                                            data?.itinerary
-                                                              .length -
-                                                              3
-                                                            ? " border-dashed  "
-                                                            : "border-solid "
-                                                        }  
-            
-            
-                                                         border-l border-l-4   border-solid border-black flex  items-center relative`}
+                         
+                          
+                        "border-solid "
+                        
+             border-l border-l-4   border-solid border-black flex  items-center relative`}
                           >
                             <Disc />
-                            <span className="pl-10">{item[lang]}</span>
+                            <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
+                              {item[lang]}
+                            </span>
                           </li>
                         );
                       })}
