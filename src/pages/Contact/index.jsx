@@ -24,7 +24,7 @@ const Contact = () => {
       },
       terms: "I agree with your terms & conditions.",
       button: "Send Message",
-      faq: "Do you have doubts? F&Q",
+      faq: "Do you have doubts? FAQ",
     },
     ar: {
       heading: "كيف يمكننا مساعدتك؟",
@@ -149,7 +149,7 @@ const Contact = () => {
           <div className="px-5 w-[600px]">
             {" "}
             <h2 className="text-3xl font-bold text-center">
-              {lang == "ar" ? "موقعنا" : "Our Location"}
+              {lang == "ar" ? "موقعنا" : "Our Locations"}
             </h2>{" "}
             {/* Add your heading here */}
             <Map />
