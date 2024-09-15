@@ -574,7 +574,7 @@ const SingleTour = () => {
                             }  
                          
                           
-                        "border-solid "
+                        border-solid 
                         
              border-l border-l-4   border-solid border-black flex  items-center relative`}
                           >

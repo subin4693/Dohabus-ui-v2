@@ -15,9 +15,9 @@ const index = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const categoryData = await axios.get(BASE_URL + "/categorys");
+        const categoryData = await axios.get(BASE_URL + "/couries");
         const toursData = await axios.get(BASE_URL + "/plans");
-        setCategories(categoryData?.data?.data?.categories);
+        setCategories(categoryData?.data?.data?.courise);
         setTours(toursData?.data?.data?.plans);
       } catch (error) {
         console.log(error);
@@ -31,13 +31,13 @@ const index = () => {
 
   const prevSlide = () => {
     setCurrentSlide((prev) =>
-      prev === 0 ? Math.ceil(categories.length / itemsPerSlide) - 1 : prev - 1,
+      prev === 0 ? Math.ceil(categories.length / itemsPerSlide) - 1 : prev - 1
     );
   };
 
   const nextSlide = () => {
     setCurrentSlide((prev) =>
-      prev === Math.ceil(categories.length / itemsPerSlide) - 1 ? 0 : prev + 1,
+      prev === Math.ceil(categories.length / itemsPerSlide) - 1 ? 0 : prev + 1
     );
   };
   return (
@@ -146,14 +146,14 @@ const index = () => {
                   {categories
                     .slice(
                       slideIndex * itemsPerSlide,
-                      slideIndex * itemsPerSlide + itemsPerSlide,
+                      slideIndex * itemsPerSlide + itemsPerSlide
                     )
                     .map((slide) => (
                       <div
                         key={slide.id}
                         className="card w-full md:w-[25%] h-[300px] flex justify-center flex-col items-center"
                       >
-                        <Link to={`/tours/${slide._id}`}>
+                        <Link to={`/contact`}>
                           <img
                             className="w-[120px] h-[120px] sm:w-[200px] sm:h-[200px] rounded-full object-cover cursor-pointer transform transition-all duration-300 ease-in-out hover:w-[140px] hover:h-[140px] sm:hover:w-[190px] sm:hover:h-[190px]"
                             src={slide.coverImage}

@@ -87,7 +87,7 @@ const Footer = () => {
     <>
       <div className="bg-yellow-400 p-1 md:px-20 flex flex-col justify-center items-center ">
         <div>
-          <div className=" flex flex-wrap  w-[95vw] sm:w-[80vw] justify-between    gap-10 place-items-start text-dark ">
+          <div className=" flex flex-wrap  w-[95vw] sm:w-[80vw] justify-between items-center gap-10 place-items-start text-dark ">
             {/* Useful Pages Section */}
             <div className="space-y-5 mt-5">
               <h2 className="text-2xl font-bold">

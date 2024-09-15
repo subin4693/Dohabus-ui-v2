@@ -24,7 +24,7 @@ const Contact = () => {
       },
       terms: "I agree with your terms & conditions.",
       button: "Send Message",
-      faq: "Do you have doubts? F&Q",
+      faq: "Do you have doubts? FAQ",
     },
     ar: {
       heading: "كيف يمكننا مساعدتك؟",
@@ -62,10 +62,10 @@ const Contact = () => {
         title={"Contact"}
         subTitle={"Home | Contact"}
       />
-      <div className="flex flex-wrap justify-center gap-20">
-        <div dir={lang === "ar" ? "rtl" : "ltr"} className="p-5 w-[600px]">
+      <div className="flex flex-wrap justify-center gap-20 mt-10">
+        <div dir={lang === "ar" ? "rtl" : "ltr"} className="w-[600px]">
           <div className="">
-            <h1 className="text-[2.8rem] font-bold text-dark">{heading}</h1>
+            <h1 className="text-3xl  font-bold text-dark">{heading}</h1>
             <p className="text-gray">{paragraph}</p>
 
             <form className="space-y-5 mt-10">
@@ -112,46 +112,48 @@ const Contact = () => {
         </div>
         <div
           dir={lang === "ar" ? "rtl" : "ltr"}
-          className=" space-y-5 p-5 w-full lg:w-[300px]"
+          className="w-full lg:w-[400px] flex justify-center"
         >
-          <h2 className=" font-bold text-dark text-2xl font-bold text-dark">
-            {lang === "en"
-              ? "Locations & Opening Times"
-              : "المواقع وأوقات العمل"}
-          </h2>
-          {datas?.map((location) => (
-            <div key={location.id} className="">
-              {console.log(location)}
-              <h4 className="flex">
-                <FaMapPin className="w-7 h-7" />
-                &nbsp;
-                <span className="text-custom-yellow">
-                  {location.title[lang]}
-                </span>
-              </h4>
-              <p>
-                {location.dates.map((time, index) => (
-                  <span key={index}>
-                    <span className="text-gray font-bold">
-                      {time.day[lang]}:
-                    </span>{" "}
-                    {time.time[lang]}
-                    <br />
+          <div className="space-y-5 ">
+            <h2 className=" font-bold text-dark text-3xl  font-bold text-dark">
+              {lang === "en"
+                ? "Locations & Opening Times"
+                : "المواقع وأوقات العمل"}
+            </h2>
+            {datas?.map((location) => (
+              <div key={location.id} className="">
+                {console.log(location)}
+                <h4 className="flex">
+                  <FaMapPin className="w-7 h-7" />
+                  &nbsp;
+                  <span className="text-custom-yellow">
+                    {location.title[lang]}
                   </span>
-                ))}
-              </p>
-            </div>
-          ))}
+                </h4>
+                <p>
+                  {location.dates.map((time, index) => (
+                    <span key={index}>
+                      <span className="text-gray font-bold">
+                        {time.day[lang]}:
+                      </span>{" "}
+                      {time.time[lang]}
+                      <br />
+                    </span>
+                  ))}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="flex justify-center items-center mt-10">
-        <div className="px-5 w-[99vw] md:w-[70vw] ">
-          {" "}
-          <h2 className="text-3xl font-bold text-center mb-4">
-            {lang == "ar" ? "موقعنا" : "Our Location"}
-          </h2>{" "}
-          {/* Add your heading here */}
-          <Map />
+        <div className="flex justify-center items-center ">
+          <div className="px-5 w-[600px]">
+            {" "}
+            <h2 className="text-3xl font-bold text-center">
+              {lang == "ar" ? "موقعنا" : "Our Locations"}
+            </h2>{" "}
+            {/* Add your heading here */}
+            <Map />
+          </div>
         </div>
       </div>
     </div>

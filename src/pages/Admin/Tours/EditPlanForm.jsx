@@ -899,14 +899,14 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         </div>
         <button
           type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded-md"
+          className="bg-green-500 text-white py-3 px-4 rounded-md"
         >
           {loading ? (
             <div className="">
               <Loader w={20} h={20} b={5} />
             </div>
           ) : (
-            <div className="h-">
+            <div className="">
                 Submit
             </div>
           )}

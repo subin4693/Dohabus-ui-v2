@@ -88,7 +88,7 @@ const Card = ({ image, title, desc, lang, id }) => {
   return (
     <div
       dir={lang === "ar" ? "rtl" : "ltr"}
-      className="h-fit hover:shadow-2xl border border-gray-lite duration-500 overflow-hidden cursor-pointer my-10"
+      className="hover:shadow-2xl border border-gray-lite duration-500 overflow-hidden cursor-pointer my-10"
     >
       <div className="h-[250px]">
         <img src={image} className="object-cover w-full h-full" alt={title} />

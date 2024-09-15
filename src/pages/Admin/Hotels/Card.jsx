@@ -3,7 +3,7 @@ import React from "react";
 const Card = ({ title, description, imageUrl, onClick }) => {
     return (
         <div
-            className="rounded-lg overflow-hidden h-fit shadow-xl cursor-pointer "
+            className="rounded-lg overflow-hidden h-fit shadow-xl cursor-pointer"
             onClick={onClick}
         >
             <div className="h-[250px] overflow-hidden">
