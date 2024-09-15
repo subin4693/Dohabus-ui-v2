@@ -672,7 +672,7 @@ const SingleTour = () => {
                             key={sessionL}
                             className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
                               isSelected
-                                ? "bg-yellow-500" // Highlight selected session with yellow
+                                ? "bg-custom-yellow" // Highlight selected session with yellow
                                 : isAvailable
                                 ? "bg-green-500" // Green for available sessions
                                 : "bg-red-500" // Red for unavailable sessions
