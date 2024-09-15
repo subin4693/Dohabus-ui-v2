@@ -25,12 +25,17 @@ const MediaGallery = ({ mediaUrls, mediaVideoUrls }) => {
   // Slider settings
   const settings = {
     className: "center",
+    cssEase: "linear",
+
+    autoplay: true,
+    autoplaySpeed: 2000,
     centerMode: media.length > 1, // Only enable center mode if there's more than 1 item
     infinite: media.length > 3, // Disable infinite scrolling if there are <= 3 items
     centerPadding: media.length > 1 ? "60px" : "0px", // Adjust padding based on media length
     slidesToShow: slidesToShow, // Show either the total number of media or 3
     speed: 500,
     nextArrow: <NextArrow className="text-white   z-20 w-10 h-10" />,
+    slidesToScroll: 1,
     prevArrow: <PrevArrow className="text-white w-10 h-10" />,
     responsive: [
       {
