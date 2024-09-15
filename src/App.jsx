@@ -52,6 +52,7 @@ import MICE from "./pages/MICE";
 import Cruise from "./pages/Cruise";
 import AdminTransportation from "./pages/Admin/Transportation";
 import OfferBanner from "./pages/Admin/OfferBanner";
+import AdminCruise from "./pages/Admin/Cruise";
 
 import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
@@ -194,6 +195,8 @@ function App() {
               <Route path="invoice" element={<Invoices />} />
               <Route path="subscribe" element={<Subscribers />} />
               <Route path="hotel-bookings" element={<HotelBookings />} />
+
+              <Route path="cruise" element={<AdminCruise />} />
             </Route>
           </Route>
         </Routes>

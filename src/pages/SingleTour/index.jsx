@@ -14,6 +14,8 @@ import album3 from "../../assets/album3.jpg";
 import album4 from "../../assets/album4.jpg";
 import album5 from "../../assets/album5.jpg";
 import album6 from "../../assets/album6.jpg";
+import discimage from "../../assets/locationPinforDisc-removebg-preview.png";
+
 import { useParams, useNavigate, Link } from "react-router-dom";
 import DatePickerr from "./DatePicker";
 import { toast } from "react-toastify";
@@ -523,63 +525,97 @@ const SingleTour = () => {
                 </div>
               </div>
             )}
-
-            {data?.itinerary?.length > 0 && (
+            <div className="flex justify-between">
               <div>
-                <h2 className="text-3xl font-bold">
-                  {lang === "ar" ? "برنامج الرحلة" : "Itinerary"}
-                </h2>
+                {data?.itinerary?.length > 0 && (
+                  <div>
+                    <h2 className="text-3xl font-bold">
+                      {lang === "ar" ? "برنامج الرحلة" : "Itinerary"}
+                    </h2>
 
-                <div
-                  className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
-                  dir={lang === "ar" ? "rtl" : "ltr"}
-                >
-                  <ul>
-                    {data?.itinerary &&
-                      data?.itinerary?.map((item, index) => {
-                        if (index == data?.itinerary.length - 2 || index == 1)
-                          return (
-                            <li
-                              className={` ${
+                    <div
+                      className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
+                      dir={lang === "ar" ? "rtl" : "ltr"}
+                    >
+                      <ul>
+                        {data?.itinerary &&
+                          data?.itinerary?.map((item, index) => {
+                            if (item.en.charAt(0) == "#") {
+                              let paddingImg = "";
+                              if (data.itinerary.length > 1 && index == 0)
+                                paddingImg = "pb-[90px]";
+                              else if (
+                                data.itinerary.length > 1 &&
                                 index == data?.itinerary.length - 1
-                                  ? "pt-[90px]"
-                                  : "pb-[90px]"
-                              }   border-l border-l-4   border-dashed border-black flex  items-center relative`}
-                            >
-                              <DiscImage />
-                              <span className="pl-10">{item[lang]}</span>
-                            </li>
-                          );
+                              )
+                                paddingImg = "pt-[90px]";
+                              else paddingImg = "pb-[90px] pt-[90px]";
 
-                        return (
-                          <li
-                            className={`${
-                              index == data?.itinerary.length - 1
-                                ? " pb-0 "
-                                : " pb-[90px] "
-                            }  
-                                                        ${
-                                                          index == 0 ||
-                                                          index ==
-                                                            data?.itinerary
-                                                              .length -
-                                                              3
-                                                            ? " border-dashed  "
-                                                            : "border-solid "
-                                                        }  
-            
-            
-                                                         border-l border-l-4   border-solid border-black flex  items-center relative`}
-                          >
-                            <Disc />
-                            <span className="pl-10">{item[lang]}</span>
-                          </li>
-                        );
-                      })}
-                  </ul>
+                              if (data.itinerary.length <= 1) paddingImg = "";
+
+                              return (
+                                <li
+                                  className={` ${paddingImg}   border-l border-l-4 group  border-dashed border-black flex  items-center relative`}
+                                >
+                                  <DiscImage />
+                                  <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
+                                    {lang === "en"
+                                      ? item[lang].substring(1)
+                                      : item[lang]}
+                                  </span>
+                                </li>
+                              );
+                            }
+                            let padding = "";
+                            if (data?.itinerary[index + 1]?.en.charAt(0) == "#")
+                              padding = "pb-0";
+                            else padding = "pb-[90px]";
+                            return (
+                              <li
+                                className={`group ${
+                                  index == data?.itinerary.length - 1
+                                    ? " pb-0 "
+                                    : padding
+                                }  
+                         
+                          
+                        border-solid 
+                        
+             border-l border-l-4   border-solid border-black flex  items-center relative`}
+                              >
+                                <Disc />
+                                <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
+                                  {item[lang]}
+                                </span>
+                              </li>
+                            );
+                          })}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className=" flex justify-center items-center  ">
+                <div className=" space-y-4 rounded-md border p-4 border-black">
+                  <div className="flex jutify-center items-center gap-3">
+                    <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] bg-white    h-[50px] border-[2px] border-black rounded-full flex border justify-center items-center">
+                      <div className="w-2 h-2 rounded-full bg-black group-hover:scale-110 -x-6 transition-transform duration-300 ease-in-out"></div>
+                    </div>
+                    someghing
+                  </div>
+                  <div className="flex justify-center items-center gap-3">
+                    <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] group-hover:scale-100 bg-custom-yellow     h-[50px] border-[2px] border-custom-yellow rounded-full flex border justify-center items-center">
+                      <img
+                        src={discimage}
+                        className="w-[80px] h-[80px]  object-cover transition-transform duration-300 ease-in-out"
+                      />
+                      {/*<div className="w-2 h-2 rounded-full bg-black"></div>*/}
+                    </div>
+                    someghing
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
           <div className="w-full md:w-1/4   relative">
             <div>
