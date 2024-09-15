@@ -32,7 +32,7 @@ const HotelBookings = () => {
     const formattedData = hotelBookings.map((booking) => ({
       "Booking ID": booking._id || "N/A",
       "Hotel Name": booking.hotelId?.title?.en || "N/A",
-      "User Name": booking.userId?.name || "N/A",
+      "User Name": booking.name || "N/A",
       "Check-in Date": booking.checkInDate || "N/A",
       "Check-out Date": booking.checkOutDate || "N/A",
       Adults: String(booking.numberOfAdults || "N/A"),
@@ -101,7 +101,7 @@ const HotelBookings = () => {
           doc.text(
             `Page ${data.pageNumber}`,
             data.settings.margin.left,
-            doc.internal.pageSize.height - 10,
+            doc.internal.pageSize.height - 10
           );
         },
       });
@@ -125,7 +125,7 @@ const HotelBookings = () => {
             "Airport Transfers",
           ],
         ],
-        { origin: "A1" },
+        { origin: "A1" }
       );
 
       const workbook = XLSX.utils.book_new();
@@ -155,14 +155,14 @@ const HotelBookings = () => {
       booking.hotelId?.title?.en
         ?.toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
-      booking.userId?.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      booking.userId?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredBookings.slice(
     indexOfFirstItem,
-    indexOfLastItem,
+    indexOfLastItem
   );
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
@@ -220,7 +220,7 @@ const HotelBookings = () => {
                   <td className="border-b px-4 py-2">
                     {booking.hotelId.title.en}
                   </td>
-                  <td className="border-b px-4 py-2">{booking.userId.name}</td>
+                  <td className="border-b px-4 py-2">{booking.name}</td>
                   <td className="border-b px-4 py-2">{booking.checkInDate}</td>
                   <td className="border-b px-4 py-2">{booking.checkOutDate}</td>
                   <td className="border-b px-4 py-2">

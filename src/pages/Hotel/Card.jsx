@@ -48,6 +48,7 @@ const Card = ({ image, title, desc, lang, id }) => {
       const res = await axios.post(BASE_URL + "/hotels/" + id, formData, {
         withCredentials: true,
       });
+      console.log(res);
       toast.success(
         "Thank you for booking! Our support team will reach out to you.",
         {
@@ -59,14 +60,14 @@ const Card = ({ image, title, desc, lang, id }) => {
           draggable: true,
           progress: undefined,
           theme: "dark",
-        },
+        }
       );
       console.log(res.data);
     } catch (error) {
       // Error handling: Log the full error response
       console.error(
         "Error details:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
 
       toast.error("Something went wrong", {
