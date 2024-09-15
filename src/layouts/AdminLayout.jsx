@@ -62,6 +62,10 @@ const AdminLayout = () => {
               text: "cruise",
               link: "/admin/cruise",
             },
+            {
+              text: "populor-cruise",
+              link: "/admin/populor-cruise",
+            },
           ].map((menu) => (
             <NavLink
               to={menu.link}

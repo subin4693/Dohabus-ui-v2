@@ -17,6 +17,10 @@ const CreateCategory = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [title, setTitle] = useState({ en: "", ar: "" });
   const [description, setDescription] = useState({ en: "", ar: "" });
+
+  const [duration, setDuration] = useState({ en: "", ar: "" });
+  const [price, setPrice] = useState(0);
+
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,11 +41,16 @@ const CreateCategory = () => {
 
       if (isEdit) {
         // Edit an existing category
-        const res = await axios.put(`${BASE_URL}/couries/${selectedData._id}`, {
-          title,
-          description,
-          coverImage: image,
-        });
+        const res = await axios.put(
+          `${BASE_URL}/populor-couries/${selectedData._id}`,
+          {
+            title,
+            description,
+            coverImage: image,
+            duration,
+            price,
+          }
+        );
         console.log(res.data.data);
 
         updatedCategory = res.data.data.courise;
@@ -68,11 +77,20 @@ const CreateCategory = () => {
           theme: "dark",
         });
       } else {
-        // Create a new category
-        const res = await axios.post(`${BASE_URL}/couries`, {
+        console.log({
           title,
           description,
           coverImage: image,
+          duration,
+          price,
+        });
+        // Create a new category
+        const res = await axios.post(`${BASE_URL}/populor-couries`, {
+          title,
+          description,
+          coverImage: image,
+          duration,
+          price,
         });
         updatedCategory = res.data.data.courise;
         console.log(updatedCategory);
@@ -134,12 +152,16 @@ const CreateCategory = () => {
       setTitle(data.title);
       setDescription(data.description);
       setImage(data.coverImage);
+      setDuration(data.duration);
+      setPrice(data.price);
     } else {
       // Create mode
       setSelectedData(null);
       setTitle({ en: "", ar: "" });
       setDescription({ en: "", ar: "" });
       setImage(null);
+      setDuration({ en: "", ar: "" });
+      setPrice(0);
     }
     setIsOpen((prev) => !prev);
   };
@@ -250,6 +272,41 @@ const CreateCategory = () => {
                 }
                 placeholder="الوصف (بالعربية)" // Arabic for 'Description'
                 className="w-full h-[100px] p-2 border border-black rounded-lg outline-none resize-none"
+              />
+
+              <input
+                type="text"
+                value={duration.en}
+                onChange={(e) =>
+                  setDuration((prev) => ({
+                    ...prev,
+                    en: e.target.value,
+                  }))
+                }
+                placeholder="Duration (English)"
+                className="w-full p-2 border border-black rounded-lg outline-none"
+              />
+
+              {/* Title in Arabic */}
+              <input
+                dir="rtl"
+                type="text"
+                value={duration.ar}
+                onChange={(e) =>
+                  setDuration((prev) => ({
+                    ...prev,
+                    ar: e.target.value,
+                  }))
+                }
+                placeholder="العنوان (بالعربية)" // Arabic for 'Title'
+                className="w-full p-2 border border-black rounded-lg outline-none"
+              />
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Duration (English)"
+                className="w-full p-2 border border-black rounded-lg outline-none"
               />
 
               <div className="flex gap-2">

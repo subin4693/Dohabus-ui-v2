@@ -61,6 +61,7 @@ import { setUser } from "./features/Auth/userSlice";
 import Invoice from "./pages/Invoice";
 import Invoices from "./pages/Admin/Invoices";
 import Subscribers from "./pages/Admin/Subscribers";
+import AdminPopulorCruise from "./pages/Admin/Populor-Cruise";
 
 function App() {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -197,6 +198,7 @@ function App() {
               <Route path="hotel-bookings" element={<HotelBookings />} />
 
               <Route path="cruise" element={<AdminCruise />} />
+              <Route path="populor-cruise" element={<AdminPopulorCruise />} />
             </Route>
           </Route>
         </Routes>

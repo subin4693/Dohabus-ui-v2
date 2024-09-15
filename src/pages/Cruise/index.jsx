@@ -16,9 +16,9 @@ const index = () => {
     const getData = async () => {
       try {
         const categoryData = await axios.get(BASE_URL + "/couries");
-        const toursData = await axios.get(BASE_URL + "/plans");
+        const toursData = await axios.get(BASE_URL + "/populor-couries");
         setCategories(categoryData?.data?.data?.courise);
-        setTours(toursData?.data?.data?.plans);
+        setTours(toursData?.data?.data?.courise);
       } catch (error) {
         console.log(error);
       }
@@ -128,7 +128,7 @@ const index = () => {
       </section>
       <section className="my-20 ">
         <h2 className="text-3xl font-semibold mb-4 px-16 mt-5 mb-5 text-center ">
-          {lang === "en" ? "Trending Categories" : "الفئات الرائجة"}
+          {lang === "en" ? "Trending Cruise packages" : "الفئات الرائجة"}
         </h2>
         <div className="relative w-full max-w-6xl mx-auto">
           <div className="overflow-hidden">
@@ -192,14 +192,14 @@ const index = () => {
       </section>
       <section className="mb-5 px-16 mt-5">
         <h2 className="text-3xl font-semibold mb-4 text-center">
-          {lang === "en" ? "Find Popular Tours" : "اكتشف الجولات الشهيرة"}
+          {lang === "en" ? "Find Popular Cruise" : "اكتشف الجولات الشهيرة"}
         </h2>
         <div className="cards flex flex-wrap gap-4 justify-center items-center">
           {tours.map((tour) => (
             <>
-              <Link to={`/tours/${tour.category}/${tour._id}`}>
+              <Link to={`/contact`}>
                 <div
-                  key={tour.id}
+                  key={tour._id}
                   className="card w-[380px] h-[350px] overflow-hidden p-5 border rounded-2xl cursor-pointer"
                 >
                   <img
@@ -221,9 +221,7 @@ const index = () => {
                         {" "}
                         {lang === "en" ? tour.duration.en : tour.duration.ar}
                       </small>
-                      <h2 className="font-semibold">
-                        From: {tour.childPrice || tour.childData[0].price} QAR
-                      </h2>
+                      <h2 className="font-semibold">From: {tour.price} QAR</h2>
                     </div>
                   </div>
                 </div>
