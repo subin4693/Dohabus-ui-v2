@@ -48,6 +48,7 @@ const Card = ({ image, title, desc, lang, id }) => {
       const res = await axios.post(BASE_URL + "/hotels/" + id, formData, {
         withCredentials: true,
       });
+      console.log(res);
       toast.success(
         "Thank you for booking! Our support team will reach out to you.",
         {
