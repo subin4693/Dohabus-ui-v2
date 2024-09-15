@@ -83,11 +83,34 @@ const Footer = () => {
       else setActiveIndex(index + 1);
     },
   };
+
+  const settings2 = {
+    className: "slider  ",
+    centerMode: true,
+    infinite: true,
+    dots: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+
+    cssEase: "ease-in-out",
+    nextArrow: <NextArrow />, // Custom Next Arrow
+    prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1524,
+      },
+    ],
+    beforeChange: (index) => {
+      if (album.length - 1 == index) setActiveIndex(0);
+      else setActiveIndex(index + 1);
+    },
+  };
   return (
     <>
       <div className="bg-yellow-400 p-1 md:px-20 flex flex-col justify-center items-center ">
         <div>
-          <div className=" flex flex-wrap  w-[95vw] sm:w-[80vw] justify-between items-center gap-10 place-items-start text-dark ">
+          <div className="   w-[95vw] sm:w-[80vw] text-dark grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {/* Useful Pages Section */}
             <div className="space-y-5 mt-5">
               <h2 className="text-2xl font-bold">
@@ -166,54 +189,56 @@ const Footer = () => {
             </div>
 
             {/* Social Media Links */}
-            <div className="space-y-5 mt-5   ">
-              <h2 className="text-2xl font-bold">
-                {lang === "en" ? "Follow Us" : "تابعنا"}
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  to="http://wa.me/97433246556"
-                  className="p-2 text-white bg-black rounded-full"
-                >
-                  <FaWhatsapp size={20} />
-                </Link>
-                <Link
-                  to="https://www.tripadvisor.com/Attraction_Review-g294009-d6215547-Reviews-Doha_Bus-Doha.html"
-                  className="p-2 text-white bg-black rounded-full"
-                >
-                  <FaTripadvisor size={20} />
-                </Link>
-                <Link
-                  to="https://www.facebook.com/DohaBus/"
-                  className="p-2 text-white bg-black rounded-full"
-                >
-                  <FaFacebook size={20} />
-                </Link>
-                <Link
-                  to="https://www.linkedin.com/company/100753681/admin/dashboard/"
-                  className="p-2 text-white bg-black rounded-full"
-                >
-                  <FaLinkedin size={20} />
-                </Link>
-                <Link
-                  to="https://www.instagram.com/doha_bus/?hl=en"
-                  className="p-2 text-white bg-black rounded-full"
-                >
-                  <FaInstagram size={20} />
-                </Link>
-                <Link
-                  to="https://www.youtube.com/channel/UCAiEl0u3qaOIHL7zlTP8IgQ"
-                  className="p-2 text-white bg-black rounded-full"
-                >
-                  <FaYoutube size={20} />
-                </Link>
-              </div>{" "}
-              <div className="gap-5 flex items-center">
-                {awards?.map((award, index) => (
-                  <div key={index} className="w-[90px]">
-                    <img src={award.image} alt={`Award ${index + 1}`} />
-                  </div>
-                ))}
+            <div className="  flex justify-end ">
+              <div className="space-y-5 mt-5   w-fit  ">
+                <h2 className="text-2xl font-bold">
+                  {lang === "en" ? "Follow Us" : "تابعنا"}
+                </h2>
+                <div className="flex   flex-wrap gap-2">
+                  <Link
+                    to="http://wa.me/97433246556"
+                    className="p-2 text-white bg-black rounded-full"
+                  >
+                    <FaWhatsapp size={20} />
+                  </Link>
+                  <Link
+                    to="https://www.tripadvisor.com/Attraction_Review-g294009-d6215547-Reviews-Doha_Bus-Doha.html"
+                    className="p-2 text-white bg-black rounded-full"
+                  >
+                    <FaTripadvisor size={20} />
+                  </Link>
+                  <Link
+                    to="https://www.facebook.com/DohaBus/"
+                    className="p-2 text-white bg-black rounded-full"
+                  >
+                    <FaFacebook size={20} />
+                  </Link>
+                  <Link
+                    to="https://www.linkedin.com/company/100753681/admin/dashboard/"
+                    className="p-2 text-white bg-black rounded-full"
+                  >
+                    <FaLinkedin size={20} />
+                  </Link>
+                  <Link
+                    to="https://www.instagram.com/doha_bus/?hl=en"
+                    className="p-2 text-white bg-black rounded-full"
+                  >
+                    <FaInstagram size={20} />
+                  </Link>
+                  <Link
+                    to="https://www.youtube.com/channel/UCAiEl0u3qaOIHL7zlTP8IgQ"
+                    className="p-2 text-white bg-black rounded-full"
+                  >
+                    <FaYoutube size={20} />
+                  </Link>
+                </div>{" "}
+                <div className="gap-5 flex items-center">
+                  {awards?.map((award, index) => (
+                    <div key={index} className="w-[90px]">
+                      <img src={award.image} alt={`Award ${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -241,7 +266,28 @@ const Footer = () => {
           >
             <IoClose className="text-2xl text-white" />
           </button>
-          <Slider {...settings} className="w-screen">
+          <Slider {...settings2} className="w-screen md:hidden">
+            {album.map((image, index) => (
+              <div
+                key={index}
+                className={`h-[40vh] md:h-[89vh]     flex-shrink-0   overflow-hidden flex justify-center items-center duration-500 ${
+                  index === activeIndex ? " mx-auto " : "scale-75"
+                }`}
+                style={{
+                  width: "100vw",
+
+                  margin: "0 20px", // Adjust the gap here
+                }}
+              >
+                <img
+                  src={image.image}
+                  alt={`Slide ${index}`}
+                  className="w-full h-full object-cover hover:scale-105 duration-300"
+                />
+              </div>
+            ))}
+          </Slider>
+          <Slider {...settings} className="w-screen hidden md:inline">
             {album.map((image, index) => (
               <div
                 key={index}

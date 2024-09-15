@@ -613,6 +613,13 @@ const SingleTour = () => {
                     </div>
                     someghing
                   </div>
+                  <div className="flex justify-center items-center gap-3">
+                    <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] group-hover:scale-100 bg-custom-yellow     h-[50px] border-[2px] border-custom-yellow rounded-full flex border justify-center items-center">
+                      <div className=" h-[80px] border" />
+                      {/*<div className="w-2 h-2 rounded-full bg-black"></div>*/}
+                    </div>
+                    someghing
+                  </div>
                 </div>
               </div>
             </div>
