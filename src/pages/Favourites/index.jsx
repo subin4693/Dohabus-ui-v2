@@ -201,8 +201,8 @@ const SignleCategory = () => {
         <div>
             <Banner
                 image={contactImg}
-                title={"Favorurites"}
-                subTitle={"Home | Favorurites"}
+                title={"Favorites"}
+                subTitle={"Home | Favorites"}
             />{" "}
             <h1 className="text-center text-[3rem] font-bold mt-16">
                 {lang === "en" ? "Choose Your Tour" : "اختر جولتك"}

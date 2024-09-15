@@ -104,13 +104,13 @@ const Home = () => {
   const itemsPerReview = window.innerWidth < 768 ? 1 : 3;
   const prevReview = () => {
     setCurrentSlide((prev) =>
-      prev === 0 ? Math.ceil(reviews.length / itemsPerReview) - 1 : prev - 1,
+      prev === 0 ? Math.ceil(reviews.length / itemsPerReview) - 1 : prev - 1
     );
   };
 
   const nextReview = () => {
     setCurrentSlide((prev) =>
-      prev === Math.ceil(reviews.length / itemsPerReview) - 1 ? 0 : prev + 1,
+      prev === Math.ceil(reviews.length / itemsPerReview) - 1 ? 0 : prev + 1
     );
   };
 
@@ -169,7 +169,7 @@ const Home = () => {
 
   const goToPrevious = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length,
+      (prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length
     );
   };
   const settings = {
@@ -206,66 +206,68 @@ const Home = () => {
       // }}
       className=""
     >
-      <div className="relative w-full h-screen overflow-hidden group">
-        <AnimatePresence initial={false}>
-          {slides &&
-            slides?.map(
-              (slide, index) =>
-                currentIndex === index && (
-                  <motion.div
-                    key={index}
-                    className="absolute w-full h-screen"
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    variants={
-                      index === 0
-                        ? firstImageVariants
-                        : index === 1
+      <div className="">
+        <div className="relative top-0 w-full h-screen overflow-hidden group m--0 p-0">
+          <AnimatePresence initial={false}>
+            {slides &&
+              slides?.map(
+                (slide, index) =>
+                  currentIndex === index && (
+                    <motion.div
+                      key={index}
+                      className="absolute w-full h-screen"
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      variants={
+                        index === 0
+                          ? firstImageVariants
+                          : index === 1
                           ? secondImageVariants
                           : {
                               enter: { opacity: 0, x: 100 },
                               center: { opacity: 1, x: 0 },
                               exit: { opacity: 0, x: -100 },
                             }
-                    }
-                    transition={{ duration: 0.5 }}
-                  >
-                    <img
-                      src={slide.image}
-                      alt={slide.alt}
-                      className="w-full h-screen object-cover"
-                    />
-                  </motion.div>
-                ),
-            )}
-        </AnimatePresence>
+                      }
+                      transition={{ duration: 0.5 }}
+                    >
+                      <img
+                        src={slide.image}
+                        alt={slide.alt}
+                        className="w-full h-screen object-cover"
+                      />
+                    </motion.div>
+                  )
+              )}
+          </AnimatePresence>
 
-        <button
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-700 text-white duration-500 p-5 opacity-0 group-hover:opacity-100 "
-          onClick={prevSlide}
-        >
-          &#10094;
-        </button>
+          <button
+            className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-700 text-white duration-500 p-5 opacity-0 group-hover:opacity-100 "
+            onClick={prevSlide}
+          >
+            &#10094;
+          </button>
 
-        <button
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-700 text-white p-5 opacity-0 group-hover:opacity-100 duration-500"
-          onClick={nextSlide}
-        >
-          &#10095;
-        </button>
+          <button
+            className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-700 text-white p-5 opacity-0 group-hover:opacity-100 duration-500"
+            onClick={nextSlide}
+          >
+            &#10095;
+          </button>
 
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {slides &&
-            slides?.map((_, index) => (
-              <button
-                key={index}
-                className={`w-3 h-3 rounded-full ${
-                  index === currentIndex ? "bg-gray-800" : "bg-gray-400"
-                }`}
-                onClick={() => goToSlide(index)}
-              ></button>
-            ))}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {slides &&
+              slides?.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    index === currentIndex ? "bg-gray-800" : "bg-gray-400"
+                  }`}
+                  onClick={() => goToSlide(index)}
+                ></button>
+              ))}
+          </div>
         </div>
       </div>
       <div
