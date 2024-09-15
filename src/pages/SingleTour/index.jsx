@@ -313,6 +313,7 @@ const SingleTour = () => {
           date: selectedDate,
           planId: data._id,
         });
+        console.log(response.data);
 
         setSessionStatus(response.data.sessionStatus);
         setSessionCounts(response.data.sessionCounts);
@@ -672,8 +673,17 @@ const SingleTour = () => {
                       data.sessions.map((sessionL) => {
                         const isAvailable =
                           sessionStatus[sessionL] === "Available";
+                        const isFillingUp =
+                          sessionStatus[sessionL] === "Filling Up";
+                        const isFull = sessionStatus[sessionL] === "Full";
                         const isSelected = session === sessionL; // Check if session is selected
 
+                        console.log("is available");
+                        console.log(isAvailable);
+                        console.log("is filing up");
+                        console.log(isFillingUp);
+                        console.log("is full");
+                        console.log(isFull);
                         return (
                           <button
                             key={sessionL}
@@ -682,14 +692,20 @@ const SingleTour = () => {
                                 ? "bg-custom-yellow" // Highlight selected session with yellow
                                 : isAvailable
                                 ? "bg-green-500" // Green for available sessions
-                                : "bg-red-500" // Red for unavailable sessions
+                                : isFillingUp
+                                ? "bg-orange-500" // Orange for filling up sessions
+                                : isFull
+                                ? "bg-red-500" // Red for full sessions
+                                : "" // Default case
                             }`}
                             onClick={() => {
-                              if (isAvailable) handleSession(sessionL);
-                              else
+                              if (isAvailable || isFillingUp) {
+                                handleSession(sessionL);
+                              } else {
                                 toast.error(
                                   "Tickets for this session are sold out."
                                 );
+                              }
                             }}
                           >
                             <BiTime className="w-[25px] h-[25px]" /> {sessionL}
