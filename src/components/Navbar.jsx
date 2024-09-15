@@ -78,6 +78,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
         {},
         { withCredentials: true }
       );
+      navigate("/");
       toast.success("Logout succesfully", {
         position: "top-right",
         autoClose: 5000,
@@ -181,7 +182,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
         } ${isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"}`}
       >
         <div className="lg:w-[100%] mx-auto flex justify-between items-center px-10 py-3">
-          
           <div className="min-w-[20mm] max-w-[20mm] h-fit">
             <Link to="/">
               <img
