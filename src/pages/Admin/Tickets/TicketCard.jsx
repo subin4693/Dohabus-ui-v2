@@ -45,10 +45,15 @@ const TicketCard = ({ booking, lang, handleCancelTicket, mainUserRole }) => {
             )
           )}
         </div>
-        <p className="text-stone-600 mb-2">{booking && booking?.user?.name}</p>{" "}
-        <p className="text-stone-600 mb-2">{booking && booking?.user?.email}</p>
+        <p className="text-stone-600 mb-2">
+          Name : {booking && booking?.user?.name}
+        </p>{" "}
+        <p className="text-stone-600 mb-2">
+          Contact Number : {booking && booking?.number}
+        </p>
+        {/* <p className="text-stone-600 mb-2">{booking && booking?.user?.email}</p> */}
         <p className="text-stone-500 mb-2 line-clamp-3">
-          {booking && booking?.plan?.description[lang]}
+          {/* {booking && booking?.plan?.description[lang]} */}
         </p>
         <div className="flex justify-between items-center mt-4">
           <div>
