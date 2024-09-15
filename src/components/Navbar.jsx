@@ -76,7 +76,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
       const res = await axios.post(
         BASE_URL + "/users/signout",
         {},
-        { withCredentials: true },
+        { withCredentials: true }
       );
       toast.success("Logout succesfully", {
         position: "top-right",
@@ -177,10 +177,11 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
 
       <div
         className={`z-10 transition-colors duration-300 fixed top-0 left-0 right-0 text-white text-xl ${
-          isVisible && " mt-[50px] "
+          isVisible && " mt-[50px]"
         } ${isScrolled ? "bg-custom-yellow" : "bg-custom-yellow-light"}`}
       >
         <div className="lg:w-[100%] mx-auto flex justify-between items-center px-10 py-3">
+          
           <div className="min-w-[20mm] max-w-[20mm] h-fit">
             <Link to="/">
               <img

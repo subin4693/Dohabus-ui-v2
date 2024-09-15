@@ -211,8 +211,8 @@ const AdminFavourite = () => {
     <div>
       <Banner
         image={contactImg}
-        title={"Admin Favourites"}
-        subTitle={"Home | Admin-Favourites"}
+        title={"Admin Favorites"}
+        subTitle={"Home | Admin-Favorites"}
       />
 
       <div className="p-5">
