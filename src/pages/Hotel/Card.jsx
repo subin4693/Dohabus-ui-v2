@@ -59,14 +59,14 @@ const Card = ({ image, title, desc, lang, id }) => {
           draggable: true,
           progress: undefined,
           theme: "dark",
-        },
+        }
       );
       console.log(res.data);
     } catch (error) {
       // Error handling: Log the full error response
       console.error(
         "Error details:",
-        error.response ? error.response.data : error.message,
+        error.response ? error.response.data : error.message
       );
 
       toast.error("Something went wrong", {
@@ -88,7 +88,7 @@ const Card = ({ image, title, desc, lang, id }) => {
   return (
     <div
       dir={lang === "ar" ? "rtl" : "ltr"}
-      className="hover:shadow-2xl border border-gray-lite duration-500 overflow-hidden cursor-pointer my-10"
+      className="hover:shadow-2xl h-fit border border-gray-lite duration-500 overflow-hidden cursor-pointer my-10"
     >
       <div className="h-[250px]">
         <img src={image} className="object-cover w-full h-full" alt={title} />
