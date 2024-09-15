@@ -526,7 +526,7 @@ const SingleTour = () => {
                 </div>
               </div>
             )}
-            <div className="flex justify-between">
+            <div className="flex justify-between flex-col md:flex-row ">
               <div>
                 {data?.itinerary?.length > 0 && (
                   <div>
@@ -596,8 +596,8 @@ const SingleTour = () => {
                   </div>
                 )}
               </div>
-              <div className=" flex justify-center items-center  ">
-                <div className=" space-y-4 rounded-md border p-4 border-black">
+              <div className=" flex justify-center items-center my-10 md:mt-0 ">
+                <div className=" space-y-8 rounded-md border p-8 border-black">
                   <div className="flex jutify-center items-center gap-3">
                     <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] bg-white    h-[50px] border-[2px] border-black rounded-full flex border justify-center items-center">
                       <div className="w-2 h-2 rounded-full bg-black group-hover:scale-110 -x-6 transition-transform duration-300 ease-in-out"></div>
@@ -615,8 +615,8 @@ const SingleTour = () => {
                     someghing
                   </div>
                   <div className="flex justify-center items-center gap-3">
-                    <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] group-hover:scale-100 bg-custom-yellow     h-[50px] border-[2px] border-custom-yellow rounded-full flex border justify-center items-center">
-                      <div className=" h-[80px] border" />
+                    <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] group-hover:scale-100      h-[50px] border-[2px]   rounded-full flex   justify-center items-center">
+                      <div className=" h-full border border-dashed border-4 border-black" />
                       {/*<div className="w-2 h-2 rounded-full bg-black"></div>*/}
                     </div>
                     someghing
@@ -678,12 +678,6 @@ const SingleTour = () => {
                         const isFull = sessionStatus[sessionL] === "Full";
                         const isSelected = session === sessionL; // Check if session is selected
 
-                        console.log("is available");
-                        console.log(isAvailable);
-                        console.log("is filing up");
-                        console.log(isFillingUp);
-                        console.log("is full");
-                        console.log(isFull);
                         return (
                           <button
                             key={sessionL}
