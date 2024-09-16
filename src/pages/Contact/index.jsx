@@ -95,8 +95,9 @@ const Contact = () => {
               />
 
               <label className="block">
-                <input type="checkbox" /> &nbsp;{terms}{" "}
-                <span className="text-custom-yellow">{terms}</span>
+                <Link to={"/termandconditions"}>
+                  <span className="text-custom-yellow text-xl">{terms}</span>
+                </Link>
               </label>
               <button
                 type="button"
@@ -121,27 +122,29 @@ const Contact = () => {
                 : "المواقع وأوقات العمل"}
             </h2>
             {datas?.map((location) => (
-              <div key={location.id} className="">
-                {console.log(location)}
-                <h4 className="flex">
-                  <FaMapPin className="w-7 h-7" />
-                  &nbsp;
-                  <span className="text-custom-yellow">
-                    {location.title[lang]}
-                  </span>
-                </h4>
-                <p>
-                  {location.dates.map((time, index) => (
-                    <span key={index}>
-                      <span className="text-gray font-bold">
-                        {time.day[lang]}:
-                      </span>{" "}
-                      {time.time[lang]}
-                      <br />
+              <Link to={location.url}>
+                <div key={location.id} className="mt-4">
+                  {console.log(location)}
+                  <h4 className="flex">
+                    <FaMapPin className="w-7 h-7" />
+                    &nbsp;
+                    <span className="text-custom-yellow">
+                      {location.title[lang]}
                     </span>
-                  ))}
-                </p>
-              </div>
+                  </h4>
+                  <p>
+                    {location.dates.map((time, index) => (
+                      <span key={index}>
+                        <span className="text-gray font-bold">
+                          {time.day[lang]}:
+                        </span>{" "}
+                        {time.time[lang]}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

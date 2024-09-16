@@ -4,6 +4,7 @@ import contactImg from "../../assets/contact.jpg";
 import img from "../../assets/single-tour.jpg";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Index = () => {
   const lang = useSelector((state) => state.language.lang);
@@ -16,8 +17,18 @@ const Index = () => {
         subTitle={lang === "en" ? "Home | MICE" : "الرئيسية | MICE"}
       />
 
-      <div className="p-8 max-w-6xl mx-auto">
-        <img src={img} alt="Tour" />
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ amount: 0.2 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="p-8 max-w-6xl mx-auto"
+      >
+   <img
+        className="transition-transform duration-300 ease-in-out transform hover:scale-110 w-full h-auto"
+        src={img}
+        alt="Tour"
+      />
         <h1
           className={`text-4xl font-bold mb-6 text-center mt-5 ${
             lang === "ar" ? "text-end" : ""
@@ -143,7 +154,7 @@ const Index = () => {
             </button>
           </Link>
         </section>
-      </div>
+      </motion.div>
     </div>
   );
 };

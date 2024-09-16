@@ -50,7 +50,7 @@ const index = () => {
         }
       />
 
-      <section className="mb-5 px-16 mt-5">
+      {/* <section className="mb-5 px-16 mt-5">
         <h2 className="text-3xl font-semibold mb-4 text-center">
           {lang === "en" ? "Why Choose DohaBus?" : "لماذا تختار دوحة باص؟"}
         </h2>
@@ -125,8 +125,8 @@ const index = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="my-20 ">
+      </section> */}
+      {/* <section className="my-20 ">
         <h2 className="text-3xl font-semibold mb-4 px-16 mt-5 mb-5 text-center ">
           {lang === "en" ? "Trending Cruise packages" : "الفئات الرائجة"}
         </h2>
@@ -189,7 +189,7 @@ const index = () => {
             &#8250;
           </button>
         </div>
-      </section>
+      </section> */}
       <section className="mb-5 px-16 mt-5">
         <h2 className="text-3xl font-semibold mb-4 text-center">
           {lang === "en" ? "Find Popular Cruise" : "اكتشف الجولات الشهيرة"}
