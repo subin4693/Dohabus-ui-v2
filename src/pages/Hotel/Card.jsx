@@ -95,7 +95,7 @@ const Card = ({ image, title, desc, lang, id }) => {
         <img src={image} className="object-cover w-full h-full" alt={title} />
       </div>
       <div className="p-5 space-y-3">
-        <h2 className="text-lg font-bold md:text-xl text-gray">
+        <h2 className="text-lg font-bold md:text-xl text-gray h-[50px] overflow-hidden w-full">
           {lang === "ar" ? "العنوان" : title}
         </h2>
         {/* <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ const Card = ({ image, title, desc, lang, id }) => {
             5 Superb - <span className="text-gray">200 reviews</span>{" "}
           </h1>
         </div>*/}
-        <p className="text-sm text-gray text-justify leading-6">
+        <p className="text-sm text-gray text-justify leading-6 h-[150px] overflow-hidden w-full">
           {lang === "ar" ? "الوصف" : desc}
         </p>
 
