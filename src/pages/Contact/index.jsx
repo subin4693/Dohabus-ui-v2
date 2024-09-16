@@ -95,8 +95,9 @@ const Contact = () => {
               />
 
               <label className="block">
-                <input type="checkbox" /> &nbsp;{terms}{" "}
-                <span className="text-custom-yellow">{terms}</span>
+                <Link to={"/termandconditions"}>
+                  <span className="text-custom-yellow text-xl">{terms}</span>
+                </Link>
               </label>
               <button
                 type="button"

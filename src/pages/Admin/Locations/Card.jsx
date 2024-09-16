@@ -108,7 +108,7 @@ const Card = ({ data, onSave, onCancel, loading }) => {
           />
 
           <div className="mb-4">
-            <label className="block font-bold mb-1">URL</label>
+            <label className="block font-bold mb-1">URL(Make sure url is correct)</label>
             <input
               type="text"
               value={detail.url}
