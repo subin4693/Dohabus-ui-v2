@@ -33,7 +33,7 @@ const Invoice = () => {
     fetchData();
   }, [BASE_URL, id]);
 
-  const generatePDF = () => {
+  const generateTicketPDF = () => {
     setLoading(true);
     const invoiceElement = document.getElementById("invoice");
 
@@ -60,27 +60,27 @@ const Invoice = () => {
         "en-GB",
         { day: "numeric", month: "long", year: "numeric" }
       )}`;
-      const invoiceNumber = `INVOICE#: ${data._id}`;
+      const invoiceNumber = `TICKET#: ${data._id}`;
 
-      const invoiceText = "INVOICE";
+      const invoiceText = "TICKET";
       const invoiceTextWidth = pdf.getTextWidth(invoiceText);
 
       pdf.setFontSize(30);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(...borderColor);
+      pdf.setTextColor(0, 0, 0);
       pdf.text(invoiceText, borderWidth + 10, 40);
 
       const verticalOffset = 5;
       const rightAlignX = pdfWidth - borderWidth - 100;
 
       pdf.setFontSize(14);
-      pdf.setTextColor(...borderColor);
+      pdf.setTextColor(0, 0, 0);
       pdf.text(dateIssued, rightAlignX, 35 - verticalOffset);
       pdf.text(invoiceNumber, rightAlignX, 45 - verticalOffset);
 
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(...borderColor);
+      pdf.setTextColor(0, 0, 0);
       pdf.text("CUSTOMER CONTACT", borderWidth + 10, 55);
 
       pdf.setFontSize(12);
@@ -130,7 +130,7 @@ const Invoice = () => {
         },
         headStyles: {
           fillColor: [255, 255, 0],
-          textColor: [255, 255, 255],
+          textColor: [0, 0, 0],
           fontSize: 14,
           fontStyle: "bold",
         },
@@ -142,13 +142,13 @@ const Invoice = () => {
 
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(...borderColor);
+      pdf.setTextColor(0, 0, 0);
       pdf.text("PAYABLE TO:", borderWidth + 10, payableToY);
 
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "normal");
       pdf.setTextColor(0, 0, 0);
-      pdf.text("Company: BOHABUS", borderWidth + 10, payableToY + 7);
+      pdf.text("Company: DOHABUS", borderWidth + 10, payableToY + 7);
       pdf.text("Phone: +974 4442 244", borderWidth + 10, payableToY + 17);
       pdf.text("Location: Doha, Qatar", borderWidth + 10, payableToY + 27);
       pdf.text("Website: www.dohabus.com", borderWidth + 10, payableToY + 37);
@@ -163,7 +163,142 @@ const Invoice = () => {
 
         pdf.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
         setLoading(false);
+        pdf.save("ticket.pdf");
+      };
+    });
+  };
 
+  const generatePDF = () => {
+    setLoading(true);
+    const invoiceElement = document.getElementById("invoice");
+
+    html2canvas(invoiceElement).then((canvas) => {
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const borderWidth = 10;
+      const borderColor = [255, 255, 0];
+      const titleColor = [255, 178, 44];
+      const contactColor = [255, 178, 44];
+      const payableToColor = titleColor;
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.setFillColor(...borderColor);
+      pdf.rect(0, 5, borderWidth, pdfHeight, "F");
+
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(...borderColor);
+
+      const dateIssued = `Issued Date: ${new Date().toLocaleDateString(
+        "en-GB",
+        { day: "numeric", month: "long", year: "numeric" }
+      )}`;
+      const invoiceNumber = `INVOICE#: ${data._id}`;
+
+      const invoiceText = "INVOICE";
+      const invoiceTextWidth = pdf.getTextWidth(invoiceText);
+
+      pdf.setFontSize(30);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(invoiceText, borderWidth + 10, 40);
+
+      const verticalOffset = 5;
+      const rightAlignX = pdfWidth - borderWidth - 100;
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(dateIssued, rightAlignX, 35 - verticalOffset);
+      pdf.text(invoiceNumber, rightAlignX, 45 - verticalOffset);
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("CUSTOMER CONTACT", borderWidth + 10, 55);
+
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(
+        `Name: ${data.firstName} ${data.lastName}`,
+        borderWidth + 10,
+        65
+      );
+      pdf.text(`Email: ${data.email}`, borderWidth + 10, 75);
+
+      pdf.autoTable({
+        startY: 80,
+        head: [["Booking Details", ""]],
+        body: [
+          [
+            "Booked Day:",
+            new Date(data.date).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          ],
+          ["Guest:", `${data.adultQuantity + data.childQuantity}`],
+          ["Name:", `${data.firstName} ${data.lastName}`],
+          ["Plan Title:", plan.title?.[lang] || "N/A"],
+          ["Category Title:", category.title?.[lang] || "N/A"],
+          ["Pickup:", data.pickupLocation || "N/A"],
+          ["Drop:", data.dropLocation || "N/A"],
+          [
+            "Add Ons:",
+            data?.addonFeatures?.length > 0
+              ? data.addonFeatures.join(", ")
+              : "No Add-ons",
+          ],
+          ["Status:", data.status],
+          ["Total:", `${data.price} QAR`],
+        ],
+        theme: "striped",
+        styles: {
+          cellPadding: 5,
+          fontSize: 12,
+          font: "helvetica",
+          halign: "left",
+          valign: "middle",
+        },
+        headStyles: {
+          fillColor: [255, 255, 0],
+          textColor: [0, 0, 0],
+          fontSize: 14,
+          fontStyle: "bold",
+        },
+        margin: { left: borderWidth + 10 },
+      });
+
+      const tableHeight = pdf.autoTable.previous.finalY;
+      const payableToY = pdfHeight - 45;
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("PAYABLE TO:", borderWidth + 10, payableToY);
+
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("Company: DOHABUS", borderWidth + 10, payableToY + 7);
+      pdf.text("Phone: +974 4442 244", borderWidth + 10, payableToY + 17);
+      pdf.text("Location: Doha, Qatar", borderWidth + 10, payableToY + 27);
+      pdf.text("Website: www.dohabus.com", borderWidth + 10, payableToY + 37);
+
+      const logoImage = new Image();
+      logoImage.src = logo;
+      logoImage.onload = () => {
+        const logoWidth = 40;
+        const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
+        const logoX = borderWidth + 140;
+        const logoY = pdfHeight - logoHeight - 12;
+
+        pdf.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
+        generateTicketPDF();
+        setLoading(false);
         pdf.save("invoice.pdf");
       };
     });
@@ -263,7 +398,7 @@ const Invoice = () => {
                     <Loader w={50} h={50} b={10} />
                   </div>
                 ) : (
-                  "Download Invoice"
+                  "Download"
                 )}
               </button>
             </div>
