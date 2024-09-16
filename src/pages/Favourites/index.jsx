@@ -71,7 +71,7 @@ const SignleCategory = () => {
             const res = await axios.post(
                 `${BASE_URL}/carts`,
                 { category: categoryId, tour: planId },
-                { withCredentials: true },
+                { withCredentials: true }
             );
 
             const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
@@ -85,8 +85,8 @@ const SignleCategory = () => {
                               isInCart: !tour.isInCart,
                               cartId: cartId ? cartId : null, // Conditionally set cartId
                           }
-                        : tour,
-                ),
+                        : tour
+                )
             );
             alert("Added to Cart");
         } catch (error) {
@@ -103,7 +103,7 @@ const SignleCategory = () => {
             const res = await axios.post(
                 `${BASE_URL}/favourites`,
                 { category: categoryId, tour: planId },
-                { withCredentials: true },
+                { withCredentials: true }
             );
 
             const favId = res.data.data.favourite?._id; // Safely access favourite._id
@@ -117,8 +117,8 @@ const SignleCategory = () => {
                               isInFavorites: !tour.isInFavorites,
                               favId: favId ? favId : null, // Conditionally set favId
                           }
-                        : tour,
-                ),
+                        : tour
+                )
             );
             alert("Added to favourite");
         } catch (error) {
@@ -137,7 +137,7 @@ const SignleCategory = () => {
 
             // Update the tours state to remove the tour with the given cartId
             setTours((prevTours) =>
-                prevTours.filter((tour) => tour._id !== cartId),
+                prevTours.filter((tour) => tour._id !== cartId)
             );
         } catch (error) {
             position: "top-right", console.log(error);
@@ -152,7 +152,7 @@ const SignleCategory = () => {
 
             // Update the tours state after successful removal
             setTours((prevTours) =>
-                prevTours.filter((tour) => tour._id !== favId),
+                prevTours.filter((tour) => tour._id !== favId)
             );
             toast.success(" Removed from favourite ", {
                 position: "top-right",
@@ -207,7 +207,7 @@ const SignleCategory = () => {
             <h1 className="text-center text-[3rem] font-bold mt-16">
                 {lang === "en" ? "Choose Your Tour" : "اختر جولتك"}
             </h1>
-            <div className="flex flex-wrap gap-5 justify-center items-center mt-5">
+            <div className=" gap-5 mt-5 grid grid-cols-1 md:grid-cols- lg:grid-cols-2 xl:grid-cols-3 mx-10">
                 {tours.map(({ _id, tour }) => {
                     const {
                         isInCart,
