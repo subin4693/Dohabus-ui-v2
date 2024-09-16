@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { FaCommentAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaCommentAlt, FaTrash } from "react-icons/fa";
 
 // A utility function to format the date
 
@@ -16,14 +16,29 @@ const Card = ({
   lang,
   title,
   formatDate,
+  handleDelete,
 }) => {
+  const navigate = useNavigate();
+  console.log(image);
   return (
-    <Link
-      to={`/blogs/${id}`}
+    <button
+      onClick={() => {
+        navigate(`/blogs/${id}`);
+      }}
       className="card-container h-fit flex flex-col md:flex-row p-4 border border-gray-200 rounded-lg shadow-md bg-white"
     >
       {/* Left Side: Image */}
-      <div className="card-image w-full md:w-1/2 h-[300px] ">
+      <div className="card-image w-full md:w-1/2 h-[300px] relative">
+        <button
+          className="text-xl p-2 rounded-md duration-300 left-3 top-4  bg-red-500  absolute"
+          onClick={(e) => {
+            e.stopPropagation();
+            // console.log("working fine");
+            handleDelete(id);
+          }}
+        >
+          <FaTrash className="" />
+        </button>
         <img
           src={image}
           alt="Blog"
@@ -36,9 +51,9 @@ const Card = ({
         {/* Top Content: Category, User, and Created At */}
         <div>
           <div className="card-header mb-2 mt-5 md:mt-0 flex flex-col space-y-1">
-            <h3 className="text-sm font-bold text-gray-700 rounded-md bg-custom-yellow w-fit px-4 py-1">
+            {/* <h3 className="text-sm font-bold text-gray-700 rounded-md bg-custom-yellow w-fit px-4 py-1">
               {categorie?.title[lang]}
-            </h3>
+            </h3> */}
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">{user?.name}</p>
               <p className="text-xs text-gray-400">{formatDate(createdAt)}</p>
@@ -64,7 +79,7 @@ const Card = ({
           </span>
         </div>
       </div>
-    </Link>
+    </button>
   );
 };
 

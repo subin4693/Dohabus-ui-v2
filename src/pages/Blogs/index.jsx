@@ -18,6 +18,7 @@ const Blogs = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
 
   const lang = useSelector((state) => state.language.lang);
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -25,6 +26,7 @@ const Blogs = () => {
 
   useEffect(() => {
     const getData = async () => {
+      console.log("get data clled");
       try {
         const catParam = searchParams.get("cat");
         const blogsUrl = catParam
@@ -33,6 +35,7 @@ const Blogs = () => {
 
         const blogData = await axios.get(blogsUrl);
         setBlogs(blogData.data.data.blogs);
+        console.log(blogData.data.data.blogs);
       } catch (error) {
         console.log(error);
       }

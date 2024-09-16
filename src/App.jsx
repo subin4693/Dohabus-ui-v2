@@ -54,6 +54,8 @@ import AdminTransportation from "./pages/Admin/Transportation";
 import OfferBanner from "./pages/Admin/OfferBanner";
 import AdminCruise from "./pages/Admin/Cruise";
 
+import AdminBlog from "./pages/Admin/Blogs";
+
 import axios from "axios";
 // import { useDispatch, useSelector } from "react-redux";
 import { setLanguage } from "./features/language/languageSlice";
@@ -199,6 +201,7 @@ function App() {
 
               <Route path="cruise" element={<AdminCruise />} />
               <Route path="populor-cruise" element={<AdminPopulorCruise />} />
+              <Route path="blogs" element={<AdminBlog />} />
             </Route>
           </Route>
         </Routes>

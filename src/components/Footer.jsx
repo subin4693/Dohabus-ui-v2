@@ -130,11 +130,11 @@ const Footer = () => {
                 <li className="cursor-pointer hover:underline">
                   <Link to="/blogs">{lang === "en" ? "Blog " : "مدونة"}</Link>
                 </li>
-                <li className="cursor-pointer hover:underline">
+                {/* <li className="cursor-pointer hover:underline">
                   <Link to="/blogs-create">
                     {lang === "en" ? "Write Blog" : "كتابة مدونة"}
                   </Link>
-                </li>
+                </li> */}
 
                 <li className="cursor-pointer hover:underline">
                   <Link to={"/Faq"}>
