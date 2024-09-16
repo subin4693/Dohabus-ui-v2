@@ -8,19 +8,34 @@ import { FaUser } from "react-icons/fa";
 import { FaSuitcase } from "react-icons/fa"; // Represents a suitcase/baggage
 import { FaCogs } from "react-icons/fa"; // Represents settings (gears)
 import { FaLink, FaTruck } from "react-icons/fa";
+import { toast } from "react-toastify";
 const Transportation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
   const [transportations, setTransportations] = useState([]);
   const lang = useSelector((state) => state.language.lang);
+  const [formData, setFormData] = useState({
+    transId: "",
+    checkInDate: "",
+    numberOfAdults: "",
+    numberOfChildren: "",
+    additionalRequest: "",
+    email: "",
+    name: "",
+  });
 
-  function openModal() {
+  const openModal = (id) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      transId: id,
+    }));
     setIsModalOpen(true);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsModalOpen(false);
-  }
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -33,6 +48,49 @@ const Transportation = () => {
     };
     getData();
   }, []);
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+
+  const handleSubmit = async (e) => {
+    console.log("formData", formData);
+    e.preventDefault();
+
+    try {
+      await axios.post(`${BASE_URL}/transbook`, formData);
+      toast.success(
+        "Thank you for booking! Our support team will reach out to you.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
+      closeModal();
+    } catch (error) {
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
   return (
     <div>
       <Banner
@@ -46,23 +104,169 @@ const Transportation = () => {
             : "Home | Transportation fleet"
         }
       />
+      <AnimatePresence>
+        {isModalOpen && (
+          <div
+            className="fixed inset-0  bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-lg shadow-lg p-6 w-fit md:mx-0 max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mt-4">
+                <div className="text-center">
+                  <h2 className="font-semibold text-2xl">
+                    {lang === "ar"
+                      ? "خدمات نقل موثوقة ومريحة"
+                      : "Reliable and Comfortable Transportation Services"}
+                  </h2>
+                  <p className="mt-4 text-[1.2rem]">
+                    {lang === "ar"
+                      ? "استمتع بخدمات نقل مريحة ومصممة لراحتك وسهولة التنقل."
+                      : "Experience seamless transportation services tailored for your comfort and convenience"}
+                  </p>
+                  <Link to={"/contact"}>
+                    <p className="text-[1.2rem] underline font-semibold text-blue-500">
+                      {lang === "ar"
+                        ? "اطرح علينا سؤالاً بدلاً من ذلك"
+                        : "Ask us a question instead"}
+                    </p>
+                  </Link>
+                </div>
+                <div className="mt-4">
+                  <form onSubmit={handleSubmit}>
+                    <div className="flex justify-between items-center gap-3">
+                      <div className="mt-10 w-full">
+                        <label className="text-lg font-semibold">
+                          {lang === "ar" ? "تاريخ الوصول" : "Date"}
+                        </label>
+                        <br />
+                        <input
+                            name="checkInDate"
+                            value={formData.checkInDate}
+                            onChange={handleChange}
+                            className="border-2 border-gray-300 rounded outline-none px-3 p-3 w-full"
+                            type="date"
+                          />
+                      </div>
+                      <div className="mt-10 w-full">
+                        <label className="text-lg font-semibold">
+                          {lang === "ar" ? "عدد البالغين" : "Number of Adults"}
+                        </label>
+                        <br />
+                        <input
+                          name="numberOfAdults"
+                          value={formData.numberOfAdults}
+                          onChange={handleChange}
+                          type="number"
+                          className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
+                          placeholder={
+                            lang === "ar" ? "عدد البالغين" : "Number of adults"
+                          }
+                        />
+                      </div>
+                    </div>
 
-      {/*      <div className="relative">
-        <img
-          className="h-[80vh] w-full object-cover"
-          src="https://images.pexels.com/photos/19096944/pexels-photo-19096944/free-photo-of-hot-air-balloons-in-the-yellow-sky-over-a-desert-and-people-standing-on-a-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt="img"
-        />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-white">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold">
-            TRANSPORTATION FLEET
-          </h1>
-          <p className="text-2xl mt-4">
-            <span className="text-custom-yellow">Home</span> | TRANSPORTATION
-            FLEET
-          </p>
-        </div>
-      </div>*/}
+                    <div className="flex justify-between items-center gap-3 mt-3 w-full">
+                      <div className="w-full">
+                        <label className="text-lg font-semibold">
+                          {lang === "ar" ? "عدد الأطفال" : "Number of Children"}
+                        </label>
+                        <br />
+                        <input
+                          name="numberOfChildren"
+                          value={formData.numberOfChildren}
+                          onChange={handleChange}
+                          type="number"
+                          className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
+                          placeholder={
+                            lang === "ar" ? "عدد الأطفال" : "Number of children"
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <label className="text-lg font-semibold">
+                        {lang === "ar" ? "طلب إضافي" : "Additional Request"}
+                      </label>
+                      <br />
+                      <textarea
+                        name="additionalRequest"
+                        value={formData.additionalRequest}
+                        onChange={handleChange}
+                        className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
+                        placeholder={
+                          lang === "ar" ? "طلب إضافي" : "Additional Request"
+                        }
+                        rows="3"
+                      ></textarea>
+                    </div>
+
+                    <div className="flex justify-between items-center gap-3 mt-3 w-full">
+                      <div className="w-full">
+                        <label className="text-lg font-semibold">
+                          {lang === "ar" ? "البريد الإلكتروني" : "Email"}
+                        </label>
+                        <br />
+                        <input
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          type="email"
+                          className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
+                          placeholder={
+                            lang === "ar"
+                              ? "أدخل البريد الإلكتروني"
+                              : "Enter email"
+                          }
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label className="text-lg font-semibold">
+                          {lang === "ar" ? "الاسم" : "Name"}
+                        </label>
+                        <br />
+                        <input
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          type="text"
+                          className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
+                          placeholder={
+                            lang === "ar" ? "أدخل الاسم" : "Enter name"
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between pt-5 bg-opacity-50 gap-3">
+                      <button
+                        type="button"
+                        className="bg-yellow-500 text-white px-4 py-2 w-full font-semibold text-lg rounded hover:bg-dark"
+                        onClick={closeModal}
+                      >
+                        {lang === "ar" ? "إغلاق" : "Close"}
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-yellow-500 text-white w-full px-4 p-3 font-semibold text-lg rounded hover:bg-dark"
+                      >
+                        {lang === "ar" ? "احجز الآن" : "Book Now"}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <div className="mt-10 mb-10">
         <motion.h1
@@ -93,9 +297,12 @@ const Transportation = () => {
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-custom-yellow bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="bg-white px-2 py-2 rounded-md">
-                    <Link to="/contact" className="font-semibold text-xl">
+                    <button
+                      onClick={() => openModal(card._id)} // Pass the transportationId here
+                      className="font-semibold text-xl"
+                    >
                       Rent Now
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
