@@ -17,6 +17,7 @@ const Card = ({
   title,
   formatDate,
   handleDelete,
+  isSuperAdmin,
 }) => {
   const navigate = useNavigate();
   console.log(image);
@@ -29,16 +30,18 @@ const Card = ({
     >
       {/* Left Side: Image */}
       <div className="card-image w-full md:w-1/2 h-[300px] relative">
-        <button
-          className="text-xl p-2 rounded-md duration-300 left-3 top-4  bg-red-500  absolute"
-          onClick={(e) => {
-            e.stopPropagation();
-            // console.log("working fine");
-            handleDelete(id);
-          }}
-        >
-          <FaTrash className="" />
-        </button>
+        {isSuperAdmin && (
+          <button
+            className="text-xl p-2 rounded-md duration-300 left-3 top-4  bg-red-500  absolute"
+            onClick={(e) => {
+              e.stopPropagation();
+              // console.log("working fine");
+              handleDelete(id);
+            }}
+          >
+            <FaTrash className="" />
+          </button>
+        )}
         <img
           src={image}
           alt="Blog"

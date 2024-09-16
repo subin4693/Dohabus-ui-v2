@@ -8,6 +8,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 const Blogs = () => {
   const [searchParams] = useSearchParams();
+  const mainuser = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [categorys, setCategorys] = useState([]);
@@ -75,12 +76,14 @@ const Blogs = () => {
       <div className=" md:flex md:gap-8">
         <div className="flex justify-between items-center w-full ">
           <h2 className="text-2xl font-bold ">Blogs</h2>
-          <Link
-            to="/blogs-create"
-            className="px-2 py-1 bg-custom-yellow rounded-md duration-300 hover:text-white text-dark hover:bg-dark "
-          >
-            Write blog
-          </Link>
+          {mainuser?.role == "super-admin" && (
+            <Link
+              to="/blogs-create"
+              className="px-2 py-1 bg-custom-yellow rounded-md duration-300 hover:text-white text-dark hover:bg-dark "
+            >
+              Write blog
+            </Link>
+          )}
         </div>
       </div>
       <div>
@@ -101,6 +104,7 @@ const Blogs = () => {
                 lang={lang}
                 title={data.title}
                 formatDate={formatDate}
+                isSuperAdmin={mainuser?.role === "super-admin"}
               />
             ))}
         </div>
