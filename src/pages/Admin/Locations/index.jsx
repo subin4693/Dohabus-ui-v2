@@ -102,11 +102,13 @@ const DetailsManager = () => {
   // Function to handle deleting a detail
   const handleDelete = async (id) => {
     try {
-      const data = await axios.delete(BASE_URL + "/locations/" + id, detail);
+      await axios.delete(BASE_URL + "/locations/" + id);
 
+      // Remove the deleted detail from state
       setDetails((prevDetails) =>
-        prevDetails.map((d) => (d._id === resData._id ? resData : d))
+        prevDetails.filter((detail) => detail._id !== id)
       );
+
       toast.success("Deleted successfully", {
         position: "top-right",
         autoClose: 5000,
@@ -120,10 +122,6 @@ const DetailsManager = () => {
     } catch (error) {
       console.log(error);
     }
-
-    setDetails((prevDetails) =>
-      prevDetails.filter((detail) => detail._id !== id)
-    );
   };
 
   // Function to handle editing a detail

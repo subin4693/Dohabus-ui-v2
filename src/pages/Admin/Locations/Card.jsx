@@ -6,6 +6,7 @@ const Card = ({ data, onSave, onCancel, loading }) => {
     data || {
       title: { en: "", ar: "" },
       dates: [{ day: { en: "", ar: "" }, time: "" }],
+      url: "",
     }
   );
 
@@ -36,6 +37,13 @@ const Card = ({ data, onSave, onCancel, loading }) => {
     setDetail((prevDetail) => ({
       ...prevDetail,
       dates: [...prevDetail.dates, { day: { en: "", ar: "" }, time: "" }],
+    }));
+  };
+
+  const handleUrlChange = (e) => {
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      url: e.target.value,
     }));
   };
 
@@ -98,6 +106,16 @@ const Card = ({ data, onSave, onCancel, loading }) => {
             onChange={(e) => handleDateChange(index, "time", e.target.value)}
             className="border p-2 w-full"
           />
+
+          <div className="mb-4">
+            <label className="block font-bold mb-1">URL</label>
+            <input
+              type="text"
+              value={detail.url}
+              onChange={handleUrlChange}
+              className="border p-2 w-full"
+            />
+          </div>
         </div>
       ))}
       <button
