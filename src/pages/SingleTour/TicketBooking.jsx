@@ -213,15 +213,15 @@ export default function TicketBooking({
 
                 {
                     <div className="flex justify-between items-center mb-4">
-                        <div className="flex justify-center items-center">
-                            <div>
+                        <div>
+                            <div className="flex justify-center items-center">
                                 <h2 className="text-lg font-semibold">
                                     {lang === "ar" ? "طفل" : "Child"}
                                 </h2>{" "}
                                 <span className="text-gray-500 ml-2 text-md font-bold">
                                     {lang === "ar"
-                                        ? "(أكثر من 13)"
-                                        : "(Above 13 YRS)"}
+                                        ? "(3-11 YRS)"
+                                        : "(3-11 YRS)"}
                                 </span>
                             </div>
 

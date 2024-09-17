@@ -890,33 +890,6 @@ const SingleTour = () => {
                                     </div>
                                 )}
                             </div>
-                            <div className=" flex justify-center items-center my-10 md:mt-0 mr-10">
-                                <div className=" space-y-8 rounded-md border p-8 border-black border-dashed">
-                                    <div className="flex jutify-center items-center gap-3">
-                                        <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] bg-white    h-[50px] border-[2px] border-black rounded-full flex border justify-center items-center">
-                                            <div className="w-2 h-2 rounded-full bg-black group-hover:scale-110 -x-6 transition-transform duration-300 ease-in-out"></div>
-                                        </div>
-                                        something
-                                    </div>
-                                    <div className="flex justify-center items-center gap-3">
-                                        <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] group-hover:scale-100 bg-custom-yellow     h-[50px] border-[2px] border-custom-yellow rounded-full flex border justify-center items-center">
-                                            <img
-                                                src={discimage}
-                                                className="w-[80px] h-[80px]  object-cover transition-transform duration-300 ease-in-out"
-                                            />
-                                            {/*<div className="w-2 h-2 rounded-full bg-black"></div>*/}
-                                        </div>
-                                        something
-                                    </div>
-                                    <div className="flex justify-center items-center gap-3">
-                                        <div className=" hover:scale-110 transition-transform duration-300 ease-in-out w-[50px] group-hover:scale-100      h-[50px] border-[2px]   rounded-full flex   justify-center items-center">
-                                            <div className=" h-full border border-dashed border-4 border-black" />
-                                            {/*<div className="w-2 h-2 rounded-full bg-black"></div>*/}
-                                        </div>
-                                        something
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div className="w-full md:w-1/4   relative">
