@@ -38,7 +38,7 @@ export default function BasicDateCalendar({
             <DateCalendar
                 style={{ width: "100%", height: "100%" }} // Increase width and height
                 //  style={{ width: "100%" }}
-                className="bg-gray-100 rounded-lg shadow-lg "
+                className="bg-gray-100 rounded-lg shadow-lg  "
                 disablePast
                 shouldDisableDate={shouldDisableDate}
                 onChange={handleDateChange}

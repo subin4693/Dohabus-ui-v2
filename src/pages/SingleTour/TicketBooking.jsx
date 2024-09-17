@@ -182,7 +182,7 @@ export default function TicketBooking({
                                 <span className="text-gray-500 ml-2 text-md font-bold">
                                     {lang === "ar"
                                         ? "(أكثر من 13)"
-                                        : "(Above 13)"}
+                                        : "(Above 13 YRS)"}
                                 </span>
                             </div>
                             <p>Price: {adultPrice} qar</p>
@@ -213,10 +213,17 @@ export default function TicketBooking({
 
                 {
                     <div className="flex justify-between items-center mb-4">
-                        <div>
-                            <h2 className="text-lg font-semibold">
-                                {lang === "ar" ? "طفل" : "Child"}
-                            </h2>
+                        <div className="flex justify-center items-center">
+                            <div>
+                                <h2 className="text-lg font-semibold">
+                                    {lang === "ar" ? "طفل" : "Child"}
+                                </h2>{" "}
+                                <span className="text-gray-500 ml-2 text-md font-bold">
+                                    {lang === "ar"
+                                        ? "(أكثر من 13)"
+                                        : "(Above 13 YRS)"}
+                                </span>
+                            </div>
 
                             <p>Price: {childPrice} qar</p>
                         </div>

@@ -61,6 +61,7 @@ const SingleTour = () => {
     const [session, setSession] = useState(null);
     const [selectedAddOns, setSelectedAddOns] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [contentLoading, setContentLoading] = useState(false);
     const [sessionLoading, setSessionLoading] = useState(false);
     const [isInCart, setIsInCart] = useState(false);
     const [isInFav, setIsInFav] = useState(false);
@@ -512,6 +513,7 @@ const SingleTour = () => {
     useEffect(() => {
         const getData = async () => {
             try {
+                setContentLoading(true);
                 console.log("get data function clled **************");
                 const data = await axios.get(
                     BASE_URL + "/plans/" + singletour,
@@ -572,6 +574,8 @@ const SingleTour = () => {
                 // setTours(data.data.data.plans);
             } catch (error) {
                 console.log(error);
+            } finally {
+                setContentLoading(false);
             }
         };
         getData();
@@ -582,6 +586,23 @@ const SingleTour = () => {
         value: addOn._id,
         price: addOn.price,
     }));
+
+    if (contentLoading) {
+        return (
+            <div>
+                <Skleton width={"w-full"} height={"h-[40vh]"} />;
+                <div className="flex flex-col mb-20  justify-center items-center px-2  pt-10">
+                    <div className="flex justify-center items-center gap-5 w-[80vw] overflow-hidden flex-wrap">
+                        <Skleton width="w-screen h-[20vh]" />
+                        <Skleton width="w-screen h-[19vh] " />
+                    </div>
+                    <div>
+                        <Skleton width="w-screen md:w-[80vw] h-[20vh]" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>
