@@ -139,20 +139,20 @@ const Index = () => {
 
             pdf.setFontSize(30);
             pdf.setFont("helvetica", "bold");
-            pdf.setTextColor(...borderColor);
+            pdf.setTextColor(0, 0, 0);
             pdf.text(invoiceText, borderWidth + 10, 40);
 
             const verticalOffset = 5;
             const rightAlignX = pdfWidth - borderWidth - 100;
 
             pdf.setFontSize(14);
-            pdf.setTextColor(...borderColor);
+            pdf.setTextColor(0, 0, 0);
             pdf.text(dateIssued, rightAlignX, 35 - verticalOffset);
             pdf.text(invoiceNumber, rightAlignX, 45 - verticalOffset);
 
             pdf.setFontSize(16);
             pdf.setFont("helvetica", "bold");
-            pdf.setTextColor(...borderColor);
+            pdf.setTextColor(0, 0, 0);
             pdf.text("CUSTOMER CONTACT", borderWidth + 10, 55);
 
             pdf.setFontSize(12);
@@ -204,7 +204,7 @@ const Index = () => {
                 },
                 headStyles: {
                     fillColor: [255, 255, 0],
-                    textColor: [255, 255, 255],
+                    textColor: [0, 0, 0],
                     fontSize: 14,
                     fontStyle: "bold",
                 },
@@ -216,7 +216,7 @@ const Index = () => {
 
             pdf.setFontSize(16);
             pdf.setFont("helvetica", "bold");
-            pdf.setTextColor(...borderColor);
+            pdf.setTextColor(0, 0, 0);
             pdf.text("PAYABLE TO:", borderWidth + 10, payableToY);
 
             pdf.setFontSize(12);
