@@ -48,6 +48,33 @@ const Checkout = () => {
     console.log("Uuu *** ");
     console.log(user);
     const checkOffer = async () => {
+        if (!firstName.trim()) {
+            toast.error("Please enter first name!");
+            setLoading(false);
+            return;
+        }
+        // if (!lastName.trim()) {
+        //   toast.error("Please enter last name!");
+        //   setLoading(false);
+        //   return;
+        // }
+        if (!email.trim()) {
+            toast.error("Please enter email!");
+            setLoading(false);
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            toast.error("Please enter a valid email address!");
+            setLoading(false);
+            return;
+        }
+        if (!number?.trim()) {
+            toast.error("Please enter a valid mobile number!");
+            setLoading(false);
+            return;
+        }
         if (!coupon) {
             toast.error("Coupon is missing");
             return;
@@ -63,6 +90,7 @@ const Checkout = () => {
         let requestData = {
             couponCode: coupon,
             planId: data._id,
+            email,
         };
 
         if (childCount || adultCount || addons) {
@@ -88,7 +116,14 @@ const Checkout = () => {
             setTotalDiscountedAmount(res?.data?.data?.totalDiscountAmount);
         } catch (error) {
             console.log(error);
-            toast.error("Coupon code is not valid");
+            if (
+                error?.response?.data?.message?.includes(
+                    "Coupon code can only be used"
+                )
+            ) {
+                toast.error(error?.response?.data?.message);
+                setCoupon("");
+            } else toast.error("Coupon code is not valid");
         } finally {
             setApplyLoader(false);
         }
@@ -205,8 +240,13 @@ const Checkout = () => {
                 )
             ) {
                 return toast.error(error?.response?.data?.message);
-            }
-            toast.error("Something went wrong. Please try again later");
+            } else if (
+                error?.response?.data?.message?.includes(
+                    "Coupon code can only be used"
+                )
+            ) {
+                toast.error(error?.response?.data?.message);
+            } else toast.error("Coupon code is not valid");
         }
     };
 

@@ -12,7 +12,6 @@ const Offers = () => {
     const mainUser = useSelector((state) => state.user.user);
     const [loading, setLoading] = useState(false);
 
-
     const handleStatus = async (id) => {
         if (mainUser.role !== "super-admin") return;
         try {
@@ -21,8 +20,8 @@ const Offers = () => {
 
             setOffers((prevOffers) =>
                 prevOffers.map((offer) =>
-                    offer._id === updatedOffer._id ? updatedOffer : offer,
-                ),
+                    offer._id === updatedOffer._id ? updatedOffer : offer
+                )
             );
         } catch (err) {
             console.log(err);
@@ -38,8 +37,9 @@ const Offers = () => {
         childDiscountPrice,
         adultDiscountPrice,
         selectedPlan,
+        limit
     ) => {
-        setLoading(true)
+        setLoading(true);
         if (mainUser.role !== "super-admin") return;
 
         try {
@@ -52,15 +52,15 @@ const Offers = () => {
                 childDiscountPrice,
                 adultDiscountPrice,
                 plan: selectedPlan,
+                limit,
             });
             console.log(res.data.data);
 
             setOffers((prev) => [...prev, ...res.data.data.offers]);
             setIsOpen(false);
-            setLoading(false)
-
+            setLoading(false);
         } catch (err) {
-            setLoading(false)
+            setLoading(false);
 
             console.log(err);
         }

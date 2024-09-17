@@ -279,9 +279,14 @@ const SingleTour = () => {
 
     const handleBooking = () => {
         setLoading(true);
-        if (!selectedDate || !session) {
+        if (!selectedDate) {
             setLoading(false);
-            toast.error("Please select data and sessoin before proceeding!");
+            toast.error("Please select date before proceeding!");
+            return;
+        }
+        if (data?.sessions?.length > 0 && !session) {
+            setLoading(false);
+            toast.error("Please select sessoin before proceeding!");
             return;
         }
 
