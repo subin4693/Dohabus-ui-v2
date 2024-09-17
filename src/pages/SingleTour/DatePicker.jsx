@@ -36,7 +36,8 @@ export default function BasicDateCalendar({
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
-                style={{ width: "100%" }}
+                style={{ width: "100%", height: "100%" }} // Increase width and height
+                //  style={{ width: "100%" }}
                 className="bg-gray-100 rounded-lg shadow-lg "
                 disablePast
                 shouldDisableDate={shouldDisableDate}
