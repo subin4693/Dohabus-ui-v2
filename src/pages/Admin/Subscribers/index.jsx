@@ -59,7 +59,7 @@ const Index = () => {
 
     return (
         <div className="mt-10 bg-gray-200 p-5">
-            <div className="flex justify-end gap-5">
+            <div className="flex justify-end gap-5 flex-wrap items-center">
                 <input
                     className="border w-[400px] p-3 outline-none font-semibold text-xl"
                     type="text"
