@@ -11,7 +11,8 @@ import PricingComponent from "./PricingComponent";
 import AddonComponent from "./AddonComponent";
 import SinglePriceComponent from "./SinglePriceComponent";
 import Loader from "../../../components/Loader";
-
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import DatePanel from "react-multi-date-picker/plugins/date_panel";
 const TourPlanForm = ({ onClose }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -55,6 +56,7 @@ const TourPlanForm = ({ onClose }) => {
     const [faq, setFaq] = useState([
         { question: { en: "", ar: "" }, answer: { en: "", ar: "" } },
     ]);
+    const [stopSales, setStopSales] = useState([]);
     const [limit, setLimit] = useState(0);
     // Helper function to convert file to base64
     // const fileToBase64 = (file, cb) => {
@@ -202,6 +204,9 @@ const TourPlanForm = ({ onClose }) => {
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
+        const formattedDates = stopSales.map((date) =>
+            date instanceof DateObject ? date.toDate().toISOString() : date
+        );
 
         // Utility function to remove empty fields from an object
         const removeEmptyFields = (obj) => {
@@ -338,6 +343,7 @@ const TourPlanForm = ({ onClose }) => {
             isDropOffRequired,
             addOn: addon.filter((item) => item.en || item.ar || item.price),
             limit,
+            stopSales: formattedDates,
             ...(hasAdultData && { adultData }),
             ...(hasChildData && { childData }),
             ...(hasAdultPrice && { adultPrice }),
@@ -422,7 +428,7 @@ const TourPlanForm = ({ onClose }) => {
             >
                 {/* Category Dropdown */}
                 <div>
-                    <label htmlFor="category" className="block mb-2">
+                    <label htmlFor="category" className="block mb-2 font-bold">
                         Category{" "}
                     </label>
                     <select
@@ -443,7 +449,10 @@ const TourPlanForm = ({ onClose }) => {
                 </div>
                 {/* Cover Image Input */}
                 <div>
-                    <label htmlFor="coverImage" className="block mb-2">
+                    <label
+                        htmlFor="coverImage"
+                        className="block mb-2 font-bold"
+                    >
                         Cover Image
                     </label>
                     <input
@@ -505,7 +514,7 @@ const TourPlanForm = ({ onClose }) => {
                     },
                 ].map(({ label, state, setter, optional }) => (
                     <div key={label}>
-                        <label className="block mb-2">
+                        <label className="block mb-2 font-bold">
                             {label}{" "}
                             {optional && (
                                 <span className="text-gray-600 ml-2">
@@ -547,7 +556,7 @@ const TourPlanForm = ({ onClose }) => {
                     },
                 ].map(({ label, state, setter }) => (
                     <div key={label}>
-                        <label className="block mb-2">
+                        <label className="block mb-2 font-bold">
                             {label}{" "}
                             <span className="text-gray-600 ml-2">
                                 (optional)
@@ -600,8 +609,8 @@ const TourPlanForm = ({ onClose }) => {
                         setter={setAddon}
                     />
                 </div>
-                <label htmlFor="galleryImages" className="block mb-2">
-                    Pickup and Dropoff{" "}
+                <label htmlFor="galleryImages" className="block mb-2 ">
+                    <span className="font-bold">Pickup and Dropoff </span>
                     <span className="text-gray-600 ml-2">(optional)</span>
                 </label>
                 <div className="flex gap-10 items-center">
@@ -632,7 +641,10 @@ const TourPlanForm = ({ onClose }) => {
                 </div>
                 {/* Gallery Images Input */}
                 <div>
-                    <label htmlFor="galleryImages" className="block mb-2">
+                    <label
+                        htmlFor="galleryImages"
+                        className="block mb-2 font-bold"
+                    >
                         Gallery Images{" "}
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
@@ -664,7 +676,10 @@ const TourPlanForm = ({ onClose }) => {
                 </div>
                 {/* Gallery Videos Input */}
                 <div>
-                    <label htmlFor="galleryVideos" className="block mb-2">
+                    <label
+                        htmlFor="galleryVideos"
+                        className="block mb-2 font-bold"
+                    >
                         Gallery Videos{" "}
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
@@ -696,7 +711,10 @@ const TourPlanForm = ({ onClose }) => {
                 </div>
                 {/* Available Days Dropdown */}
                 <div>
-                    <label htmlFor="availableDays" className="block mb-2">
+                    <label
+                        htmlFor="availableDays"
+                        className="block mb-2 font-bold"
+                    >
                         Available Days
                     </label>
                     <div className="flex flex-wrap">
@@ -749,13 +767,34 @@ const TourPlanForm = ({ onClose }) => {
                             </div>
                         </>
                     )}
+                </div>{" "}
+                <div>
+                    {/* ******************************************************************************************************************* */}
+                    <div>
+                        <label className="font-bold">Stop sales</label>
+                    </div>
+
+                    <div>
+                        <DatePicker
+                            multiple
+                            value={stopSales}
+                            className="text-xl"
+                            format="MMMM DD YYYY"
+                            sort
+                            onChange={setStopSales}
+                            plugins={[<DatePanel />]}
+                        />
+                    </div>
                 </div>
                 <div className="mt-4">
                     <div className="">
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Box>
                                 <h3>
-                                    Select Sessions{" "}
+                                    <span className="font-bold">
+                                        {" "}
+                                        Select Sessions{" "}
+                                    </span>
                                     <span className="text-gray-600 ml-2">
                                         (optional)
                                     </span>
@@ -854,6 +893,9 @@ const TourPlanForm = ({ onClose }) => {
                         />
                     )}
                 </div>
+                <div>
+                    <label>Stop sales</label>
+                </div>
                 <div className="mt-4">
                     <label htmlFor="limit" className="block mb-2">
                         Set ticket limit
@@ -869,7 +911,7 @@ const TourPlanForm = ({ onClose }) => {
                 </div>
                 <div className="mt-4">
                     <label htmlFor="knowBeforeYouGo" className="block mb-2">
-                        Know Before You Go{" "}
+                        <span className="font-bold">Know Before You Go </span>
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     {knowBeforeYouGo.map((item, index) => (
@@ -923,7 +965,7 @@ const TourPlanForm = ({ onClose }) => {
                 {/* Submit Button */}
                 <div className="mt-4">
                     <label htmlFor="faq" className="block mb-2">
-                        FAQs{" "}
+                        <span className="font-bold"> FAQs </span>
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     {faq.map((faqItem, index) => (

@@ -11,12 +11,6 @@ td {
 }
 /* Custom styles for React DatePicker */
 
-.sslick-slide {
-    transition: transform 0.5s ease-in-out; /* Adjust duration and easing here */
-}
-
-.sslick-active {
-    transform: scale(0.8);
-
-    transition: transform 0.5s ease-in-out; /* Adjust duration and easing here */
+.rmdp-input {
+    padding: 20px 10px !important;
 }
