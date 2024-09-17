@@ -4,7 +4,7 @@ import DownloadModal from "./DowloadModal";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-
+import DatePicker from "react-datepicker";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 
@@ -15,7 +15,7 @@ const ManageTickets = () => {
     const [details, setDetails] = useState([]);
     const lang = useSelector((state) => state.language.lang);
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedFilter, setSelectedFilter] = useState("Year");
+
     const openPopup = () => {
         setIsModalOpen(true);
     };
@@ -23,7 +23,9 @@ const ManageTickets = () => {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
     const handleDownload = (format) => {
         setIsModalOpen(false);
 
@@ -135,36 +137,36 @@ const ManageTickets = () => {
         };
         getData();
     }, []);
-    const handleSearchChange = (e) => {
-        console.log("workng fine");
-        setSearchQuery(e.target.value);
-    };
-
+    const [selectedFilter, setSelectedFilter] = useState("All");
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const getStartAndEndDate = (filter) => {
         const now = new Date();
-        let startDate, endDate;
+        let startDate = null;
+        let endDate = null;
 
         if (filter === "week") {
-            // Get the current week's start and end dates
-            const startOfWeek = now.getDate() - now.getDay(); // Start from Sunday
+            // Get the start and end of the current week (Sunday to Saturday)
+            const startOfWeek = now.getDate() - now.getDay(); // Sunday
             startDate = new Date(now.setDate(startOfWeek));
-            endDate = new Date(now.setDate(startOfWeek + 6)); // End of the week (Saturday)
+            endDate = new Date(now.setDate(startOfWeek + 6)); // Saturday
         } else if (filter === "Month") {
-            // Get the current month's start and end dates
+            // Get the start and end of the current month
             startDate = new Date(now.getFullYear(), now.getMonth(), 1);
             endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of the month
         } else if (filter === "Year") {
-            // Get the current year's start and end dates
+            // Get the start and end of the current year
             startDate = new Date(now.getFullYear(), 0, 1);
             endDate = new Date(now.getFullYear(), 11, 31); // Last day of the year
         }
 
+        // If filter is "All", no date filtering is needed
         return { startDate, endDate };
     };
-
     const filteredDetails = details.filter((ticket) => {
-        const ticketDate = new Date(ticket?.date); // Assuming `createdAt` is the date field in ticket
-        // Apply text search filter
+        const ticketDate = new Date(ticket?.createdAt).setHours(0, 0, 0, 0);
+
+        // Match search query
         const matchesSearchQuery =
             ticket?.user?.name
                 ?.toLowerCase()
@@ -180,25 +182,29 @@ const ManageTickets = () => {
                 ?.includes(searchQuery.toLowerCase()) ||
             ticket?.status?.toLowerCase()?.includes(searchQuery.toLowerCase());
 
-        // Get the selected time filter (week, month, year)
-        const { startDate, endDate } = getStartAndEndDate(selectedFilter);
-        console.log("********************888");
+        // Check if a custom date range is selected from DatePicker
+        let startDateToUse = startDate?.setHours(0, 0, 0, 0);
+        let endDateToUse = endDate?.setHours(0, 0, 0, 0);
 
-        console.log(ticketDate);
-        console.log(">");
+        // If no custom date range is selected, use selectedFilter (week, month, year)
+        if (!startDate && !endDate) {
+            const { startDate: filterStartDate, endDate: filterEndDate } =
+                getStartAndEndDate(selectedFilter);
+            startDateToUse = filterStartDate;
+            endDateToUse = filterEndDate;
+        }
         console.log(startDate);
         console.log(endDate);
-        console.log(startDate < ticketDate);
-        console.log(endDate > ticketDate);
-
-        console.log(endDate);
-        // Apply date filter
+        console.log(ticketDate);
+        // Apply date filtering based on the available date range (either DatePicker or selectedFilter)
         const isWithinDateRange =
-            ticketDate >= startDate && ticketDate <= endDate;
+            (!startDateToUse || ticketDate >= startDateToUse) &&
+            (!endDateToUse || ticketDate <= endDateToUse);
 
-        // Return true only if both search query and date filters match
+        // Return true if both search query and date range filters match
         return matchesSearchQuery && isWithinDateRange;
     });
+
     return (
         <div className="p-5 bg-gray-100">
             <div className="flex justify-between items-center">
@@ -212,10 +218,32 @@ const ManageTickets = () => {
                         value={selectedFilter}
                         onChange={(e) => setSelectedFilter(e.target.value)} // Set selected filter
                     >
-                        <option value="week">Week</option>
-                        <option value="Month">Month</option>
-                        <option value="Year">Year</option>
-                    </select>
+                        <option value="week">Current Week</option>
+                        <option value="Month">Current Month</option>
+                        <option value="Year">Current Year</option>
+                        <option value="All">All</option>
+                    </select>{" "}
+                    <div className="flex items-center gap-2">
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            placeholderText="Start Date"
+                            className="px-2 py-1 rounded-md shadow border-black"
+                        />
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            placeholderText="End Date"
+                            className="px-2 py-1 rounded-md shadow border-black"
+                        />
+                    </div>
                     <input
                         type="text"
                         placeholder="Search ticket"
