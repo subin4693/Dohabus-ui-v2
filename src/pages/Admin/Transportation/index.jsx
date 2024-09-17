@@ -6,6 +6,8 @@ import { IoCameraOutline } from "react-icons/io5";
 import Card from "./Card";
 import { toast } from "react-toastify";
 import Loader from "../../../components/Loader";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Transportation = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Ensure BASE_URL is set properly
@@ -22,6 +24,7 @@ const Transportation = () => {
   const [transportations, setTransportations] = useState([]);
   const mainUser = useSelector((state) => state.user.user);
   const [loading, setLoading] = useState(false);
+  const [details, setDetails] = useState([]);
 
   const handleImageChange = (e) => {
     console.log("Working IMG");
@@ -32,7 +35,7 @@ const Transportation = () => {
   };
 
   const handleCreate = async (isEdit) => {
-    setLoading(true)
+    setLoading(true);
     try {
       let updatedFleet;
       if (isEdit) {
@@ -58,11 +61,8 @@ const Transportation = () => {
         );
 
         toast.success("Transportation fleet updated");
-        setLoading(false)
-
+        setLoading(false);
       } else {
-       
-
         // Create a new transportation fleet
         // if (!file) {
         //   return toast.warn("Please select an image");
@@ -89,13 +89,12 @@ const Transportation = () => {
         ]);
 
         toast.success("New transportation fleet created");
-        setLoading(false)
+        setLoading(false);
       }
-      
 
       // Close the modal or form
       setIsOpen(false);
-      setLoading(false)
+      setLoading(false);
       // Reset form fields
       setTitle({ en: "", ar: "" });
       setType({ en: "", ar: "" });
@@ -105,11 +104,62 @@ const Transportation = () => {
       setImage(null);
       setSelectedData(null);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       toast.error("Something went wrong. Please try again later");
     }
   };
 
+  const handleDownload = () => {
+    console.log("Download as PDF");
+    const doc = new jsPDF();
+  
+    // Define the table columns and rows
+    const tableColumn = ["ID", "Title", "Type", "Passenger", "Luggage", "isActive", "Created At"];
+    const tableRows = [];
+  
+    // Loop through the details to push each item's data as a row in the table
+    details.forEach((item) => {
+      const { _id, title, type, passenger, luggage, isActive, createdAt } = item;
+      const rowData = [
+        _id,
+        title.en,
+        type.en,
+        passenger,
+        luggage,
+        isActive ? "Yes" : "No",
+        new Date(createdAt).toLocaleDateString(), // Formatting date
+      ];
+      tableRows.push(rowData);
+    });
+  
+    // Add a title to the document
+    doc.text("Transportations List", 14, 15);
+  
+    // Add the autoTable
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20, // Position to start the table
+    });
+  
+    // Save the PDF
+    doc.save("Transportations.pdf");
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/transportations/admin");
+        console.log(res?.data?.data);
+        setDetails(res?.data?.data.transportations);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
+  }, []);
+
+  console.log("details", details);
   //   const handleDialog = (data = null) => {
   //     if (data) {
   //       // Edit mode
@@ -368,12 +418,20 @@ const Transportation = () => {
       )}
 
       {mainUser && mainUser.role === "super-admin" && (
-        <button
-          onClick={() => handleDialog(null)}
-          className="bg-blue-500 text-white p-2 rounded-lg mb-4 hover:bg-blue-600"
-        >
-          Create New Transportation
-        </button>
+        <div className=" flex justify-between">
+          <button
+            onClick={() => handleDialog(null)}
+            className="bg-blue-500 text-white p-2 rounded-lg mb-4 hover:bg-blue-600"
+          >
+            Create New Transportation
+          </button>
+          <button
+            onClick={handleDownload}
+            className="bg-custom-yellow text-dark p-2 rounded-lg mb-4"
+          >
+            Download
+          </button>
+        </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
