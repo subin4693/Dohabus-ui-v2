@@ -138,7 +138,7 @@ const Contact = () => {
                         <span className="text-gray font-bold">
                           {time.day[lang]}:
                         </span>{" "}
-                        {time.time[lang]}
+                        {time.time}
                         <br />
                       </span>
                     ))}
