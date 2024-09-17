@@ -216,7 +216,11 @@ const ManageTickets = () => {
                     <select
                         className="px-5 rounded-md"
                         value={selectedFilter}
-                        onChange={(e) => setSelectedFilter(e.target.value)} // Set selected filter
+                        onChange={(e) => {
+                            setStartDate(null);
+                            setEndDate(null);
+                            setSelectedFilter(e.target.value);
+                        }} // Set selected filter
                     >
                         <option value="week">Current Week</option>
                         <option value="Month">Current Month</option>
