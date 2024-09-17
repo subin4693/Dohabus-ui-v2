@@ -397,7 +397,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             >
                 {/* Category Dropdown */}
                 <div>
-                    <label htmlFor="category" className="block mb-2">
+                    <label htmlFor="category" className="block mb-2 font-bold">
                         Category{" "}
                     </label>
                     <select
@@ -418,7 +418,10 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 {/* Cover Image Input */}
                 <div>
-                    <label htmlFor="coverImage" className="block mb-2">
+                    <label
+                        htmlFor="coverImage"
+                        className="block mb-2 font-bold"
+                    >
                         Cover Image
                     </label>
                     <input
@@ -480,7 +483,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                     },
                 ].map(({ label, state, setter, optional }) => (
                     <div key={label}>
-                        <label className="block mb-2">
+                        <label className="block mb-2 font-bold">
                             {label}{" "}
                             {optional && (
                                 <span className="text-gray-600 ml-2">
@@ -522,7 +525,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                     },
                 ].map(({ label, state, setter }) => (
                     <div key={label}>
-                        <label className="block mb-2">
+                        <label className="block mb-2 font-bold">
                             {label}{" "}
                             <span className="text-gray-600 ml-2">
                                 (optional)
@@ -575,7 +578,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         setter={setAddon}
                     />
                 </div>
-                <label htmlFor="galleryImages" className="block mb-2">
+                <label htmlFor="galleryImages" className="block mb-2 font-bold">
                     Pickup and Dropoff{" "}
                     <span className="text-gray-600 ml-2">(optional)</span>
                 </label>
@@ -607,7 +610,10 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 {/* Gallery Images Input */}
                 <div>
-                    <label htmlFor="galleryImages" className="block mb-2">
+                    <label
+                        htmlFor="galleryImages"
+                        className="block mb-2 font-bold"
+                    >
                         Gallery Images{" "}
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
@@ -639,7 +645,10 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 {/* Gallery Videos Input */}
                 <div>
-                    <label htmlFor="galleryVideos" className="block mb-2">
+                    <label
+                        htmlFor="galleryVideos"
+                        className="block mb-2 font-bold"
+                    >
                         Gallery Videos{" "}
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
@@ -671,8 +680,12 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 {/* Available Days Dropdown */}
                 <div>
-                    <label htmlFor="availableDays" className="block mb-2">
-                        Available Days
+                    <label
+                        htmlFor="availableDays"
+                        className="block mb-2 font-bold"
+                    >
+                        Available Days{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     <div className="flex flex-wrap">
                         {[
@@ -727,7 +740,12 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 <div>
                     <div>
-                        <label className="font-bold">Stop sales</label>
+                        <label className="font-bold">
+                            Stop sales{" "}
+                            <span className="text-gray-600 ml-2">
+                                (optional)
+                            </span>
+                        </label>
                     </div>
 
                     <div>
@@ -746,7 +764,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                     <div className="">
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Box>
-                                <h3>
+                                <h3 className="font-bold">
                                     Select Sessions{" "}
                                     <span className="text-gray-600 ml-2">
                                         (optional)
@@ -806,7 +824,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 <div>
                     {/* Toggle Switch */}
                     <div className="mb-4">
-                        <label className="inline-flex items-center cursor-pointer">
+                        <label className="inline-flex items-center cursor-pointer ">
                             <input
                                 type="checkbox"
                                 className="sr-only"
@@ -847,7 +865,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                     )}
                 </div>
                 <div className="mt-4">
-                    <label htmlFor="limit" className="block mb-2">
+                    <label htmlFor="limit" className="block mb-2 font-bold">
                         Set ticket limit
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
@@ -860,7 +878,10 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                     />
                 </div>
                 <div className="mt-4">
-                    <label htmlFor="knowBeforeYouGo" className="block mb-2">
+                    <label
+                        htmlFor="knowBeforeYouGo"
+                        className="block mb-2 font-bold"
+                    >
                         Know Before You Go{" "}
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
@@ -914,7 +935,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 </div>
                 {/* Submit Button */}
                 <div className="mt-4">
-                    <label htmlFor="faq" className="block mb-2">
+                    <label htmlFor="faq" className="block mb-2 font-bold">
                         FAQs{" "}
                         <span className="text-gray-600 ml-2">(optional)</span>
                     </label>

@@ -715,7 +715,8 @@ const TourPlanForm = ({ onClose }) => {
                         htmlFor="availableDays"
                         className="block mb-2 font-bold"
                     >
-                        Available Days
+                        Available Days{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     <div className="flex flex-wrap">
                         {[
@@ -771,7 +772,8 @@ const TourPlanForm = ({ onClose }) => {
                 <div>
                     {/* ******************************************************************************************************************* */}
                     <div>
-                        <label className="font-bold">Stop sales</label>
+                        <label className="font-bold">Stop sales</label>{" "}
+                        <span className="text-gray-600 ml-2">(optional)</span>
                     </div>
 
                     <div>
@@ -892,9 +894,6 @@ const TourPlanForm = ({ onClose }) => {
                             setChildPrice={setChildPrice}
                         />
                     )}
-                </div>
-                <div>
-                    <label>Stop sales</label>
                 </div>
                 <div className="mt-4">
                     <label htmlFor="limit" className="block mb-2">
