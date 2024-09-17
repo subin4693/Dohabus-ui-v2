@@ -4,6 +4,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storageSession from "redux-persist/lib/storage/session"; // Import sessionStorage
 import languageReducer from "../features/language/languageSlice";
 import userReducer from "../features/Auth/userSlice";
+import offerReducer from "../features/offerBanner/offerSlice";
 
 // Configuration for redux-persist using sessionStorage
 const persistConfig = {
@@ -20,6 +21,7 @@ export const store = configureStore({
     reducer: {
         language: persistedLanguageReducer,
         user: persistedUserReducer,
+        offer: offerReducer,
     },
 });
 
