@@ -16,6 +16,11 @@ const CreateCategory = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [title, setTitle] = useState({ en: "", ar: "" });
+  const [location, setLocation] = useState({ en: "", ar: "" });
+  const [numberOfNights, setNumberOfNights] = useState(0);
+  const [stops, setStops] = useState([{ en: "", ar: "" }]);
+  const [operatorName, setOperatorName] = useState(""); // Operator name state
+  const [cruiseName, setCruiseName] = useState(""); // Cruise name state
   const [description, setDescription] = useState({ en: "", ar: "" });
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -26,6 +31,26 @@ const CreateCategory = () => {
     if (file) {
       setFile(file); // Set the file state to trigger Firebase upload
     }
+  };
+  const handleStopChange = (e, index, lang) => {
+    const { value } = e.target;
+    const updatedStops = stops.map((stop, i) =>
+      i === index ? { ...stop, [lang]: value } : stop
+    );
+    setStops(updatedStops);
+  };
+
+  // Add Stop Function
+  const addStop = () => {
+    setStops([...stops, { en: "", ar: "" }]);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target; // Get the name and value of the input
+    setLocation((prev) => ({
+      ...prev,
+      [name]: value, // Dynamically update the state based on the input's name
+    }));
   };
 
   const handleCreate = async (isEdit) => {
@@ -39,8 +64,12 @@ const CreateCategory = () => {
         // Edit an existing category
         const res = await axios.put(`${BASE_URL}/couries/${selectedData._id}`, {
           title,
-          description,
           coverImage: image,
+          operatorName,
+          cruiseName,
+          location,
+          numberOfNights,
+          stops,
         });
         console.log(res.data.data);
 
@@ -71,8 +100,12 @@ const CreateCategory = () => {
         // Create a new category
         const res = await axios.post(`${BASE_URL}/couries`, {
           title,
-          description,
           coverImage: image,
+          operatorName,
+          cruiseName,
+          location,
+          numberOfNights,
+          stops,
         });
         updatedCategory = res.data.data.courise;
         console.log(updatedCategory);
@@ -153,15 +186,37 @@ const CreateCategory = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/populor-couries");
+        const res = await axios.get(BASE_URL + "/couries");
         console.log(res.data.data.courise);
-        setCategories(res.data.data.courise);
+        setCategories(res.data.data.cruises);
       } catch (error) {
         console.log(error);
       }
     };
     getData();
   }, []);
+
+  const handleRemove = async (id) => {
+    try {
+      if (id) {
+        // Make delete request to the server
+        const res = await axios.delete(`${BASE_URL}/couries/${id}`);
+
+        // Show success message
+        toast.success("Cruise deleted successfully!", { theme: "dark" });
+
+        // Update the state to remove the deleted cruise from the UI
+        setCategories((prevCategories) =>
+          prevCategories.filter((category) => category._id !== id)
+        );
+      }
+    } catch (error) {
+      // Show error message
+      toast.error("Failed to delete Cruise.", { theme: "dark" });
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       {isOpen && (
@@ -186,7 +241,7 @@ const CreateCategory = () => {
                     alt="Selected"
                     className="w-full h-full object-cover rounded-md"
                   />
-                )}{" "}
+                )}
                 {progress > 0 && progress !== 100 && (
                   <p>Upload progress: {progress}%</p>
                 )}
@@ -195,6 +250,7 @@ const CreateCategory = () => {
                 )}
               </label>
             </div>
+
             <div className="flex-1 space-y-5">
               {/* Title in English */}
               <input
@@ -225,32 +281,90 @@ const CreateCategory = () => {
                 className="w-full p-2 border border-black rounded-lg outline-none"
               />
 
-              {/* Description in English */}
-              <textarea
-                value={description.en}
-                onChange={(e) =>
-                  setDescription((prev) => ({
-                    ...prev,
-                    en: e.target.value,
-                  }))
-                }
-                placeholder="Description (English)"
-                className="w-full h-[100px] p-2 border border-black rounded-lg outline-none resize-none"
+              <input
+                type="text"
+                value={operatorName.en}
+                onChange={(e) => setOperatorName((prev) => e.target.value)}
+                placeholder="Operator Name (English)"
+                className="w-full p-2 border border-black rounded-lg outline-none"
               />
 
-              {/* Description in Arabic */}
-              <textarea
-                dir="rtl"
-                value={description.ar}
+              <input
+                type="text"
+                value={cruiseName.en}
+                onChange={(e) => setCruiseName((prev) => e.target.value)}
+                placeholder="Cruise Name (English)"
+                className="w-full p-2 border border-black rounded-lg outline-none"
+              />
+
+              {/* Location in English */}
+              <input
+                type="text"
+                value={location.en}
                 onChange={(e) =>
-                  setDescription((prev) => ({
+                  setLocation((prev) => ({
                     ...prev,
-                    ar: e.target.value,
+                    en: e.target.value, // Correctly updating 'en'
                   }))
                 }
-                placeholder="الوصف (بالعربية)" // Arabic for 'Description'
-                className="w-full h-[100px] p-2 border border-black rounded-lg outline-none resize-none"
+                placeholder="Location (English)"
+                className="w-full p-2 border border-black rounded-lg outline-none"
               />
+
+              {/* Location in Arabic */}
+              <input
+                dir="rtl"
+                type="text"
+                value={location.ar}
+                onChange={(e) =>
+                  setLocation((prev) => ({
+                    ...prev,
+                    ar: e.target.value, // Correctly updating 'ar'
+                  }))
+                }
+                placeholder="الموقع (بالعربية)" // Arabic for 'Location'
+                className="w-full p-2 border border-black rounded-lg outline-none"
+              />
+
+              {/* Number of Nights */}
+              <input
+                type="number"
+                value={numberOfNights}
+                onChange={(e) => setNumberOfNights(e.target.value)}
+                placeholder="Number of Nights"
+                className="w-full p-2 border border-black rounded-lg outline-none"
+              />
+
+              {/* Stops in English */}
+              {stops.map((stop, index) => (
+                <div key={index} className="space-y-2">
+                  <input
+                    type="text"
+                    value={stop.en}
+                    onChange={(e) => handleStopChange(e, index, "en")}
+                    placeholder={`Stop ${index + 1} (English)`}
+                    className="w-full p-2 border border-black rounded-lg outline-none"
+                  />
+
+                  {/* Stop in Arabic */}
+                  <input
+                    dir="rtl"
+                    type="text"
+                    value={stop.ar}
+                    onChange={(e) => handleStopChange(e, index, "ar")}
+                    placeholder={`التوقف ${index + 1} (بالعربية)`} // Placeholder in Arabic
+                    className="w-full p-2 border border-black rounded-lg outline-none"
+                  />
+                </div>
+              ))}
+
+              {/* Add more stops */}
+              <button
+                className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
+                onClick={addStop}
+              >
+                Add Stop
+              </button>
 
               <div className="flex gap-2">
                 <button
@@ -265,26 +379,14 @@ const CreateCategory = () => {
                     className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
                     onClick={() => handleCreate(true)}
                   >
-                    {loading ? (
-                      <div className="">
-                        <Loader w={20} h={20} b={5} />
-                      </div>
-                    ) : (
-                      "Update"
-                    )}
+                    {loading ? <Loader w={20} h={20} b={5} /> : "Update"}
                   </button>
                 ) : (
                   <button
                     className="px-3 bg-custom-yellow py-1 rounded-md duration-300 hover:bg-black hover:text-white"
                     onClick={() => handleCreate(false)}
                   >
-                    {loading ? (
-                      <div className="">
-                        <Loader w={20} h={20} b={5} />
-                      </div>
-                    ) : (
-                      "Create"
-                    )}
+                    {loading ? <Loader w={20} h={20} b={5} /> : "Create"}
                   </button>
                 )}
               </div>
@@ -315,11 +417,13 @@ const CreateCategory = () => {
           <Card
             key={card?._id}
             title={card?.title ? card?.title[lang] : "Default Title"}
-            description={
-              card?.description
-                ? card?.description[lang]
-                : "Default Description"
+            operatorName={
+              card?.operatorName ? card?.operatorName : "Default Title"
             }
+            cruiseName={card?.cruiseName ? card?.cruiseName : "Default Title"}
+            location={card?.location ? card?.location[lang] : "Default Title"}
+            id={card?._id ? card?._id : "Default id"}
+            handleRemove={() => handleRemove(card._id)}
             imageUrl={card?.coverImage || "default-image-url"} // Replace with a default image URL
             onClick={() => handleDialog(card)}
           />

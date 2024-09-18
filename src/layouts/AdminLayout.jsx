@@ -63,10 +63,6 @@ const AdminLayout = () => {
               link: "/admin/cruise",
             },
             {
-              text: "populor-cruise",
-              link: "/admin/populor-cruise",
-            },
-            {
               text: "blogs",
               link: "/admin/blogs",
             },
