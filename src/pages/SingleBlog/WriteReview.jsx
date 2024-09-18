@@ -19,6 +19,9 @@ const WriteReview = ({ blogId, handleSubmit, lang }) => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
+                    setName("");
+                    setEmail("");
+                    setComment("");
                     handleSubmit(name, email, comment);
                 }}
             >

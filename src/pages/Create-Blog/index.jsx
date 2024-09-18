@@ -232,12 +232,14 @@ const Write = () => {
                     toolbar: [
                         [{ size: ["small", false, "large", "huge"] }], // Custom font sizes
                         ["bold", "italic", "underline"],
+                        [{ color: ["red"] }], // Add color selector
                         [{ align: [] }],
                         [{ list: "ordered" }, { list: "bullet" }],
                         ["link"],
                     ],
                 }}
             />
+
             <div className="text-right mt-5">
                 <button
                     className="bg-green-500 text-white py-2 rounded-sm px-5"
