@@ -106,7 +106,7 @@ const SignleCategory = () => {
                 { withCredentials: true }
             );
 
-            const favId = res.data.data.favourite?._id; // Safely access favourite._id
+            const favId = res?.data?.data?.favourite?._id; // Safely access favourite._id
 
             // Update the tours state after successful request
             setTours((prevTours) =>
@@ -185,10 +185,10 @@ const SignleCategory = () => {
                 const data = await axios.get(BASE_URL + "/favourites", {
                     withCredentials: true, // This option ensures cookies or other credentials are sent with the request
                 });
-                console.log(data.data.data.favourites);
+                console.log(data?.data?.data?.favourites);
                 // setAlbum(data?.data?.images);
 
-                setTours(data.data.data.favourites);
+                setTours(data?.data?.data?.favourites);
                 // setBannerCategory(data.data.data.category);
             } catch (error) {
                 setTours([]);
