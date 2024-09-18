@@ -144,10 +144,10 @@ const SingleBlog = () => {
 
     return (
         <div className="bg-slate-200 pt-[100px]">
-            <div className="md:container mx-auto px-4 py-8 md:flex md:gap-8">
+            <div className="md:container  mx-auto px-4 py-8 md:flex md:gap-8">
                 {/* Main Content */}
                 <div className="flex-1 grid gap-5 md:w-3/4">
-                    <div className="bg-white p-6 rounded-lg shadow-md">
+                    <div className="bg-white p-6 rounded-lg shadow-md ">
                         <div className="mb-4 flex justify-between items-center">
                             <div>
                                 <h1 className="text-3xl font-bold mb-2">
