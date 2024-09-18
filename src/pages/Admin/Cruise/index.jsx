@@ -54,6 +54,14 @@ const CreateCategory = () => {
   };
 
   const handleCreate = async (isEdit) => {
+    console.log(
+      "FORMDATA",title,
+      operatorName,
+      cruiseName,
+      location,
+      numberOfNights,
+      stops
+    );
     setLoading(true);
     if (mainUser.role !== "super-admin") return;
     try {
@@ -129,7 +137,7 @@ const CreateCategory = () => {
       setDescription({ en: "", ar: "" });
       setImage(null);
       setSelectedData(null);
-      toast.success("Hotel details updated", {
+      toast.success("Cruise details updated", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -291,7 +299,7 @@ const CreateCategory = () => {
 
               <input
                 type="text"
-                value={cruiseName.en}
+                value={cruiseName}
                 onChange={(e) => setCruiseName((prev) => e.target.value)}
                 placeholder="Cruise Name (English)"
                 className="w-full p-2 border border-black rounded-lg outline-none"
