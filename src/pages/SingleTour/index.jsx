@@ -240,13 +240,10 @@ const SingleTour = () => {
             });
         }
         try {
-            const res = await axios.post(
-                BASE_URL + "/reviews/" + data._id,
+            const res = await axios.post(BASE_URL + "/reviews/" + data._id, {
                 newReview,
-                {
-                    withCredentials: true,
-                }
-            );
+                user,
+            });
             const revvv = res.data.data.populatedReview;
             console.log(res.data);
 
@@ -333,11 +330,11 @@ const SingleTour = () => {
             console.log(planId);
             console.log("Adding to cart...");
 
-            const res = await axios.post(
-                `${BASE_URL}/carts`,
-                { category: categoryId, tour: planId },
-                { withCredentials: true }
-            );
+            const res = await axios.post(`${BASE_URL}/carts`, {
+                category: categoryId,
+                tour: planId,
+                user,
+            });
 
             const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
 
@@ -378,11 +375,11 @@ const SingleTour = () => {
             console.log(planId);
             console.log("Adding to favorites...");
 
-            const res = await axios.post(
-                `${BASE_URL}/favourites`,
-                { category: categoryId, tour: planId },
-                { withCredentials: true }
-            );
+            const res = await axios.post(`${BASE_URL}/favourites`, {
+                category: categoryId,
+                tour: planId,
+                user,
+            });
 
             const favId = res.data.data.favourite?._id; // Safely access favourite._id
 
@@ -418,9 +415,7 @@ const SingleTour = () => {
             return;
         }
         try {
-            const res = await axios.delete(`${BASE_URL}/carts/${cartId}`, {
-                withCredentials: true,
-            });
+            const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
             console.log(res);
 
             // Update the tours state after successful removal
@@ -456,9 +451,7 @@ const SingleTour = () => {
             return;
         }
         try {
-            const res = await axios.delete(`${BASE_URL}/favourites/${favId}`, {
-                withCredentials: true,
-            });
+            const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
             console.log(res);
 
             // Update the tours state after successful removal
@@ -521,17 +514,11 @@ const SingleTour = () => {
                 setContentLoading(true);
                 console.log("get data function clled **************");
                 const data = await axios.get(
-                    BASE_URL + "/plans/" + singletour,
-                    {
-                        withCredentials: true,
-                    }
+                    BASE_URL + "/plans/" + singletour + "?user=" + user._id
                 );
                 const res = await axios.get(
                     BASE_URL + "/reviews/" + singletour,
-                    newReview,
-                    {
-                        withCredentials: true,
-                    }
+                    newReview
                 );
 
                 setSessionStatus({});

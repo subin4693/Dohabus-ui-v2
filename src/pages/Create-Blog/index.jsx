@@ -83,17 +83,13 @@ const Write = () => {
             plan: cat,
         });
         try {
-            const res = await axios.post(
-                BASE_URL + "/blogs",
-                {
-                    image: url,
-                    title,
-                    text: value,
+            const res = await axios.post(BASE_URL + "/blogs", {
+                image: url,
+                title,
+                text: value,
 
-                    plan: cat,
-                },
-                { withCredentials: true }
-            );
+                plan: cat,
+            });
             toast.success("New blog created", {
                 position: "top-right",
                 autoClose: 5000,

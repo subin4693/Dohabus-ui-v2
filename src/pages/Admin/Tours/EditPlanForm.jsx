@@ -235,11 +235,9 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             stopSales: formattedDates,
         };
         try {
-            const res = await axios.put(
-                BASE_URL + "/plans/" + editPlan,
-                { formData },
-                { withCredentials: true }
-            );
+            const res = await axios.put(BASE_URL + "/plans/" + editPlan, {
+                formData,
+            });
             console.log(res);
             toast.success("Plan edited successfully...", {
                 position: "top-right",
@@ -685,7 +683,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         className="block mb-2 font-bold"
                     >
                         Available Days{" "}
-                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     <div className="flex flex-wrap">
                         {[

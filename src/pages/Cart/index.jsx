@@ -18,49 +18,9 @@ const SignleCategory = () => {
     const [tours, setTours] = useState([]);
     const [bannerCategory, setBannerCategory] = useState(null);
     const { category } = useParams();
-    const data = [
-        {
-            _id: 1,
-            image: aimaj,
-            title: {
-                en: "24 Hop On - Hop off Sightseeing Tour",
-                ar: "جولة هوب أون - هوب أوف 24",
-            },
-        },
-        {
-            _id: 2,
-            image: desert,
-            title: {
-                en: "Explore Doha Tour",
-                ar: "جولة استكشاف الدوحة",
-            },
-        },
-        {
-            _id: 3,
-            image: common,
-            title: {
-                en: "Doha by Night",
-                ar: "الدوحة في الليل",
-            },
-        },
-        {
-            _id: 4,
-            image: city,
-            title: {
-                en: "Night Tour",
-                ar: "جولة ليلية",
-            },
-        },
-        {
-            _id: 5,
-            image: cultural,
-            title: {
-                en: "Doha Sports Tour",
-                ar: "جولة الرياضة في الدوحة",
-            },
-        },
-    ];
+
     const lang = useSelector((state) => state.language.lang);
+    const mainUser = useSelector((state) => state.user.user);
 
     const addToCart = async (categoryId, planId) => {
         try {
@@ -68,11 +28,11 @@ const SignleCategory = () => {
             console.log(planId);
             console.log("Adding to cart...");
 
-            const res = await axios.post(
-                `${BASE_URL}/carts`,
-                { category: categoryId, tour: planId },
-                { withCredentials: true }
-            );
+            const res = await axios.post(`${BASE_URL}/carts`, {
+                category: categoryId,
+                tour: planId,
+                user: mainUser,
+            });
 
             const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
 
@@ -119,11 +79,11 @@ const SignleCategory = () => {
             console.log(planId);
             console.log("Adding to favorites...");
 
-            const res = await axios.post(
-                `${BASE_URL}/favourites`,
-                { category: categoryId, tour: planId },
-                { withCredentials: true }
-            );
+            const res = await axios.post(`${BASE_URL}/favourites`, {
+                category: categoryId,
+                tour: planId,
+                user: mainUser,
+            });
 
             const favId = res.data.data.favourite?._id; // Safely access favourite._id
 
@@ -167,9 +127,7 @@ const SignleCategory = () => {
         try {
             console.log(cartId);
 
-            const res = await axios.delete(`${BASE_URL}/carts/${cartId}`, {
-                withCredentials: true,
-            });
+            const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
 
             console.log(res);
 
@@ -203,9 +161,7 @@ const SignleCategory = () => {
     };
     const removeFromFav = async (favId) => {
         try {
-            const res = await axios.delete(`${BASE_URL}/favourites/${favId}`, {
-                withCredentials: true,
-            });
+            const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
             console.log(res);
 
             // Update the tours state after successful removal
@@ -244,9 +200,9 @@ const SignleCategory = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const data = await axios.get(BASE_URL + "/carts", {
-                    withCredentials: true, // This option ensures cookies or other credentials are sent with the request
-                });
+                const data = await axios.get(
+                    BASE_URL + "/carts?user=" + mainUser._id
+                );
                 console.log(data.data.data.cartItems);
                 // setAlbum(data?.data?.images);
 

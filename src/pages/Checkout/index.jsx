@@ -105,11 +105,10 @@ const Checkout = () => {
 
         try {
             setApplyLoader(true);
-            const res = await axios.post(
-                `${BASE_URL}/offers/apply-discount`,
+            const res = await axios.post(`${BASE_URL}/offers/apply-discount`, {
                 requestData,
-                { withCredentials: true }
-            );
+                user,
+            });
             console.log(res);
 
             setDiscountedPrice(res?.data?.data?.discountedPrice);
@@ -221,8 +220,9 @@ const Checkout = () => {
         // }
 
         try {
-            const res = await axios.post(BASE_URL + "/tickets", dataa, {
-                withCredentials: true,
+            const res = await axios.post(BASE_URL + "/tickets", {
+                dataa,
+                user,
             });
             setinvoiceID(res.data.data.bookedTickets._id);
 

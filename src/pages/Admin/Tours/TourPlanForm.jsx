@@ -356,9 +356,7 @@ const TourPlanForm = ({ onClose }) => {
         console.log("Prepared formData:", formData); // Debugging output
 
         try {
-            const res = await axios.post(`${BASE_URL}/plans`, formData, {
-                withCredentials: true,
-            });
+            const res = await axios.post(`${BASE_URL}/plans`, formData);
             setLoading(false);
             toast.success("Plan created successfully...", {
                 position: "top-right",
@@ -716,7 +714,6 @@ const TourPlanForm = ({ onClose }) => {
                         className="block mb-2 font-bold"
                     >
                         Available Days{" "}
-                        <span className="text-gray-600 ml-2">(optional)</span>
                     </label>
                     <div className="flex flex-wrap">
                         {[

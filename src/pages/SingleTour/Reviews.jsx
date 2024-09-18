@@ -31,8 +31,7 @@ const Reviews = ({
 
         try {
             const res = await axios.delete(`${BASE_URL}/reviews/${reviewId}`, {
-                params: { userId: user.id }, // Send userId as a query parameter
-                withCredentials: true,
+                params: { userId: user._id },
             });
 
             if (res.status === 204) {

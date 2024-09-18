@@ -75,11 +75,12 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
 
     const handleSignOut = async () => {
         try {
-            const res = await axios.post(
-                BASE_URL + "/users/signout",
-                {},
-                { withCredentials: true }
-            );
+            // const res = await axios.post(
+            //     BASE_URL + "/users/signout",
+            //     {}
+
+            dispatch(setUser({}));
+            // );
             navigate("/");
             toast.success("Logout succesfully", {
                 position: "top-right",
@@ -91,8 +92,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 progress: undefined,
                 theme: "dark",
             });
-
-            dispatch(setUser({}));
         } catch (error) {
             console.log(error);
         }
