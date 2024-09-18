@@ -134,7 +134,7 @@ const SignleCategory = () => {
                 { category: categoryId, tour: planId },
                 { withCredentials: true }
             );
-
+            console.log(res);
             const favId = res?.data?.data?.favourite?._id; // Safely access favourite._id
 
             // Update the tours state after successful request
