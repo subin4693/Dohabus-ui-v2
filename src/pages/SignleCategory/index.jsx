@@ -80,15 +80,15 @@ const SignleCategory = () => {
                 { withCredentials: true }
             );
 
-            const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
+            const cartId = res?.data?.data?.cartItem?._id; // Safely access cartItem._id
 
             // Update the tours state after successful request
             setTours((prevTours) =>
-                prevTours.map((tour) =>
-                    tour._id === planId
+                prevTours?.map((tour) =>
+                    tour?._id === planId
                         ? {
                               ...tour,
-                              isInCart: !tour.isInCart,
+                              isInCart: !tour?.isInCart,
                               cartId: cartId ? cartId : null, // Conditionally set cartId
                           }
                         : tour
@@ -120,7 +120,7 @@ const SignleCategory = () => {
     };
 
     const addToFav = async (categoryId, planId) => {
-        if (!user || !user.email) {
+        if (!user || !user?.email) {
             navigate("/signin");
             return;
         }
@@ -135,15 +135,15 @@ const SignleCategory = () => {
                 { withCredentials: true }
             );
 
-            const favId = res.data.data.favourite?._id; // Safely access favourite._id
+            const favId = res?.data?.data?.favourite?._id; // Safely access favourite._id
 
             // Update the tours state after successful request
             setTours((prevTours) =>
-                prevTours.map((tour) =>
-                    tour._id === planId
+                prevTours?.map((tour) =>
+                    tour?._id === planId
                         ? {
                               ...tour,
-                              isInFavorites: !tour.isInFavorites,
+                              isInFavorites: !tour?.isInFavorites,
                               favId: favId ? favId : null, // Conditionally set favId
                           }
                         : tour
@@ -175,7 +175,7 @@ const SignleCategory = () => {
         }
     };
     const removeFromCart = async (cartId) => {
-        if (!user || !user.email) {
+        if (!user || !user?.email) {
             navigate("/signin");
             return;
         }
@@ -187,8 +187,8 @@ const SignleCategory = () => {
 
             // Update the tours state after successful removal
             setTours((prevTours) =>
-                prevTours.map((tour) =>
-                    tour.cartId === cartId
+                prevTours?.map((tour) =>
+                    tour?.cartId === cartId
                         ? { ...tour, isInCart: false, cartId: null }
                         : tour
                 )
