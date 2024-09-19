@@ -11,31 +11,31 @@ const OfferCard = ({ offer, handleStatus }) => {
     return (
         <div className="border p-4 rounded-lg shadow-md bg-white">
             <img
-                src={offer.plan.coverImage}
-                alt={offer.plan.title.en}
+                src={offer?.plan?.coverImage}
+                alt={offer?.plan?.title?.en}
                 className="w-full h-32 object-cover rounded mb-4"
             />
-            <h3 className="text-lg font-bold mb-2">{offer.plan.title.en}</h3>
+            <h3 className="text-lg font-bold mb-2">{offer?.plan?.title?.en}</h3>
             <p className="text-sm text-gray-600">
-                Coupon Code: {offer.couponCode}
+                Coupon Code: {offer?.couponCode}
             </p>
             <p className="text-sm text-gray-600">
-                Start Date: {offer.startingDate}
+                Start Date: {offer?.startingDate}
             </p>
             <p className="text-sm text-gray-600">
-                End Date: {offer.endingDate}
+                End Date: {offer?.endingDate}
             </p>
             <p className="text-sm text-gray-600">
                 Child Discount:{" "}
                 {offer.childDiscountType === "percentage"
-                    ? `${offer.childDiscountPrice}%`
-                    : `${offer.childDiscountPrice} Qar`}
+                    ? `${offer?.childDiscountPrice}%`
+                    : `${offer?.childDiscountPrice} Qar`}
             </p>
             <p className="text-sm text-gray-600">
                 Adult Discount:{" "}
                 {offer.adultDiscountType === "percentage"
-                    ? `${offer.adultDiscountPrice}%`
-                    : `${offer.adultDiscountPrice} Qar`}
+                    ? `${offer?.adultDiscountPrice}%`
+                    : `${offer?.adultDiscountPrice} Qar`}
             </p>
             <p className="text-sm text-gray-600">
                 Limit per User: {offer?.limit}
