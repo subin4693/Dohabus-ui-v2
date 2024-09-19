@@ -76,11 +76,11 @@ const index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ amount: 0.2 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="card w-[800px] border p-5 flex gap-4 flex-wrap shadow-lg"
+                className="card w-[800px] border p-5 flex gap-10 flex-wrap shadow-lg"
               >
-                <div className="w-[350px] h-[250px]">
+                <div className="w-[350px] h-[270px]">
                   <img
-                    className="object-cover w-full h-[220px]"
+                    className="object-cover w-full h-full"
                     src={card.coverImage}
                     alt="Cruise"
                   />
@@ -134,7 +134,11 @@ const index = () => {
                         .join(" | ")}
                     </p>
                   </h2>
+                  <div className="w-full bg-custom-yellow border p-1 text-center flex items-center justify-center">
+                  <button className="text-xl">Book Now</button>
                 </div>
+                </div>
+               
               </motion.div>
             ))}
           </div>
