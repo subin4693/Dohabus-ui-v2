@@ -222,12 +222,18 @@ const SignleCategory = () => {
         const getData = async () => {
             try {
                 console.log(mainUser);
+                const params = {};
+
+                // Check if mainUser exists and has an _id
+                if (mainUser && mainUser._id) {
+                    params.user = mainUser._id;
+                }
+
                 const data = await axios.get(
-                    BASE_URL +
-                        "/plans/category/" +
-                        category +
-                        "?user=" +
-                        mainUser._id
+                    BASE_URL + "/plans/category/" + category,
+                    {
+                        params: params,
+                    }
                 );
                 console.log(data.data.data.plans);
                 // setAlbum(data?.data?.images);
