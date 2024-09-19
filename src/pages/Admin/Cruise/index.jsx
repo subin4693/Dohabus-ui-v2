@@ -25,6 +25,8 @@ const CreateCategory = () => {
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [logo, setLogo] = useState(null); // Store logo URL
+  const [logoFile, setLogoFile] = useState(null); // Store logo file for upload
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -55,12 +57,14 @@ const CreateCategory = () => {
 
   const handleCreate = async (isEdit) => {
     console.log(
-      "FORMDATA",title,
+      "FORMDATA",
+      title,
       operatorName,
       cruiseName,
       location,
       numberOfNights,
-      stops
+      stops,
+      logo
     );
     setLoading(true);
     if (mainUser.role !== "super-admin") return;
@@ -78,6 +82,7 @@ const CreateCategory = () => {
           location,
           numberOfNights,
           stops,
+          logo: logo,
         });
         console.log(res.data.data);
 
@@ -114,6 +119,7 @@ const CreateCategory = () => {
           location,
           numberOfNights,
           stops,
+          logo: logo,
         });
         updatedCategory = res.data.data.courise;
         console.log(updatedCategory);
@@ -165,6 +171,18 @@ const CreateCategory = () => {
       });
     }
   };
+
+  const {
+    progress: logoProgress,
+    error: logoError,
+    downloadURL: logoDownloadURL,
+  } = useFirebaseUpload(logoFile);
+
+  useEffect(() => {
+    if (logoDownloadURL) {
+      setLogo(logoDownloadURL); // Update form data with the Firebase logo URL
+    }
+  }, [logoDownloadURL]);
 
   const handleDialog = (data = null) => {
     if (mainUser.role !== "super-admin") return;
@@ -289,6 +307,36 @@ const CreateCategory = () => {
                 className="w-full p-2 border border-black rounded-lg outline-none"
               />
 
+              {/* Logo Image Input */}
+              <div className="flex-1 flex items-center justify-center">
+                <label className="flex flex-col justify-center items-center cursor-pointer h-full">
+                  {!logo ? (
+                    <>
+                      <IoCameraOutline className="w-12 h-12 text-gray-500" />
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={(e) => setLogoFile(e.target.files[0])} // Store the selected file
+                      />
+                      <p className="mt-2">Upload Logo</p>
+                    </>
+                  ) : (
+                    <img
+                      src={logo}
+                      alt="Selected Logo"
+                      className="w-[50px] h-[50px] object-cover rounded-md"
+                    />
+                  )}
+                  {progress > 0 && progress !== 100 && (
+                    <p>Logo Upload progress: {progress}%</p>
+                  )}
+                  {error && (
+                    <p className="text-red-500">Error: {error.message}</p>
+                  )}
+                </label>
+              </div>
+
               <input
                 type="text"
                 value={operatorName.en}
@@ -312,7 +360,7 @@ const CreateCategory = () => {
                 onChange={(e) =>
                   setLocation((prev) => ({
                     ...prev,
-                    en: e.target.value, // Correctly updating 'en'
+                    en: e.target.value, 
                   }))
                 }
                 placeholder="Location (English)"

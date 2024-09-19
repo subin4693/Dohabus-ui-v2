@@ -90,9 +90,14 @@ const index = () => {
                 </div>
                 <div className="w-[300px]">
                   <h1 className=" flex gap-2 items-center">
-                    <span>
+                    <span className="w-[40px] h-[40px] ">
                       {" "}
-                      <FaSun size={30} />
+                      {/* <FaSun size={30} /> */}
+                      <img
+                        className="w-full h-full rounded-full object-cover"
+                        src={card.logo}
+                        alt={card.operatorName}
+                      />
                     </span>
                     <p>{card.operatorName}</p>
                   </h1>
