@@ -105,6 +105,8 @@ const TourCard = ({
                             />
                         </button>
                         <div className="">
+                            {console.log("link id")}
+                            {console.log(link)}
                             <Link to={link}>
                                 <button className="p-5 text-black text-2xl font-semibold rounded-full bg-white w-[180px]">
                                     {lang === "ar" ? "عرض الجولة" : "View Tour"}
