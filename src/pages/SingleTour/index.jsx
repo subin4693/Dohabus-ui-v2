@@ -321,6 +321,8 @@ const SingleTour = () => {
     const addToCart = async (categoryId, planId) => {
         console.log(categoryId);
         console.log(planId);
+        console.log(childCount);
+        console.log(adultCount);
         if (!user || !user.email) {
             navigate("/signin");
             return;
@@ -334,6 +336,8 @@ const SingleTour = () => {
                 category: categoryId,
                 tour: planId,
                 user,
+                childCount,
+                adultCount,
             });
 
             const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id

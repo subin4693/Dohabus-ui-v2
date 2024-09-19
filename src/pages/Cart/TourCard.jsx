@@ -1,10 +1,12 @@
 import React from "react";
+import { BsPerson } from "react-icons/bs";
 // import { AiFillHeart } from "react-icons/ai";
 // import { BiCart } from "react-icons/bi";
 import {
     FaHeart as HeartIcon,
     FaShoppingCart as CartIcon,
     FaTrash,
+    FaBaby,
 } from "react-icons/fa";
 import { FaRegClock as Watch } from "react-icons/fa";
 import { FaMapMarkerAlt as LocationPin } from "react-icons/fa";
@@ -29,6 +31,8 @@ const TourCard = ({
     cartId,
     itinerary,
     childPrice,
+    childCount,
+    adultCount,
     category,
 }) => {
     const lang = useSelector((state) => state.language.lang);
@@ -40,7 +44,7 @@ const TourCard = ({
             }}
             // to={`${"/tours/" + category + "/" + link}`}
             dir={lang === "ar" ? "rtl" : "ltr"}
-            className="flex flex-col md:flex-row h-fit md:h-[300px] relative group  bg-white relative overflow-hidden rounded-lg mb-5 border shadow-md"
+            className="flex flex-col md:flex-row h-fit md:h-[380px] relative group  bg-white relative overflow-hidden rounded-lg mb-5 border shadow-md"
         >
             {/* Left side - Image */}
             <div
@@ -87,6 +91,28 @@ const TourCard = ({
                             </h2>
                             <small className="text-md text-black font-semibold">
                                 QAR {childPrice}
+                            </small>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-5">
+                        <BsPerson color="black" className="text-xl" />
+                        <div>
+                            <h2 className="text-md text-black font-bold">
+                                Adult Count:
+                            </h2>
+                            <small className="text-md text-black font-semibold">
+                                {adultCount}
+                            </small>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-5">
+                        <FaBaby color="black" className="text-xl" />
+                        <div>
+                            <h2 className="text-md text-black font-bold">
+                                Child Count:
+                            </h2>
+                            <small className="text-md text-black font-semibold">
+                                {childCount}
                             </small>
                         </div>
                     </div>

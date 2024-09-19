@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import catTop from "../../assets/city-tour-categorypage.jpg";
 import TourCard from "./TourCard";
 import { useSelector } from "react-redux";
+
 const SignleCategory = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [tours, setTours] = useState([]);
@@ -226,7 +227,7 @@ const SignleCategory = () => {
                 {lang === "en" ? "Choose Your Tour" : "اختر جولتك"}
             </h1>
             <div className=" gap-5 mt-5 grid grid-cols-1 md:grid-cols- lg:grid-cols-2 xl:grid-cols-3 mx-10">
-                {tours.map(({ _id, tour }) => {
+                {tours.map(({ _id, tour, adultCount, childCount }) => {
                     const {
                         isInCart,
                         isInFavorites,
@@ -238,13 +239,15 @@ const SignleCategory = () => {
                         cartId,
                         itinerary,
                         childPrice,
+                        childData,
                     } = tour; // Destructure tour properties
-                    console.log(tour.category);
+
                     console.log({
                         lang: lang,
                         image: coverImage,
                         title: title[lang],
-
+                        childCount: childCount,
+                        adultCout: adultCount,
                         link: tour._id,
                         key: tour._id,
                         addToCart: addToCart,
@@ -274,6 +277,8 @@ const SignleCategory = () => {
                             itinerary={itinerary && itinerary[0]}
                             childPrice={childPrice ? childPrice : 0}
                             category={tour.category}
+                            childCount={childCount || 0}
+                            adultCount={adultCount || 0}
                         />
                     );
                 })}
