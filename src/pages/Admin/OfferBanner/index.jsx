@@ -14,7 +14,7 @@ const Index = () => {
     const [percentage, setPercentage] = useState("");
     const [selectedPlan, setSelectedPlan] = useState("");
     const lang = useSelector((state) => state.language.lang);
-    const mainUser = useSelector((state) => state.user.user);
+    const user = useSelector((state) => state.user.user);
     const [loading, setLoading] = useState(false);
 
     const openModal = () => {
@@ -55,7 +55,7 @@ const Index = () => {
             console.log("Payload:", payload);
 
             const response = await axios.post(`${BASE_URL}/offerbanner`, {
-                user: mainUser,
+                user,
                 payload,
             });
 
