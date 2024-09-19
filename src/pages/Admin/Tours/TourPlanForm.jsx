@@ -273,7 +273,6 @@ const TourPlanForm = ({ onClose }) => {
             (row) => Number(row.pax) > 0 || Number(row.price) > 0
         );
 
-        // Ensure only one type of pricing data is provided
         if (
             (hasAdultPrice || hasChildPrice) &&
             (hasAdultData || hasChildData)
@@ -309,6 +308,21 @@ const TourPlanForm = ({ onClose }) => {
             );
             setLoading(false);
 
+            return;
+        }
+
+        if (hasAdultData && hasChildData) {
+            const hasPaxOneInAdultData = adultData.some(
+                (row) => Number(row.pax) === 1
+            );
+            const hasPaxOneInChildData = childData.some(
+                (row) => Number(row.pax) === 1
+            );
+            if (!hasPaxOneInAdultData || !hasPaxOneInChildData)
+                toast.error(
+                    "Both Adult and Child data must have at least one pax with a value of 1."
+                );
+            setLoading(false);
             return;
         }
 

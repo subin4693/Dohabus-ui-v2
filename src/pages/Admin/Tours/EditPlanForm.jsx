@@ -206,6 +206,91 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         const formattedDates = stopSales.map((date) =>
             date instanceof DateObject ? date.toDate().toISOString() : date
         );
+
+        if (
+            !category ||
+            !coverImage ||
+            !title.en ||
+            !title.ar ||
+            !description.en ||
+            !description.ar ||
+            availableDays.length === 0
+        ) {
+            toast.error("Please fill out all required fields.");
+            setLoading(false);
+            return;
+        }
+        const hasAdultPrice =
+            adultPrice !== undefined &&
+            adultPrice !== null &&
+            adultPrice !== "";
+        const hasChildPrice =
+            childPrice !== undefined &&
+            childPrice !== null &&
+            childPrice !== "";
+
+        // Check if there is at least one meaningful row of data in adultData or childData
+        const hasAdultData = adultData.some(
+            (row) => Number(row.pax) > 0 || Number(row.price) > 0
+        );
+        const hasChildData = childData.some(
+            (row) => Number(row.pax) > 0 || Number(row.price) > 0
+        );
+
+        if (
+            (hasAdultPrice || hasChildPrice) &&
+            (hasAdultData || hasChildData)
+        ) {
+            toast.error(
+                "You can only provide either single price fields or detailed pricing data, not both."
+            );
+            setLoading(false);
+
+            return;
+        }
+
+        // Ensure that both adultPrice and childPrice are provided together
+        if (
+            (hasAdultPrice && !hasChildPrice) ||
+            (!hasAdultPrice && hasChildPrice)
+        ) {
+            toast.error(
+                "Both adultPrice and childPrice must be provided together."
+            );
+            setLoading(false);
+
+            return;
+        }
+
+        // Ensure that both adultData and childData are provided together
+        if (
+            (hasAdultData && !hasChildData) ||
+            (!hasAdultData && hasChildData)
+        ) {
+            toast.error(
+                "Both adultData and childData must be provided together."
+            );
+            setLoading(false);
+
+            return;
+        }
+
+        if (hasAdultData && hasChildData) {
+            const hasPaxOneInAdultData = adultData.some(
+                (row) => Number(row.pax) === 1
+            );
+            const hasPaxOneInChildData = childData.some(
+                (row) => Number(row.pax) === 1
+            );
+            if (!hasPaxOneInAdultData || !hasPaxOneInChildData)
+                toast.error(
+                    "Both Adult and Child data must have at least one pax with a value of 1."
+                );
+
+            setLoading(false);
+            return;
+        }
+
         const formData = {
             category,
             coverImage,
