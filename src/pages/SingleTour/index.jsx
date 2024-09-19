@@ -519,10 +519,12 @@ const SingleTour = () => {
                 console.log("get data function clled **************");
                 console.log(user);
                 const data = await axios.get(
-                    `${BASE_URL}/plans/${singletour}?user=${
-                        user ? user._id : "null"
-                    }`
+                    `${BASE_URL}/plans/${singletour}`,
+                    {
+                        params: user ? { user: user._id } : {},
+                    }
                 );
+
                 const res = await axios.get(
                     BASE_URL + "/reviews/" + singletour,
                     newReview
