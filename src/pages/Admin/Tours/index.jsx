@@ -95,7 +95,7 @@ const Tours = () => {
                                 <img
                                     src={plan.coverImage}
                                     alt={plan.title[lang] || "Tour Image"}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-56 object-cover"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                                 <div className="absolute bottom-2 left-2 text-white">
