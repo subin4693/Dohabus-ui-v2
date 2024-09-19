@@ -26,28 +26,28 @@ const AdminLayout = () => {
         </div>
         <div className="flex flex-wrap gap-2 lg:gap-4 w-full md:w-1/2">
           {[
-            { text: "dashboard", link: "/admin/dashboard" },
-            { text: "categories", link: "/admin/categorys" },
-            { text: "plans", link: "/admin/tours" },
-            { text: "users", link: "/admin/users" },
-            { text: "tickets", link: "/admin/tickets" },
+            { text: "Dashboard", link: "/admin/dashboard" },
+            { text: "Categories", link: "/admin/categorys" },
+            { text: "Plans", link: "/admin/tours" },
+            { text: "Users", link: "/admin/users" },
+            { text: "Tickets", link: "/admin/tickets" },
 
-            { text: "Edit Gallery", link: "/admin/gallery" },
-            { text: "about us", link: "/admin/aboutus" },
-            { text: "banner", link: "/admin/banner" },
+            { text: "Edit Footer", link: "/admin/gallery" },
+            { text: "About us", link: "/admin/aboutus" },
+            { text: "Banner", link: "/admin/banner" },
 
-            { text: "hotel", link: "/admin/hotels" },
-            { text: "locations us", link: "/admin/locations" },
+            { text: "Hotel", link: "/admin/hotels" },
+            { text: "Location", link: "/admin/locations" },
             {
-              text: "transportations",
+              text: "Transportation",
               link: "/admin/transportations",
             },
             {
-              text: "offers",
+              text: "Coupon",
               link: "/admin/offers",
             },
             {
-              text: "offer banner",
+              text: "Offer banner",
               link: "/admin/offerbanner",
             },
             {
@@ -59,11 +59,11 @@ const AdminLayout = () => {
               link: "/admin/subscribe",
             },
             {
-              text: "cruise",
+              text: "Cruise",
               link: "/admin/cruise",
             },
             {
-              text: "blogs",
+              text: "Blogs",
               link: "/admin/blogs",
             },
           ].map((menu) => (
