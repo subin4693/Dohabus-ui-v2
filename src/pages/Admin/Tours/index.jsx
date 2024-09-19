@@ -89,7 +89,7 @@ const Tours = () => {
                     {plans.map((plan) => (
                         <div
                             key={plan._id}
-                            className="flex flex-col h-fit border border-slate-200 shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105 bg-white"
+                            className="flex flex-col border border-slate-200 shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105 bg-white  "
                         >
                             <div className="relative h-56 w-full">
                                 <img
@@ -105,7 +105,7 @@ const Tours = () => {
                                     </h2>
                                 </div>
                             </div>
-                            <div className="flex flex-col justify-between p-4 space-y-3">
+                            <div className="flex flex-col   h-full justify-between p-4 space-y-3">
                                 <div>
                                     <h1 className="text-xl font-bold text-gray-800">
                                         {plan.title[lang] || "Tour Title"}
@@ -115,41 +115,43 @@ const Tours = () => {
                                             "Description not available"}
                                     </p>
                                 </div>
-                                <Link
-                                    to={`/tours/${plan.categoryDetails?._id}/${plan._id}`}
-                                    className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
-                                >
-                                    View Details
-                                </Link>
-                                {mainUser &&
-                                    mainUser.role === "super-admin" && (
-                                        <>
-                                            {" "}
-                                            <button
-                                                onClick={() => {
-                                                    console.log(plan._id);
-                                                    setEditPlan(plan._id);
-                                                }}
-                                                className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className={`mt-4 p-2 text-center text-white rounded-md transition duration-200 ${
-                                                    plan.isActive
-                                                        ? "bg-green-500 hover:bg-green-600"
-                                                        : "bg-red-500 hover:bg-red-600"
-                                                }`}
-                                                onClick={() =>
-                                                    switchActive(plan._id)
-                                                }
-                                            >
-                                                {plan.isActive
-                                                    ? "Active"
-                                                    : "Inactive"}
-                                            </button>
-                                        </>
-                                    )}
+                                <div className="flex  flex-col">
+                                    <Link
+                                        to={`/tours/${plan.categoryDetails?._id}/${plan._id}`}
+                                        className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                                    >
+                                        View Details
+                                    </Link>
+                                    {mainUser &&
+                                        mainUser.role === "super-admin" && (
+                                            <>
+                                                {" "}
+                                                <button
+                                                    onClick={() => {
+                                                        console.log(plan._id);
+                                                        setEditPlan(plan._id);
+                                                    }}
+                                                    className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    className={`mt-4 p-2 text-center text-white rounded-md transition duration-200 ${
+                                                        plan.isActive
+                                                            ? "bg-green-500 hover:bg-green-600"
+                                                            : "bg-red-500 hover:bg-red-600"
+                                                    }`}
+                                                    onClick={() =>
+                                                        switchActive(plan._id)
+                                                    }
+                                                >
+                                                    {plan.isActive
+                                                        ? "Active"
+                                                        : "Inactive"}
+                                                </button>
+                                            </>
+                                        )}
+                                </div>
                             </div>
                         </div>
                     ))}
