@@ -255,7 +255,7 @@ const SignleCategory = () => {
                         removeFromCart: removeFromCart,
                         removeFromFav: removeFromFav,
                         duration: duration,
-
+                        childData: childData[0]?.price,
                         cartId: _id,
                         itinerary: itinerary && itinerary[0],
                         childPrice: childPrice ? childPrice : 0,
@@ -275,7 +275,13 @@ const SignleCategory = () => {
                             duration={duration}
                             cartId={_id}
                             itinerary={itinerary && itinerary[0]}
-                            childPrice={childPrice ? childPrice : 0}
+                            childPrice={
+                                childPrice
+                                    ? childPrice
+                                    : childData[0]?.price
+                                    ? childData[0]?.price
+                                    : 0
+                            }
                             category={tour.category}
                             childCount={childCount || 0}
                             adultCount={adultCount || 0}

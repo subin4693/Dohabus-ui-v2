@@ -31,7 +31,7 @@ const Reviews = ({
 
         try {
             const res = await axios.delete(`${BASE_URL}/reviews/${reviewId}`, {
-                params: { userId: user._id },
+                params: user ? { user: user?._id } : {},
             });
 
             if (res.status === 204) {
@@ -105,6 +105,7 @@ const Reviews = ({
                         className="bg-custom-yellow duration-300 hover:text-white px-4 py-2 rounded-md hover:bg-dark"
                         onClick={() => {
                             if (progress > 0 && progress < 100) return;
+
                             handleReviewSubmit();
                         }}
                     >
@@ -147,8 +148,10 @@ const Reviews = ({
                                         </div>
                                         <div>
                                             {/* Conditionally render the delete button */}
-                                            {(user.id === review.user?._id ||
-                                                user.role === "admin") && (
+                                            {(user.email ===
+                                                review.user?.email ||
+                                                user.role ===
+                                                    "super-admin") && (
                                                 <BsTrash
                                                     onClick={() =>
                                                         handleRemoveReview(

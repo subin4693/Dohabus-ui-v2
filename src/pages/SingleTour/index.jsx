@@ -241,7 +241,7 @@ const SingleTour = () => {
         }
         try {
             const res = await axios.post(BASE_URL + "/reviews/" + data?._id, {
-                newReview,
+                ...newReview,
                 user,
             });
             const revvv = res.data.data.populatedReview;
@@ -521,7 +521,9 @@ const SingleTour = () => {
                 const data = await axios.get(
                     `${BASE_URL}/plans/${singletour}`,
                     {
-                        params: user ? { user: user._id } : {},
+                        params: user
+                            ? { user: user?._id, email: user?.email }
+                            : {},
                     }
                 );
 

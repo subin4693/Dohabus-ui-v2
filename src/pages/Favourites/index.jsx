@@ -171,7 +171,7 @@ const SignleCategory = () => {
                         coverImage,
                         duration,
                         title,
-
+                        childData,
                         itinerary,
                         childPrice,
                     } = tour; // Destructure tour properties
@@ -208,7 +208,13 @@ const SignleCategory = () => {
                             duration={duration}
                             favId={_id}
                             itinerary={itinerary && itinerary[0]}
-                            childPrice={childPrice ? childPrice : 0}
+                            childPrice={
+                                childPrice
+                                    ? childPrice
+                                    : childData[0]?.price
+                                    ? childData[0]?.price
+                                    : 0
+                            }
                         />
                     );
                 })}
