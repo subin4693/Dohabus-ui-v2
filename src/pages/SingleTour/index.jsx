@@ -240,7 +240,7 @@ const SingleTour = () => {
             });
         }
         try {
-            const res = await axios.post(BASE_URL + "/reviews/" + data._id, {
+            const res = await axios.post(BASE_URL + "/reviews/" + data?._id, {
                 newReview,
                 user,
             });
@@ -513,8 +513,11 @@ const SingleTour = () => {
             try {
                 setContentLoading(true);
                 console.log("get data function clled **************");
+                console.log(user);
                 const data = await axios.get(
-                    BASE_URL + "/plans/" + singletour + "?user=" + user._id
+                    `${BASE_URL}/plans/${singletour}?user=${
+                        user ? user._id : "null"
+                    }`
                 );
                 const res = await axios.get(
                     BASE_URL + "/reviews/" + singletour,
