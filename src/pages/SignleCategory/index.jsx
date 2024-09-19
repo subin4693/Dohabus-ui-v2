@@ -40,16 +40,15 @@ const SignleCategory = () => {
                 user,
             });
 
-            const cartId = res?.data?.data?.cartItem?._id; // Safely access cartItem._id
+            const cartId = res?.data?.data?.cartItem?._id;
 
-            // Update the tours state after successful request
             setTours((prevTours) =>
                 prevTours?.map((tour) =>
                     tour?._id === planId
                         ? {
                               ...tour,
                               isInCart: !tour?.isInCart,
-                              cartId: cartId ? cartId : null, // Conditionally set cartId
+                              cartId: cartId ? cartId : null,
                           }
                         : tour
                 )
