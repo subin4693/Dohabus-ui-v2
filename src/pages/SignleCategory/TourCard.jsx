@@ -56,7 +56,7 @@ const TourCard = ({
                                 </h2>
 
                                 <small className="text-2xl text-black font-semibold">
-                                    {duration[lang]}
+                                    {duration[lang] ? duration[lang] : "--"}
                                 </small>
                             </div>
                         </div>
@@ -70,7 +70,9 @@ const TourCard = ({
                                 </h2>
 
                                 <small className="text-2xl text-black font-semibold">
-                                    {itinerary && itinerary[lang]}
+                                    {itinerary && itinerary[lang]
+                                        ? itinerary[lang]
+                                        : "--"}
                                 </small>
                             </div>
                         </div>
@@ -84,7 +86,7 @@ const TourCard = ({
                                 </h2>
 
                                 <small className="text-2xl text-black font-semibold">
-                                    QAR {childPrice}
+                                    QAR {childPrice ? childPrice : "--"}
                                 </small>
                             </div>
                         </div>
