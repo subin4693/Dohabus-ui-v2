@@ -14,3 +14,21 @@ td {
 .rmdp-input {
     padding: 20px 10px !important;
 }
+
+.react-calendar {
+    background-color: inherit !important;
+    border: none !important;
+    width: 100% !important;
+}
+.react-calendar__navigation__arrow.react-calendar__navigation__next2-button,
+.react-calendar__navigation__arrow.react-calendar__navigation__prev2-button {
+    display: none !important;
+}
+.react-calendar__month-view__days__day--weekend {
+    color: black;
+}
+.react-calendar__tile--active {
+    background-color: yellow !important;
+    color: black;
+    border-radius: 4px;
+}

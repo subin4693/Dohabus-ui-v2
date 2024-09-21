@@ -7,6 +7,7 @@ import html2canvas from "html2canvas";
 import logo from "../../../assets/DOHA Bus Logo YB large.png";
 import Loader from "../../../components/Loader";
 import DatePicker from "react-datepicker";
+import DownloadModal from "./DownloadModal";
 const Index = () => {
   const lang = useSelector((state) => state.language.lang);
   const { id } = useParams();
@@ -16,7 +17,7 @@ const Index = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [loadingInvoice, setLoadingInvoice] = useState({});
   const [selectedFilter, setSelectedFilter] = useState("All");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -35,7 +36,142 @@ const Index = () => {
     fetchData();
   }, []);
 
-  console.log("Invoices", filteredData);
+  console.log("Invoices", data);
+
+  const openPopup = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDownload = (format) => {
+    setIsModalOpen(false);
+  
+    if (format === "pdf") {
+      console.log("Download as PDF");
+      const doc = new jsPDF({ orientation: "portrait" });
+  
+      // Title
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("Ticket Invoices", 14, 22);
+      doc.setLineWidth(0.5);
+      doc.line(14, 24, 200, 24); // Line below the title
+  
+      // Prepare data for autoTable
+      const formattedData = data.map((item, index) => ({
+        "Ticket Number": index + 1,
+        "User Name": `${item.firstName} ${item.lastName}`,
+        "User Email": item.email,
+        "Category": item.category.title.en,
+        "Plan Title": item.plan.title.en,
+        "Total Price": `$${item.price}`,
+        "Adult Quantity": item.adultQuantity,
+        "Child Quantity": item.childQuantity,
+      }));
+  
+      // Define columns for the table
+      const columns = [
+        { header: "Ticket Number", dataKey: "Ticket Number" },
+        { header: "User Name", dataKey: "User Name" },
+        { header: "User Email", dataKey: "User Email" },
+        { header: "Category", dataKey: "Category" },
+        { header: "Plan Title", dataKey: "Plan Title" },
+        { header: "Total Price", dataKey: "Total Price" },
+        { header: "Adult Quantity", dataKey: "Adult Quantity" },
+        { header: "Child Quantity", dataKey: "Child Quantity" },
+      ];
+  
+      // Generate the table
+      doc.autoTable({
+        head: [columns.map(col => col.header)],
+        body: formattedData.map(item => columns.map(col => item[col.dataKey])),
+        startY: 30,
+        margin: { left: 10, right: 10 },
+        styles: {
+          overflow: 'linebreak',
+          fontSize: 10,
+          cellPadding: 3,
+          valign: 'middle',
+          halign: 'center',
+        },
+        headStyles: {
+          fillColor: [255, 204, 0],
+          textColor: [0, 0, 0],
+          fontSize: 12,
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+        },
+        didDrawPage: (data) => {
+          // Footer
+          doc.setFontSize(10);
+          doc.text(`Page ${data.pageNumber}`, data.settings.margin.left, doc.internal.pageSize.height - 10);
+        },
+      });
+  
+      // Save the PDF
+      doc.save("Invoices.pdf");
+  
+    } else if (format === "excel") {
+      console.log("Download as Excel");
+      const excelData = details.map((item, index) => ({
+        "Ticket Number": index + 1,
+        "User Name": item.user.name,
+        "User Email": item.email,
+        Category: item.category.title.en,
+        "Plan Title": item.plan.title.en,
+        "Total Price": `$${item.totalPrice}`,
+        "Adult Quantity": item.adultQuantity,
+        "Child Quantity": item.childQuantity,
+      }));
+  
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Ticket Details");
+  
+      // Adding header style
+      const headerCellStyle = {
+        fill: { fgColor: { rgb: "FFFF00" } },
+        font: { bold: true },
+        alignment: { horizontal: "center" },
+      };
+  
+      // Apply header styles
+      const headers = worksheet['!ref'].split(':')[0].slice(0, 1) + '1:' + worksheet['!ref'].split(':')[1].slice(0, 1) + '1';
+      for (let cell in worksheet) {
+        if (cell[0] === '!') continue; // Skip special properties
+        if (cell.match(/^[A-Z]\d$/)) { // Check if it's a header cell
+          worksheet[cell].s = headerCellStyle;
+        }
+      }
+  
+      // Adding borders to all cells
+      const borderStyle = {
+        border: {
+          top: { style: "thin", color: { rgb: "000000" } },
+          bottom: { style: "thin", color: { rgb: "000000" } },
+          left: { style: "thin", color: { rgb: "000000" } },
+          right: { style: "thin", color: { rgb: "000000" } },
+        },
+      };
+  
+      for (let cell in worksheet) {
+        if (cell[0] === '!') continue; // Skip special properties
+        worksheet[cell].s = { ...(worksheet[cell].s || {}), ...borderStyle };
+      }
+  
+      // Write the file
+      XLSX.writeFile(workbook, "TicketDetails.xlsx");
+    }
+  };
+  
+  
+
   const getStartAndEndDate = (filter) => {
     const now = new Date();
     let startDate = null;
@@ -278,8 +414,19 @@ const Index = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="shadow-md px-2 py-1"
           />
+          <button
+            onClick={openPopup}
+            className="p-2 text-[1.1rem] bg-custom-yellow rounded"
+          >
+            Download
+          </button>
         </div>
       </div>
+      <DownloadModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onDownload={handleDownload}
+      />
       <div className="cards grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3   gap-5 mt-10">
         {filteredData.length > 0 ? (
           filteredData.map((invoice) => (

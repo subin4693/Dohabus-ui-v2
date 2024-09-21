@@ -31,8 +31,11 @@ const AdminLayout = () => {
             { text: "Plans", link: "/admin/tours" },
             { text: "Users", link: "/admin/users" },
             { text: "Tickets", link: "/admin/tickets" },
-
-            { text: "Edit Footer", link: "/admin/gallery" },
+            {
+              text: "Invoice",
+              link: "/admin/invoice",
+            },
+            { text: "Edit footer", link: "/admin/gallery" },
             { text: "About us", link: "/admin/aboutus" },
             { text: "Banner", link: "/admin/banner" },
 
@@ -50,12 +53,9 @@ const AdminLayout = () => {
               text: "Offer banner",
               link: "/admin/offerbanner",
             },
+          
             {
-              text: "Invoice",
-              link: "/admin/invoice",
-            },
-            {
-              text: "Subscribers",
+              text: "Subscriber",
               link: "/admin/subscribe",
             },
             {

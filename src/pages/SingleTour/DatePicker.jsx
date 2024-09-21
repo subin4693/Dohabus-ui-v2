@@ -1,22 +1,22 @@
-import * as React from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import React, { useState } from "react";
+import Calendar from "react-calendar";
 import dayjs from "dayjs";
+import "react-calendar/dist/Calendar.css";
 
 export default function BasicDateCalendar({
     setSelectedDate,
     enableDays,
     setSession,
 }) {
-    // const enableDays = [0, 1, 4]; // Days to enable (0 = Sunday, 1 = Monday, 4 = Thursday)
+    // Function to disable past dates and specific days
+    const tileDisabled = ({ date }) => {
+        const today = new Date();
+        const dayOfWeek = date.getDay(); // Get day of week (0 = Sunday, 6 = Saturday)
 
-    // Function to enable specific days and disable others
-    const shouldDisableDate = (date) => {
-        // Get the day of the week (0 = Sunday, 6 = Saturday)
-        const dayOfWeek = date.day();
-        // Disable the day if it is NOT in the enableDays array
-        return !enableDays.includes(dayOfWeek);
+        // Disable if the date is in the past or the day is not in the enabled days array
+        return (
+            date < today.setHours(0, 0, 0, 0) || !enableDays.includes(dayOfWeek)
+        );
     };
 
     const handleDateChange = (date) => {
@@ -29,20 +29,16 @@ export default function BasicDateCalendar({
 
         const localISODate = adjustedDate.format("YYYY-MM-DDTHH");
 
-        setSession(null);
-        setSelectedDate(localISODate.split("T")[0]);
+        setSession(null); // Reset session
+        setSelectedDate(localISODate.split("T")[0]); // Set the selected date
     };
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateCalendar
-                style={{ width: "100%", height: "100%" }} // Increase width and height
-                //  style={{ width: "100%" }}
-                className="bg-gray-100 rounded-lg shadow-lg  "
-                disablePast
-                shouldDisableDate={shouldDisableDate}
-                onChange={handleDateChange}
+        <div className={"bg-gray-100 p-2 rounded-md h-full shadow-lg border"}>
+            <Calendar
+                onChange={handleDateChange} // Handle date change
+                tileDisabled={tileDisabled} // Disable past dates and unwanted days
             />
-        </LocalizationProvider>
+        </div>
     );
 }
