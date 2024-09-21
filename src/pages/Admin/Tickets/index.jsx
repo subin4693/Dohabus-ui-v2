@@ -137,6 +137,7 @@ const ManageTickets = () => {
         };
         getData();
     }, []);
+    console.log("Tickets????????????????????", details)
     const [selectedFilter, setSelectedFilter] = useState("All");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
@@ -204,6 +205,8 @@ const ManageTickets = () => {
         // Return true if both search query and date range filters match
         return matchesSearchQuery && isWithinDateRange;
     });
+
+
 
     return (
         <div className="p-5 bg-gray-100">
