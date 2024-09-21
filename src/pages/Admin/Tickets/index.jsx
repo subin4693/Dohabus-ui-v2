@@ -258,7 +258,7 @@ const ManageTickets = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-5   justify-start">
+      <div className="flex flex-wrap gap-5 justify-center mt-5">
         {filteredDetails.map((booking, index) => (
           <TicketCard
             key={index}
