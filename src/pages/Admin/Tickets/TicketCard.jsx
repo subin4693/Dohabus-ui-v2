@@ -34,7 +34,7 @@ const TicketCard = ({ booking, lang, handleCancelTicket, mainUserRole }) => {
         "en-GB",
         { day: "numeric", month: "long", year: "numeric" }
       )}`;
-      const invoiceNumber = `TICKET#: ${booking._id}`;
+      const invoiceNumber = `TICKET#: ${booking.uniqueId}`;
 
       const invoiceText = "TICKET";
       const invoiceTextWidth = pdf.getTextWidth(invoiceText);

@@ -42,10 +42,11 @@ const ManageTickets = () => {
           totalPrice,
           adultQuantity,
           childQuantity,
+          uniqueId,
           email,
         } = item;
 
-        doc.text(`Ticket ${index + 1}`, 10, y);
+        doc.text(`TicketID ${uniqueId}`, 10, y);
         y += 10; // Move down for next line
 
         doc.text("User Name: " + user.name, 10, y);
@@ -68,7 +69,7 @@ const ManageTickets = () => {
     } else if (format === "excel") {
       console.log("Download as Excel");
       const data = details.map((item, index) => ({
-        "Ticket Number": index + 1,
+        "Ticket ID": item.uniqueId,
         "User Name": item.user.name,
         "User Email": item.email,
         Category: item.category.title.en,

@@ -60,7 +60,7 @@ const Invoice = () => {
                 "en-GB",
                 { day: "numeric", month: "long", year: "numeric" }
             )}`;
-            const invoiceNumber = `TICKET#: ${data._id}`;
+            const invoiceNumber = `TICKET#: ${data.uniqueId}`;
 
             const invoiceText = "TICKET";
             const invoiceTextWidth = pdf.getTextWidth(invoiceText);
@@ -207,7 +207,7 @@ const Invoice = () => {
                 "en-GB",
                 { day: "numeric", month: "long", year: "numeric" }
             )}`;
-            const invoiceNumber = `INVOICE#: ${data._id}`;
+            const invoiceNumber = `INVOICE#: ${data.uniqueId}`;
 
             const invoiceText = "INVOICE";
             const invoiceTextWidth = pdf.getTextWidth(invoiceText);

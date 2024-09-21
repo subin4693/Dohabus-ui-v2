@@ -62,7 +62,7 @@ const Index = () => {
   
       // Prepare data for autoTable
       const formattedData = data.map((item, index) => ({
-        "Ticket Number": index + 1,
+        "Ticket ID": item.uniqueId,
         "User Name": `${item.firstName} ${item.lastName}`,
         "User Email": item.email,
         "Category": item.category.title.en,
@@ -74,7 +74,7 @@ const Index = () => {
   
       // Define columns for the table
       const columns = [
-        { header: "Ticket Number", dataKey: "Ticket Number" },
+        { header: "Ticket ID", dataKey: "Ticket ID" },
         { header: "User Name", dataKey: "User Name" },
         { header: "User Email", dataKey: "User Email" },
         { header: "Category", dataKey: "Category" },
@@ -264,7 +264,7 @@ const Index = () => {
         "en-GB",
         { day: "numeric", month: "long", year: "numeric" }
       )}`;
-      const invoiceNumber = `INVOICE#: ${invoice._id}`;
+      const invoiceNumber = `INVOICE#: ${invoice.uniqueId}`;
 
       const invoiceText = "INVOICE";
       const invoiceTextWidth = pdf.getTextWidth(invoiceText);
