@@ -183,7 +183,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         );
     };
     const handleChangefaq = (index, field, lang, value) => {
-        console.log("working");
         const updatedFaq = [...faq];
         updatedFaq[index][field][lang] = value;
         setFaq(updatedFaq);
@@ -324,7 +323,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             const res = await axios.put(BASE_URL + "/plans/" + editPlan, {
                 formData,
             });
-            console.log(res);
             toast.success("Plan edited successfully...", {
                 position: "top-right",
                 autoClose: 5000,
@@ -402,7 +400,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         const getCategorys = async () => {
             try {
                 const { data } = await axios.get(BASE_URL + "/categorys");
-                console.log(data);
                 setCategoryOptions(data?.data?.categories);
             } catch (error) {
                 console.log(error);
@@ -417,7 +414,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 const response = await axios.get(
                     `${BASE_URL}/plans/${editPlan}`
                 );
-                console.log(response.data.data);
                 const planData = response.data.data.plan;
 
                 // Set state variables with fetched data

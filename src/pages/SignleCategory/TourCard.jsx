@@ -30,7 +30,6 @@ const TourCard = ({
     childPrice,
 }) => {
     const lang = useSelector((state) => state.language.lang);
-    console.log({ favId, cartId });
     return (
         <div
             dir={lang === "ar" ? "rtl" : "ltr"}
@@ -107,9 +106,6 @@ const TourCard = ({
                             />
                         </button>
                         <div className="">
-                            {console.log("link _id")}
-                            {console.log(link)}
-
                             <Link to={link}>
                                 <button className="p-5 text-black text-2xl font-semibold rounded-full bg-white w-[180px]">
                                     {lang === "ar" ? "عرض الجولة" : "View Tour"}

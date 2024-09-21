@@ -42,7 +42,6 @@ const CreateCategory = () => {
                     }
                 );
                 updatedCategory = res.data.data.category;
-                console.log(updatedCategory);
 
                 // Update the category in the state
                 setCategories((prevCategories) =>
@@ -72,7 +71,6 @@ const CreateCategory = () => {
                     coverImage: image,
                 });
                 updatedCategory = res.data.data.category;
-                console.log(updatedCategory);
 
                 // Add the new category to the end of the state array
                 setCategories((prevCategories) => [
@@ -123,7 +121,7 @@ const CreateCategory = () => {
         if (mainUser && mainUser.role !== "super-admin") return;
         if (data) {
             // Edit mode
-            console.log(data);
+
             setSelectedData(data);
             setTitle(data.title);
             setDescription(data.description);
@@ -149,7 +147,7 @@ const CreateCategory = () => {
         const getData = async () => {
             try {
                 const res = await axios.get(BASE_URL + "/categorys");
-                console.log(res.data.data.categories);
+
                 setCategories(res.data.data.categories);
             } catch (error) {
                 console.log(error);

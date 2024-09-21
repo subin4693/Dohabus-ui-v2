@@ -27,8 +27,6 @@ const Reviews = ({
     };
 
     const handleRemoveReview = async (reviewId) => {
-        console.log("reviewId", reviewId);
-
         try {
             const res = await axios.delete(`${BASE_URL}/reviews/${reviewId}`, {
                 params: user ? { user: user?._id } : {},

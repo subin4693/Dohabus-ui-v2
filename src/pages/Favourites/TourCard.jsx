@@ -32,7 +32,6 @@ const TourCard = ({
     category,
 }) => {
     const lang = useSelector((state) => state.language.lang);
-    console.log({ favId, cartId });
     const navigate = useNavigate();
     return (
         <div

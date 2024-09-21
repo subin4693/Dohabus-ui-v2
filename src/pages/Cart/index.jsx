@@ -25,10 +25,6 @@ const SignleCategory = () => {
 
     const addToCart = async (categoryId, planId) => {
         try {
-            console.log(categoryId);
-            console.log(planId);
-            console.log("Adding to cart...");
-
             const res = await axios.post(`${BASE_URL}/carts`, {
                 category: categoryId,
                 tour: planId,
@@ -76,10 +72,6 @@ const SignleCategory = () => {
 
     const addToFav = async (categoryId, planId) => {
         try {
-            console.log(categoryId);
-            console.log(planId);
-            console.log("Adding to favorites...");
-
             const res = await axios.post(`${BASE_URL}/favourites`, {
                 category: categoryId,
                 tour: planId,
@@ -126,11 +118,7 @@ const SignleCategory = () => {
     };
     const removeFromCart = async (cartId) => {
         try {
-            console.log(cartId);
-
             const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
-
-            console.log(res);
 
             // Update the tours state to remove the tour with the given cartId
             setTours((prevTours) =>
@@ -163,7 +151,6 @@ const SignleCategory = () => {
     const removeFromFav = async (favId) => {
         try {
             const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
-            console.log(res);
 
             // Update the tours state after successful removal
             setTours((prevTours) =>
@@ -204,7 +191,6 @@ const SignleCategory = () => {
                 const data = await axios.get(
                     BASE_URL + "/carts?user=" + mainUser._id
                 );
-                console.log(data.data.data.cartItems);
                 // setAlbum(data?.data?.images);
 
                 setTours(data.data.data.cartItems);
@@ -241,25 +227,6 @@ const SignleCategory = () => {
                         childPrice,
                         childData,
                     } = tour; // Destructure tour properties
-
-                    console.log({
-                        lang: lang,
-                        image: coverImage,
-                        title: title[lang],
-                        childCount: childCount,
-                        adultCout: adultCount,
-                        link: tour._id,
-                        key: tour._id,
-                        addToCart: addToCart,
-                        addToFav: addToFav,
-                        removeFromCart: removeFromCart,
-                        removeFromFav: removeFromFav,
-                        duration: duration,
-                        childData: childData[0]?.price,
-                        cartId: _id,
-                        itinerary: itinerary && itinerary[0],
-                        childPrice: childPrice ? childPrice : 0,
-                    });
 
                     return (
                         <TourCard

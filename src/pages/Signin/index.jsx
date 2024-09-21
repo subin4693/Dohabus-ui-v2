@@ -54,7 +54,6 @@ const Signin = () => {
             }
         } catch (error) {
             setLoading(false);
-            console.log("Error occured");
             toast.error("Something went wrong! ", {
                 position: "top-right",
                 autoClose: 5000,

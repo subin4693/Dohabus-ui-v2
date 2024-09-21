@@ -43,11 +43,8 @@ const CreateCategory = () => {
                         coverImage: image,
                     }
                 );
-                console.log(res.data.data);
 
                 updatedCategory = res.data.data.hotel;
-
-                console.log(updatedCategory);
 
                 // Update the category in the state
                 setCategories((prevCategories) =>
@@ -76,8 +73,6 @@ const CreateCategory = () => {
                     coverImage: image,
                 });
                 updatedCategory = res.data.data.category;
-                console.log(updatedCategory);
-
                 // Add the new category to the end of the state array
                 setCategories((prevCategories) => [
                     ...prevCategories,
@@ -86,11 +81,6 @@ const CreateCategory = () => {
             }
 
             // Log the creation/update
-            console.log("Creating/Updating category with data:", {
-                title,
-                description,
-                image,
-            });
 
             // Close the modal or form
             setIsOpen(false);
@@ -133,7 +123,7 @@ const CreateCategory = () => {
         if (mainUser.role !== "super-admin") return;
         if (data) {
             // Edit mode
-            console.log(data);
+
             setSelectedData(data);
             setTitle(data.title);
             setDescription(data.description);
@@ -158,7 +148,7 @@ const CreateCategory = () => {
         const getData = async () => {
             try {
                 const res = await axios.get(BASE_URL + "/hotels");
-                console.log(res.data.data.hotels);
+
                 setCategories(res.data.data.hotels);
             } catch (error) {
                 console.log(error);
@@ -325,7 +315,6 @@ const CreateCategory = () => {
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-10 flex-wrap">
-                {console.log(categories)}
                 {categories.map((card) => (
                     <Card
                         key={card._id}

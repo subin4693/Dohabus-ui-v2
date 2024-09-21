@@ -41,12 +41,9 @@ const Card = ({ image, title, desc, lang, id }) => {
         e.preventDefault(); // Prevent the default form submission behavior
 
         // Debug: Log formData and the request URL
-        console.log("Submitting form data:", formData);
-        console.log("Request URL:", BASE_URL + "/hotels/" + id);
 
         try {
             const res = await axios.post(BASE_URL + "/hotels/" + id, formData);
-            console.log(res);
             toast.success(
                 "Thank you for booking! Our support team will reach out to you.",
                 {
@@ -60,7 +57,6 @@ const Card = ({ image, title, desc, lang, id }) => {
                     theme: "dark",
                 }
             );
-            console.log(res.data);
         } catch (error) {
             // Error handling: Log the full error response
             console.error(

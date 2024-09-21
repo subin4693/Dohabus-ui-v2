@@ -30,10 +30,6 @@ const SignleCategory = () => {
             return;
         }
         try {
-            console.log(categoryId);
-            console.log(planId);
-            console.log("Adding to cart...");
-
             const res = await axios.post(`${BASE_URL}/carts`, {
                 category: categoryId,
                 tour: planId,
@@ -84,16 +80,11 @@ const SignleCategory = () => {
             return;
         }
         try {
-            console.log(categoryId);
-            console.log(planId);
-            console.log("Adding to favorites...");
-
             const res = await axios.post(`${BASE_URL}/favourites`, {
                 category: categoryId,
                 tour: planId,
                 user,
             });
-            console.log(res);
             const favId = res?.data?.data?.favourite?._id; // Safely access favourite._id
 
             // Update the tours state after successful request
@@ -140,8 +131,6 @@ const SignleCategory = () => {
         }
         try {
             const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
-            console.log(res);
-
             // Update the tours state after successful removal
             setTours((prevTours) =>
                 prevTours?.map((tour) =>
@@ -182,7 +171,6 @@ const SignleCategory = () => {
         }
         try {
             const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
-            console.log(res);
 
             // Update the tours state after successful removal
             setTours((prevTours) =>
@@ -220,7 +208,6 @@ const SignleCategory = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                console.log(mainUser);
                 const params = {};
 
                 // Check if mainUser exists and has an _id
@@ -234,9 +221,6 @@ const SignleCategory = () => {
                         params: params,
                     }
                 );
-                console.log(data.data.data.plans);
-                // setAlbum(data?.data?.images);
-                console.log("category", data.data.data.category);
                 setTours(data.data.data.plans);
                 setBannerCategory(data.data.data.category);
             } catch (error) {

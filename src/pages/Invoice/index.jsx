@@ -24,7 +24,6 @@ const Invoice = () => {
                 setPlan(res.data.data.plan);
                 setData(res.data.data.ticket);
                 setCategory(res.data.data.planCategory);
-                console.log("data>>>>>>>", res.data.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

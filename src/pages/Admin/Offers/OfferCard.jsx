@@ -2,7 +2,6 @@ import React from "react";
 
 const OfferCard = ({ offer, handleStatus }) => {
     // Determine button styles based on the offer status
-    console.log(offer);
     const statusClass =
         offer.status === "active"
             ? "bg-green-500 text-white"

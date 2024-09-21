@@ -41,7 +41,7 @@ const Index = () => {
 
     const handleSubmit = async () => {
         setLoading(true);
-        console.log("Button clicked"); // Debug log
+
         try {
             const payload = {
                 title: {
@@ -52,14 +52,11 @@ const Index = () => {
                 tourIds: selectedPlan ? [selectedPlan] : [], // Ensure this is an array
             };
 
-            console.log("Payload:", payload);
-
             const response = await axios.post(`${BASE_URL}/offerbanner`, {
                 user,
                 payload,
             });
 
-            console.log("Response:", response.data);
             closeModal();
             fetchOffers();
             setLoading(false);
@@ -76,7 +73,7 @@ const Index = () => {
     const fetchOffers = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/offerbanner`);
-            console.log("Offers Response:", response.data);
+
             setOffers(response.data); // Adjust according to the actual data structure
         } catch (error) {
             console.error(
@@ -121,7 +118,7 @@ const Index = () => {
         const getPlans = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/plans`);
-                console.log("Plans Response:", response.data);
+
                 setPlans(response?.data?.data?.plans || []);
             } catch (error) {
                 console.error(
@@ -138,7 +135,6 @@ const Index = () => {
     return (
         <>
             <div className="text-end">
-                {console.log(user)}
                 {user && user?.role === "super-admin" && (
                     <button
                         onClick={openModal}

@@ -18,7 +18,6 @@ const Index = () => {
                 const response = await axios.get(`${BASE_URL}/subscribe`);
                 setSubscribers(response.data.data.subscribers);
                 setFilteredSubscribers(response.data.data.subscribers);
-                console.log("subscribers", response.data.data.subscribers);
             } catch (error) {
                 console.error("Error fetching subscribers:", error.message);
             }

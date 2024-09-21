@@ -41,11 +41,6 @@ const SingleBlog = () => {
         }
 
         try {
-            console.log({
-                name,
-                email,
-                comment,
-            });
             const resComment = await axios.post(
                 `${BASE_URL}/blogs/${id}/comments`,
                 {
@@ -100,8 +95,6 @@ const SingleBlog = () => {
                     ), // Filter out the comment by ID
                 };
             });
-
-            console.log(res);
         } catch (error) {
             console.log(error);
         }
@@ -112,7 +105,6 @@ const SingleBlog = () => {
             try {
                 const response = await axios.get(`${BASE_URL}/blogs/${id}`);
                 setBlog(response?.data?.data?.blog);
-                console.log(response?.data?.data?.blog);
 
                 const blogData = await axios.get(BASE_URL + "/blogs?limit=2");
                 setBlogs(blogData.data.data.blogs);
@@ -131,7 +123,6 @@ const SingleBlog = () => {
         const getData = async () => {
             try {
                 const data = await axios.get(BASE_URL + "/blogs/recent");
-                console.log(data?.data?.data?.blogs);
                 setRecent(data?.data?.data?.blogs);
             } catch (error) {
                 console.log(error);
@@ -156,8 +147,6 @@ const SingleBlog = () => {
                             </div>
                             {blog?.plan?.title[lang] && (
                                 <h3 className="text-sm font-bold text-gray-700 rounded-md bg-custom-yellow w-fit px-4 py-1">
-                                    {console.log(blog)}
-
                                     {blog?.plan?.title[lang]}
                                 </h3>
                             )}

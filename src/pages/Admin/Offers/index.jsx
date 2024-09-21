@@ -54,7 +54,6 @@ const Offers = () => {
                 plan: selectedPlan,
                 limit,
             });
-            console.log(res.data.data);
 
             setOffers((prev) => [...prev, ...res.data.data.offers]);
             setIsOpen(false);
@@ -70,12 +69,9 @@ const Offers = () => {
         const getData = async () => {
             try {
                 const response = await axios.get(BASE_URL + "/offers");
-                console.log(response.data.data.offers);
                 setOffers(response.data.data.offers);
 
                 const res = await axios.get(BASE_URL + "/plans/plan-titles");
-                console.log("new plan--->");
-                console.log(res.data.data.plans);
                 setPlans(res.data.data.plans);
             } catch (error) {
                 console.log(error);

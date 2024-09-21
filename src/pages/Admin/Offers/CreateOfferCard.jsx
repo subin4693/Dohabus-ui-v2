@@ -26,7 +26,6 @@ const CreateOffer = ({ closeModal, plans, handleSubmit, loading }) => {
 
     // Handle change event
     const handleChange = (selectedOptions) => {
-        console.log(selectedPlan);
         if (
             selectedOptions &&
             selectedOptions.some((option) => option.value === "all")

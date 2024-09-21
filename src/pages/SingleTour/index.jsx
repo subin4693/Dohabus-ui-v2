@@ -76,7 +76,6 @@ const SingleTour = () => {
 
     const [addOnTotalCost, setAddOnTotalCost] = useState(0);
     const handleAddOnChange = (selectedOptions) => {
-        console.log(selectedOptions);
         setSelectedAddOns(selectedOptions);
 
         const totalAddOnPrice = selectedOptions.reduce((sum, option) => {
@@ -206,7 +205,6 @@ const SingleTour = () => {
     };
 
     const handleSession = (sess) => {
-        console.log(sess);
         setSession(sess);
     };
     const formatDateForBackend = (date) => {
@@ -226,7 +224,6 @@ const SingleTour = () => {
         return utcDate.toISOString();
     };
     const handleReviewSubmit = async () => {
-        console.log(data._id);
         if (newReview.reviewText.trim() == "") {
             return toast.error("Review text required ", {
                 position: "top-right",
@@ -245,7 +242,6 @@ const SingleTour = () => {
                 user,
             });
             const revvv = res.data.data.populatedReview;
-            console.log(res.data);
 
             setReviews((prev) => [...prev, revvv]);
             setNewReview({ reviewText: "", imageURL: null });
@@ -297,10 +293,6 @@ const SingleTour = () => {
 
         const date = formatDateForBackend(selectedDate);
         let query = `date=${date}&session=${session}`;
-        // console.log(date);
-        // return;
-
-        // If adultCount or childCount is present, loop through selectedAddOns and add to query
         if (adultCount || childCount) {
             query += `&adultCount=${adultCount}&childCount=${childCount}`;
 
@@ -319,19 +311,11 @@ const SingleTour = () => {
     };
 
     const addToCart = async (categoryId, planId) => {
-        console.log(categoryId);
-        console.log(planId);
-        console.log(childCount);
-        console.log(adultCount);
         if (!user || !user.email) {
             navigate("/signin");
             return;
         }
         try {
-            console.log(categoryId);
-            console.log(planId);
-            console.log("Adding to cart...");
-
             const res = await axios.post(`${BASE_URL}/carts`, {
                 category: categoryId,
                 tour: planId,
@@ -375,10 +359,6 @@ const SingleTour = () => {
             return;
         }
         try {
-            console.log(categoryId);
-            console.log(planId);
-            console.log("Adding to favorites...");
-
             const res = await axios.post(`${BASE_URL}/favourites`, {
                 category: categoryId,
                 tour: planId,
@@ -420,8 +400,6 @@ const SingleTour = () => {
         }
         try {
             const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
-            console.log(res);
-
             // Update the tours state after successful removal
             setIsInCart(false);
             toast.success("Removed from Cart", {
@@ -449,14 +427,12 @@ const SingleTour = () => {
         }
     };
     const removeFromFav = async (favId) => {
-        console.log(favId);
         if (!user || !user.email) {
             navigate("/signin");
             return;
         }
         try {
             const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
-            console.log(res);
 
             // Update the tours state after successful removal
             setIsInFav(false);
@@ -488,7 +464,6 @@ const SingleTour = () => {
     useEffect(() => {
         const getData = async () => {
             if (!selectedDate) return;
-            console.log("getting data");
             setSessionLoading(true);
             try {
                 const response = await axios.post(
@@ -498,12 +473,9 @@ const SingleTour = () => {
                         planId: data._id,
                     }
                 );
-                console.log(response.data);
 
                 setSessionStatus(response.data.sessionStatus);
                 setSessionCounts(response.data.sessionCounts);
-                console.log(response.data.sessionCounts);
-                console.log(response.data.sessionStatus);
             } catch (error) {
                 console.log(error);
             } finally {
@@ -516,8 +488,6 @@ const SingleTour = () => {
         const getData = async () => {
             try {
                 setContentLoading(true);
-                console.log("get data function clled **************");
-                console.log(user);
                 const data = await axios.get(
                     `${BASE_URL}/plans/${singletour}`,
                     {
@@ -556,14 +526,12 @@ const SingleTour = () => {
                     setAdultPrice(data.data.data.plan.adultData[0].price);
                     setChildPrice(data.data.data.plan.childData[0].price);
                 }
-                console.log(data.data.data);
                 if (data.data.data.cart) setIsInCart(data.data.data.cart);
                 if (data.data.data.fav) setIsInFav(data.data.data.fav);
 
                 setSelectedAddOns([]);
 
                 setSelectedDate(null);
-                console.log(res.data.data);
                 setReviews(res.data.data);
                 setData(data.data.data.plan);
                 setCanWriteReview(data.data.data.canWriteReview);
@@ -922,8 +890,6 @@ const SingleTour = () => {
                   renderInput={(params) => <TextField {...params} fullWidth />}
                 />
               </LocalizationProvider>*/}
-                            {console.log(data.adultData)}
-                            {console.log(data.childData)}
 
                             {data?.availableDays && (
                                 <DatePickerr

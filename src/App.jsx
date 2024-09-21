@@ -84,21 +84,7 @@ function App() {
             dispatch(setLanguage("en"));
         }
     }, []);
-    // useEffect(() => {
-    //   const verify = async () => {
-    //     try {
-    //       const response = await axios.get(`${BASE_URL}/users/verify`, {
-    //         withCredentials: true,
-    //       });
-    //       console.log(response?.data?.data?.user); // Use response.data to access the data
-    //       dispatch(setUser(response?.data?.data?.user));
-    //     } catch (error) {
-    //       console.error("Error verifying user:", error); // Log the error
-    //     }
-    //   };
 
-    //   verify(); // Call verify on component mount
-    // }, []);
     return (
         <div className="font-custom cursor-default overflow-x-hidden">
             <Router>

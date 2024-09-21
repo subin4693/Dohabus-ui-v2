@@ -59,7 +59,6 @@ const Signup = () => {
                 password: password,
                 number,
             });
-            console.log(res.data.data);
             toast.success("User created successfully  ", {
                 position: "top-right",
                 autoClose: 5000,

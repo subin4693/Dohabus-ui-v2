@@ -44,7 +44,7 @@ const Banner = () => {
         try {
             await axios.put(
                 `${BASE_URL}/banner/${updatedSlide._id}`,
-                updatedSlide,
+                updatedSlide
             );
             setSlide(updatedSlides);
             toast.success("Banner updated successfully!", {
@@ -87,10 +87,10 @@ const Banner = () => {
         };
         setSlide([...slide]);
         setIsEditing(false);
-        console.log(newSlide);
+
         try {
             const res = await axios.post(`${BASE_URL}/banner`, newSlide);
-            console.log(res.data.data.banner);
+
             const val = res.data.data.banner;
             setSlide([...slide, val]);
 
@@ -128,7 +128,7 @@ const Banner = () => {
     useEffect(() => {
         const getData = async () => {
             const res = await axios.get(`${BASE_URL}/banner`);
-            console.log(res.data.data.banner);
+
             setSlide(res.data.data.banner);
         };
         getData();

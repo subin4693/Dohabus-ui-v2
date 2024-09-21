@@ -184,7 +184,6 @@ const TourPlanForm = ({ onClose }) => {
         );
     };
     const handleChangefaq = (index, field, lang, value) => {
-        console.log("working");
         const updatedFaq = [...faq];
         updatedFaq[index][field][lang] = value;
         setFaq(updatedFaq);
@@ -368,8 +367,6 @@ const TourPlanForm = ({ onClose }) => {
         // Remove any empty keys (fields that are empty objects or arrays)
         formData = removeEmptyFields(formData);
 
-        console.log("Prepared formData:", formData); // Debugging output
-
         try {
             const res = await axios.post(`${BASE_URL}/plans`, formData);
             setLoading(false);
@@ -424,7 +421,6 @@ const TourPlanForm = ({ onClose }) => {
         const getCategorys = async () => {
             try {
                 const { data } = await axios.get(BASE_URL + "/categorys");
-                console.log(data);
                 setCategoryOptions(data?.data?.categories);
             } catch (error) {
                 console.log(error);

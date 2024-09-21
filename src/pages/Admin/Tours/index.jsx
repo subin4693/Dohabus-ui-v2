@@ -60,7 +60,6 @@ const Tours = () => {
         const getTours = async () => {
             try {
                 const res = await axios.get(BASE_URL + "/admin/plans");
-                console.log(res);
                 setPlans(res?.data?.data);
             } catch (error) {
                 console.error("Error fetching plans:", error);
@@ -128,7 +127,6 @@ const Tours = () => {
                                                 {" "}
                                                 <button
                                                     onClick={() => {
-                                                        console.log(plan._id);
                                                         setEditPlan(plan._id);
                                                     }}
                                                     className="mt-4 p-2 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"

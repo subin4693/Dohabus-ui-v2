@@ -75,13 +75,7 @@ const Write = () => {
         //     });
         //     return;
         // }
-        console.log({
-            image: url,
-            title,
-            text: value,
 
-            plan: cat,
-        });
         try {
             const res = await axios.post(BASE_URL + "/blogs", {
                 image: url,
@@ -126,8 +120,6 @@ const Write = () => {
         const getData = async () => {
             try {
                 const categoryData = await axios.get(BASE_URL + "/categorys");
-                console.log(categoryData?.data?.data?.categories);
-
                 setCategorys(categoryData?.data?.data?.categories);
             } catch (error) {
                 console.log(error);

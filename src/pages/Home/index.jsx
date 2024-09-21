@@ -153,7 +153,6 @@ const Home = () => {
                     // },
                 ]);
                 const reviewData = await axios.get(BASE_URL + "/reviews/all");
-                console.log("Reviews???????????????????????", reviewData.data);
                 setReviews(reviewData.data.data);
 
                 const categoryData = await axios.get(BASE_URL + "/categorys");
@@ -166,7 +165,6 @@ const Home = () => {
         };
         getData();
     }, []);
-    console.log("Reviewwwwsss>>>>>>>>>>>>>>>>>>>", reviews);
 
     const goToNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % reviews.length);
@@ -202,8 +200,7 @@ const Home = () => {
             },
         ],
     };
-    console.log("******************");
-    console.log(offer);
+
     return (
         <div
             // style={{

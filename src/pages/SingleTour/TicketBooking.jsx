@@ -112,9 +112,6 @@ export default function TicketBooking({
     const adultData = data?.adultData || [];
     const childData = data?.childData || [];
     const handleSelect = (type, selectedData) => {
-        console.log(selectedData);
-        console.log(type);
-        console.log(totalPrice);
         let updatedTotalPrice = totalPrice;
 
         if (type === "adult") {

@@ -50,10 +50,10 @@ const AboutUsForm = () => {
         if (initialData) {
             try {
                 // Post request to the backend endpoint with formData
-                console.log(formData);
+
                 const response = await axios.put(
                     `${BASE_URL}/about/` + formData._id,
-                    formData,
+                    formData
                 );
 
                 toast.success("Successfully updated", {
@@ -84,10 +84,10 @@ const AboutUsForm = () => {
             e.preventDefault();
             try {
                 // Post request to the backend endpoint with formData
-                console.log(formData);
+
                 const response = await axios.post(
                     `${BASE_URL}/about/`,
-                    formData,
+                    formData
                 );
 
                 toast.success("Successfully updated", {
@@ -131,7 +131,7 @@ const AboutUsForm = () => {
         const getData = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/about`, formData);
-                console.log(response.data.aboutus[0]);
+
                 let dataa = response.data.aboutus[0];
 
                 dataa.about = dataa.text;

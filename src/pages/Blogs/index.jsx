@@ -26,7 +26,6 @@ const Blogs = () => {
 
     useEffect(() => {
         const getData = async () => {
-            console.log("get data clled");
             try {
                 const catParam = searchParams.get("cat");
                 const blogsUrl = catParam
@@ -35,7 +34,6 @@ const Blogs = () => {
 
                 const blogData = await axios.get(blogsUrl);
                 setBlogs(blogData.data.data.blogs);
-                console.log(blogData.data.data.blogs);
             } catch (error) {
                 console.log(error);
             }
@@ -47,7 +45,6 @@ const Blogs = () => {
         const getData = async () => {
             try {
                 const data = await axios.get(BASE_URL + "/blogs/recent");
-                console.log(data.data.data.blogs);
                 setRecent(data.data.data.blogs);
                 const categoryData = await axios.get(BASE_URL + "/categorys");
                 setCategorys(categoryData?.data?.data?.categories);
@@ -76,7 +73,6 @@ const Blogs = () => {
                     progress: undefined,
                     theme: "dark",
                 });
-                console.log("Subscribed");
             }
         } catch (error) {
             toast.warn("This email already subscribed", {
