@@ -346,7 +346,7 @@ const Checkout = () => {
       {/* Left side: Input form */}
 
       <div className="checkout-form w-full md:w-3/4  p-8 border border-gray-300 rounded-lg h-fit">
-        {user.role == undefined && (
+        {user?.role == undefined && (
           <h1 className="text-center text-3xl font-bold mb-5">
             Continue as a Guest
           </h1>
