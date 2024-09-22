@@ -1,6 +1,15 @@
 // store.js
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from "redux-persist";
 import storageSession from "redux-persist/lib/storage/session"; // Import sessionStorage
 import languageReducer from "../features/language/languageSlice";
 import userReducer from "../features/Auth/userSlice";
@@ -23,6 +32,19 @@ export const store = configureStore({
         user: persistedUserReducer,
         offer: offerReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [
+                    FLUSH,
+                    REHYDRATE,
+                    PAUSE,
+                    PERSIST,
+                    PURGE,
+                    REGISTER,
+                ],
+            },
+        }),
 });
 
 // Create the persistor for the store

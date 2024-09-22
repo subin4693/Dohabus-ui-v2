@@ -32,9 +32,41 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
     const [isEnglish, setIsEnglish] = useState(lang == "en" ? true : false);
     const [offer, setOffer] = useState([]);
     const [randomOffer, setRandomOffer] = useState(null);
+    const [search, setSearch] = useState("");
 
+    const [filteredTours, setFilteredTours] = useState([]);
     const dispatch = useDispatch();
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearch(value);
 
+        // Filter tours based on query
+        if (value) {
+            const filtered = categorys.filter(
+                (category) =>
+                    category.text.en
+                        .toLowerCase()
+                        .includes(value.toLowerCase()) ||
+                    category.tours.some((tour) =>
+                        tour.text.en.toLowerCase().includes(value.toLowerCase())
+                    )
+            );
+            setFilteredTours(filtered);
+        } else {
+            setFilteredTours([]);
+        }
+    };
+
+    const handleNavigate = (categoryId, tourId = null) => {
+        if (tourId) {
+            // Navigate to tours/category._id/tour._id
+            navigate(`/tours/${categoryId}/${tourId}`);
+        } else {
+            // Navigate to /category._id
+            navigate(`/tours/${categoryId}`);
+        }
+        setSearchOpen(false);
+    };
     const toggleLanguage = () => {
         setIsEnglish((prev) => {
             const newLanguage = prev ? "ar" : "en"; // Determine the new language
@@ -104,6 +136,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                 const data = await axios.get(BASE_URL + "/categorys/cat-tour");
 
                 // setAlbum(data?.data?.images);
+
                 setCategorys(data?.data?.data?.category);
             } catch (error) {
                 console.log(error);
@@ -1058,10 +1091,45 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                                 className="text-3xl w-full bg-inherit border-b border-b-[px] border-white outline-none"
                                 placeholder="Search ..."
                                 ref={inputref}
+                                value={search}
+                                onChange={handleSearch}
                             />
                             <IoSearch className="w-8 h-8 text-white" />
                         </div>
+
                         <div className="h-full mt-3 h-1 bg-white"></div>
+                        <ul className="h-[200px] ">
+                            {filteredTours.map((category) => (
+                                <li key={category._id}>
+                                    {/* Parent item click */}
+                                    <div
+                                        onClick={() =>
+                                            handleNavigate(category._id)
+                                        }
+                                        className="hover:bg-custom-yellow hover:text-black "
+                                    >
+                                        {category.text.en}
+                                    </div>
+                                    <ul>
+                                        {category.tours.map((tour) => (
+                                            <li
+                                                key={tour._id}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevent parent click from firing
+                                                    handleNavigate(
+                                                        category._id,
+                                                        tour._id
+                                                    ); // Nested item click with category and tour IDs
+                                                }}
+                                                className="hover:bg-custom-yellow hover:text-black "
+                                            >
+                                                {tour.text.en}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 

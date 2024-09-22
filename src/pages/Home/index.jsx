@@ -326,6 +326,7 @@ const Home = () => {
                         {categorys &&
                             categorys?.map((data) => (
                                 <Link
+                                    key={data?._id}
                                     to={`tours/${data?._id}`}
                                     className="card w-[300px] flex flex-col items-center mb-20"
                                 >
