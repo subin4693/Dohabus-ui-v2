@@ -250,6 +250,29 @@ const Transportation = () => {
     getData();
   }, []);
 
+  const handleRemove = async (id) => {
+    try {
+      if (id) {
+        // Make delete request to the server
+        const res = await axios.delete(`${BASE_URL}/transportations/${id}`);
+
+        // Show success message
+        toast.success("Transportation deleted successfully!", {
+          theme: "dark",
+        });
+
+        // Update the state to remove the deleted cruise from the UI
+        setTransportations((prevCategories) =>
+          prevCategories.filter((category) => category._id !== id)
+        );
+      }
+    } catch (error) {
+      // Show error message
+      toast.error("Failed to delete Transportation.", { theme: "dark" });
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       {isOpen && (
@@ -456,6 +479,7 @@ const Transportation = () => {
             transid={transport._id}
             switchActive={switchActive}
             onClick={() => handleDialog(transport)}
+            handleRemove={handleRemove}
           />
 
           // key={card._id}
