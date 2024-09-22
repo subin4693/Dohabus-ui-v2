@@ -187,7 +187,7 @@ const TicketCard = ({ booking, lang, handleCancelTicket, mainUserRole }) => {
             {/* Details Section */}
             <div className="flex-1 group">
                 <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-semibold mb-1">
+                    <h3 className="text-xl font-semibold mb-1 h-[55px] overflow-hidden">
                         {booking && booking?.plan?.title[lang]}
                     </h3>
 
