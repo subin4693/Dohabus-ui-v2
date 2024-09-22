@@ -13,6 +13,7 @@ const ManageTickets = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const [details, setDetails] = useState([]);
+    const [filteredDetails, setFilteredDetails] = useState([]);
     const lang = useSelector((state) => state.language.lang);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -128,6 +129,7 @@ const ManageTickets = () => {
             try {
                 const res = await axios.get(BASE_URL + "/admin/tickets");
                 setDetails(res?.data?.data);
+                setFilteredDetails(res?.data?.data);
             } catch (error) {
                 console.log(error);
             }
@@ -160,44 +162,84 @@ const ManageTickets = () => {
         // If filter is "All", no date filtering is needed
         return { startDate, endDate };
     };
-    const filteredDetails = details.filter((ticket) => {
-        const ticketDate = new Date(ticket?.createdAt).setHours(0, 0, 0, 0);
+    useEffect(() => {
+        const filtered = details.filter((invoice) => {
+            const invoiceDate = new Date(invoice.createdAt);
 
-        // Match search query
-        const matchesSearchQuery =
-            ticket?.user?.name
-                ?.toLowerCase()
-                ?.includes(searchQuery.toLowerCase()) ||
-            ticket?.user?.email
-                ?.toLowerCase()
-                ?.includes(searchQuery.toLowerCase()) ||
-            ticket?.category?.title?.en
-                ?.toLowerCase()
-                ?.includes(searchQuery.toLowerCase()) ||
-            ticket?.plan?.title?.en
-                ?.toLowerCase()
-                ?.includes(searchQuery.toLowerCase()) ||
-            ticket?.status?.toLowerCase()?.includes(searchQuery.toLowerCase());
+            // Search Query Filter
+            const matchesSearchQuery =
+                invoice.plan.title.en
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                invoice.category.title.en
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                invoice.firstName
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
 
-        // Check if a custom date range is selected from DatePicker
-        let startDateToUse = startDate?.setHours(0, 0, 0, 0);
-        let endDateToUse = endDate?.setHours(0, 0, 0, 0);
+            // Date Range Filter
+            let startDateToUse = startDate;
+            let endDateToUse = endDate;
 
-        // If no custom date range is selected, use selectedFilter (week, month, year)
-        if (!startDate && !endDate) {
-            const { startDate: filterStartDate, endDate: filterEndDate } =
-                getStartAndEndDate(selectedFilter);
-            startDateToUse = filterStartDate;
-            endDateToUse = filterEndDate;
-        }
-        // Apply date filtering based on the available date range (either DatePicker or selectedFilter)
-        const isWithinDateRange =
-            (!startDateToUse || ticketDate >= startDateToUse) &&
-            (!endDateToUse || ticketDate <= endDateToUse);
+            if (!startDate && !endDate) {
+                const { startDate: filterStartDate, endDate: filterEndDate } =
+                    getStartAndEndDate(selectedFilter);
+                startDateToUse = filterStartDate;
+                endDateToUse = filterEndDate;
+            }
 
-        // Return true if both search query and date range filters match
-        return matchesSearchQuery && isWithinDateRange;
-    });
+            const isWithinDateRange =
+                (!startDateToUse ||
+                    invoiceDate >=
+                        new Date(startDateToUse).setHours(0, 0, 0, 0)) &&
+                (!endDateToUse ||
+                    invoiceDate <=
+                        new Date(endDateToUse).setHours(23, 59, 59, 999));
+
+            return matchesSearchQuery && isWithinDateRange;
+        });
+
+        setFilteredDetails(filtered);
+    }, [searchQuery, details, startDate, endDate, selectedFilter]);
+    // const filteredDetails = details.filter((ticket) => {
+    //     const ticketDate = new Date(ticket?.createdAt).setHours(0, 0, 0, 0);
+
+    //     // Match search query
+    //     const matchesSearchQuery =
+    //         ticket?.user?.name
+    //             ?.toLowerCase()
+    //             ?.includes(searchQuery.toLowerCase()) ||
+    //         ticket?.user?.email
+    //             ?.toLowerCase()
+    //             ?.includes(searchQuery.toLowerCase()) ||
+    //         ticket?.category?.title?.en
+    //             ?.toLowerCase()
+    //             ?.includes(searchQuery.toLowerCase()) ||
+    //         ticket?.plan?.title?.en
+    //             ?.toLowerCase()
+    //             ?.includes(searchQuery.toLowerCase()) ||
+    //         ticket?.status?.toLowerCase()?.includes(searchQuery.toLowerCase());
+
+    //     // Check if a custom date range is selected from DatePicker
+    //     let startDateToUse = startDate?.setHours(0, 0, 0, 0);
+    //     let endDateToUse = endDate?.setHours(0, 0, 0, 0);
+
+    //     // If no custom date range is selected, use selectedFilter (week, month, year)
+    //     if (!startDate && !endDate) {
+    //         const { startDate: filterStartDate, endDate: filterEndDate } =
+    //             getStartAndEndDate(selectedFilter);
+    //         startDateToUse = filterStartDate;
+    //         endDateToUse = filterEndDate;
+    //     }
+    //     // Apply date filtering based on the available date range (either DatePicker or selectedFilter)
+    //     const isWithinDateRange =
+    //         (!startDateToUse || ticketDate >= startDateToUse) &&
+    //         (!endDateToUse || ticketDate <= endDateToUse);
+
+    //     // Return true if both search query and date range filters match
+    //     return matchesSearchQuery && isWithinDateRange;
+    // });
 
     return (
         <div className="p-5 bg-gray-100">
