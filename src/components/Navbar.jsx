@@ -1104,7 +1104,7 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                                     {/* Parent item click */}
                                     <div
                                         onClick={() =>
-                                            handleNavigate(category._id)
+                                            handleNavigate(category?._id)
                                         }
                                         className="hover:bg-custom-yellow hover:text-black "
                                     >
@@ -1117,8 +1117,8 @@ const Navbar = ({ sidebarOpen, setSidebarOpen, isVisible, setIsVisible }) => {
                                                 onClick={(e) => {
                                                     e.stopPropagation(); // Prevent parent click from firing
                                                     handleNavigate(
-                                                        category._id,
-                                                        tour._id
+                                                        category?._id,
+                                                        tour?._id
                                                     ); // Nested item click with category and tour IDs
                                                 }}
                                                 className="hover:bg-custom-yellow hover:text-black "
