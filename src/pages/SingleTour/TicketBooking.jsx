@@ -178,8 +178,8 @@ export default function TicketBooking({
                                 </h2>
                                 <span className="text-gray-500 ml-2 text-md font-bold">
                                     {lang === "ar"
-                                        ? "(أكثر من 13)"
-                                        : "(Above 13 YRS)"}
+                                        ? "(أكثر من 12)"
+                                        : "(Above 12 YRS)"}
                                 </span>
                             </div>
                             <p>Price: {adultPrice} qar</p>
@@ -249,7 +249,7 @@ export default function TicketBooking({
                 }
 
                 {/* If no adultPrice/childPrice, check for adultData/childData and display */}
-                {adultData.length > 0 && (
+                {/* {adultData.length > 0 && (
                     <div
                         className="flex justify-between items-center mb-4 cursor-pointer"
                         onMouseEnter={handleHover}
@@ -266,7 +266,7 @@ export default function TicketBooking({
                                 : "Click here to view"}
                         </span>
                     </div>
-                )}
+                )} */}
 
                 {/* Popup for showing the adultData and childData */}
                 <DataPopup
