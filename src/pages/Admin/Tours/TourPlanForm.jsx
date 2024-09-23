@@ -13,11 +13,20 @@ import SinglePriceComponent from "./SinglePriceComponent";
 import Loader from "../../../components/Loader";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+} from "firebase/storage";
+import app from "../../../firebase";
+
 const TourPlanForm = ({ onClose }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     const [file, setFile] = useState(null);
     const [galleryFile, setGalleryFile] = useState(null);
+    const [tempGallery, setTempGallery] = useState(null);
     const [galleryVideoFile, setGalleryVideoFile] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -95,63 +104,90 @@ const TourPlanForm = ({ onClose }) => {
         error: error,
         downloadURL: downloadURL,
     } = useFirebaseUpload(file);
-    const {
-        progress: progressGallery,
-        error: errorGallery,
-        downloadURL: downloadURLGallery,
-    } = useFirebaseUpload(galleryFile);
+    // const {
+    //     progress: progressGallery,
+    //     error: errorGallery,
+    //     downloadURL: downloadURLGallery,
+    // } = useFirebaseUpload(galleryFile);
 
-    const {
-        progress: progressVideo,
-        error: errorVideo,
-        downloadURL: downloadURLVideo,
-    } = useFirebaseUpload(galleryVideoFile);
-    const [galleryQueue, setGalleryQueue] = useState([]);
+    // const {
+    //     progress: progressVideo,
+    //     error: errorVideo,
+    //     downloadURL: downloadURLVideo,
+    // } = useFirebaseUpload(galleryVideoFile);
+
     const handleCoverImageChange = (e) => {
         const selectedFile = e.target.files[0]; // Get the selected file
         if (selectedFile) {
             setFile(selectedFile); // Update the file state to trigger the upload
         }
     };
-
-    const handleGalleryImageChange = (e) => {
+    const handleGalleryImageChange = async (e) => {
         const files = Array.from(e.target.files); // Convert FileList to array
-        setGalleryQueue(files); // Set files into a queue for sequential upload
+        if (files.length > 0) {
+            setLoading(true);
+            console.log("setting set loading true");
+            setGalleryFile(files[0]);
+
+            await uploadFilesSequentially(files, setGalleryImages); // Call function to handle sequential upload
+            console.log("setting set loading false");
+
+            setLoading(false);
+        }
     };
-    useEffect(() => {
-        if (progressGallery === 100) {
-            // Trigger the next file upload after current one finishes
-            setGalleryFile(null); // Clear current file to allow next upload
-        }
-    }, [progressGallery]);
 
-    useEffect(() => {
-        if (galleryQueue.length > 0 && !galleryFile) {
-            setGalleryFile(galleryQueue[0]); // Set the first file from the queue to be uploaded
-        }
-    }, [galleryQueue, galleryFile]);
-    useEffect(() => {
-        if (downloadURLGallery) {
-            console.log(downloadURLGallery);
-            setGalleryImages((prev) => [...prev, downloadURLGallery]); // Add uploaded image URL to gallery
-            setGalleryFile(null); // Clear current file
-            setGalleryQueue((prevQueue) => prevQueue.slice(1)); // Remove the uploaded file from the queue
-        }
-    }, [downloadURLGallery]);
-    useEffect(() => {
-        if (progressGallery === 100) {
-            // Wait 100 milliseconds before triggering the next file upload
-            setTimeout(() => {
-                setGalleryFile(null); // Clear current file to allow next upload
-            }, 100); // Wait for 100 milliseconds
-        }
-    }, [progressGallery]);
+    const handleGalleryVideoChange = async (e) => {
+        const files = Array.from(e.target.files); // Convert FileList to array
+        if (files.length > 0) {
+            setLoading(true);
+            console.log("setting set loading true");
 
-    const handleGalleryVideoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setGalleryVideoFile(file); // Set the file state to trigger upload
+            setGalleryVideoFile(files[0]);
+
+            await uploadFilesSequentially(files, setGalleryVideos); // Call function to handle sequential upload
+            console.log("setting set loading false");
+
+            setLoading(false);
         }
+    };
+
+    const uploadFilesSequentially = async (files, setter) => {
+        for (let i = 0; i < files.length; i++) {
+            let uploadedlink = await uploadSingleFile(files[i]);
+            setter((prev) => [...prev, uploadedlink]);
+        }
+    };
+    const uploadSingleFile = (file) => {
+        return new Promise((resolve, reject) => {
+            const storage = getStorage(app);
+            const fileName = `${new Date().getTime()}-${file.name}`;
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    reject(error); // Handle error
+                },
+                async () => {
+                    try {
+                        const downloadUrl = await getDownloadURL(
+                            uploadTask.snapshot.ref
+                        );
+
+                        resolve(downloadUrl); // Resolve when upload is complete
+                    } catch (error) {
+                        console.error("Error getting download URL:", error);
+                        reject(error); // Handle error
+                    }
+                }
+            );
+        });
     };
 
     const handleInputChange = (setter) => (e) => {
@@ -229,10 +265,6 @@ const TourPlanForm = ({ onClose }) => {
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
-        console.log("************************");
-        console.log(galleryImages);
-        console.log("**************************************");
-        // return;
         const formattedDates = stopSales.map((date) =>
             date instanceof DateObject ? date.toDate().toISOString() : date
         );
@@ -441,12 +473,12 @@ const TourPlanForm = ({ onClose }) => {
     //         setGalleryFile(null); // Clear file state after upload
     //     }
     // }, [downloadURLGallery]);
-    useEffect(() => {
-        if (downloadURLVideo) {
-            setGalleryVideos((prev) => [...prev, downloadURLVideo]); // Add new URL to galleryVideos
-            setGalleryVideoFile(null); // Clear file state after upload
-        }
-    }, [downloadURLVideo]);
+    // useEffect(() => {
+    //     if (downloadURLVideo) {
+    //         setGalleryVideos((prev) => [...prev, downloadURLVideo]); // Add new URL to galleryVideos
+    //         setGalleryVideoFile(null); // Clear file state after upload
+    //     }
+    // }, [downloadURLVideo]);
     useEffect(() => {
         const getCategorys = async () => {
             try {
@@ -705,14 +737,14 @@ const TourPlanForm = ({ onClose }) => {
                             />
                         ))}
                     </div>
-                    {progressGallery > 0 && (
+                    {/* {progressGallery > 0 && (
                         <p>Upload progress: {progressGallery}%</p>
                     )}
                     {errorGallery && (
                         <p className="text-red-500">
                             Error: {errorGallery.message}
                         </p>
-                    )}
+                    )} */}
                 </div>
                 {/* Gallery Videos Input */}
                 <div>
@@ -729,6 +761,7 @@ const TourPlanForm = ({ onClose }) => {
                         accept="video/*"
                         onChange={handleGalleryVideoChange}
                         className="p-2 border rounded-md w-full"
+                        multiple
                     />
                     <div className="flex flex-wrap mt-2">
                         {galleryVideos.map((video, index) => (
@@ -740,14 +773,14 @@ const TourPlanForm = ({ onClose }) => {
                             />
                         ))}
                     </div>
-                    {progressVideo > 0 && (
+                    {/* {progressVideo > 0 && (
                         <p>Upload progress: {progressVideo}%</p>
                     )}
                     {errorVideo && (
                         <p className="text-red-500">
                             Error: {errorVideo.message}
                         </p>
-                    )}
+                    )} */}
                 </div>
                 {/* Available Days Dropdown */}
                 <div>

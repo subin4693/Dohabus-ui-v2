@@ -13,7 +13,13 @@ import { toast } from "react-toastify";
 import Loader from "../../../components/Loader";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
-
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+} from "firebase/storage";
+import app from "../../../firebase";
 const TourPlanForm = ({ onClose, editPlan }) => {
     const [loading, setLoading] = useState(false);
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -94,17 +100,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         error: error,
         downloadURL: downloadURL,
     } = useFirebaseUpload(file);
-    const {
-        progress: progressGallery,
-        error: errorGallery,
-        downloadURL: downloadURLGallery,
-    } = useFirebaseUpload(galleryFile);
-
-    const {
-        progress: progressVideo,
-        error: errorVideo,
-        downloadURL: downloadURLVideo,
-    } = useFirebaseUpload(galleryVideoFile);
 
     const handleCoverImageChange = (e) => {
         const selectedFile = e.target.files[0]; // Get the selected file
@@ -113,20 +108,71 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         }
     };
 
-    const handleGalleryImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setGalleryFile(file); // Set the file state to trigger upload
+    const handleGalleryImageChange = async (e) => {
+        const files = Array.from(e.target.files); // Convert FileList to array
+        if (files.length > 0) {
+            setLoading(true);
+            setGalleryFile(files[0]);
+
+            await uploadFilesSequentially(files, setGalleryImages); // Call function to handle sequential upload
+            setLoading(false);
         }
     };
 
-    const handleGalleryVideoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setGalleryVideoFile(file); // Set the file state to trigger upload
+    const handleGalleryVideoChange = async (e) => {
+        const files = Array.from(e.target.files); // Convert FileList to array
+        if (files.length > 0) {
+            setLoading(true);
+            setGalleryVideoFile(files[0]);
+
+            await uploadFilesSequentially(files, setGalleryVideos); // Call function to handle sequential upload
+            setLoading(false);
         }
     };
 
+    const uploadFilesSequentially = async (files, setter) => {
+        for (let i = 0; i < files.length; i++) {
+            let uploadedlink = await uploadSingleFile(files[i]);
+            setter((prev) => [...prev, uploadedlink]);
+        }
+    };
+    const uploadSingleFile = (file) => {
+        return new Promise((resolve, reject) => {
+            const storage = getStorage(app);
+            const fileName = `${new Date().getTime()}-${file.name}`;
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log(
+                        `Upload progress for ${file.name}: ${progress}%`
+                    );
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    reject(error); // Handle error
+                },
+                async () => {
+                    try {
+                        const downloadUrl = await getDownloadURL(
+                            uploadTask.snapshot.ref
+                        );
+                        console.log(
+                            `File uploaded successfully: ${downloadUrl}`
+                        );
+                        resolve(downloadUrl); // Resolve when upload is complete
+                    } catch (error) {
+                        console.error("Error getting download URL:", error);
+                        reject(error); // Handle error
+                    }
+                }
+            );
+        });
+    };
     const handleInputChange = (setter) => (e) => {
         const { name, value } = e.target;
         setter((prev) => ({ ...prev, [name]: value }));
@@ -384,18 +430,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
             setCoverImage(downloadURL); // Set the cover image to the Firebase download URL
         }
     }, [downloadURL]);
-    useEffect(() => {
-        if (downloadURLGallery) {
-            setGalleryImages((prev) => [...prev, downloadURLGallery]); // Add new URL to galleryImages
-            setGalleryFile(null); // Clear file state after upload
-        }
-    }, [downloadURLGallery]);
-    useEffect(() => {
-        if (downloadURLVideo) {
-            setGalleryVideos((prev) => [...prev, downloadURLVideo]); // Add new URL to galleryVideos
-            setGalleryVideoFile(null); // Clear file state after upload
-        }
-    }, [downloadURLVideo]);
+
     useEffect(() => {
         const getCategorys = async () => {
             try {
@@ -703,6 +738,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         accept="image/*"
                         onChange={handleGalleryImageChange}
                         className="p-2 border rounded-md w-full"
+                        multiple
                     />
                     <div className="flex flex-wrap mt-2">
                         {galleryImages.map((image, index) => (
@@ -714,14 +750,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                             />
                         ))}
                     </div>
-                    {progressGallery > 0 && (
-                        <p>Upload progress: {progressGallery}%</p>
-                    )}
-                    {errorGallery && (
-                        <p className="text-red-500">
-                            Error: {errorGallery.message}
-                        </p>
-                    )}
                 </div>
                 {/* Gallery Videos Input */}
                 <div>
@@ -738,6 +766,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                         accept="video/*"
                         onChange={handleGalleryVideoChange}
                         className="p-2 border rounded-md w-full"
+                        multiple
                     />
                     <div className="flex flex-wrap mt-2">
                         {galleryVideos.map((video, index) => (
@@ -749,14 +778,6 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                             />
                         ))}
                     </div>
-                    {progressVideo > 0 && (
-                        <p>Upload progress: {progressVideo}%</p>
-                    )}
-                    {errorVideo && (
-                        <p className="text-red-500">
-                            Error: {errorVideo.message}
-                        </p>
-                    )}
                 </div>
                 {/* Available Days Dropdown */}
                 <div>
