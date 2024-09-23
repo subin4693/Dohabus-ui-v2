@@ -106,7 +106,7 @@ const TourPlanForm = ({ onClose }) => {
         error: errorVideo,
         downloadURL: downloadURLVideo,
     } = useFirebaseUpload(galleryVideoFile);
-
+    const [galleryQueue, setGalleryQueue] = useState([]);
     const handleCoverImageChange = (e) => {
         const selectedFile = e.target.files[0]; // Get the selected file
         if (selectedFile) {
@@ -115,11 +115,37 @@ const TourPlanForm = ({ onClose }) => {
     };
 
     const handleGalleryImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setGalleryFile(file); // Set the file state to trigger upload
-        }
+        const files = Array.from(e.target.files); // Convert FileList to array
+        setGalleryQueue(files); // Set files into a queue for sequential upload
     };
+    useEffect(() => {
+        if (progressGallery === 100) {
+            // Trigger the next file upload after current one finishes
+            setGalleryFile(null); // Clear current file to allow next upload
+        }
+    }, [progressGallery]);
+
+    useEffect(() => {
+        if (galleryQueue.length > 0 && !galleryFile) {
+            setGalleryFile(galleryQueue[0]); // Set the first file from the queue to be uploaded
+        }
+    }, [galleryQueue, galleryFile]);
+    useEffect(() => {
+        if (downloadURLGallery) {
+            console.log(downloadURLGallery);
+            setGalleryImages((prev) => [...prev, downloadURLGallery]); // Add uploaded image URL to gallery
+            setGalleryFile(null); // Clear current file
+            setGalleryQueue((prevQueue) => prevQueue.slice(1)); // Remove the uploaded file from the queue
+        }
+    }, [downloadURLGallery]);
+    useEffect(() => {
+        if (progressGallery === 100) {
+            // Wait 100 milliseconds before triggering the next file upload
+            setTimeout(() => {
+                setGalleryFile(null); // Clear current file to allow next upload
+            }, 100); // Wait for 100 milliseconds
+        }
+    }, [progressGallery]);
 
     const handleGalleryVideoChange = (e) => {
         const file = e.target.files[0];
@@ -203,6 +229,10 @@ const TourPlanForm = ({ onClose }) => {
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
+        console.log("************************");
+        console.log(galleryImages);
+        console.log("**************************************");
+        // return;
         const formattedDates = stopSales.map((date) =>
             date instanceof DateObject ? date.toDate().toISOString() : date
         );
@@ -405,12 +435,12 @@ const TourPlanForm = ({ onClose }) => {
             setCoverImage(downloadURL); // Set the cover image to the Firebase download URL
         }
     }, [downloadURL]);
-    useEffect(() => {
-        if (downloadURLGallery) {
-            setGalleryImages((prev) => [...prev, downloadURLGallery]); // Add new URL to galleryImages
-            setGalleryFile(null); // Clear file state after upload
-        }
-    }, [downloadURLGallery]);
+    // useEffect(() => {
+    //     if (downloadURLGallery) {
+    //         setGalleryImages((prev) => [...prev, downloadURLGallery]); // Add new URL to galleryImages
+    //         setGalleryFile(null); // Clear file state after upload
+    //     }
+    // }, [downloadURLGallery]);
     useEffect(() => {
         if (downloadURLVideo) {
             setGalleryVideos((prev) => [...prev, downloadURLVideo]); // Add new URL to galleryVideos
@@ -663,6 +693,7 @@ const TourPlanForm = ({ onClose }) => {
                         accept="image/*"
                         onChange={handleGalleryImageChange}
                         className="p-2 border rounded-md w-full"
+                        multiple
                     />
                     <div className="flex flex-wrap mt-2">
                         {galleryImages.map((image, index) => (

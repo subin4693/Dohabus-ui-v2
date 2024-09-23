@@ -496,6 +496,7 @@ const SingleTour = () => {
                             : {},
                     }
                 );
+                console.log(data.data.data.plan);
 
                 const res = await axios.get(
                     BASE_URL + "/reviews/" + singletour,
@@ -1067,9 +1068,9 @@ const SingleTour = () => {
             </div>
 
             <Slider
-                mediaUrls={data && data.galleryimages ? data.galleryimages : []}
+                mediaUrls={data && data.galleryImages ? data.galleryImages : []}
                 mediaVideoUrls={
-                    data && data.galleryvideos ? data.galleryvideos : []
+                    data && data.galleryVideos ? data.galleryVideos : []
                 }
             />
             <div className="flex justify-center items-center px-2  mb-10 ">
