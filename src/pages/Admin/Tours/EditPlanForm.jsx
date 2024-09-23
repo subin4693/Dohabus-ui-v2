@@ -433,8 +433,8 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                 setKnowBeforeYouGo(
                     planData.knowBeforeYouGo || [{ en: "", ar: "" }]
                 );
-                setGalleryImages(planData.galleryimages || []);
-                setGalleryVideos(planData.galleryvideos || []);
+                setGalleryImages(planData.galleryImages || []);
+                setGalleryVideos(planData.galleryVideos || []);
                 setAvailableDays(planData.availableDays || []);
                 setAdultPrice(planData.adultPrice || "");
                 setChildPrice(planData.childPrice || "");
