@@ -151,7 +151,8 @@ const Checkout = () => {
             setLoading(false);
             return;
         }
-        if (!number.trim) {
+        console.log(number);
+        if (!number?.trim()) {
             toast.error("Please enter a valid mobile number!");
             setLoading(false);
             return;
@@ -244,7 +245,25 @@ const Checkout = () => {
                 )
             ) {
                 toast.error(error?.response?.data?.message);
-            } else toast.error("Coupon code is not valid");
+            } else if (
+                error?.response?.data?.message?.includes(
+                    "Coupon code is not valid"
+                )
+            ) {
+                toast.error("Coupon code is not valid");
+            } else if (
+                error?.response?.data?.message?.includes("The minimum ")
+            ) {
+                toast.error(error?.response?.data?.message);
+            } else if (
+                error?.response?.data?.message?.includes(
+                    "Invalid or expired coupon code"
+                )
+            ) {
+                toast.error(error?.response?.data?.message);
+            } else {
+                toast.error("Something went wront please try again later");
+            }
         }
     };
 

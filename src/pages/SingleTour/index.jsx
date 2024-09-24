@@ -65,6 +65,9 @@ const SingleTour = () => {
     const [session, setSession] = useState(null);
     const [selectedAddOns, setSelectedAddOns] = useState([]);
 
+    const [minChildCount, setMinChidCount] = useState(null);
+    const [minAdultCount, setMinAdultCount] = useState(null);
+
     const [loading, setLoading] = useState(false);
     const [contentLoading, setContentLoading] = useState(false);
     const [sessionLoading, setSessionLoading] = useState(false);
@@ -292,6 +295,21 @@ const SingleTour = () => {
             setLoading(false);
             toast.error(
                 "Please fill all the booking fields before proceeding!"
+            );
+            return;
+        }
+        if (minAdultCount && adultCount > 0 && adultCount < minAdultCount) {
+            setLoading(false);
+            toast.error(
+                `The minimum adult count should be ${minAdultCount}. You have selected ${adultCount}.`
+            );
+            return;
+        }
+
+        if (minChildCount && childCount > 0 && childCount < minChildCount) {
+            setLoading(false);
+            toast.error(
+                `The minimum child count should be ${minChildCount}. You have selected ${childCount}.`
             );
             return;
         }
@@ -533,8 +551,17 @@ const SingleTour = () => {
                     setAdultPrice(data.data.data.plan.adultPrice);
                     setChildPrice(data.data.data.plan.childPrice);
                 } else {
-                    setAdultPrice(data.data.data.plan.adultData[0].price);
-                    setChildPrice(data.data.data.plan.childData[0].price);
+                    const sortedAdultData = data.data.data.plan.adultData.sort(
+                        (a, b) => a.pax - b.pax
+                    );
+                    setAdultPrice(sortedAdultData[0]?.price);
+                    setMinAdultCount(sortedAdultData[0]?.pax);
+
+                    const sortedChildData = data.data.data.plan.childData.sort(
+                        (a, b) => a.pax - b.pax
+                    );
+                    setChildPrice(sortedChildData[0]?.price);
+                    setMinChidCount(sortedChildData[0]?.pax);
                 }
                 if (data.data.data.cart) setIsInCart(data.data.data.cart);
                 if (data.data.data.fav) setIsInFav(data.data.data.fav);
