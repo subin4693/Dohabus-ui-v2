@@ -264,6 +264,8 @@ const Checkout = () => {
             } else {
                 toast.error("Something went wront please try again later");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
