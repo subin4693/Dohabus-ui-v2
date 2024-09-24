@@ -45,6 +45,7 @@ const Checkout = () => {
     const childData = searchParams.get("selectedChild");
     const adultData = searchParams.get("selectedAdult");
     const addons = searchParams.get("addOns") || "";
+    console.log(addons);
     const checkOffer = async () => {
         if (!firstName.trim()) {
             toast.error("Please enter first name!");
@@ -317,21 +318,39 @@ const Checkout = () => {
         }
 
         if (addons) {
-            const selectedAddOns = addons.split(","); // Array of add-on IDs
+            const selectedAddOns = addons.split(","); // Array of add-on IDs and counts
 
-            // Loop through add-on IDs and find matches in data.addOn
-            selectedAddOns.forEach((addOnId) => {
+            // Loop through add-on IDs and counts
+            selectedAddOns.forEach((addOnEntry) => {
+                const [addId, count] = addOnEntry.split(":"); // Extract add-on ID and count
                 const matchingAddOn = data?.addOn?.find(
-                    (addOn) => addOn._id === addOnId
+                    (addOn) => addOn._id === addId
                 );
+
                 if (matchingAddOn) {
-                    setShowAddons((prev) => [...prev, matchingAddOn]);
-                    addOnTotalPrice += matchingAddOn.price;
+                    const addOnCount = parseInt(count, 10) || 1; // Parse the count or default to 1
+                    const totalAddOnPrice = matchingAddOn.price * addOnCount; // Calculate total price for this add-on
+
+                    // Add the add-on to the display list
+                    setShowAddons((prev) => [
+                        ...prev,
+                        {
+                            ...matchingAddOn,
+                            price: totalAddOnPrice,
+                            count: addOnCount,
+                        },
+                    ]);
+                    console.log(matchingAddOn);
+                    // Accumulate the total price for all selected add-ons
+                    addOnTotalPrice += totalAddOnPrice;
+                    console.log(totalAddOnPrice);
+                    console.log(addOnTotalPrice);
                 }
             });
 
             // Multiply the add-on total by the adultCount and childCount
-            addOnTotalPrice = addOnTotalPrice * (adultCount + childCount);
+
+            console.log(addOnTotalPrice); // Log the toz    tal price
         }
 
         // Set total prices
@@ -444,13 +463,13 @@ const Checkout = () => {
             </div>
 
             {/* Right side: Plan details */}
-            <div className="w-full md:w-1/4 bg-white p-4 space-y-8 h-fit rounded-lg border">
+            <div className="w-full md:w-1/4 bg-white p-4 space-y-5 h-fit rounded-lg border">
                 <h2 className="text-xl font-semibold ">Plan Details</h2>
                 {data.coverImage && (
                     <img
                         src={data.coverImage}
                         alt="Plan Cover"
-                        className="w-full max-h-[200px] mb-4 rounded-lg"
+                        className="w-full h-[150px] mb-4 rounded-lg"
                     />
                 )}
                 <p className="text-lg font-medium mb-2">
@@ -558,10 +577,10 @@ const Checkout = () => {
                         {showAddons.map((addon) => (
                             <div className="flex justify-between mb-2">
                                 <span>
-                                    {addon[lang]} x {adultCount + childCount}
+                                    {addon[lang]} x {addon?.count}
                                 </span>
                                 <span>
-                                    {addon.price * (adultCount + childCount)}{" "}
+                                    {addon.price}
                                     Qar
                                 </span>
                             </div>

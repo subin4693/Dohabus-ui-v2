@@ -35,6 +35,7 @@ import { BiHeartCircle, BiTime } from "react-icons/bi";
 import { useSelector } from "react-redux";
 
 import { BsBag, BsBagCheckFill } from "react-icons/bs";
+import Addons from "./Addons";
 
 const SingleTour = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -50,6 +51,9 @@ const SingleTour = () => {
         imageURL: null,
     });
     const [data, setData] = useState({});
+    const [ticketsCount, setTicketsCount] = useState({}); // Store count for each add-on
+    const [totalAddOnCost, setTotalAddOnCost] = useState(0);
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [adultCount, setAdultCount] = useState(0);
@@ -60,6 +64,7 @@ const SingleTour = () => {
     const [canWriteReview, setCanWriteReview] = useState(false);
     const [session, setSession] = useState(null);
     const [selectedAddOns, setSelectedAddOns] = useState([]);
+    const [addonPersonCount, setAddonPersonCount] = useState(0);
     const [loading, setLoading] = useState(false);
     const [contentLoading, setContentLoading] = useState(false);
     const [sessionLoading, setSessionLoading] = useState(false);
@@ -298,12 +303,17 @@ const SingleTour = () => {
 
             if (selectedAddOns && selectedAddOns.length > 0) {
                 const addOnValues = selectedAddOns
-                    .map((addOn) => addOn.value)
-                    .join(",");
-                query += `&addOns=${addOnValues}`; // Add add-on values to the query
+                    .map((addOn) => {
+                        const count = ticketsCount[addOn.value] || 1; // Get the count from ticketsCount, default to 1
+                        return `${addOn.value}:${count}`; // Format as "addOnId:count"
+                    })
+                    .join(","); // Join the array of "addOnId:count" strings
+
+                query += `&addOns=${addOnValues}`; // Append add-on IDs and counts to the query
             }
 
             setLoading(false);
+
             return navigate(`/checkout/${data._id}?${query}`);
         }
 
@@ -496,7 +506,6 @@ const SingleTour = () => {
                             : {},
                     }
                 );
-                console.log(data.data.data.plan);
 
                 const res = await axios.get(
                     BASE_URL + "/reviews/" + singletour,
@@ -975,7 +984,7 @@ const SingleTour = () => {
                             )}
                         </>
 
-                        {data?.addOn?.length > 0 && (
+                        {/* {data?.addOn?.length > 0 && (
                             <div>
                                 <h2 className="text-xl mt-5 font-bold">
                                     {lang === "ar" ? "الإضافات" : "Add-Ons"}
@@ -988,6 +997,19 @@ const SingleTour = () => {
                                     onChange={handleAddOnChange} // Handle selection change
                                 />
                             </div>
+                        )} */}
+
+                        {data?.addOn?.length > 0 && (
+                            <Addons
+                                lang={lang}
+                                addOnOptions={addOnOptions}
+                                handleAddOnChange={handleAddOnChange}
+                                selectedAddOns={selectedAddOns}
+                                ticketsCount={ticketsCount}
+                                setTicketsCount={setTicketsCount}
+                                totalAddOnCost={totalAddOnCost}
+                                setTotalAddOnCost={setTotalAddOnCost}
+                            />
                         )}
 
                         <TicketBooking
@@ -1014,6 +1036,7 @@ const SingleTour = () => {
                             setAdultPrice={setAdultPrice}
                             childPrice={childPrice}
                             setChildPrice={setChildPrice}
+                            totalAddOnCost={totalAddOnCost}
                         />
                         <div className="mt-10 rounded-md bg-gray-100 shadow-lg p-3">
                             <h2 className="text-xl my-3 font-bold">

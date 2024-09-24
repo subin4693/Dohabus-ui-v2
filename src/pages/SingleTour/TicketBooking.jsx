@@ -100,6 +100,7 @@ export default function TicketBooking({
     setAdultPrice,
     childPrice,
     setChildPrice,
+    totalAddOnCost,
     loading,
 }) {
     const [popupOpen, setPopupOpen] = useState(false);
@@ -290,7 +291,7 @@ export default function TicketBooking({
                     <h2 className="text-xl font-bold">
                         {lang === "ar" ? "السعر الإجمالي" : "Total Price"}:{" "}
                         {/* Calculate the total addon cost for adults and children */}
-                        {addOnTotalCost * (adultCount + childCount) +
+                        {totalAddOnCost +
                             adultPrice * adultCount +
                             childPrice * childCount}{" "}
                         qar
