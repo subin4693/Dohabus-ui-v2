@@ -64,7 +64,7 @@ const SingleTour = () => {
     const [canWriteReview, setCanWriteReview] = useState(false);
     const [session, setSession] = useState(null);
     const [selectedAddOns, setSelectedAddOns] = useState([]);
-    const [addonPersonCount, setAddonPersonCount] = useState(0);
+
     const [loading, setLoading] = useState(false);
     const [contentLoading, setContentLoading] = useState(false);
     const [sessionLoading, setSessionLoading] = useState(false);

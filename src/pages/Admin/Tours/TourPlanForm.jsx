@@ -372,21 +372,21 @@ const TourPlanForm = ({ onClose }) => {
             return;
         }
 
-        if (hasAdultData && hasChildData) {
-            const hasPaxOneInAdultData = adultData.some(
-                (row) => Number(row.pax) === 1
-            );
-            const hasPaxOneInChildData = childData.some(
-                (row) => Number(row.pax) === 1
-            );
-            if (!hasPaxOneInAdultData || !hasPaxOneInChildData) {
-                toast.error(
-                    "Both Adult and Child data must have at least one pax with a value of 1."
-                );
-                setLoading(false);
-                return;
-            }
-        }
+        // if (hasAdultData && hasChildData) {
+        //     const hasPaxOneInAdultData = adultData.some(
+        //         (row) => Number(row.pax) === 1
+        //     );
+        //     const hasPaxOneInChildData = childData.some(
+        //         (row) => Number(row.pax) === 1
+        //     );
+        //     if (!hasPaxOneInAdultData || !hasPaxOneInChildData) {
+        //         toast.error(
+        //             "Both Adult and Child data must have at least one pax with a value of 1."
+        //         );
+        //         setLoading(false);
+        //         return;
+        //     }
+        // }
 
         // Construct formData object and remove empty fields
         let formData = {
