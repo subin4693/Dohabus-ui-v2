@@ -14,5 +14,6 @@ const firebaseConfig = {
     measurementId: "G-TNHFTSPMLS",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export default app;

@@ -51,12 +51,12 @@ const TourCard = ({
                                 <h2 className="text-3xl text-black font-bold">
                                     {lang === "ar"
                                         ? "مدة الجولة"
-                                        : "Tour Durations"}
+                                        : "Tour Duration"}
                                 </h2>
 
-                                <small className="text-2xl text-black font-semibold">
-                                    {duration[lang] ? duration[lang] : "--"}
-                                </small>
+                                <p className="text-2xl text-black font-semibold w-[300px] overflow-hidden">
+                                    {duration[lang] ? duration[lang] : "--"} 
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-center gap-5 mt-5 justify-c enter">
@@ -68,11 +68,11 @@ const TourCard = ({
                                         : "Starting Point"}
                                 </h2>
 
-                                <small className="text-2xl text-black font-semibold">
+                                <p className="text-2xl text-black font-semibold w-[300px] h-[65px] overflow-hidden">
                                     {itinerary && itinerary[lang]
                                         ? itinerary[lang]
                                         : "--"}
-                                </small>
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-center gap-5 mt-5 justi fy-center">
@@ -84,9 +84,9 @@ const TourCard = ({
                                         : "Price Starts From"}
                                 </h2>
 
-                                <small className="text-2xl text-black font-semibold">
-                                    QAR {childPrice ? childPrice : "--"}
-                                </small>
+                                <p className="text-2xl text-black font-semibold w-[300px]">
+                                    QAR {childPrice ? childPrice : "--"} 
+                                </p>
                             </div>
                         </div>
                     </div>
