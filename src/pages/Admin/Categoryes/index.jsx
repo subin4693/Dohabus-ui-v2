@@ -317,7 +317,7 @@ const CreateCategory = () => {
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-10 flex-wrap">
-                {categories.map((card) => (
+                {categories?.map((card) => (
                     <Card
                         key={card.id}
                         title={card.title[lang]}

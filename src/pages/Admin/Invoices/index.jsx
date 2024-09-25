@@ -59,14 +59,14 @@ const Index = () => {
 
             // Prepare data for autoTable
             const formattedData = data.map((item, index) => ({
-                "Ticket ID": item.uniqueId,
-                "User Name": `${item.firstName} ${item.lastName}`,
-                "User Email": item.email,
-                Category: item.category.title.en,
-                "Plan Title": item.plan.title.en,
-                "Total Price": `$${item.price}`,
-                "Adult Quantity": item.adultQuantity,
-                "Child Quantity": item.childQuantity,
+                "Ticket ID": item?.uniqueId,
+                "User Name": `${item?.firstName} ${item?.lastName}`,
+                "User Email": item?.email,
+                Category: item?.category?.title?.en,
+                "Plan Title": item?.plan?.title?.en,
+                "Total Price": `$${item?.price}`,
+                "Adult Quantity": item?.adultQuantity,
+                "Child Quantity": item?.childQuantity,
             }));
 
             // Define columns for the table
@@ -122,13 +122,13 @@ const Index = () => {
         } else if (format === "excel") {
             const excelData = details.map((item, index) => ({
                 "Ticket Number": index + 1,
-                "User Name": item.user.name,
-                "User Email": item.email,
-                Category: item.category.title.en,
-                "Plan Title": item.plan.title.en,
-                "Total Price": `$${item.totalPrice}`,
-                "Adult Quantity": item.adultQuantity,
-                "Child Quantity": item.childQuantity,
+                "User Name": item?.user?.name,
+                "User Email": item?.email,
+                Category: item?.category?.title?.en,
+                "Plan Title": item?.plan?.title?.en,
+                "Total Price": `$${item?.totalPrice}`,
+                "Adult Quantity": item?.adultQuantity,
+                "Child Quantity": item?.childQuantity,
             }));
 
             const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -210,13 +210,13 @@ const Index = () => {
 
             // Search Query Filter
             const matchesSearchQuery =
-                invoice.plan.title.en
+                invoice?.plan?.title?.en
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase()) ||
-                invoice.category.title.en
+                invoice?.category?.title?.en
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase()) ||
-                invoice.firstName
+                invoice?.firstName
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase());
 
@@ -471,40 +471,40 @@ const Index = () => {
                             <div className="">
                                 <img
                                     className="w-full h-[300px] object-cover rounded-2xl"
-                                    src={invoice.plan.coverImage}
-                                    alt={invoice.plan.title.en}
+                                    src={invoice?.plan?.coverImage}
+                                    alt={invoice.plan?.title?.en}
                                 />
                             </div>
                             <div className="w-full h-[200px] mt-2">
                                 <h1 className="text-3xl mt-1">
-                                    {invoice.plan.title[lang]}
+                                    {invoice?.plan?.title?.[lang]}
                                 </h1>
                                 <h2 className="text-xl mt-1">
-                                    {invoice.category.title[lang]}
+                                    {invoice?.category?.title[lang]}
                                 </h2>
                                 <h2 className="text-xl mt-1">
-                                    Name: {invoice.firstName}
+                                    Name: {invoice?.firstName}
                                 </h2>
                                 <h2 className="text-xl mt-1">
-                                    Email: {invoice.email}
+                                    Email: {invoice?.email}
                                 </h2>
                                 <h2 className="text-xl mt-1">
                                     Guest:{" "}
-                                    {invoice.adultQuantity +
-                                        invoice.childQuantity}
+                                    {invoice?.adultQuantity +
+                                        invoice?.childQuantity}
                                 </h2>
                                 <h2 className="text-xl mt-1">
-                                    Price: {invoice.price} QAR
+                                    Price: {invoice?.price} QAR
                                 </h2>
                                 <h2 className="text-xl mt-1">
-                                    Status: {invoice.status}
+                                    Status: {invoice?.status}
                                 </h2>
                             </div>
                             <button
                                 onClick={() => generatePDF(invoice)}
                                 className="mt-16 w-full p-1 border rounded-md hover:bg-dark hover:text-white duration-300 bg-custom-yellow text-xl "
                             >
-                                {loadingInvoice[invoice._id] ? (
+                                {loadingInvoice[invoice?._id] ? (
                                     <div>
                                         <Loader w={50} h={50} b={10} />
                                     </div>
