@@ -280,6 +280,7 @@ const SingleTour = () => {
 
     const handleBooking = () => {
         setLoading(true);
+
         if (!selectedDate) {
             setLoading(false);
             toast.error("Please select date before proceeding!");
@@ -298,6 +299,17 @@ const SingleTour = () => {
             );
             return;
         }
+
+        if (data.minPerson > 0 && data.minPerson > adultCount + childCount) {
+            setLoading(false);
+            toast.error(
+                `The minimum persons count should be ${
+                    data?.minPerson
+                }. You have selected ${adultCount + childCount}.`
+            );
+            return;
+        }
+
         if (minAdultCount && adultCount > 0 && adultCount < minAdultCount) {
             setLoading(false);
             toast.error(

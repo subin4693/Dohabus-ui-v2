@@ -128,7 +128,15 @@ const Checkout = () => {
 
     const handleTicketBooking = async () => {
         setLoading(true);
-
+        if (data.minPerson > 0 && data.minPerson > adultCount + childCount) {
+            setLoading(false);
+            toast.error(
+                `The minimum persons count should be ${
+                    data?.minPerson
+                }. You have selected ${adultCount + childCount}.`
+            );
+            return;
+        }
         if (!firstName.trim()) {
             toast.error("Please enter first name!");
             setLoading(false);
@@ -151,7 +159,7 @@ const Checkout = () => {
             setLoading(false);
             return;
         }
-        console.log(number);
+
         if (!number?.trim()) {
             toast.error("Please enter a valid mobile number!");
             setLoading(false);
