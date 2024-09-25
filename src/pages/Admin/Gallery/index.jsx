@@ -95,7 +95,7 @@ const Gallery = () => {
   const handleImageChange = (e, imageId = null) => {
     const file = e.target.files[0];
     if (file) {
-      setFile(file); 
+      setFile(file);
       setEditingImageId(imageId);
     }
   };
@@ -103,8 +103,8 @@ const Gallery = () => {
   const handleAwardFileChange = (e, awardId = null) => {
     const file = e.target.files[0];
     if (file) {
-      setAwardFile(file); 
-      setEditingAwardId(awardId); 
+      setAwardFile(file);
+      setEditingAwardId(awardId);
     }
   };
 
@@ -120,6 +120,18 @@ const Gallery = () => {
       console.error(error);
     }
   };
+  const handleRemoveGalery = async (id) => {
+    try {
+      if (id) {
+        await axios.delete(`${BASE_URL}/footer/${id}`);
+        fetchData(); // Re-fetch data to update the state
+        toast.success("Footer deleted successfully!", { theme: "dark" });
+      }
+    } catch (error) {
+      toast.error("Failed to delete footer.", { theme: "dark" });
+      console.error(error);
+    }
+  };
 
   const handleCreateNew = () =>
     document.getElementById("fileInput-new").click();
@@ -127,7 +139,7 @@ const Gallery = () => {
     document.getElementById("awardFileInput-new").click();
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="p-4">
       {mainUser && mainUser.role === "super-admin" && (
         <>
           <div className="flex justify-between items-center">
@@ -161,20 +173,26 @@ const Gallery = () => {
         style={{ display: "none" }}
         onChange={handleAwardFileChange}
       />
+      <h2 className="text-2xl font-bold">Gallery Images:</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <h2 className="col-span-full text-lg font-bold">Gallery Images</h2>
+      <div className="flex flex-wrap gap-5 mt-3">
         {images.length > 0 ? (
           images.map((image, index) => (
-            <div key={index} className="relative group">
+            <div key={index} className=" w-[300px]">
               <img
                 src={image?.image}
                 alt={`Gallery Image ${index + 1}`}
-                className="w-full h-full object-cover cursor-pointer rounded-lg transition-transform duration-200 transform group-hover:scale-105"
+                className=" w-full  h-[200px] object-cover cursor-pointer transition-transform duration-200 transform group-hover:scale-105"
                 onClick={() =>
                   document.getElementById(`fileInput-${index}`).click()
                 }
               />
+              <button
+                onClick={() => handleRemoveGalery(image?._id)}
+                className="bg-red-500 p-2  text-white h-[50px] w-full"
+              >
+                Remove
+              </button>
               <input
                 type="file"
                 id={`fileInput-${index}`}
@@ -187,24 +205,25 @@ const Gallery = () => {
         ) : (
           <p>No images available.</p>
         )}
-
-        <h2 className="col-span-full text-lg font-bold">
-          Awards (Make sure admin only add 4 awards)
-        </h2>
+      </div>
+      <h2 className="mt-5 text-2xl font-bold">
+        Awards: (Make sure admin only add 4 awards)
+      </h2>
+      <div className="flex flex-wrap gap-5 mt-3">
         {awards.length > 0 ? (
           awards.map((award, index) => (
-            <div key={index} className="relative group mt-5">
+            <div key={index} className="w-[300px]">
               <img
                 src={award?.image}
                 alt={`Award ${index + 1}`}
-                className="w-[300px] h-[300px] object-cover cursor-pointer rounded-lg transition-transform duration-200 transform group-hover:scale-105"
+                className="w-full  h-[200px] object-cover cursor-pointer transition-transform duration-200 transform group-hover:scale-105"
                 onClick={() =>
                   document.getElementById(`awardFileInput-${index}`).click()
                 }
               />
               <button
                 onClick={() => handleRemove(award._id)}
-                className="bg-red-500 border p-2 mt-2 rounded-xl"
+                className="bg-red-500 border p-2 mt-2 text-white w-full"
               >
                 Remove
               </button>
