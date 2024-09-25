@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import Axios for API calls
 import useFirebaseUpload from "../../../hooks/use-firebaseUpload"; // Import your custom Firebase hook
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Banner = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -133,21 +134,46 @@ const Banner = () => {
         };
         getData();
     }, []);
+
+    const handleRemove = async (id) => {
+        try {
+          if (id) {
+            // Make delete request to the server
+            const res = await axios.delete(`${BASE_URL}/banner/${id}`);
+    
+            // Show success message
+            toast.success("Banner deleted successfully!", {
+              theme: "dark",
+            });
+    
+            // Update the state to remove the deleted cruise from the UI
+            setSlide((prevCategories) =>
+              prevCategories.filter((category) => category._id !== id)
+            );
+          }
+        } catch (error) {
+          // Show error message
+          toast.error("Failed to delete Banner.", { theme: "dark" });
+          console.error(error);
+        }
+      };
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">Banner Images</h2>
 
             {/* Display All Images */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="flex gap-4 items-center flex-wrap">
                 {slide.map((item, index) => (
+                <div className="flex flex-wrap w-[300px]">
                     <div
                         key={item._id}
-                        className="relative cursor-pointer"
+                        className="w-full relative cursor-pointer"
                         onClick={() => {
                             if (mainUser && mainUser.role === "super-admin")
                                 handleEdit(index);
                         }}
                     >
+                        
                         <img
                             src={item.image}
                             alt={`Slide ${index + 1}`}
@@ -157,9 +183,14 @@ const Banner = () => {
                             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-opacity">
                                 Edit
                             </div>
+                           
                         )}
+                        
                     </div>
-                ))}
+                    <button onClick={() => handleRemove(item._id)} className="w-full p-2 bg-red-500 text-white">Remove</button>
+                    </div>
+                    ))}
+                    
             </div>
 
             {/* Add New Image Button */}
@@ -202,7 +233,7 @@ const Banner = () => {
                             </p>
                         )}
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                         <label className="block font-bold mb-2">URL</label>
                         <input
                             type="text"
@@ -210,7 +241,7 @@ const Banner = () => {
                             onChange={(e) => setNewUrl(e.target.value)}
                             className="w-full p-2 border rounded"
                         />
-                    </div>
+                    </div> */}
                     <div className="flex justify-end">
                         <button
                             onClick={
