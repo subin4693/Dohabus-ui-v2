@@ -91,7 +91,6 @@ const Signin = () => {
           password: null,
           phone: user.providerData[0].phoneNumber,
         };
-        console.log("fields", fields);
 
         setLoading(true);
         try {
