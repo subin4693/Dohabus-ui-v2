@@ -4,7 +4,13 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import logo from "../../../assets/DOHA Bus Logo YB large.png";
 
-const TicketCard = ({ booking, lang, handleCancelTicket, mainUserRole }) => {
+const TicketCard = ({
+  booking,
+  lang,
+  handleCancelTicket,
+  mainUserRole,
+  handleRemove,
+}) => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const generatePDF = () => {
@@ -166,8 +172,11 @@ const TicketCard = ({ booking, lang, handleCancelTicket, mainUserRole }) => {
           </h3>
 
           {booking.status.toLowerCase() === "canceled" ? (
-            <div className="p-1 rounded-md text-white px-2 cursor-pointer flex items-center space-x-2 bg-red-500">
-              Canceled
+            <div
+              onClick={() => handleRemove(booking._id)}
+              className="p-1 rounded-md text-white px-2 cursor-pointer flex items-center space-x-2 bg-red-500"
+            >
+              Remove
             </div>
           ) : (
             mainUserRole === "super-admin" &&

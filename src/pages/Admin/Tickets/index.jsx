@@ -312,6 +312,28 @@ const ManageTickets = () => {
   //     // Return true if both search query and date range filters match
   //     return matchesSearchQuery && isWithinDateRange;
   // });
+  const handleRemove = async (id) => {
+    try {
+      if (id) {
+        // Make delete request to the server
+        const res = await axios.delete(`${BASE_URL}/tickets/${id}`);
+
+        // Show success message
+        toast.success("Ticket deleted successfully!", {
+          theme: "dark",
+        });
+
+        // Update the state to remove the deleted cruise from the UI
+        setDetails((prevCategories) =>
+          prevCategories.filter((category) => category._id !== id)
+        );
+      }
+    } catch (error) {
+      // Show error message
+      toast.error("Failed to delete Ticket.", { theme: "dark" });
+      console.error(error);
+    }
+  };
 
   return (
     <div className="p-5 bg-gray-100">
@@ -379,6 +401,7 @@ const ManageTickets = () => {
             lang={lang}
             handleCancelTicket={handleCancelTicket}
             mainUserRole={mainUser.role}
+            handleRemove={handleRemove}
           />
         ))}
       </div>
