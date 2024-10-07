@@ -25,6 +25,7 @@ const AdminLayout = () => {
         { text: "Cruise", link: "/admin/cruise" },
         { text: "Dashboard", link: "/admin/dashboard" },
         { text: "Edit footer", link: "/admin/gallery" },
+        { text: "Faq", link: "/admin/faq" },
         { text: "Guidelines", link: "/admin/guidelines" },
         { text: "Hotel", link: "/admin/hotels" },
         { text: "Invoice", link: "/admin/invoice" },

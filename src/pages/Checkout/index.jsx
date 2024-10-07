@@ -231,13 +231,17 @@ const Checkout = () => {
                 dataa,
                 user,
             });
-            setinvoiceID(res?.data?.data?.bookedTickets?._id);
+             const { ticketId, payUrl } = res.data.data;
+              localStorage.setItem('pendingTicketId', ticketId);
+              window.location.href = payUrl;
+            
+            // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
 
             toast.success(
                 "Your ticket has been successfully booked. You can now download your invoice"
             );
             setLoading(false);
-            navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
+            // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
         } catch (error) {
             setLoading(false);
             console.log(error);
@@ -413,13 +417,13 @@ const Checkout = () => {
                 <div className="flex justify-between items-center gap-5">
                     <div className="mb-4 flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            First Name
+                          Full Name
                         </label>
                         <input
                             type="text"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
-                            placeholder="Enter your first name"
+                            placeholder="Enter your name"
                             className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
                         />
                     </div>
