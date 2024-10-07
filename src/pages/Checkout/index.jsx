@@ -9,7 +9,8 @@ import {
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
-
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 const Checkout = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
     const { id } = useParams(); // Get the route parameter (e.g., checkout/:id)
@@ -69,7 +70,7 @@ const Checkout = () => {
             setLoading(false);
             return;
         }
-        if (!number?.trim()) {
+        if (!number) {
             toast.error("Please enter a valid mobile number!");
             setLoading(false);
             return;
@@ -231,10 +232,10 @@ const Checkout = () => {
                 dataa,
                 user,
             });
-             const { ticketId, payUrl } = res.data.data;
-              localStorage.setItem('pendingTicketId', ticketId);
-              window.location.href = payUrl;
-            
+            const { ticketId, payUrl } = res.data.data;
+            localStorage.setItem("pendingTicketId", ticketId);
+            window.location.href = payUrl;
+
             // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
 
             toast.success(
@@ -417,7 +418,7 @@ const Checkout = () => {
                 <div className="flex justify-between items-center gap-5">
                     <div className="mb-4 flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Full Name
+                            Full Name
                         </label>
                         <input
                             type="text"
@@ -444,10 +445,9 @@ const Checkout = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Phone number
                     </label>
-                    <input
-                        type="email"
+                    <PhoneInput
                         value={number}
-                        onChange={(e) => setNumber(e.target.value)}
+                        onChange={setNumber}
                         placeholder="Enter your mobile number"
                         className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
                     />
