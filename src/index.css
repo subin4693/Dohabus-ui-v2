@@ -32,3 +32,8 @@ td {
     color: black;
     border-radius: 4px;
 }
+.PhoneInputInput {
+    border: none;
+    outline: none;
+    background-color: inherit;
+}
