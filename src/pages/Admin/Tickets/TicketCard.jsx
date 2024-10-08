@@ -201,6 +201,9 @@ const TicketCard = ({
           )}
         </div>
         <p className="text-stone-600 mb-1">
+          UniqueID : {booking && booking?.uniqueId}
+        </p>{" "}
+        <p className="text-stone-600 mb-1">
           Name : {booking && booking?.firstName}
         </p>{" "}
         <p className="text-stone-600 mb-1">
@@ -220,7 +223,9 @@ const TicketCard = ({
             : "No pickup"}
         </p>
         <p className="text-stone-600 mb-2  overflow-hidden">
-          Payment Status : {booking && booking?.paymentStatus}
+          Payment Status :  {booking && booking?.paymentStatus
+            ? booking?.paymentStatus
+            : "N/A"}
         </p>
         {/* <p className="text-stone-600 mb-2">{booking && booking?.user?.email}</p> */}
         <p className="text-stone-500 mb-2 line-clamp-3">
