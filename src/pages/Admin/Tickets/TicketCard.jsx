@@ -147,6 +147,15 @@ const TicketCard = ({
     });
   };
 
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, "0"); // Get day
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Get month (0-indexed)
+    const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
+
+    return `${day}-${month}-${year}`;
+  };
+
+  console.log(booking);
   return (
     <div
       id="ticket"
@@ -192,13 +201,20 @@ const TicketCard = ({
           )}
         </div>
         <p className="text-stone-600 mb-1">
-          Name : {booking && booking?.user?.name}
+          Name : {booking && booking?.firstName}
         </p>{" "}
         <p className="text-stone-600 mb-1">
-          Contact Number : {booking && booking?.number}
+          Number : {booking && booking?.number}
         </p>
         <p className="text-stone-600 mb-2  overflow-hidden">
           Email : {booking && booking?.email}
+        </p>
+        <p className="text-stone-600 mb-2  overflow-hidden">
+          Date :{" "}
+          {booking && booking.date ? formatDate(new Date(booking.date)) : "N/A"}
+        </p>
+        <p className="text-stone-600 mb-2  overflow-hidden">
+          Pick Up : {booking && booking?.pickupLocation ? booking?.pickupLocation : "No pickup"}
         </p>
         {/* <p className="text-stone-600 mb-2">{booking && booking?.user?.email}</p> */}
         <p className="text-stone-500 mb-2 line-clamp-3">
