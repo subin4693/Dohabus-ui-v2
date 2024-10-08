@@ -155,7 +155,6 @@ const TicketCard = ({
     return `${day}-${month}-${year}`;
   };
 
-  console.log(booking);
   return (
     <div
       id="ticket"
