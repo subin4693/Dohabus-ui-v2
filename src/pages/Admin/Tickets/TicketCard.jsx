@@ -214,7 +214,13 @@ const TicketCard = ({
           {booking && booking.date ? formatDate(new Date(booking.date)) : "N/A"}
         </p>
         <p className="text-stone-600 mb-2  overflow-hidden">
-          Pick Up : {booking && booking?.pickupLocation ? booking?.pickupLocation : "No pickup"}
+          Pick Up :{" "}
+          {booking && booking?.pickupLocation
+            ? booking?.pickupLocation
+            : "No pickup"}
+        </p>
+        <p className="text-stone-600 mb-2  overflow-hidden">
+          Payment Status : {booking && booking?.paymentStatus}
         </p>
         {/* <p className="text-stone-600 mb-2">{booking && booking?.user?.email}</p> */}
         <p className="text-stone-500 mb-2 line-clamp-3">
