@@ -289,7 +289,7 @@ const Checkout = () => {
 
                 setData(res.data.data.plan);
                 setFirstName(user?.name);
-
+                console.log(res.data.data.plan);
                 setEmail(user?.email);
                 setNumber(user?.number);
             } catch (error) {
@@ -465,7 +465,7 @@ const Checkout = () => {
                     />
                 </div>
 
-                {data?.isDropOffRequired && (
+                {data?.isPickupRequired && (
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Pick-up Location
@@ -479,7 +479,7 @@ const Checkout = () => {
                         />
                     </div>
                 )}
-                {data?.isPickupRequired && (
+                {data?.isDropOffRequired && (
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Drop-off Location
