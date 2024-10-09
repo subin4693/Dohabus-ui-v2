@@ -37,3 +37,6 @@ td {
     outline: none;
     background-color: inherit;
 }
+.react-calendar__tile--now {
+    background: #ffff;
+}
