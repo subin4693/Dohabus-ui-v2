@@ -159,7 +159,7 @@ const Footer = () => {
                   <FaPhoneAlt size={20} /> +974 4442 244
                 </li>
                 <li className="flex items-center gap-2">
-                  <FaWhatsapp size={20} /> +974 4442 244
+                  <FaWhatsapp size={20} /> +974 3324 6556 
                 </li>
                 <li className="flex items-center gap-2">
                   <AiOutlineMail size={20} /> hello@dohabus.com
