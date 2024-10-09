@@ -222,6 +222,12 @@ const TicketCard = ({
             : "No pickup"}
         </p>
         <p className="text-stone-600 mb-2  overflow-hidden">
+          Pickup Time :{" "}
+          {booking && booking?.pickupTime
+            ? booking?.pickupTime
+            : "No pickup time "}
+        </p>
+        <p className="text-stone-600 mb-2  overflow-hidden">
           Payment Status :  {booking && booking?.paymentStatus
             ? booking?.paymentStatus
             : "N/A"}
