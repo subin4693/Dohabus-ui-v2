@@ -239,7 +239,7 @@ const Checkout = () => {
             // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
 
             toast.success(
-                "Your ticket has been successfully booked. You can now download your invoice"
+                "Your ticket has been created. Proceed to payment to confirm your booking."
             );
             setLoading(false);
             // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);

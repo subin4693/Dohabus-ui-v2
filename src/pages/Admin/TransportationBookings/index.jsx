@@ -33,7 +33,7 @@ const HotelBookings = () => {
       "Email": booking.email || "N/A",
       Date: booking.date || "N/A",
       Adults: String(booking.numberOfAdults || "N/A"),
-      Children: String(booking.numberOfChildren || "N/A"),
+      Children: String(booking?.pickupLocation || "N/A"),
       Transportation: booking.transId.title.en || "N/A",
     }));
 
@@ -49,8 +49,8 @@ const HotelBookings = () => {
         { header: "User Name", dataKey: "User Name" },
         { header: "Email", dataKey: "Email" },
         { header: "Date", dataKey: "Date" },
-        { header: "Adults", dataKey: "Adults" },
-        { header: "Children", dataKey: "Children" },
+        { header: "Passangers", dataKey: "Adults" },
+        { header: "Pick Up", dataKey: "Children" },
         { header: "Transportation", dataKey: "Transportation" },
       ];
 
@@ -112,8 +112,8 @@ const HotelBookings = () => {
             "Name",
             "Email",
             "Date",
-            "Adults",
-            "Children",
+            "Passangers",
+            "Pickup",
             "Transportation",
           ],
         ],
@@ -197,8 +197,8 @@ const HotelBookings = () => {
               <th className="border-b px-4 py-2">Name</th>
               <th className="border-b px-4 py-2">Email</th>
               <th className="border-b px-4 py-2">Date</th>
-              <th className="border-b px-4 py-2">Number of Adults</th>
-              <th className="border-b px-4 py-2">Number of Children</th>
+              <th className="border-b px-4 py-2">Number of Passanger</th>
+              <th className="border-b px-4 py-2">Pick Up</th>
               <th className="border-b px-4 py-2">Transportation</th>
             </tr>
           </thead>
@@ -206,15 +206,16 @@ const HotelBookings = () => {
             {currentItems.length > 0 ? (
               currentItems.map((booking) => (
                 <tr key={booking._id}>
-                  <td className="border-b px-4 py-2">{booking._id}</td>
+                  <td className="border-b px-4 py-2">{booking?._id}</td>
                   <td className="border-b px-4 py-2">{booking?.name}</td>
-                  <td className="border-b px-4 py-2">{booking.email}</td>
-                  <td className="border-b px-4 py-2">{booking.date}</td>
+                  <td className="border-b px-4 py-2">{booking?.email}</td>
+                  <td className="border-b px-4 py-2">{booking?.date}</td>
                   <td className="border-b px-4 py-2">
-                    {booking.numberOfAdults}
+                    {booking?.numberOfAdults}
                   </td>
                   <td className="border-b px-4 py-2">
-                    {booking.numberOfChildren}
+                    {booking?.pickupLocation
+}
                   </td>
                   <td className="border-b px-4 py-2">
                     {booking.transId.title?.en}
