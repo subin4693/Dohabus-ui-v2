@@ -30,6 +30,7 @@ const Checkout = () => {
     const [totalDiscountedAmount, setTotalDiscountedAmount] = useState(null);
     const [applyLoader, setApplyLoader] = useState(false);
     const [coupon, setCoupon] = useState("");
+    const [pickupTime, setPickupTime] = useState("");
 
     const [totalAdultPrice, setTotalAdultPrice] = useState(0);
     const [totalChildPrice, setTotalChildPrice] = useState(0);
@@ -215,6 +216,7 @@ const Checkout = () => {
             category: data.category,
             plan: data._id,
             number,
+            pickupTime,
         };
 
         if (childCount || adultCount) {
@@ -489,6 +491,20 @@ const Checkout = () => {
                             value={dropLocation}
                             onChange={(e) => setDropLocation(e.target.value)}
                             placeholder="Enter drop-off location"
+                            className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+                        />
+                    </div>
+                )}
+                {data?.isPickupRequired && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Pick-up Time
+                        </label>
+                        <input
+                            type="text"
+                            value={pickupTime}
+                            onChange={(e) => setPickupTime(e.target.value)}
+                            placeholder="Enter your Pickup time Eg:8:00 AM"
                             className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
                         />
                     </div>
