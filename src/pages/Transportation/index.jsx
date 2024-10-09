@@ -157,8 +157,8 @@ const Transportation = () => {
                                             <div className="mt-10 w-full">
                                                 <label className="text-lg font-semibold">
                                                     {lang === "ar"
-                                                        ? "عدد البالغين"
-                                                        : "Number of Adults"}
+                                                        ? "عدد الركاب"
+                                                        : "Number of Passanger"}
                                                 </label>
                                                 <br />
                                                 <input
@@ -171,8 +171,8 @@ const Transportation = () => {
                                                     className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                                                     placeholder={
                                                         lang === "ar"
-                                                            ? "عدد البالغين"
-                                                            : "Number of adults"
+                                                            ? "عدد الركاب"
+                                                            : "Number of Passanger"
                                                     }
                                                 />
                                             </div>
@@ -182,8 +182,8 @@ const Transportation = () => {
                                             <div className="w-full">
                                                 <label className="text-lg font-semibold">
                                                     {lang === "ar"
-                                                        ? "عدد الأطفال"
-                                                        : "Number of Children"}
+                                                        ? "مكان الاستلام"
+                                                        : "Pickup Location"}
                                                 </label>
                                                 <br />
                                                 <input
@@ -192,12 +192,12 @@ const Transportation = () => {
                                                         formData.numberOfChildren
                                                     }
                                                     onChange={handleChange}
-                                                    type="number"
+                                                    type="text"
                                                     className="border-2 border-gray-300 outline-none rounded px-3 p-3 w-full"
                                                     placeholder={
                                                         lang === "ar"
-                                                            ? "عدد الأطفال"
-                                                            : "Number of children"
+                                                            ? "مكان الاستلام"
+                                                            : "Pickup Location"
                                                     }
                                                 />
                                             </div>
@@ -251,7 +251,7 @@ const Transportation = () => {
                                                 <label className="text-lg font-semibold">
                                                     {lang === "ar"
                                                         ? "الاسم"
-                                                        : "Name"}
+                                                        : "Full Name"}
                                                 </label>
                                                 <br />
                                                 <input
