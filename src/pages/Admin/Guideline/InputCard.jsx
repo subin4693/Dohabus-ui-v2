@@ -45,7 +45,7 @@ const InputCard = ({
                     className="border w -full p-4 w-full max-h-[40vh]"
                     placeholder="Guidelies in english"
                     rows="8"
-                    value={editedText.en}
+                    value={editedText?.en}
                     onChange={(e) =>
                         setEditedText((prev) => ({
                             ...prev,
@@ -58,7 +58,7 @@ const InputCard = ({
                     placeholder="Guidelies in Arabic"
                     rows="8"
                     dir={"rtl"}
-                    value={editedText.ar}
+                    value={editedText?.ar}
                     onChange={(e) =>
                         setEditedText((prev) => ({
                             ...prev,
