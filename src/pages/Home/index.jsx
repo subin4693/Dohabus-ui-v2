@@ -360,7 +360,7 @@ const Home = () => {
         >
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src="https://www.youtube.com/embed/PoyyKl6uypA"
+            src="https://www.youtube.com/embed/lcJsIoyE06c?si=2GiuNTAhTxaAhhHe"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -387,7 +387,7 @@ const Home = () => {
         >
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src="https://www.youtube.com/embed/PoyyKl6uypA"
+            src="https://www.youtube.com/embed/70dBzLkTY5Y?si=bYVeHCOliW6mPIg4"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
