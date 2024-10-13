@@ -39,45 +39,53 @@ const Faq = () => {
             ? "اعثر على إجابات للأسئلة الشائعة"
             : "Find Answers to Frequently Asked Questions"
         }
-        subTitle={lang === "ar" ? "الصفحة الرئيسية | الأسئلة الشائعة" : "Home | FAQ"}
+        subTitle={
+          lang === "ar" ? "الصفحة الرئيسية | الأسئلة الشائعة" : "Home | FAQ"
+        }
       />
 
       <div className="p-6">
         <div className="mx-auto mt-8 max-w-4xl divide-y divide-neutral-200 mb-5 border p-10 border-4 rounded-2xl">
-          {faqs.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                borderTop: "2px solid #686D76",
-                borderBottom: "2px solid #686D76",
-              }}
-              className="p-3 mt-5"
-            >
-              <details className="group">
-                <summary className="flex cursor-pointer list-none items-center justify-between font-medium text-lg">
-                  <span>{item?.question?.[lang]}</span>
-                  <span className="transition-transform duration-300 transform group-open:rotate-180">
-                    <svg
-                      fill="none"
-                      height="24"
-                      shapeRendering="geometricPrecision"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      width="24"
-                    >
-                      <path d="M6 9l6 6 6-6"></path>
-                    </svg>
-                  </span>
-                </summary>
-                <p className="mt-3 text-neutral-600 transition-opacity duration-500 ease-in-out max-h-[1000px] overflow-hidden group-open:max-h-[1000px] group-open:opacity-100 opacity-0">
-                  {item?.answer?.[lang]}
-                </p>
-              </details>
+          {faqs?.length > 0 ? (
+            faqs.map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  borderTop: "2px solid #686D76",
+                  borderBottom: "2px solid #686D76",
+                }}
+                className="p-3 mt-5"
+              >
+                <details className="group">
+                  <summary className="flex cursor-pointer list-none items-center justify-between font-medium text-lg">
+                    <span className="break-all">{item?.question?.[lang]}</span>
+                    <span className="transition-transform duration-300 transform group-open:rotate-180">
+                      <svg
+                        fill="none"
+                        height="24"
+                        shapeRendering="geometricPrecision"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        viewBox="0 0 24 24"
+                        width="24"
+                      >
+                        <path d="M6 9l6 6 6-6"></path>
+                      </svg>
+                    </span>
+                  </summary>
+                  <p className="break-all mt-3 text-neutral-600 transition-opacity duration-500 ease-in-out max-h-[1000px] overflow-hidden group-open:max-h-[1000px] group-open:opacity-100 opacity-0">
+                    {item?.answer?.[lang]}
+                  </p>
+                </details>
+              </div>
+            ))
+          ) : (
+            <div className="p-3 mt-5 text-center text-gray-600">
+              No FAQs available.
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
