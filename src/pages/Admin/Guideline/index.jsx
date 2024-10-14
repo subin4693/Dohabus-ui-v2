@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import InputCard from "./InputCard";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const GuideLine = () => {
+  const lang = useSelector((state) => state.language.lang); // Get the current language (e.g., 'en' or 'ar')
+
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [showCard, setShowCard] = useState(false);
-  const [guideLineTxt, setGuidelineTxt] = useState({
-    text: { en: "", ar: "" },
-  });
+  const [guideLineTxt, setGuidelineTxt] = useState({});
   console.log(guideLineTxt);
   useEffect(() => {
     const getData = async () => {
@@ -16,10 +17,6 @@ const GuideLine = () => {
       try {
         const res = await axios.get(BASE_URL + "/guidelines");
 
-        if (res.data.message != "success") {
-          toast.error("Something went wrong please try again later");
-          return;
-        }
         setGuidelineTxt(res.data.data);
         console.log(res.data);
       } catch (error) {
@@ -44,17 +41,19 @@ const GuideLine = () => {
       <div>
         <h2 className="text-lg font-bold ">Guideline in English</h2>
         <br />
-        <p className="">{guideLineTxt?.text?.en}</p>
+
+        <p className="">{guideLineTxt?.heading?.[lang]}</p>
+        {guideLineTxt?.points?.map((point) => (
+          <h1>{point[lang]}</h1>
+        ))}
         <br />
-        <h2 className="text-lg font-bold ">Guideline in Arabic</h2>
-        <br />
-        <p dir={"rtl"}>{guideLineTxt?.text?.ar}</p>
       </div>
       {showCard && (
         <InputCard
           setShowCard={setShowCard}
-          guideLineTxt={guideLineTxt?.text}
+          guideLineTxt={guideLineTxt?.heading?.[lang]}
           guideLineId={guideLineTxt?._id}
+          guideLineTxts={guideLineTxt}
           setGuidelineTxt={setGuidelineTxt}
         />
       )}
