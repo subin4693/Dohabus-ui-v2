@@ -32,15 +32,34 @@ const InputCard = ({
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await axios.put(`${BASE_URL}/guidelines/${guideLineId}`, {
-        data: editedText,
-      });
-      setGuidelineTxt(res.data.data);
+      let res;
+
+      if (guideLineId) {
+        // Editing an existing guideline
+        res = await axios.put(`${BASE_URL}/guidelines/${guideLineId}`, {
+          data: editedText,
+        });
+
+        // Update the guideline in state
+        setGuidelineTxt((prev) =>
+          prev.map((item) => (item._id === guideLineId ? res.data.data : item))
+        );
+        toast.success("Guideline updated successfully");
+      } else {
+        // Creating a new guideline
+        res = await axios.post(`${BASE_URL}/guidelines`, {
+          data: editedText,
+        });
+
+        // Add the new guideline to state
+        setGuidelineTxt((prev) => [...prev, res.data.data]);
+        toast.success("Guideline created successfully");
+      }
+
       setShowCard(false);
-      toast.success("Guideline updated successfully");
     } catch (error) {
       console.log(error);
-      toast.error("Error updating guidelines");
+      toast.error("Error saving guideline");
     } finally {
       setLoading(false);
     }

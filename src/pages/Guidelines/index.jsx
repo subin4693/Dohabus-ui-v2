@@ -52,28 +52,30 @@ const GuidelinesPage = () => {
           <h1 className="text-3xl font-bold text-center mb-6">
             {selectedContent.heading}
           </h1>
-          <div className="space-y-6">
-            {guidelinesData ? (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4">
-                  {lang === "ar"
-                    ? guidelinesData?.heading?.ar 
-                    : guidelinesData?.heading?.en}
-                </h2>
-                <ul className="list-disc list-inside space-y-2">
-                  {guidelinesData?.points?.map((point, idx) => (
-                    <li key={idx} className="text-gray-700">
-                      {lang === "ar" ? point.ar : point.en}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p className="text-center text-gray-700">
-                No guidelines available at this time.
-              </p>
-            )}
-          </div>
+          {guidelinesData?.map((item, index) => (
+            <div className="space-y-6">
+              {item ? (
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h2 className="text-2xl font-semibold mb-4">
+                    {lang === "ar"
+                      ? item?.heading?.ar
+                      : item?.heading?.en}
+                  </h2>
+                  <ul className="list-disc list-inside space-y-2">
+                    {item?.points?.map((point, idx) => (
+                      <li key={idx} className="text-gray-700">
+                        {lang === "ar" ? point.ar : point.en}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="text-center text-gray-700">
+                  No guidelines available at this time.
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
