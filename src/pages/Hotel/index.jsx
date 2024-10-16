@@ -36,10 +36,10 @@ const Hotel = () => {
             />
             <div className="px-1 md:px-10 xl:w-[70%] mx-auto ">
                 <motion.div
-                    initial={{ opacity: 0, y: 100 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ amount: 0.2 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    // initial={{ opacity: 0, y: 100 }}
+                    // whileInView={{ opacity: 1, y: 0 }}
+                    // viewport={{ amount: 0.2 }}
+                    // transition={{ duration: 0.4, ease: "easeOut" }}
                     className="grid grid-cols-1 gap-y-20 gap-5 md:grid-cols-2 xl:grid-cols-3"
                 >
                     {hotels &&
