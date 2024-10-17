@@ -4,8 +4,14 @@ const Banner = ({ image, title, subTitle }) => {
   return (
     <div
       className="relative w-full h-[300px] md:h-[380px] bg-cover bg-center"
-      style={{ backgroundImage: `url(${image})` }}
+      // style={{ backgroundImage: `url(${image})` }}
     >
+      <img
+        src={image}
+        className=" w-full h-full  bg-cover object-cover"
+        alt=""
+      />
+
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
         <h1 className="text-2xl md:text-[3rem] font-bold text-center ">
           {title}
