@@ -851,7 +851,7 @@ const SingleTour = () => {
 
                                                                 return (
                                                                     <li
-                                                                        className={` ${paddingImg}   border-l border-l-4 group  border-dashed border-black flex  items-center relative`}
+                                                                        className={` ${paddingImg} border-l border-l-4 group  border-dashed border-black flex  items-center relative`}
                                                                     >
                                                                         <DiscImage />
                                                                         <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
@@ -896,7 +896,6 @@ const SingleTour = () => {
                          
                           
                         border-solid 
-                        
              border-l border-l-4   border-solid border-black flex  items-center relative`}
                                                                 >
                                                                     <Disc />
