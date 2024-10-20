@@ -922,7 +922,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                     <span className="text-gray-600 ml-2">(optional)</span>
                 </label>
                 <div className="flex gap-10 items-center">
-                    <div>
+                    {/* <div>
                         <label>
                             <input
                                 type="checkbox"
@@ -933,7 +933,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
                             />{" "}
                             &nbsp;&nbsp; Is pickup location required
                         </label>
-                    </div>
+                    </div> */}
                     <div>
                         <label>
                             <input

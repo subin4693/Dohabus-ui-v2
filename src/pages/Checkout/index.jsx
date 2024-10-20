@@ -467,7 +467,7 @@ const Checkout = () => {
                     />
                 </div>
 
-                {data?.isPickupRequired && (
+                {/* {data?.isPickupRequired && (
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Pick-up Location
@@ -480,7 +480,7 @@ const Checkout = () => {
                             className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
                         />
                     </div>
-                )}
+                )} */}
                 {data?.isDropOffRequired && (
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
