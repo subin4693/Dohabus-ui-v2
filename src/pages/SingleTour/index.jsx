@@ -8,6 +8,9 @@ import makeAnimated from "react-select/animated";
 import "react-datepicker/dist/react-datepicker.css";
 import { LuLanguages } from "react-icons/lu";
 import singleTour from "../../assets/single-tour.jpg";
+import dayjs from "dayjs";
+// import { BiTime } from 'react-icons/bi';
+
 import album1 from "../../assets/album1.jpg";
 import album2 from "../../assets/album2.jpg";
 import album3 from "../../assets/album3.jpg";
@@ -43,7 +46,7 @@ const SingleTour = () => {
     const animatedComponents = makeAnimated();
     const lang = useSelector((state) => state.language.lang);
 
-    const [sessionStatus, setSessionStatus] = useState({});
+    const [sessionStatus, setSessionStatus] = useState([]);
     const [sessionCounts, setSessionCounts] = useState({});
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({
@@ -514,6 +517,7 @@ const SingleTour = () => {
                     }
                 );
 
+                console.log("YEah", response.data);
                 setSessionStatus(response.data.sessionStatus);
                 setSessionCounts(response.data.sessionCounts);
             } catch (error) {
@@ -600,6 +604,8 @@ const SingleTour = () => {
         };
         getData();
     }, [singletour]);
+
+    console.log(">>>", sessionStatus);
 
     const addOnOptions = data?.addOn?.map((addOn) => ({
         label: addOn?.[lang] + "  (" + addOn.price + "  qar) ", // or addOn.ar for Arabic if needed
@@ -920,25 +926,6 @@ const SingleTour = () => {
                                     : "Choose date and time"}
                             </h2>
                             <br />
-                            {/*          <DatePicker
-                selected={selectedDate}
-                onChange={(date) => console.log(formatDateForBackend(date))}
-                // filterDate={isAvailableDay} // Disable all days not in availableDays
-                inline
-                dateFormat="MMMM d, yyyy"
-                className="w-full max-w-[100%] sm:max-w-[80%] md:max-w-[60%] lg:max-w-[50%]" // Adjust width for different breakpoints
-                // minDate={minDate}
-              />*/}
-                            {/*  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  label="Select Date"
-                  value={selectedDate}
-                  onChange={(newDate) => setSelectedDate(newDate)}
-                  shouldDisableDate={shouldDisableDate} // Disable all dates except those in isAvailableDay
-                  minDate={new Date()} // Example: Minimum date can be today
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                />
-              </LocalizationProvider>*/}
 
                             {data?.availableDays && (
                                 <DatePickerr
@@ -948,80 +935,118 @@ const SingleTour = () => {
                                 />
                             )}
                         </div>
+                        {selectedDate && data?.sessions?.length > 0 && (
+                            <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
+                                {sessionLoading ? (
+                                    <div className="grid grid-cols-2 gap-2 w-full">
+                                        <Skleton height={"h-[30px]"} />
+                                        <Skleton height={"h-[30px]"} />
+                                        <Skleton height={"h-[30px]"} />
+                                    </div>
+                                ) : (
+                                    data.sessions &&
+                                    data.sessions
+                                        .filter((sessionL) => {
+                                            // Get the current time as a dayjs object
+                                            const currentTime = dayjs();
+                                            console.log(
+                                                "Current Time:",
+                                                currentTime.format("HH:mm")
+                                            );
 
-                        <>
-                            {selectedDate && data?.sessions?.length > 0 && (
-                                <div>
-                                    <h2 className="text-xl mt-5 font-bold">
-                                        {lang === "ar" ? "الجلسات" : "Sessions"}
-                                    </h2>
-                                    {sessionLoading ? (
-                                        <div className="grid grid-cols-2 gap-2 ">
-                                            <Skleton height={"h-[30px]"} />
-                                            <Skleton height={"h-[30px]"} />
-                                            <Skleton height={"h-[30px]"} />
-                                        </div>
-                                    ) : (
-                                        <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
-                                            {data.sessions &&
-                                                data.sessions.map(
-                                                    (sessionL) => {
-                                                        const isAvailable =
-                                                            sessionStatus[
-                                                                sessionL
-                                                            ] === "Available";
-                                                        const isFillingUp =
-                                                            sessionStatus[
-                                                                sessionL
-                                                            ] === "Filling Up";
-                                                        const isFull =
-                                                            sessionStatus[
-                                                                sessionL
-                                                            ] === "Full";
-                                                        const isSelected =
-                                                            session ===
-                                                            sessionL; // Check if session is selected
+                                            // Check if selectedDate is today
+                                            const isToday = dayjs(
+                                                selectedDate
+                                            ).isSame(currentTime, "day");
 
-                                                        return (
-                                                            <button
-                                                                key={sessionL}
-                                                                className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
-                                                                    isSelected
-                                                                        ? "bg-custom-yellow" // Highlight selected session with yellow
-                                                                        : isAvailable
-                                                                        ? "bg-green-500" // Green for available sessions
-                                                                        : isFillingUp
-                                                                        ? "bg-orange-500" // Orange for filling up sessions
-                                                                        : isFull
-                                                                        ? "bg-red-500" // Red for full sessions
-                                                                        : "" // Default case
-                                                                }`}
-                                                                onClick={() => {
-                                                                    if (
-                                                                        isAvailable ||
-                                                                        isFillingUp
-                                                                    ) {
-                                                                        handleSession(
-                                                                            sessionL
-                                                                        );
-                                                                    } else {
-                                                                        toast.error(
-                                                                            "Tickets for this session are sold out."
-                                                                        );
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <BiTime className="w-[25px] h-[25px]" />{" "}
-                                                                {sessionL}
-                                                            </button>
-                                                        );
-                                                    }
-                                                )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </>
+                                            if (isToday) {
+                                                // Combine today's date with sessionL.closeTime to create a valid dayjs object
+                                                const closeTime = dayjs(
+                                                    `${currentTime.format(
+                                                        "YYYY-MM-DD"
+                                                    )} ${sessionL.closeTime}`,
+                                                    "YYYY-MM-DD h:mm A"
+                                                );
+
+                                                if (!closeTime.isValid()) {
+                                                    console.error(
+                                                        "Invalid closeTime format for session:",
+                                                        sessionL
+                                                    );
+                                                    return false; // If closeTime is invalid, filter it out
+                                                }
+                                                console.log(
+                                                    "*********** prev line"
+                                                );
+                                                console.log(
+                                                    "Parsed Close Time (24-hour):",
+                                                    closeTime.format("HH:mm")
+                                                );
+                                                console.log(
+                                                    currentTime.isBefore(
+                                                        closeTime
+                                                    )
+                                                );
+                                                // Compare the current time and session closeTime if the selected date is today
+                                                return currentTime.isBefore(
+                                                    closeTime
+                                                );
+                                            } else {
+                                                // If the selected date is not today, show all sessions
+                                                return true;
+                                            }
+                                        })
+                                        .map((sessionL) => {
+                                            console.log("Session:", sessionL);
+                                            const isAvailable =
+                                                sessionStatus[sessionL._id] ===
+                                                "Available";
+                                            const isFillingUp =
+                                                sessionStatus[sessionL._id] ===
+                                                "Filling Up";
+                                            const isFull =
+                                                sessionStatus[sessionL._id] ===
+                                                "Full";
+                                            const isSelected =
+                                                session === sessionL.name; // Check if session is selected
+
+                                            return (
+                                                <button
+                                                    key={sessionL._id}
+                                                    className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
+                                                        isSelected
+                                                            ? "bg-custom-yellow"
+                                                            : isAvailable
+                                                            ? "bg-green-500"
+                                                            : isFillingUp
+                                                            ? "bg-orange-500"
+                                                            : isFull
+                                                            ? "bg-red-500"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() => {
+                                                        if (
+                                                            isAvailable ||
+                                                            isFillingUp
+                                                        ) {
+                                                            handleSession(
+                                                                sessionL.name
+                                                            );
+                                                        } else {
+                                                            toast.error(
+                                                                "Tickets for this session are sold out."
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    <BiTime className="w-[25px] h-[25px]" />{" "}
+                                                    {sessionL.name}
+                                                </button>
+                                            );
+                                        })
+                                )}
+                            </div>
+                        )}
 
                         {/* {data?.addOn?.length > 0 && (
                             <div>

@@ -287,7 +287,7 @@ const SignleCategory = () => {
                             cartId={cartId}
                             itinerary={itinerary && itinerary[0]}
                             childPrice={
-                                childPrice ? childPrice : childData[0].price
+                                childPrice ? childPrice : childData?.[0]?.price
                             }
                         />
                     )

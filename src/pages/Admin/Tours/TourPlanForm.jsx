@@ -76,23 +76,126 @@ const TourPlanForm = ({ onClose }) => {
     //     reader.onload = () => cb(null, reader.result);
     //     reader.onerror = (error) => cb(error, null);
     // };
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [pricingByMonth, setPricingByMonth] = useState([
+        {
+            month: 0,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 1,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 2,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 3,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 4,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 5,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 6,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 7,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 8,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 9,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 10,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+        {
+            month: 11,
+            adultPrice: null,
+            childPrice: null,
+            adultData: [],
+            childData: [],
+        },
+    ]);
 
     const [selectedTime, setSelectedTime] = useState(null); // To store current time selection
+    const [selectedCloseTime, setSelectedCloseTime] = useState(null);
 
     // Handle when time is selected from the picker
     const handleTimeChange = (newTime) => {
         setSelectedTime(newTime);
     };
+    const handleCloseTimeChange = (newTime) => {
+        setSelectedCloseTime(newTime);
+    };
 
     // Add the selected time to the list and format it to "h:mm A" format
     const handleAddSession = () => {
-        if (selectedTime) {
+        if (selectedTime && selectedCloseTime) {
             const formattedTime = dayjs(selectedTime).format("h:mm A");
-            if (!selectedSessions.includes(formattedTime)) {
-                setSelectedSessions([...selectedSessions, formattedTime]);
+            const formattedCloseTime =
+                dayjs(selectedCloseTime).format("h:mm A");
+
+            // Check if the session with the same name already exists
+            const sessionExists = selectedSessions.some(
+                (session) => session.name === formattedTime
+            );
+
+            if (!sessionExists) {
+                setSelectedSessions([
+                    ...selectedSessions,
+                    { name: formattedTime, closeTime: formattedCloseTime },
+                ]);
             }
         }
     };
+    console.log("Sessionnnnnnnnnnnnnnnnnnnnn", selectedSessions);
 
     // Remove a selected session from the array
     const handleRemoveSession = (session) => {
@@ -318,79 +421,86 @@ const TourPlanForm = ({ onClose }) => {
             return;
         }
 
-        // Check for valid pricing data
-        const hasAdultPrice =
-            adultPrice !== undefined &&
-            adultPrice !== null &&
-            adultPrice !== "";
-        const hasChildPrice =
-            childPrice !== undefined &&
-            childPrice !== null &&
-            childPrice !== "";
+        if (pricingByMonth && pricingByMonth.length > 0) {
+            for (const monthPricing of pricingByMonth) {
+                const hasMonthAdultPrice =
+                    monthPricing.adultPrice !== undefined &&
+                    monthPricing.adultPrice !== null;
+                const hasMonthChildPrice =
+                    monthPricing.childPrice !== undefined &&
+                    monthPricing.childPrice !== null;
+                const hasMonthAdultData =
+                    monthPricing.adultData &&
+                    monthPricing.adultData.some(
+                        (row) => Number(row.pax) > 0 || Number(row.price) > 0
+                    );
+                const hasMonthChildData =
+                    monthPricing.childData &&
+                    monthPricing.childData.some(
+                        (row) => Number(row.pax) > 0 || Number(row.price) > 0
+                    );
 
-        // Check if there is at least one meaningful row of data in adultData or childData
-        const hasAdultData = adultData.some(
-            (row) => Number(row.pax) > 0 || Number(row.price) > 0
-        );
-        const hasChildData = childData.some(
-            (row) => Number(row.pax) > 0 || Number(row.price) > 0
-        );
+                // Check if both price and detailed data are filled for the same month
+                if (
+                    (hasMonthAdultPrice || hasMonthChildPrice) &&
+                    (hasMonthAdultData || hasMonthChildData)
+                ) {
+                    setLoading(false);
+                    return toast.error(
+                        `For month ${
+                            monthPricing.month + 1
+                        }, provide either single price fields (adultPrice/childPrice) or detailed pricing data (adultData/childData), not both.`
+                    );
+                }
 
-        if (
-            (hasAdultPrice || hasChildPrice) &&
-            (hasAdultData || hasChildData)
-        ) {
-            toast.error(
-                "You can only provide either single price fields or detailed pricing data, not both."
-            );
+                // Check if both adultPrice and childPrice are provided together
+                if (
+                    (hasMonthAdultPrice && !hasMonthChildPrice) ||
+                    (!hasMonthAdultPrice && hasMonthChildPrice)
+                ) {
+                    setLoading(false);
+                    return toast.error(
+                        `For month ${
+                            monthPricing.month + 1
+                        }, both adultPrice and childPrice must be provided together.`
+                    );
+                }
+
+                // Check if both adultData and childData are provided together
+                if (
+                    (hasMonthAdultData && !hasMonthChildData) ||
+                    (!hasMonthAdultData && hasMonthChildData)
+                ) {
+                    setLoading(false);
+                    return toast.error(
+                        `For month ${
+                            monthPricing.month + 1
+                        }, both adultData and childData must be provided together.`
+                    );
+                }
+
+                // New condition: Ensure all months have either adultPrice/childPrice or adultData/childData
+                const hasCompletePriceForMonth =
+                    (hasMonthAdultPrice && hasMonthChildPrice) ||
+                    (hasMonthAdultData && hasMonthChildData);
+
+                if (!hasCompletePriceForMonth) {
+                    setLoading(false);
+                    return toast.error(
+                        `For month ${
+                            monthPricing.month + 1
+                        }, you must provide either both adultPrice and childPrice or both adultData and childData.`
+                    );
+                }
+            }
+
+            // If all checks pass
+            setLoading(true);
+            // Proceed with form submission or other logic here...
+        } else {
             setLoading(false);
-
-            return;
+            return toast.error("Enter valid price for all months");
         }
-
-        // Ensure that both adultPrice and childPrice are provided together
-        if (
-            (hasAdultPrice && !hasChildPrice) ||
-            (!hasAdultPrice && hasChildPrice)
-        ) {
-            toast.error(
-                "Both adultPrice and childPrice must be provided together."
-            );
-            setLoading(false);
-
-            return;
-        }
-
-        // Ensure that both adultData and childData are provided together
-        if (
-            (hasAdultData && !hasChildData) ||
-            (!hasAdultData && hasChildData)
-        ) {
-            toast.error(
-                "Both adultData and childData must be provided together."
-            );
-            setLoading(false);
-
-            return;
-        }
-
-        // if (hasAdultData && hasChildData) {
-        //     const hasPaxOneInAdultData = adultData.some(
-        //         (row) => Number(row.pax) === 1
-        //     );
-        //     const hasPaxOneInChildData = childData.some(
-        //         (row) => Number(row.pax) === 1
-        //     );
-        //     if (!hasPaxOneInAdultData || !hasPaxOneInChildData) {
-        //         toast.error(
-        //             "Both Adult and Child data must have at least one pax with a value of 1."
-        //         );
-        //         setLoading(false);
-        //         return;
-        //     }
-        // }
-
-        // Construct formData object and remove empty fields
         let formData = {
             category,
             coverImage,
@@ -423,14 +533,13 @@ const TourPlanForm = ({ onClose }) => {
             limit,
             stopSales: formattedDates,
             minPerson,
-            ...(hasAdultData && { adultData }),
-            ...(hasChildData && { childData }),
-            ...(hasAdultPrice && { adultPrice }),
-            ...(hasChildPrice && { childPrice }),
+            pricingByMonth,
         };
 
         // Remove any empty keys (fields that are empty objects or arrays)
         formData = removeEmptyFields(formData);
+
+        console.log(formData);
 
         try {
             const res = await axios.post(`${BASE_URL}/plans`, formData);
@@ -894,6 +1003,15 @@ const TourPlanForm = ({ onClose }) => {
                                         )}
                                         ampm={true} // Ensure AM/PM format
                                     />
+                                    <TimePicker
+                                        label="Select Close Time"
+                                        value={selectedCloseTime}
+                                        onChange={handleCloseTimeChange}
+                                        renderInput={(params) => (
+                                            <TextField {...params} />
+                                        )}
+                                        ampm={true} // Ensure AM/PM format
+                                    />
 
                                     {/* Button to add the selected time to sessions */}
                                     <Button
@@ -916,7 +1034,7 @@ const TourPlanForm = ({ onClose }) => {
                                                 (session, index) => (
                                                     <Chip
                                                         key={index}
-                                                        label={session}
+                                                        label={`${session?.name} (Close: ${session?.closeTime})`} // Show name and close time
                                                         onDelete={() =>
                                                             handleRemoveSession(
                                                                 session
@@ -935,6 +1053,35 @@ const TourPlanForm = ({ onClose }) => {
                 </div>
                 {/* Price Inputs */}
                 <div>
+                    {" "}
+                    <div className="flex justify-center items-center gap-2  flex-wrap mb-5">
+                        {[
+                            "Jan",
+                            "Feb",
+                            "Mar",
+                            "Apr",
+                            "May",
+                            "Jun",
+                            "Jul",
+                            "Aug",
+                            "Sep",
+                            "Oct",
+                            "Nov",
+                            "Dec",
+                        ]?.map((month, index) => (
+                            <div
+                                key={index}
+                                className={`px-4 py-2 rounded-md ${
+                                    index == activeIndex
+                                        ? " bg-custom-yellow  "
+                                        : " bg-slate-300"
+                                }`}
+                                onClick={() => setActiveIndex(index)}
+                            >
+                                {month}
+                            </div>
+                        ))}
+                    </div>
                     {/* Toggle Switch */}
                     <div className="mb-4">
                         <label className="inline-flex items-center cursor-pointer">
@@ -959,21 +1106,22 @@ const TourPlanForm = ({ onClose }) => {
                             </span>
                         </label>
                     </div>
-
                     {/* Conditional Rendering */}
                     {showPricing ? (
                         <PricingComponent
-                            adultData={adultData}
-                            setAdultData={setAdultData}
-                            childData={childData}
-                            setChildData={setChildData}
+                            adultData={pricingByMonth[activeIndex]?.adultData}
+                            setAdultData={setPricingByMonth}
+                            childData={pricingByMonth[activeIndex]?.childData}
+                            setChildData={setPricingByMonth}
+                            activeIndex={activeIndex}
                         />
                     ) : (
                         <SinglePriceComponent
-                            adultPrice={adultPrice}
-                            setAdultPrice={setAdultPrice}
-                            childPrice={childPrice}
-                            setChildPrice={setChildPrice}
+                            adultPrice={pricingByMonth[activeIndex]?.adultPrice}
+                            setAdultPrice={setPricingByMonth}
+                            childPrice={pricingByMonth[activeIndex]?.childPrice}
+                            setChildPrice={setPricingByMonth}
+                            activeIndex={activeIndex}
                         />
                     )}
                 </div>
