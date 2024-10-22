@@ -156,7 +156,7 @@ const Footer = () => {
               </h2>
               <ul className="space-y-2 font-semibold text-lg">
                 <li className="flex items-center gap-2">
-                  <FaPhoneAlt size={20} /> +974 4442 244
+                  <FaPhoneAlt size={20} /> +974 4442 2444
                 </li>
                 <li className="flex items-center gap-2">
                   <FaWhatsapp size={20} /> +974 3324 6556 
