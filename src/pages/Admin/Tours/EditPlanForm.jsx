@@ -495,17 +495,17 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         setGalleryImages(planData.galleryImages || []);
         setGalleryVideos(planData.galleryVideos || []);
         setAvailableDays(planData.availableDays || []);
-        setAdultPrice(planData.adultPrice || "");
-        setChildPrice(planData.childPrice || "");
+        setAdultPrice(planData.defaultAdultPrice || "");
+        setChildPrice(planData.defaultChildPrice || "");
         setSelectedSessions(planData.sessions || []);
         setStopSales(planData.stopSales || []);
         setAddon(planData.addOn || [{ en: "", ar: "" }]);
         childData,
-          setChildData(planData.childData || [{ pax: null, price: null }]);
-        setAdultData(planData.adultData || [{ pax: null, price: null }]);
+          setChildData(planData.defaultChildData || [{ pax: null, price: null }]);
+        setAdultData(planData.defaultAdultData || [{ pax: null, price: null }]);
         setLimit(planData.limit || "");
         setMinPerson(planData.minPerson || 0);
-
+        setPricingLimits(planData.pricingLimits||[])
         setIsPickupRequired(planData.isPickupRequired || false);
         setIsDropOffRequired(planData.isDropOffRequired || false);
 
