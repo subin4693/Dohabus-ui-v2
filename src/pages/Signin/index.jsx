@@ -41,7 +41,7 @@ const Signin = () => {
           email: email.trim(),
           password,
         },
-        { withCredentials: true }
+        
       );
       toast.success("Signin successfully", {
         position: "top-right",

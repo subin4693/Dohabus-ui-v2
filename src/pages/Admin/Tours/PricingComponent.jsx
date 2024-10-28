@@ -1,129 +1,36 @@
-import React, { act, useState } from "react";
+import React, { useState } from "react";
 
-const PricingTable = ({
-    adultData,
-    setAdultData,
-    childData,
-    setChildData,
-    activeIndex,
-}) => {
+const PricingTable = ({ adultData, setAdultData, childData, setChildData }) => {
     // Handler to add a new row
-    console.log(adultData);
     const addRow = (type) => {
         if (type === "adult") {
-            // setAdultData([...adultData, { pax: null, price: null }]);
-            setAdultData((prev) => {
-                const temp = prev.map((singleval) => {
-                    if (singleval.month == activeIndex) {
-                        singleval.adultData.push({ pax: null, price: null });
-                        return singleval;
-                    }
-                    return singleval;
-                });
-
-                return temp;
-            });
+            setAdultData([...adultData, { pax: null, price: null }]);
         } else {
-            setChildData((prev) => {
-                const temp = prev.map((singleval) => {
-                    if (singleval.month == activeIndex) {
-                        singleval.childData.push({ pax: null, price: null });
-                        return singleval;
-                    }
-                    return singleval;
-                });
-
-                return temp;
-            });
+            setChildData([...childData, { pax: null, price: null }]);
         }
     };
 
     // Handler to remove a row
     const removeRow = (type, index) => {
         if (type === "adult") {
-            setAdultData((prev) => {
-                const temp = prev.map((singleval) => {
-                    if (singleval.month == activeIndex) {
-                        let tempAddData = singleval.adultData.filter(
-                            (_, i) => i != index
-                        );
-
-                        console.log({ ...singleval, adultData: tempAddData });
-                        return { ...singleval, adultData: tempAddData };
-                    }
-                    return singleval;
-                });
-                console.log(temp);
-
-                return temp;
-            });
+            setAdultData(adultData.filter((_, i) => i !== index));
         } else {
-            setChildData((prev) => {
-                const temp = prev.map((singleval) => {
-                    if (singleval.month == activeIndex) {
-                        let tempAddData = singleval.childData.filter(
-                            (_, i) => i != index
-                        );
-
-                        console.log({ ...singleval, childData: tempAddData });
-                        return { ...singleval, childData: tempAddData };
-                    }
-                    return singleval;
-                });
-                console.log(temp);
-
-                return temp;
-            });
+            setChildData(childData.filter((_, i) => i !== index));
         }
     };
 
     // Handler to update the row data
     const handleChange = (type, index, field, value) => {
-        // const updateData = (data, setter) => {
-        //     const newData = [...data];
-        //     newData[index][field] = value;
-        //     setter(newData);
-        // };
+        const updateData = (data, setter) => {
+            const newData = [...data];
+            newData[index][field] = value;
+            setter(newData);
+        };
 
         if (type === "adult") {
-            setAdultData((prev) => {
-                const temp = prev.map((singleval) => {
-                    if (singleval.month == activeIndex) {
-                        const updatedAdultData = singleval.adultData.map(
-                            (row, i) => {
-                                if (i == index) {
-                                    return { ...row, [field]: value };
-                                }
-                                return row;
-                            }
-                        );
-                        return { ...singleval, adultData: updatedAdultData };
-                    }
-                    return singleval;
-                });
-                console.log(temp);
-                return temp;
-            });
-            // updateData(adultData, setAdultData);
+            updateData(adultData, setAdultData);
         } else {
-            setChildData((prev) => {
-                const temp = prev.map((singleval) => {
-                    if (singleval.month == activeIndex) {
-                        const updatedChildData = singleval.childData.map(
-                            (row, i) => {
-                                if (i == index) {
-                                    return { ...row, [field]: value };
-                                }
-                                return row;
-                            }
-                        );
-                        return { ...singleval, childData: updatedChildData };
-                    }
-                    return singleval;
-                });
-                console.log(temp);
-                return temp;
-            });
+            updateData(childData, setChildData);
         }
     };
 
@@ -152,16 +59,15 @@ const PricingTable = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {adultData?.map((row, index) => (
+                        {adultData.map((row, index) => (
                             <tr key={index}>
                                 <td className="border border-gray-300 p-2">
                                     Adult
                                 </td>
                                 <td className="border border-gray-300 p-2">
-                                    {console.log(row)}
                                     <input
                                         type="number"
-                                        value={row.pax || ""}
+                                        value={row.pax}
                                         onChange={(e) =>
                                             handleChange(
                                                 "adult",
@@ -177,7 +83,7 @@ const PricingTable = ({
                                 <td className="border border-gray-300 p-2">
                                     <input
                                         type="number"
-                                        value={row.price || ""}
+                                        value={row.price}
                                         onChange={(e) =>
                                             handleChange(
                                                 "adult",
@@ -235,7 +141,7 @@ const PricingTable = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {childData?.map((row, index) => (
+                        {childData.map((row, index) => (
                             <tr key={index}>
                                 <td className="border border-gray-300 p-2">
                                     Child
@@ -243,7 +149,7 @@ const PricingTable = ({
                                 <td className="border border-gray-300 p-2">
                                     <input
                                         type="number"
-                                        value={row.pax || ""}
+                                        value={row.pax}
                                         onChange={(e) =>
                                             handleChange(
                                                 "child",
@@ -259,7 +165,7 @@ const PricingTable = ({
                                 <td className="border border-gray-300 p-2">
                                     <input
                                         type="number"
-                                        value={row.price || ""}
+                                        value={row.price}
                                         onChange={(e) =>
                                             handleChange(
                                                 "child",

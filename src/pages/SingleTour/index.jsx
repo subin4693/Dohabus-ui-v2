@@ -559,7 +559,7 @@ const SingleTour = () => {
                 setAdultCount(0);
                 setChildCount(0);
                 setTotalPrice(0);
-
+                console.log(data.data.data.plan)
                 if (
                     data.data.data.plan.adultPrice ||
                     data.data.data.plan.childPrice
