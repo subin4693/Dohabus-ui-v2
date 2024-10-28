@@ -78,90 +78,7 @@ const TourPlanForm = ({ onClose }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [pricingLimits, setPricingLimits] = useState([]);
   const [pricingByMonth, setPricingByMonth] = useState([
-    {
-      month: 0,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 1,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 2,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 3,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 4,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 5,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 6,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 7,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 8,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 9,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 10,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
-    {
-      month: 11,
-      adultPrice: null,
-      childPrice: null,
-      adultData: [],
-      childData: [],
-    },
+    
   ]);
 
   const [selectedTime, setSelectedTime] = useState(null); // To store current time selection
@@ -400,7 +317,7 @@ const TourPlanForm = ({ onClose }) => {
       return newObj;
     };
 
-    // Required field checks
+    // Required field checks 
     if (
       !category ||
       !coverImage ||
@@ -415,86 +332,86 @@ const TourPlanForm = ({ onClose }) => {
       return;
     }
 
-    if (pricingByMonth && pricingByMonth.length > 0) {
-      for (const monthPricing of pricingByMonth) {
-        const hasMonthAdultPrice =
-          monthPricing.adultPrice !== undefined &&
-          monthPricing.adultPrice !== null;
-        const hasMonthChildPrice =
-          monthPricing.childPrice !== undefined &&
-          monthPricing.childPrice !== null;
-        const hasMonthAdultData =
-          monthPricing.adultData &&
-          monthPricing.adultData.some(
-            (row) => Number(row.pax) > 0 || Number(row.price) > 0
-          );
-        const hasMonthChildData =
-          monthPricing.childData &&
-          monthPricing.childData.some(
-            (row) => Number(row.pax) > 0 || Number(row.price) > 0
-          );
+    // if (pricingByMonth && pricingByMonth.length > 0) {
+    //   for (const monthPricing of pricingByMonth) {
+    //     const hasMonthAdultPrice =
+    //       monthPricing.adultPrice !== undefined &&
+    //       monthPricing.adultPrice !== null;
+    //     const hasMonthChildPrice =
+    //       monthPricing.childPrice !== undefined &&
+    //       monthPricing.childPrice !== null;
+    //     const hasMonthAdultData =
+    //       monthPricing.adultData &&
+    //       monthPricing.adultData.some(
+    //         (row) => Number(row.pax) > 0 || Number(row.price) > 0
+    //       );
+    //     const hasMonthChildData =
+    //       monthPricing.childData &&
+    //       monthPricing.childData.some(
+    //         (row) => Number(row.pax) > 0 || Number(row.price) > 0
+    //       );
 
-        // Check if both price and detailed data are filled for the same month
-        if (
-          (hasMonthAdultPrice || hasMonthChildPrice) &&
-          (hasMonthAdultData || hasMonthChildData)
-        ) {
-          setLoading(false);
-          return toast.error(
-            `For month ${
-              monthPricing.month + 1
-            }, provide either single price fields (adultPrice/childPrice) or detailed pricing data (adultData/childData), not both.`
-          );
-        }
+    //     // Check if both price and detailed data are filled for the same month
+    //     if (
+    //       (hasMonthAdultPrice || hasMonthChildPrice) &&
+    //       (hasMonthAdultData || hasMonthChildData)
+    //     ) {
+    //       setLoading(false);
+    //       return toast.error(
+    //         `For month ${
+    //           monthPricing.month + 1
+    //         }, provide either single price fields (adultPrice/childPrice) or detailed pricing data (adultData/childData), not both.`
+    //       );
+    //     }
 
-        // Check if both adultPrice and childPrice are provided together
-        if (
-          (hasMonthAdultPrice && !hasMonthChildPrice) ||
-          (!hasMonthAdultPrice && hasMonthChildPrice)
-        ) {
-          setLoading(false);
-          return toast.error(
-            `For month ${
-              monthPricing.month + 1
-            }, both adultPrice and childPrice must be provided together.`
-          );
-        }
+    //     // Check if both adultPrice and childPrice are provided together
+    //     if (
+    //       (hasMonthAdultPrice && !hasMonthChildPrice) ||
+    //       (!hasMonthAdultPrice && hasMonthChildPrice)
+    //     ) {
+    //       setLoading(false);
+    //       return toast.error(
+    //         `For month ${
+    //           monthPricing.month + 1
+    //         }, both adultPrice and childPrice must be provided together.`
+    //       );
+    //     }
 
-        // Check if both adultData and childData are provided together
-        if (
-          (hasMonthAdultData && !hasMonthChildData) ||
-          (!hasMonthAdultData && hasMonthChildData)
-        ) {
-          setLoading(false);
-          return toast.error(
-            `For month ${
-              monthPricing.month + 1
-            }, both adultData and childData must be provided together.`
-          );
-        }
+    //     // Check if both adultData and childData are provided together
+    //     if (
+    //       (hasMonthAdultData && !hasMonthChildData) ||
+    //       (!hasMonthAdultData && hasMonthChildData)
+    //     ) {
+    //       setLoading(false);
+    //       return toast.error(
+    //         `For month ${
+    //           monthPricing.month + 1
+    //         }, both adultData and childData must be provided together.`
+    //       );
+    //     }
 
-        // New condition: Ensure all months have either adultPrice/childPrice or adultData/childData
-        const hasCompletePriceForMonth =
-          (hasMonthAdultPrice && hasMonthChildPrice) ||
-          (hasMonthAdultData && hasMonthChildData);
+    //     // New condition: Ensure all months have either adultPrice/childPrice or adultData/childData
+    //     const hasCompletePriceForMonth =
+    //       (hasMonthAdultPrice && hasMonthChildPrice) ||
+    //       (hasMonthAdultData && hasMonthChildData);
 
-        if (!hasCompletePriceForMonth) {
-          setLoading(false);
-          return toast.error(
-            `For month ${
-              monthPricing.month + 1
-            }, you must provide either both adultPrice and childPrice or both adultData and childData.`
-          );
-        }
-      }
+    //     if (!hasCompletePriceForMonth) {
+    //       setLoading(false);
+    //       return toast.error(
+    //         `For month ${
+    //           monthPricing.month + 1
+    //         }, you must provide either both adultPrice and childPrice or both adultData and childData.`
+    //       );
+    //     }
+    //   }
 
-      // If all checks pass
-      setLoading(true);
-      // Proceed with form submission or other logic here...
-    } else {
-      setLoading(false);
-      return toast.error("Enter valid price for all months");
-    }
+    //   // If all checks pass
+    //   setLoading(true);
+    //   // Proceed with form submission or other logic here...
+    // } else {
+    //   setLoading(false);
+    //   return toast.error("Enter valid price for all months");
+    // }
     let formData = {
       category,
       coverImage,
@@ -525,7 +442,7 @@ const TourPlanForm = ({ onClose }) => {
       limit,
       stopSales: formattedDates,
       minPerson,
-      pricingByMonth,
+      pricingLimits,
     };
 
     // Remove any empty keys (fields that are empty objects or arrays)
@@ -995,36 +912,9 @@ const TourPlanForm = ({ onClose }) => {
         </div>
         {/* Price Inputs */}
         <div>
-          {" "}
-          <div className="flex justify-center items-center gap-2  flex-wrap mb-5">
-            {[
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ]?.map((month, index) => (
-              <div
-                key={index}
-                className={`px-4 py-2 rounded-md ${
-                  index == activeIndex ? " bg-custom-yellow  " : " bg-slate-300"
-                }`}
-                onClick={() => setActiveIndex(index)}
-              >
-                {month}
-              </div>
-            ))}
-          </div>
           {/* Toggle Switch */}
           <div className="mb-4">
-            <label className="inline-flex items-center cursor-pointer">
+            <label className="inline-flex items-center cursor-pointer ">
               <input
                 type="checkbox"
                 className="sr-only"
@@ -1042,25 +932,24 @@ const TourPlanForm = ({ onClose }) => {
               </span>
             </label>
           </div>
+
           {/* Conditional Rendering */}
           {showPricing ? (
             <PricingComponent
-              adultData={pricingByMonth[activeIndex]?.adultData}
-              setAdultData={setPricingByMonth}
-              childData={pricingByMonth[activeIndex]?.childData}
-              setChildData={setPricingByMonth}
-              activeIndex={activeIndex}
+              adultData={adultData}
+              setAdultData={setAdultData}
+              childData={childData}
+              setChildData={setChildData}
             />
           ) : (
             <SinglePriceComponent
-              adultPrice={pricingByMonth[activeIndex]?.adultPrice}
-              setAdultPrice={setPricingByMonth}
-              childPrice={pricingByMonth[activeIndex]?.childPrice}
-              setChildPrice={setPricingByMonth}
-              activeIndex={activeIndex}
+              adultPrice={adultPrice}
+              setAdultPrice={setAdultPrice}
+              childPrice={childPrice}
+              setChildPrice={setChildPrice}
             />
           )}
-        </div>{" "}
+        </div>
         <PriceLimiting
           pricingLimits={pricingLimits}
           setPricingLimits={setPricingLimits}

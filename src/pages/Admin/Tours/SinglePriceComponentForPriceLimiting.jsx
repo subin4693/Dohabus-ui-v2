@@ -20,8 +20,7 @@ const SinglePriceComponentForPriceLimiting = ({
 				className="p-2 border rounded-md w-full"
 			/>
 		</div>
-		{console.log(adultPrice)}
-		{console.log(childPrice)}
+	 
 
 		<div>
 			<label htmlFor="childPrice" className="block mb-2">
