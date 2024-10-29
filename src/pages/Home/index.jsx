@@ -208,7 +208,7 @@ const Home = () => {
       <div className="">
         <div
           className={`relative top-0 w-full overflow-hidden group m--0 p-0 ${
-            offer.isOpen ? "h-[calc(100vh-50px)] " : " h-screen "
+            offer.isOpen ? "h-[350px] lg:h-screen" : "h-[350px] lg:h-screen"
           }`}
         >
           <AnimatePresence initial={false}>
@@ -219,7 +219,7 @@ const Home = () => {
                     <motion.div
                       key={index}
                       className={`absolute w-full ${
-                        offer.isOpen ? "h-[calc(100vh-50px)] " : " h-screen "
+                        offer.isOpen ? "h-[350px] lg:h-screen " : " h-screen "
                       }`}
                       initial="enter"
                       animate="center"
@@ -249,8 +249,8 @@ const Home = () => {
                       <img
                         src={slide.image}
                         alt={slide.alt}
-                        className={`w-full  object-cover ${
-                          offer.isOpen ? "h-[calc(100vh-50px)] " : " h-screen "
+                        className={`w-full h-[350px] object-cover  ${
+                          offer.isOpen ? "h-[350px] lg:h-screen " : "lg:h-screen "
                         }`}
                       />
                     </motion.div>
