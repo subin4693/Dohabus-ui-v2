@@ -77,10 +77,7 @@ const TourPlanForm = ({ onClose }) => {
   // };
   const [activeIndex, setActiveIndex] = useState(0);
   const [pricingLimits, setPricingLimits] = useState([]);
-  const [pricingByMonth, setPricingByMonth] = useState([
-    
-  ]);
-
+ 
   const [selectedTime, setSelectedTime] = useState(null); // To store current time selection
   const [selectedCloseTime, setSelectedCloseTime] = useState(null);
 
@@ -443,8 +440,12 @@ const TourPlanForm = ({ onClose }) => {
       stopSales: formattedDates,
       minPerson,
       pricingLimits,
+      adultData,
+      childData,
+      adultPrice,
+      childPrice,
     };
-
+    
     // Remove any empty keys (fields that are empty objects or arrays)
     formData = removeEmptyFields(formData);
 

@@ -508,7 +508,14 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         setPricingLimits(planData.pricingLimits||[])
         setIsPickupRequired(planData.isPickupRequired || false);
         setIsDropOffRequired(planData.isDropOffRequired || false);
-
+        setAdultPrice(planData?.
+          defaultAdultPrice || null)
+        setChildPrice(planData?.
+          defaultChildPrice || null)
+        setAdultData(planData?.
+          defaultAdultData || [])
+        setChildData(planData?.
+          defaultChildData || [])
         setFaq(
           planData.faq || [
             {
