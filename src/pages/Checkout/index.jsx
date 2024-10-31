@@ -94,10 +94,11 @@ const Checkout = () => {
             email,
         };
 
-        if (childCount || adultCount || addons) {
+        if (childCount || adultCount || addons|| selectedDate) {
             if (childCount) requestData.childCount = childCount;
             if (adultCount) requestData.adultCount = adultCount;
             if (addons) requestData.addons = addons.split(",");
+            if(selectedDate) requestData.selectedDate = selectedDate
         }
         // else {
         //     if (childData) requestData.childData = childData;
@@ -286,12 +287,14 @@ const Checkout = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+        
             try {
                 const res = await axios.get(`${BASE_URL}/plans/${id}`);
 
                 setData(res.data.data.plan);
                 setFirstName(user?.name);
                 console.log(res.data.data.plan);
+                
                 setEmail(user?.email);
                 setNumber(user?.number);
             } catch (error) {
@@ -306,67 +309,90 @@ const Checkout = () => {
         let calculatedTotalAdultPrice = 0;
         let calculatedTotalChildPrice = 0;
         let addOnTotalPrice = 0;
-
+     
+        const normalizedSelectedDate = new Date(selectedDate);
+        normalizedSelectedDate.setHours(0, 0, 0, 0);
+    
+        const currentPricingLimit = data?.pricingLimits?.find(limit => {
+        
+            const startDate = new Date(limit.startDate);
+            const endDate = new Date(limit.endDate);
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
+    
+          
+    
+           
+            return normalizedSelectedDate >= startDate && normalizedSelectedDate <= endDate;
+        });
+    
+        console.log("Current Pricing Limit:", currentPricingLimit);
+        
+        const pricingSource = currentPricingLimit || data;
+    
+        // Calculate adult price based on count
         if (adultCount > 0) {
-            if (data?.adultPrice) {
-                calculatedTotalAdultPrice = data?.adultPrice * adultCount;
-            } else if (data?.adultData?.length > 0) {
-                const sortedAdultData = data.adultData.sort(
-                    (a, b) => a.pax - b.pax
-                );
+            if (pricingSource?.adultPrice) {
+                // Use direct adult price if available
+                calculatedTotalAdultPrice = pricingSource.adultPrice * adultCount;
+            } else if (pricingSource?.adultData?.length > 0) {
+                // If adultData exists, find the closest matching or lowest available pax
+                const sortedAdultData = pricingSource.adultData.sort((a, b) => a.pax - b.pax);
                 let foundAdultPrice = null;
-
+    
                 const nearestAdultPax = sortedAdultData
                     .filter((adult) => adult.pax <= adultCount)
                     .pop();
-
+                    console.log(nearestAdultPax)
                 if (nearestAdultPax) {
                     foundAdultPrice = nearestAdultPax.price;
                 } else {
                     foundAdultPrice = sortedAdultData[0].price;
                 }
-
+    
                 calculatedTotalAdultPrice = foundAdultPrice * adultCount;
             }
         }
-
+    
+        // Calculate child price based on count
         if (childCount > 0) {
-            if (data?.childPrice) {
-                calculatedTotalChildPrice = data?.childPrice * childCount;
-            } else if (data?.childData?.length > 0) {
-                const sortedChildData = data.childData.sort(
-                    (a, b) => a.pax - b.pax
-                );
+            if (pricingSource?.childPrice) {
+                // Use direct child price if available
+                calculatedTotalChildPrice = pricingSource.childPrice * childCount;
+            } else if (pricingSource?.childData?.length > 0) {
+                // If childData exists, find the closest matching or lowest available pax
+                const sortedChildData = pricingSource.childData.sort((a, b) => a.pax - b.pax);
                 let foundChildPrice = null;
-
+    
                 const nearestChildPax = sortedChildData
                     .filter((child) => child.pax <= childCount)
                     .pop();
-
+    
                 if (nearestChildPax) {
                     foundChildPrice = nearestChildPax.price;
                 } else {
                     foundChildPrice = sortedChildData[0].price;
                 }
-
+    console.log(foundChildPrice)
                 calculatedTotalChildPrice = foundChildPrice * childCount;
             }
         }
-
+    
+        // Calculate add-on prices if selected
         if (addons) {
             const selectedAddOns = addons.split(","); // Array of add-on IDs and counts
-
+    
             // Loop through add-on IDs and counts
             selectedAddOns.forEach((addOnEntry) => {
                 const [addId, count] = addOnEntry.split(":"); // Extract add-on ID and count
                 const matchingAddOn = data?.addOn?.find(
                     (addOn) => addOn._id === addId
                 );
-
+    
                 if (matchingAddOn) {
                     const addOnCount = parseInt(count, 10) || 1; // Parse the count or default to 1
                     const totalAddOnPrice = matchingAddOn.price * addOnCount; // Calculate total price for this add-on
-
+    
                     // Add the add-on to the display list
                     setShowAddons((prev) => [
                         ...prev,
@@ -376,33 +402,19 @@ const Checkout = () => {
                             count: addOnCount,
                         },
                     ]);
-                    console.log(matchingAddOn);
-                    // Accumulate the total price for all selected add-ons
+                    
                     addOnTotalPrice += totalAddOnPrice;
-                    console.log(totalAddOnPrice);
-                    console.log(addOnTotalPrice);
                 }
             });
-
-            // Multiply the add-on total by the adultCount and childCount
-
-            console.log(addOnTotalPrice); // Log the toz    tal price
         }
-
-        // Set total prices
+    
+        // Set calculated total prices
         setTotalAdultPrice(calculatedTotalAdultPrice);
         setTotalChildPrice(calculatedTotalChildPrice);
-
-        // Set final total price including add-ons
-        setTotalPrice(
-            calculatedTotalAdultPrice +
-                calculatedTotalChildPrice +
-                addOnTotalPrice
-        );
-        // setTotalAdultPrice(calculatedTotalAdultPrice);
-        // setTotalChildPrice(calculatedTotalChildPrice);
-        // setTotalPrice(calculatedTotalAdultPrice + calculatedTotalChildPrice);
-    }, [data, adultCount, childCount]);
+        setTotalPrice(calculatedTotalAdultPrice + calculatedTotalChildPrice + addOnTotalPrice);
+    
+    }, [data, adultCount, childCount, selectedDate, addons]);
+    
     return (
         <div className="md:container mx-auto px-4 py-8 md:flex md:gap-8 mt-20">
             {/* Left side: Input form */}

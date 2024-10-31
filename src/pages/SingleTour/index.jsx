@@ -64,11 +64,15 @@ const SingleTour = () => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [adultPrice, setAdultPrice] = useState(0);
     const [childPrice, setChildPrice] = useState(0);
+    const [defaultAdultPrice, setDefaultAdultPrice] = useState(0);
+    const [defaultChildPrice, setDefaultChildPrice] = useState(0);
+    const [defaultAdultCount, setDefaultAdultCount] = useState(0);
+    const [defaultChildCount, setDefaultChildCount] = useState(0);
     const [canWriteReview, setCanWriteReview] = useState(false);
     const [session, setSession] = useState(null);
     const [selectedAddOns, setSelectedAddOns] = useState([]);
 
-    const [minChildCount, setMinChidCount] = useState(null);
+    const [minChildCount,  setMinChildCount] = useState(null);
     const [minAdultCount, setMinAdultCount] = useState(null);
 
     const [loading, setLoading] = useState(false);
@@ -76,6 +80,7 @@ const SingleTour = () => {
     const [sessionLoading, setSessionLoading] = useState(false);
     const [isInCart, setIsInCart] = useState(false);
     const [isInFav, setIsInFav] = useState(false);
+    const [priceLimit, setPriceLimiting] = useState([]);
     const { user } = useSelector((state) => state.user);
     const { singletour } = useParams();
 
@@ -118,102 +123,136 @@ const SingleTour = () => {
         );
     };
     const handleTicketCountChange = (type, isIncrement) => {
+
+        if(!selectedDate)
+        return toast.warning("Select a date first")
+
+
+        const newCount = isIncrement
+            ? (type === "adult" ? adultCount + 1 : childCount + 1)
+            : Math.max(type === "adult" ? adultCount - 1 : childCount - 1, 0);
+    
+        // Set count state for adults or children
         if (type === "adult") {
-            const newCount = isIncrement
-                ? adultCount + 1
-                : Math.max(adultCount - 1, 0);
             setAdultCount(newCount);
-
-            // Find the appropriate price based on the updated adultCount
-            if (data.adultData.length > 0) {
-                // Sort the adultData by pax in ascending order
-                const sortedAdultData = data.adultData.sort(
-                    (a, b) => a.pax - b.pax
-                );
-                let foundPrice = null;
-
-                // Find an exact match for pax
+        } else {
+            setChildCount(newCount);
+        }
+    
+        // Normalize selected date for comparison
+        const normalizedSelectedDate = new Date(selectedDate);
+        normalizedSelectedDate.setHours(0, 0, 0, 0);
+    
+        // Find if any pricing limit exists for the selected date
+        const currentPricingLimit = data?.pricingLimits?.find(limit => {
+            const startDate = new Date(limit.startDate);
+            const endDate = new Date(limit.endDate);
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
+    
+            return normalizedSelectedDate >= startDate && normalizedSelectedDate <= endDate;
+        });
+    
+        if (type === "adult") {
+            let foundPrice = null;
+    
+            if (currentPricingLimit && currentPricingLimit.adultData?.length > 0) {
+                // Sort adultData by pax
+                const sortedAdultData = currentPricingLimit.adultData.sort((a, b) => a.pax - b.pax);
+                
+                // Find the exact match or nearest lower pax
                 sortedAdultData.forEach((adult) => {
                     if (adult.pax === newCount) {
                         foundPrice = adult.price;
                     }
                 });
-
+    
                 if (foundPrice === null) {
                     const nearestLowerPax = sortedAdultData
                         .filter((adult) => adult.pax <= newCount)
                         .pop();
-
-                    if (!nearestLowerPax) {
-                        // If no lower pax found, set the smallest pax price
-                        setAdultPrice(sortedAdultData[0].price);
-                        foundPrice = sortedAdultData[0].price;
-                    } else {
-                        // If we found a nearest lower pax, use its price
-                        setAdultPrice(nearestLowerPax.price);
-                        foundPrice = nearestLowerPax.price;
-                    }
-                } else {
-                    // Exact match found
-                    setAdultPrice(foundPrice);
+    
+                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedAdultData[0].price;
                 }
-
-                // Calculate new total price based on the updated adult price
-                setTotalPrice(
-                    (prev) =>
-                        newCount * foundPrice + childCount * data.childPrice
-                );
+    
+                setAdultPrice(foundPrice);
+            } else if (currentPricingLimit && currentPricingLimit.adultPrice) {
+                // Use adultPrice if available
+                foundPrice = currentPricingLimit.adultPrice;
+                setAdultPrice(foundPrice);
+            } else if (data.adultData?.length > 0) {
+                // Fallback to general adultData if no pricing limit exists
+                const sortedAdultData = data.adultData.sort((a, b) => a.pax - b.pax);
+    
+                sortedAdultData.forEach((adult) => {
+                    if (adult.pax === newCount) {
+                        foundPrice = adult.price;
+                    }
+                });
+    
+                if (foundPrice === null) {
+                    const nearestLowerPax = sortedAdultData
+                        .filter((adult) => adult.pax <= newCount)
+                        .pop();
+    
+                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedAdultData[0].price;
+                }
+    
+                setAdultPrice(foundPrice);
             }
+    
+            setTotalPrice((prev) => newCount * foundPrice + childCount * data.childPrice);
         } else if (type === "child") {
-            // Handle child count change
-            const newCount = isIncrement
-                ? childCount + 1
-                : Math.max(childCount - 1, 0);
-            setChildCount(newCount);
-
-            // Find the appropriate price based on the updated childCount
-            if (data.childData.length > 0) {
-                // Sort the childData by pax in ascending order
-                const sortedChildData = data.childData.sort(
-                    (a, b) => a.pax - b.pax
-                );
-                let foundPrice = null;
-
-                // Find an exact match for pax
+            let foundPrice = null;
+    
+            if (currentPricingLimit && currentPricingLimit.childData?.length > 0) {
+                // Sort childData by pax
+                const sortedChildData = currentPricingLimit.childData.sort((a, b) => a.pax - b.pax);
+    
                 sortedChildData.forEach((child) => {
                     if (child.pax === newCount) {
                         foundPrice = child.price;
                     }
                 });
-
-                // If no exact match, apply the logic for finding the nearest lower pax price
+    
                 if (foundPrice === null) {
                     const nearestLowerPax = sortedChildData
                         .filter((child) => child.pax <= newCount)
-                        .pop(); // get the nearest lower or equal pax
-
-                    if (!nearestLowerPax) {
-                        // If no lower pax found, set the smallest pax price
-                        setChildPrice(sortedChildData[0].price);
-                        foundPrice = sortedChildData[0].price;
-                    } else {
-                        // If we found a nearest lower pax, use its price
-                        setChildPrice(nearestLowerPax.price);
-                        foundPrice = nearestLowerPax.price;
-                    }
-                } else {
-                    // Exact match found
-                    setChildPrice(foundPrice);
+                        .pop();
+    
+                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedChildData[0].price;
                 }
-
-                // Calculate new total price based on the updated child price
-                setTotalPrice(
-                    (prev) =>
-                        adultCount * data.adultPrice + newCount * foundPrice
-                );
+    
+                setChildPrice(foundPrice);
+            } else if (currentPricingLimit && currentPricingLimit.childPrice) {
+                // Use childPrice if available
+                foundPrice = currentPricingLimit.childPrice;
+                setChildPrice(foundPrice);
+            } else if (data.childData?.length > 0) {
+                // Fallback to general childData if no pricing limit exists
+                const sortedChildData = data.childData.sort((a, b) => a.pax - b.pax);
+    
+                sortedChildData.forEach((child) => {
+                    if (child.pax === newCount) {
+                        foundPrice = child.price;
+                    }
+                });
+    
+                if (foundPrice === null) {
+                    const nearestLowerPax = sortedChildData
+                        .filter((child) => child.pax <= newCount)
+                        .pop();
+    
+                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedChildData[0].price;
+                }
+    
+                setChildPrice(foundPrice);
             }
+    
+            setTotalPrice((prev) => adultCount * data.adultPrice + newCount * foundPrice);
         }
     };
+    
 
     const handleSession = (sess) => {
         setSession(sess);
@@ -505,9 +544,65 @@ const SingleTour = () => {
     };
 
     useEffect(() => {
+        
         const getData = async () => {
             if (!selectedDate) return;
-            setSessionLoading(true);
+      
+            let matchedAdultPrice = null;
+            let matchedChildPrice = null;
+            let matchedAdultData = null;
+            let matchedChildData = null;
+    
+            const selected = new Date(selectedDate);
+            selected.setHours(0, 0, 0, 0);
+    
+            // Loop through priceLimit to find a matching range
+            if (priceLimit && priceLimit.length > 0) {
+                for (const limit of priceLimit) {
+                    const startDate = new Date(limit.startDate);
+                    const endDate = new Date(limit.endDate);
+    
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate.setHours(0, 0, 0, 0);
+    
+                    if (selected >= startDate && selected <= endDate) {
+                        if (limit.adultPrice !== undefined) matchedAdultPrice = limit.adultPrice;
+                        if (limit.childPrice !== undefined) matchedChildPrice = limit.childPrice;
+    
+                        if (limit.adultData && limit.adultData.length > 0) matchedAdultData = limit.adultData;
+                        if (limit.childData && limit.childData.length > 0) matchedChildData = limit.childData;
+                        
+                        break; 
+                    }
+                }
+            }
+    
+            // Set values if a matching date range is found in priceLimit
+            if (matchedAdultPrice !== null) {
+                setAdultPrice(matchedAdultPrice);
+                setMinAdultCount(null); // Adjust to your min count requirement
+            } else if (matchedAdultData) {
+                const sortedAdultData = matchedAdultData.sort((a, b) => a.pax - b.pax);
+                setAdultPrice(sortedAdultData[0].price);
+                setMinAdultCount(sortedAdultData[0].pax);
+            } else {
+                // Set default values if no match in priceLimit
+                setAdultPrice(defaultAdultPrice);
+                setMinAdultCount(defaultAdultCount);
+            }
+    
+            if (matchedChildPrice !== null) {
+                setChildPrice(matchedChildPrice);
+                setMinChildCount(null); 
+            } else if (matchedChildData) {
+                const sortedChildData = matchedChildData.sort((a, b) => a.pax - b.pax);
+                setChildPrice(sortedChildData[0].price);
+                setMinChildCount(sortedChildData[0].pax);
+            } else {
+                // Set default values if no match in priceLimit
+                setChildPrice(defaultChildPrice);
+                setMinChildCount(defaultChildCount);
+            }
             try {
                 const response = await axios.post(
                     BASE_URL + "/tickets/counts",
@@ -516,6 +611,7 @@ const SingleTour = () => {
                         planId: data._id,
                     }
                 );
+                console.log(priceLimit)
 
                 console.log("YEah", response.data);
                 setSessionStatus(response.data.sessionStatus);
@@ -560,24 +656,32 @@ const SingleTour = () => {
                 setChildCount(0);
                 setTotalPrice(0);
                 console.log(data.data.data.plan)
+                setPriceLimiting(data?.data?.data?.plan?.pricingLimits)
                 if (
                     data.data.data.plan.adultPrice ||
                     data.data.data.plan.childPrice
                 ) {
                     setAdultPrice(data.data.data.plan.adultPrice);
+                    setDefaultAdultPrice(data.data.data.plan.adultPrice)
                     setChildPrice(data.data.data.plan.childPrice);
+                    setDefaultChildPrice(data.data.data.plan.childPrice);
+
                 } else {
                     const sortedAdultData = data.data.data.plan.adultData.sort(
                         (a, b) => a.pax - b.pax
                     );
                     setAdultPrice(sortedAdultData[0]?.price);
+                    setDefaultAdultPrice(sortedAdultData[0]?.price)
                     setMinAdultCount(sortedAdultData[0]?.pax);
+                    setDefaultAdultCount(sortedAdultData[0]?.pax)
 
                     const sortedChildData = data.data.data.plan.childData.sort(
                         (a, b) => a.pax - b.pax
                     );
                     setChildPrice(sortedChildData[0]?.price);
-                    setMinChidCount(sortedChildData[0]?.pax);
+                    setMinChildCount(sortedChildData[0]?.pax);
+                    setDefaultChildPrice(sortedChildData[0]?.price)
+                    setDefaultChildCount(sortedChildData[0]?.pax)
                 }
                 if (data.data.data.cart) setIsInCart(data.data.data.cart);
                 if (data.data.data.fav) setIsInFav(data.data.data.fav);
@@ -1130,6 +1234,7 @@ const SingleTour = () => {
                                     />
                                     {isInCart ? "Added" : "Add to cart"}
                                 </button>
+                              
                                 <button
                                     className={`py-3 px-2 rounded-md w-full group duration-200 flex justify-center items-center gap-3    ${
                                         isInFav

@@ -107,57 +107,12 @@ export default function TicketBooking({
     const [selectedAdult, setSelectedAdult] = useState(null);
     const [selectedChild, setSelectedChild] = useState(null);
 
-    // Check if adult and child price or data exists
-    const hasAdultPrice = data?.adultPrice;
-    const hasChildPrice = data?.childPrice;
-    const adultData = data?.adultData || [];
-    const childData = data?.childData || [];
-    const handleSelect = (type, selectedData) => {
-        let updatedTotalPrice = totalPrice;
-
-        if (type === "adult") {
-            if (selectedData._id === selectedAdult?._id) {
-                updatedTotalPrice -=
-                    selectedData?.price * selectedData?.pax || 0;
-                setSelectedAdult(null);
-            } else {
-                updatedTotalPrice -=
-                    selectedAdult?.price * selectedAdult?.pax || 0;
-                updatedTotalPrice += selectedData?.price * selectedData?.pax;
-                setSelectedAdult(selectedData);
-            }
-        }
-        if (type === "child") {
-            if (selectedData._id === selectedChild?._id) {
-                updatedTotalPrice -=
-                    selectedData?.price * selectedData?.pax || 0;
-                setSelectedChild(null);
-            } else {
-                updatedTotalPrice -=
-                    selectedChild?.price * selectedChild?.pax || 0;
-                updatedTotalPrice += selectedData?.price * selectedData?.pax;
-                setSelectedChild(selectedData);
-            }
-        }
-
-        setTotalPrice(updatedTotalPrice);
-
-        // Optionally, close the popup after selection if required
-        // setPopupOpen(false);
-    };
+    
+  
     // Handle hover action for showing the message
-    const handleHover = () => {
-        if (!hasAdultPrice && adultData.length > 0) {
-            return "Click here to view";
-        }
-        return "";
-    };
-
+ 
     // Function to format selected date for backend
-    const formatDateForBackend = (date) => {
-        return date;
-    };
-
+  
     // Calculate total price
 
     return (
@@ -270,21 +225,7 @@ export default function TicketBooking({
                 )} */}
 
                 {/* Popup for showing the adultData and childData */}
-                <DataPopup
-                    isOpen={popupOpen}
-                    onClose={() => setPopupOpen(false)}
-                    adultData={adultData}
-                    childData={childData}
-                    setSelectedAdult={setSelectedAdult}
-                    setSelectedChild={setSelectedChild}
-                    handleSelect={handleSelect}
-                    toast={toast}
-                    setTotalPrice={setTotalPrice}
-                    selectedAdultData={selectedAdultData}
-                    setSelectedAdultData={setSelectedAdultData}
-                    selectedChildData={selectedChildData}
-                    setSelectedChildData={setSelectedChildData}
-                />
+               
 
                 {/* Total Price Display */}
                 <div className="mt-4" dir={lang === "ar" ? "rtl" : "ltr"}>
