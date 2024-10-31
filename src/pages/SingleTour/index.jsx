@@ -998,13 +998,13 @@ const SingleTour = () => {
                                         .map((sessionL) => {
                                             console.log("Session:", sessionL);
                                             const isAvailable =
-                                                sessionStatus[sessionL._id] ===
+                                                sessionStatus[sessionL.name] ===
                                                 "Available";
                                             const isFillingUp =
-                                                sessionStatus[sessionL._id] ===
+                                                sessionStatus[sessionL.name] ===
                                                 "Filling Up";
                                             const isFull =
-                                                sessionStatus[sessionL._id] ===
+                                                sessionStatus[sessionL.name] ===
                                                 "Full";
                                             const isSelected =
                                                 session === sessionL.name; // Check if session is selected
@@ -1023,6 +1023,7 @@ const SingleTour = () => {
                                                             ? "bg-red-500"
                                                             : ""
                                                     }`}
+                                                    
                                                     onClick={() => {
                                                         if (
                                                             isAvailable ||
@@ -1038,6 +1039,7 @@ const SingleTour = () => {
                                                         }
                                                     }}
                                                 >
+                                                    {console.log(sessionStatus)}
                                                     <BiTime className="w-[25px] h-[25px]" />{" "}
                                                     {sessionL.name}
                                                 </button>
