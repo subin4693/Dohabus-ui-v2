@@ -125,7 +125,7 @@ const SingleTour = () => {
     const handleTicketCountChange = (type, isIncrement) => {
 
         if(!selectedDate)
-        return toast.warning("Select a date first")
+        return toast.warning("Please select a date before choosing the ticket count")
 
 
         const newCount = isIncrement
