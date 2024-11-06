@@ -261,7 +261,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
     setLoading(true);
     e.preventDefault();
     console.log(pricingLimits);
-    
+
     const formattedDates = stopSales.map((date) =>
       date instanceof DateObject ? date.toDate().toISOString() : date
     );
@@ -381,7 +381,7 @@ const TourPlanForm = ({ onClose, editPlan }) => {
       childPrice,
       faq,
       selectedSessions,
-      isPickupRequired,
+      isPickupRequired: false,
       isDropOffRequired,
       childData,
       adultData,
@@ -501,21 +501,19 @@ const TourPlanForm = ({ onClose, editPlan }) => {
         setStopSales(planData.stopSales || []);
         setAddon(planData.addOn || [{ en: "", ar: "" }]);
         childData,
-          setChildData(planData.defaultChildData || [{ pax: null, price: null }]);
+          setChildData(
+            planData.defaultChildData || [{ pax: null, price: null }]
+          );
         setAdultData(planData.defaultAdultData || [{ pax: null, price: null }]);
         setLimit(planData.limit || "");
         setMinPerson(planData.minPerson || 0);
-        setPricingLimits(planData.pricingLimits||[])
+        setPricingLimits(planData.pricingLimits || []);
         setIsPickupRequired(planData.isPickupRequired || false);
         setIsDropOffRequired(planData.isDropOffRequired || false);
-        setAdultPrice(planData?.
-          defaultAdultPrice || null)
-        setChildPrice(planData?.
-          defaultChildPrice || null)
-        setAdultData(planData?.
-          defaultAdultData || [])
-        setChildData(planData?.
-          defaultChildData || [])
+        setAdultPrice(planData?.defaultAdultPrice || null);
+        setChildPrice(planData?.defaultChildPrice || null);
+        setAdultData(planData?.defaultAdultData || []);
+        setChildData(planData?.defaultChildData || []);
         setFaq(
           planData.faq || [
             {

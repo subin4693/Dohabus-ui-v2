@@ -77,7 +77,7 @@ const TourPlanForm = ({ onClose }) => {
   // };
   const [activeIndex, setActiveIndex] = useState(0);
   const [pricingLimits, setPricingLimits] = useState([]);
- 
+
   const [selectedTime, setSelectedTime] = useState(null); // To store current time selection
   const [selectedCloseTime, setSelectedCloseTime] = useState(null);
 
@@ -314,7 +314,7 @@ const TourPlanForm = ({ onClose }) => {
       return newObj;
     };
 
-    // Required field checks 
+    // Required field checks
     if (
       !category ||
       !coverImage ||
@@ -433,7 +433,7 @@ const TourPlanForm = ({ onClose }) => {
           item.answer.ar
       ),
       selectedSessions,
-      isPickupRequired,
+      isPickupRequired: false,
       isDropOffRequired,
       addOn: addon.filter((item) => item.en || item.ar || item.price),
       limit,
@@ -445,7 +445,7 @@ const TourPlanForm = ({ onClose }) => {
       adultPrice,
       childPrice,
     };
-    
+
     // Remove any empty keys (fields that are empty objects or arrays)
     formData = removeEmptyFields(formData);
 
