@@ -41,1119 +41,1025 @@ import { BsBag, BsBagCheckFill } from "react-icons/bs";
 import Addons from "./Addons";
 
 const SingleTour = () => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
-    const navigate = useNavigate();
-    const animatedComponents = makeAnimated();
-    const lang = useSelector((state) => state.language.lang);
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+  const navigate = useNavigate();
+  const animatedComponents = makeAnimated();
+  const lang = useSelector((state) => state.language.lang);
 
-    const [sessionStatus, setSessionStatus] = useState([]);
-    const [sessionCounts, setSessionCounts] = useState({});
-    const [reviews, setReviews] = useState([]);
-    const [newReview, setNewReview] = useState({
-        reviewText: "",
-        imageURL: null,
-    });
-    const [data, setData] = useState({});
-    const [ticketsCount, setTicketsCount] = useState({}); // Store count for each add-on
-    const [totalAddOnCost, setTotalAddOnCost] = useState(0);
+  const [sessionStatus, setSessionStatus] = useState([]);
+  const [sessionCounts, setSessionCounts] = useState({});
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({
+    reviewText: "",
+    imageURL: null,
+  });
+  const [data, setData] = useState({});
+  const [ticketsCount, setTicketsCount] = useState({}); // Store count for each add-on
+  const [totalAddOnCost, setTotalAddOnCost] = useState(0);
 
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [adultCount, setAdultCount] = useState(0);
-    const [childCount, setChildCount] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [adultPrice, setAdultPrice] = useState(0);
-    const [childPrice, setChildPrice] = useState(0);
-    const [defaultAdultPrice, setDefaultAdultPrice] = useState(0);
-    const [defaultChildPrice, setDefaultChildPrice] = useState(0);
-    const [defaultAdultCount, setDefaultAdultCount] = useState(0);
-    const [defaultChildCount, setDefaultChildCount] = useState(0);
-    const [canWriteReview, setCanWriteReview] = useState(false);
-    const [session, setSession] = useState(null);
-    const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [adultCount, setAdultCount] = useState(0);
+  const [childCount, setChildCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [adultPrice, setAdultPrice] = useState(0);
+  const [childPrice, setChildPrice] = useState(0);
+  const [defaultAdultPrice, setDefaultAdultPrice] = useState(0);
+  const [defaultChildPrice, setDefaultChildPrice] = useState(0);
+  const [defaultAdultCount, setDefaultAdultCount] = useState(0);
+  const [defaultChildCount, setDefaultChildCount] = useState(0);
+  const [canWriteReview, setCanWriteReview] = useState(false);
+  const [session, setSession] = useState(null);
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
 
-    const [minChildCount,  setMinChildCount] = useState(null);
-    const [minAdultCount, setMinAdultCount] = useState(null);
+  const [minChildCount, setMinChildCount] = useState(null);
+  const [minAdultCount, setMinAdultCount] = useState(null);
 
-    const [loading, setLoading] = useState(false);
-    const [contentLoading, setContentLoading] = useState(false);
-    const [sessionLoading, setSessionLoading] = useState(false);
-    const [isInCart, setIsInCart] = useState(false);
-    const [isInFav, setIsInFav] = useState(false);
-    const [priceLimit, setPriceLimiting] = useState([]);
-    const { user } = useSelector((state) => state.user);
-    const { singletour } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [contentLoading, setContentLoading] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
+  const [isInFav, setIsInFav] = useState(false);
+  const [priceLimit, setPriceLimiting] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  const { singletour } = useParams();
 
-    //ticket booking componet state variables
+  //ticket booking componet state variables
 
-    const [selectedAdultData, setSelectedAdultData] = useState(null);
-    const [selectedChildData, setSelectedChildData] = useState(null);
-    // Handle add-on selection and update total price
+  const [selectedAdultData, setSelectedAdultData] = useState(null);
+  const [selectedChildData, setSelectedChildData] = useState(null);
+  // Handle add-on selection and update total price
 
-    const [addOnTotalCost, setAddOnTotalCost] = useState(0);
-    const handleAddOnChange = (selectedOptions) => {
-        setSelectedAddOns(selectedOptions);
+  const [addOnTotalCost, setAddOnTotalCost] = useState(0);
+  const handleAddOnChange = (selectedOptions) => {
+    setSelectedAddOns(selectedOptions);
 
-        const totalAddOnPrice = selectedOptions.reduce((sum, option) => {
-            return sum + option.price;
-        }, 0);
+    const totalAddOnPrice = selectedOptions.reduce((sum, option) => {
+      return sum + option.price;
+    }, 0);
 
-        setAddOnTotalCost(totalAddOnPrice); // Update the total price
-    };
+    setAddOnTotalCost(totalAddOnPrice); // Update the total price
+  };
 
-    // const isAvailableDay = (date) => {
-    //   const day = date.getDay(); // Get the day index (0 for Sunday, 1 for Monday, etc.)
-    //   return data?.availableDays?.includes(day); // Check if the day index is in the availableDays array
-    // };
-    const shouldDisableDate = (date) => {
-        // Get the day of the week (0 = Sunday, 6 = Saturday)
-        const dayOfWeek = date.getDay();
-        // Disable all dates except those that match the numbers in the isAvailableDay array
-        return data?.availableDays?.includes(dayOfWeek);
-    };
+  // const isAvailableDay = (date) => {
+  //   const day = date.getDay(); // Get the day index (0 for Sunday, 1 for Monday, etc.)
+  //   return data?.availableDays?.includes(day); // Check if the day index is in the availableDays array
+  // };
+  const shouldDisableDate = (date) => {
+    // Get the day of the week (0 = Sunday, 6 = Saturday)
+    const dayOfWeek = date.getDay();
+    // Disable all dates except those that match the numbers in the isAvailableDay array
+    return data?.availableDays?.includes(dayOfWeek);
+  };
 
-    const album = [album1, album2, album3, album4, album5, album6];
-    const handleNextImage = () => {
-        setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
-    };
+  const album = [album1, album2, album3, album4, album5, album6];
+  const handleNextImage = () => {
+    setSelectedImage((prevIndex) => (prevIndex + 1) % album.length);
+  };
 
-    const handlePreviousImage = () => {
-        setSelectedImage(
-            (prevIndex) => (prevIndex - 1 + album.length) % album.length
-        );
-    };
-    const handleTicketCountChange = (type, isIncrement) => {
+  const handlePreviousImage = () => {
+    setSelectedImage(
+      (prevIndex) => (prevIndex - 1 + album.length) % album.length
+    );
+  };
+  const handleTicketCountChange = (type, isIncrement) => {
+    if (!selectedDate)
+      return toast.warning(
+        "Please select a date before choosing the ticket count"
+      );
 
-        if(!selectedDate)
-        return toast.warning("Please select a date before choosing the ticket count")
+    const newCount = isIncrement
+      ? type === "adult"
+        ? adultCount + 1
+        : childCount + 1
+      : Math.max(type === "adult" ? adultCount - 1 : childCount - 1, 0);
 
-
-        const newCount = isIncrement
-            ? (type === "adult" ? adultCount + 1 : childCount + 1)
-            : Math.max(type === "adult" ? adultCount - 1 : childCount - 1, 0);
-    
-        // Set count state for adults or children
-        if (type === "adult") {
-            setAdultCount(newCount);
-        } else {
-            setChildCount(newCount);
-        }
-    
-        // Normalize selected date for comparison
-        const normalizedSelectedDate = new Date(selectedDate);
-        normalizedSelectedDate.setHours(0, 0, 0, 0);
-    
-        // Find if any pricing limit exists for the selected date
-        const currentPricingLimit = data?.pricingLimits?.find(limit => {
-            const startDate = new Date(limit.startDate);
-            const endDate = new Date(limit.endDate);
-            startDate.setHours(0, 0, 0, 0);
-            endDate.setHours(0, 0, 0, 0);
-    
-            return normalizedSelectedDate >= startDate && normalizedSelectedDate <= endDate;
-        });
-    
-        if (type === "adult") {
-            let foundPrice = null;
-    
-            if (currentPricingLimit && currentPricingLimit.adultData?.length > 0) {
-                // Sort adultData by pax
-                const sortedAdultData = currentPricingLimit.adultData.sort((a, b) => a.pax - b.pax);
-                
-                // Find the exact match or nearest lower pax
-                sortedAdultData.forEach((adult) => {
-                    if (adult.pax === newCount) {
-                        foundPrice = adult.price;
-                    }
-                });
-    
-                if (foundPrice === null) {
-                    const nearestLowerPax = sortedAdultData
-                        .filter((adult) => adult.pax <= newCount)
-                        .pop();
-    
-                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedAdultData[0].price;
-                }
-    
-                setAdultPrice(foundPrice);
-            } else if (currentPricingLimit && currentPricingLimit.adultPrice) {
-                // Use adultPrice if available
-                foundPrice = currentPricingLimit.adultPrice;
-                setAdultPrice(foundPrice);
-            } else if (data.adultData?.length > 0) {
-                // Fallback to general adultData if no pricing limit exists
-                const sortedAdultData = data.adultData.sort((a, b) => a.pax - b.pax);
-    
-                sortedAdultData.forEach((adult) => {
-                    if (adult.pax === newCount) {
-                        foundPrice = adult.price;
-                    }
-                });
-    
-                if (foundPrice === null) {
-                    const nearestLowerPax = sortedAdultData
-                        .filter((adult) => adult.pax <= newCount)
-                        .pop();
-    
-                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedAdultData[0].price;
-                }
-    
-                setAdultPrice(foundPrice);
-            }
-    
-            setTotalPrice((prev) => newCount * foundPrice + childCount * data.childPrice);
-        } else if (type === "child") {
-            let foundPrice = null;
-    
-            if (currentPricingLimit && currentPricingLimit.childData?.length > 0) {
-                // Sort childData by pax
-                const sortedChildData = currentPricingLimit.childData.sort((a, b) => a.pax - b.pax);
-    
-                sortedChildData.forEach((child) => {
-                    if (child.pax === newCount) {
-                        foundPrice = child.price;
-                    }
-                });
-    
-                if (foundPrice === null) {
-                    const nearestLowerPax = sortedChildData
-                        .filter((child) => child.pax <= newCount)
-                        .pop();
-    
-                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedChildData[0].price;
-                }
-    
-                setChildPrice(foundPrice);
-            } else if (currentPricingLimit && currentPricingLimit.childPrice) {
-                // Use childPrice if available
-                foundPrice = currentPricingLimit.childPrice;
-                setChildPrice(foundPrice);
-            } else if (data.childData?.length > 0) {
-                // Fallback to general childData if no pricing limit exists
-                const sortedChildData = data.childData.sort((a, b) => a.pax - b.pax);
-    
-                sortedChildData.forEach((child) => {
-                    if (child.pax === newCount) {
-                        foundPrice = child.price;
-                    }
-                });
-    
-                if (foundPrice === null) {
-                    const nearestLowerPax = sortedChildData
-                        .filter((child) => child.pax <= newCount)
-                        .pop();
-    
-                    foundPrice = nearestLowerPax ? nearestLowerPax.price : sortedChildData[0].price;
-                }
-    
-                setChildPrice(foundPrice);
-            }
-    
-            setTotalPrice((prev) => adultCount * data.adultPrice + newCount * foundPrice);
-        }
-    };
-    
-
-    const handleSession = (sess) => {
-        setSession(sess);
-    };
-    const formatDateForBackend = (date) => {
-        // Convert to ISO string without time
-        const localDate = new Date(date);
-        localDate.setHours(0, 0, 0, 0); // Set time to midnight in local time
-
-        // Convert to UTC date
-        const utcDate = new Date(
-            Date.UTC(
-                localDate.getFullYear(),
-                localDate.getMonth(),
-                localDate.getDate()
-            )
-        );
-
-        return utcDate.toISOString();
-    };
-    const handleReviewSubmit = async () => {
-        if (newReview.reviewText.trim() == "") {
-            return toast.error("Review text required ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-        try {
-            const res = await axios.post(BASE_URL + "/reviews/" + data?._id, {
-                ...newReview,
-                user,
-            });
-            const revvv = res.data.data.populatedReview;
-
-            setReviews((prev) => [...prev, revvv]);
-            setNewReview({ reviewText: "", imageURL: null });
-            toast.success(" New review added", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } catch (error) {
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-            console.log(error);
-        }
-    };
-
-    const handleBooking = () => {
-        setLoading(true);
-
-        if (!selectedDate) {
-            setLoading(false);
-            toast.error("Please select date before proceeding!");
-            return;
-        }
-        if (data?.sessions?.length > 0 && !session) {
-            setLoading(false);
-            toast.error("Please select sessoin before proceeding!");
-            return;
-        }
-
-        if (!adultCount && !childCount) {
-            setLoading(false);
-            toast.error(
-                "Please fill all the booking fields before proceeding!"
-            );
-            return;
-        }
-
-        if (data.minPerson > 0 && data.minPerson > adultCount + childCount) {
-            setLoading(false);
-            toast.error(
-                `The minimum persons count should be ${
-                    data?.minPerson
-                }. You have selected ${adultCount + childCount}.`
-            );
-            return;
-        }
-
-        if (minAdultCount && adultCount > 0 && adultCount < minAdultCount) {
-            setLoading(false);
-            toast.error(
-                `The minimum adult count should be ${minAdultCount}. You have selected ${adultCount}.`
-            );
-            return;
-        }
-
-        if (minChildCount && childCount > 0 && childCount < minChildCount) {
-            setLoading(false);
-            toast.error(
-                `The minimum child count should be ${minChildCount}. You have selected ${childCount}.`
-            );
-            return;
-        }
-
-        const date = formatDateForBackend(selectedDate);
-        let query = `date=${date}&session=${session}`;
-        if (adultCount || childCount) {
-            query += `&adultCount=${adultCount}&childCount=${childCount}`;
-
-            if (selectedAddOns && selectedAddOns.length > 0) {
-                const addOnValues = selectedAddOns
-                    .map((addOn) => {
-                        const count = ticketsCount[addOn.value] || 1; // Get the count from ticketsCount, default to 1
-                        return `${addOn.value}:${count}`; // Format as "addOnId:count"
-                    })
-                    .join(","); // Join the array of "addOnId:count" strings
-
-                query += `&addOns=${addOnValues}`; // Append add-on IDs and counts to the query
-            }
-
-            setLoading(false);
-
-            return navigate(`/checkout/${data._id}?${query}`);
-        }
-
-        // Navigate to checkout with the appropriate query string
-    };
-
-    const addToCart = async (categoryId, planId) => {
-        if (!user || !user.email) {
-            navigate("/signin");
-            return;
-        }
-        try {
-            const res = await axios.post(`${BASE_URL}/carts`, {
-                category: categoryId,
-                tour: planId,
-                user,
-                childCount,
-                adultCount,
-            });
-
-            const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
-
-            // Update the tours state after successful request
-            setIsInCart(cartId);
-            toast.success(" Added to Cart", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-    };
-
-    const addToFav = async (categoryId, planId) => {
-        if (!user || !user.email) {
-            navigate("/signin");
-            return;
-        }
-        try {
-            const res = await axios.post(`${BASE_URL}/favourites`, {
-                category: categoryId,
-                tour: planId,
-                user,
-            });
-
-            const favId = res.data.data.favourite?._id; // Safely access favourite._id
-
-            // Update the tours state after successful request
-            setIsInFav(favId);
-            toast.success("Added to favourite ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-    };
-    const removeFromCart = async (cartId) => {
-        if (!user || !user.email) {
-            navigate("/signin");
-            return;
-        }
-        try {
-            const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
-            // Update the tours state after successful removal
-            setIsInCart(false);
-            toast.success("Removed from Cart", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-    };
-    const removeFromFav = async (favId) => {
-        if (!user || !user.email) {
-            navigate("/signin");
-            return;
-        }
-        try {
-            const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
-
-            // Update the tours state after successful removal
-            setIsInFav(false);
-            toast.success("Removed from favourite  ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong! ", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-    };
-
-    useEffect(() => {
-        
-        const getData = async () => {
-            if (!selectedDate) return;
-      
-            let matchedAdultPrice = null;
-            let matchedChildPrice = null;
-            let matchedAdultData = null;
-            let matchedChildData = null;
-    
-            const selected = new Date(selectedDate);
-            selected.setHours(0, 0, 0, 0);
-    
-            // Loop through priceLimit to find a matching range
-            if (priceLimit && priceLimit.length > 0) {
-                for (const limit of priceLimit) {
-                    const startDate = new Date(limit.startDate);
-                    const endDate = new Date(limit.endDate);
-    
-                    startDate.setHours(0, 0, 0, 0);
-                    endDate.setHours(0, 0, 0, 0);
-    
-                    if (selected >= startDate && selected <= endDate) {
-                        if (limit.adultPrice !== undefined) matchedAdultPrice = limit.adultPrice;
-                        if (limit.childPrice !== undefined) matchedChildPrice = limit.childPrice;
-    
-                        if (limit.adultData && limit.adultData.length > 0) matchedAdultData = limit.adultData;
-                        if (limit.childData && limit.childData.length > 0) matchedChildData = limit.childData;
-                        
-                        break; 
-                    }
-                }
-            }
-    
-            // Set values if a matching date range is found in priceLimit
-            if (matchedAdultPrice !== null) {
-                setAdultPrice(matchedAdultPrice);
-                setMinAdultCount(null); // Adjust to your min count requirement
-            } else if (matchedAdultData) {
-                const sortedAdultData = matchedAdultData.sort((a, b) => a.pax - b.pax);
-                setAdultPrice(sortedAdultData[0].price);
-                setMinAdultCount(sortedAdultData[0].pax);
-            } else {
-                // Set default values if no match in priceLimit
-                setAdultPrice(defaultAdultPrice);
-                setMinAdultCount(defaultAdultCount);
-            }
-    
-            if (matchedChildPrice !== null) {
-                setChildPrice(matchedChildPrice);
-                setMinChildCount(null); 
-            } else if (matchedChildData) {
-                const sortedChildData = matchedChildData.sort((a, b) => a.pax - b.pax);
-                setChildPrice(sortedChildData[0].price);
-                setMinChildCount(sortedChildData[0].pax);
-            } else {
-                // Set default values if no match in priceLimit
-                setChildPrice(defaultChildPrice);
-                setMinChildCount(defaultChildCount);
-            }
-            try {
-                const response = await axios.post(
-                    BASE_URL + "/tickets/counts",
-                    {
-                        date: selectedDate,
-                        planId: data._id,
-                    }
-                );
-                console.log(priceLimit)
-
-                console.log("YEah", response.data);
-                setSessionStatus(response.data.sessionStatus);
-                setSessionCounts(response.data.sessionCounts);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setSessionLoading(false);
-            }
-        };
-        getData();
-    }, [selectedDate]);
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                setContentLoading(true);
-                const data = await axios.get(
-                    `${BASE_URL}/plans/${singletour}`,
-                    {
-                        params: user
-                            ? { user: user?._id, email: user?.email }
-                            : {},
-                    }
-                );
-
-                const res = await axios.get(
-                    BASE_URL + "/reviews/" + singletour,
-                    newReview
-                );
-
-                setSessionStatus({});
-                setSessionCounts({});
-
-                setNewReview({
-                    reviewText: "",
-                    imageURL: null,
-                });
-
-                setSelectedImage(null);
-
-                setAdultCount(0);
-                setChildCount(0);
-                setTotalPrice(0);
-                console.log(data.data.data.plan)
-                setPriceLimiting(data?.data?.data?.plan?.pricingLimits)
-                if (
-                    data.data.data.plan.adultPrice ||
-                    data.data.data.plan.childPrice
-                ) {
-                    setAdultPrice(data.data.data.plan.adultPrice);
-                    setDefaultAdultPrice(data.data.data.plan.adultPrice)
-                    setChildPrice(data.data.data.plan.childPrice);
-                    setDefaultChildPrice(data.data.data.plan.childPrice);
-
-                } else {
-                    const sortedAdultData = data.data.data.plan.adultData.sort(
-                        (a, b) => a.pax - b.pax
-                    );
-                    setAdultPrice(sortedAdultData[0]?.price);
-                    setDefaultAdultPrice(sortedAdultData[0]?.price)
-                    setMinAdultCount(sortedAdultData[0]?.pax);
-                    setDefaultAdultCount(sortedAdultData[0]?.pax)
-
-                    const sortedChildData = data.data.data.plan.childData.sort(
-                        (a, b) => a.pax - b.pax
-                    );
-                    setChildPrice(sortedChildData[0]?.price);
-                    setMinChildCount(sortedChildData[0]?.pax);
-                    setDefaultChildPrice(sortedChildData[0]?.price)
-                    setDefaultChildCount(sortedChildData[0]?.pax)
-                }
-                if (data.data.data.cart) setIsInCart(data.data.data.cart);
-                if (data.data.data.fav) setIsInFav(data.data.data.fav);
-
-                setSelectedAddOns([]);
-
-                setSelectedDate(null);
-                setReviews(res.data.data);
-                setData(data.data.data.plan);
-                setCanWriteReview(data.data.data.canWriteReview);
-                setSession(null);
-                setAddOnTotalCost(0);
-                setSelectedAdultData(null);
-
-                setSelectedChildData(null);
-
-                // setAlbum(data?.data?.images);
-                // setTours(data.data.data.plans);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setContentLoading(false);
-            }
-        };
-        getData();
-    }, [singletour]);
-
-    console.log(">>>", sessionStatus);
-
-    const addOnOptions = data?.addOn?.map((addOn) => ({
-        label: addOn?.[lang] + "  (" + addOn.price + "  qar) ", // or addOn.ar for Arabic if needed
-        value: addOn._id,
-        price: addOn.price,
-    }));
-
-    if (contentLoading) {
-        return (
-            <div>
-                <Skleton width={"w-full"} height={"h-[40vh]"} />;
-                <div className="flex flex-col mb-20  justify-center items-center px-2  pt-10">
-                    <div className="flex justify-center items-center gap-5 w-[80vw] overflow-hidden flex-wrap">
-                        <Skleton width="w-screen h-[20vh]" />
-                        <Skleton width="w-screen h-[19vh] " />
-                    </div>
-                    <div>
-                        <Skleton width="w-screen md:w-[80vw] h-[20vh]" />
-                    </div>
-                </div>
-            </div>
-        );
+    // Set count state for adults or children
+    if (type === "adult") {
+      setAdultCount(newCount);
+    } else {
+      setChildCount(newCount);
     }
 
+    // Normalize selected date for comparison
+    const normalizedSelectedDate = new Date(selectedDate);
+    normalizedSelectedDate.setHours(0, 0, 0, 0);
+
+    // Find if any pricing limit exists for the selected date
+    const currentPricingLimit = data?.pricingLimits?.find((limit) => {
+      const startDate = new Date(limit.startDate);
+      const endDate = new Date(limit.endDate);
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+
+      return (
+        normalizedSelectedDate >= startDate && normalizedSelectedDate <= endDate
+      );
+    });
+
+    if (type === "adult") {
+      let foundPrice = null;
+
+      if (currentPricingLimit && currentPricingLimit.adultData?.length > 0) {
+        // Sort adultData by pax
+        const sortedAdultData = currentPricingLimit.adultData.sort(
+          (a, b) => a.pax - b.pax
+        );
+
+        // Find the exact match or nearest lower pax
+        sortedAdultData.forEach((adult) => {
+          if (adult.pax === newCount) {
+            foundPrice = adult.price;
+          }
+        });
+
+        if (foundPrice === null) {
+          const nearestLowerPax = sortedAdultData
+            .filter((adult) => adult.pax <= newCount)
+            .pop();
+
+          foundPrice = nearestLowerPax
+            ? nearestLowerPax.price
+            : sortedAdultData[0].price;
+        }
+
+        setAdultPrice(foundPrice);
+      } else if (currentPricingLimit && currentPricingLimit.adultPrice) {
+        // Use adultPrice if available
+        foundPrice = currentPricingLimit.adultPrice;
+        setAdultPrice(foundPrice);
+      } else if (data.adultData?.length > 0) {
+        // Fallback to general adultData if no pricing limit exists
+        const sortedAdultData = data.adultData.sort((a, b) => a.pax - b.pax);
+
+        sortedAdultData.forEach((adult) => {
+          if (adult.pax === newCount) {
+            foundPrice = adult.price;
+          }
+        });
+
+        if (foundPrice === null) {
+          const nearestLowerPax = sortedAdultData
+            .filter((adult) => adult.pax <= newCount)
+            .pop();
+
+          foundPrice = nearestLowerPax
+            ? nearestLowerPax.price
+            : sortedAdultData[0].price;
+        }
+
+        setAdultPrice(foundPrice);
+      }
+
+      setTotalPrice(
+        (prev) => newCount * foundPrice + childCount * data.childPrice
+      );
+    } else if (type === "child") {
+      let foundPrice = null;
+
+      if (currentPricingLimit && currentPricingLimit.childData?.length > 0) {
+        // Sort childData by pax
+        const sortedChildData = currentPricingLimit.childData.sort(
+          (a, b) => a.pax - b.pax
+        );
+
+        sortedChildData.forEach((child) => {
+          if (child.pax === newCount) {
+            foundPrice = child.price;
+          }
+        });
+
+        if (foundPrice === null) {
+          const nearestLowerPax = sortedChildData
+            .filter((child) => child.pax <= newCount)
+            .pop();
+
+          foundPrice = nearestLowerPax
+            ? nearestLowerPax.price
+            : sortedChildData[0].price;
+        }
+
+        setChildPrice(foundPrice);
+      } else if (currentPricingLimit && currentPricingLimit.childPrice) {
+        // Use childPrice if available
+        foundPrice = currentPricingLimit.childPrice;
+        setChildPrice(foundPrice);
+      } else if (data.childData?.length > 0) {
+        // Fallback to general childData if no pricing limit exists
+        const sortedChildData = data.childData.sort((a, b) => a.pax - b.pax);
+
+        sortedChildData.forEach((child) => {
+          if (child.pax === newCount) {
+            foundPrice = child.price;
+          }
+        });
+
+        if (foundPrice === null) {
+          const nearestLowerPax = sortedChildData
+            .filter((child) => child.pax <= newCount)
+            .pop();
+
+          foundPrice = nearestLowerPax
+            ? nearestLowerPax.price
+            : sortedChildData[0].price;
+        }
+
+        setChildPrice(foundPrice);
+      }
+
+      setTotalPrice(
+        (prev) => adultCount * data.adultPrice + newCount * foundPrice
+      );
+    }
+  };
+
+  const handleSession = (sess) => {
+    setSession(sess);
+  };
+  const formatDateForBackend = (date) => {
+    // Convert to ISO string without time
+    const localDate = new Date(date);
+    localDate.setHours(0, 0, 0, 0); // Set time to midnight in local time
+
+    // Convert to UTC date
+    const utcDate = new Date(
+      Date.UTC(
+        localDate.getFullYear(),
+        localDate.getMonth(),
+        localDate.getDate()
+      )
+    );
+
+    return utcDate.toISOString();
+  };
+  const handleReviewSubmit = async () => {
+    if (newReview.reviewText.trim() == "") {
+      return toast.error("Review text required ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+    try {
+      const res = await axios.post(BASE_URL + "/reviews/" + data?._id, {
+        ...newReview,
+        user,
+      });
+      const revvv = res.data.data.populatedReview;
+
+      setReviews((prev) => [...prev, revvv]);
+      setNewReview({ reviewText: "", imageURL: null });
+      toast.success(" New review added", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      console.log(error);
+    }
+  };
+
+  const handleBooking = () => {
+    setLoading(true);
+
+    if (!selectedDate) {
+      setLoading(false);
+      toast.error("Please select date before proceeding!");
+      return;
+    }
+    if (data?.sessions?.length > 0 && !session) {
+      setLoading(false);
+      toast.error("Please select sessoin before proceeding!");
+      return;
+    }
+
+    if (!adultCount && !childCount) {
+      setLoading(false);
+      toast.error("Please fill all the booking fields before proceeding!");
+      return;
+    }
+
+    if (data.minPerson > 0 && data.minPerson > adultCount + childCount) {
+      setLoading(false);
+      toast.error(
+        `The minimum persons count should be ${
+          data?.minPerson
+        }. You have selected ${adultCount + childCount}.`
+      );
+      return;
+    }
+
+    if (minAdultCount && adultCount > 0 && adultCount < minAdultCount) {
+      setLoading(false);
+      toast.error(
+        `The minimum adult count should be ${minAdultCount}. You have selected ${adultCount}.`
+      );
+      return;
+    }
+
+    if (minChildCount && childCount > 0 && childCount < minChildCount) {
+      setLoading(false);
+      toast.error(
+        `The minimum child count should be ${minChildCount}. You have selected ${childCount}.`
+      );
+      return;
+    }
+
+    const date = formatDateForBackend(selectedDate);
+    let query = `date=${date}&session=${session}`;
+    if (adultCount || childCount) {
+      query += `&adultCount=${adultCount}&childCount=${childCount}`;
+
+      if (selectedAddOns && selectedAddOns.length > 0) {
+        const addOnValues = selectedAddOns
+          .map((addOn) => {
+            const count = ticketsCount[addOn.value] || 1; // Get the count from ticketsCount, default to 1
+            return `${addOn.value}:${count}`; // Format as "addOnId:count"
+          })
+          .join(","); // Join the array of "addOnId:count" strings
+
+        query += `&addOns=${addOnValues}`; // Append add-on IDs and counts to the query
+      }
+
+      setLoading(false);
+
+      return navigate(`/checkout/${data._id}?${query}`);
+    }
+
+    // Navigate to checkout with the appropriate query string
+  };
+
+  const addToCart = async (categoryId, planId) => {
+    if (!user || !user.email) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      const res = await axios.post(`${BASE_URL}/carts`, {
+        category: categoryId,
+        tour: planId,
+        user,
+        childCount,
+        adultCount,
+      });
+
+      const cartId = res.data.data.cartItem?._id; // Safely access cartItem._id
+
+      // Update the tours state after successful request
+      setIsInCart(cartId);
+      toast.success(" Added to Cart", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  const addToFav = async (categoryId, planId) => {
+    if (!user || !user.email) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      const res = await axios.post(`${BASE_URL}/favourites`, {
+        category: categoryId,
+        tour: planId,
+        user,
+      });
+
+      const favId = res.data.data.favourite?._id; // Safely access favourite._id
+
+      // Update the tours state after successful request
+      setIsInFav(favId);
+      toast.success("Added to favourite ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+  const removeFromCart = async (cartId) => {
+    if (!user || !user.email) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      const res = await axios.delete(`${BASE_URL}/carts/${cartId}`);
+      // Update the tours state after successful removal
+      setIsInCart(false);
+      toast.success("Removed from Cart", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+  const removeFromFav = async (favId) => {
+    if (!user || !user.email) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      const res = await axios.delete(`${BASE_URL}/favourites/${favId}`);
+
+      // Update the tours state after successful removal
+      setIsInFav(false);
+      toast.success("Removed from favourite  ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      if (!selectedDate) return;
+
+      let matchedAdultPrice = null;
+      let matchedChildPrice = null;
+      let matchedAdultData = null;
+      let matchedChildData = null;
+
+      const selected = new Date(selectedDate);
+      selected.setHours(0, 0, 0, 0);
+
+      // Loop through priceLimit to find a matching range
+      if (priceLimit && priceLimit.length > 0) {
+        for (const limit of priceLimit) {
+          const startDate = new Date(limit.startDate);
+          const endDate = new Date(limit.endDate);
+
+          startDate.setHours(0, 0, 0, 0);
+          endDate.setHours(0, 0, 0, 0);
+
+          if (selected >= startDate && selected <= endDate) {
+            if (limit.adultPrice !== undefined)
+              matchedAdultPrice = limit.adultPrice;
+            if (limit.childPrice !== undefined)
+              matchedChildPrice = limit.childPrice;
+
+            if (limit.adultData && limit.adultData.length > 0)
+              matchedAdultData = limit.adultData;
+            if (limit.childData && limit.childData.length > 0)
+              matchedChildData = limit.childData;
+
+            break;
+          }
+        }
+      }
+
+      // Set values if a matching date range is found in priceLimit
+      if (matchedAdultPrice !== null) {
+        setAdultPrice(matchedAdultPrice);
+        setMinAdultCount(null); // Adjust to your min count requirement
+      } else if (matchedAdultData) {
+        const sortedAdultData = matchedAdultData.sort((a, b) => a.pax - b.pax);
+        setAdultPrice(sortedAdultData[0].price);
+        setMinAdultCount(sortedAdultData[0].pax);
+      } else {
+        // Set default values if no match in priceLimit
+        setAdultPrice(defaultAdultPrice);
+        setMinAdultCount(defaultAdultCount);
+      }
+
+      if (matchedChildPrice !== null) {
+        setChildPrice(matchedChildPrice);
+        setMinChildCount(null);
+      } else if (matchedChildData) {
+        const sortedChildData = matchedChildData.sort((a, b) => a.pax - b.pax);
+        setChildPrice(sortedChildData[0].price);
+        setMinChildCount(sortedChildData[0].pax);
+      } else {
+        // Set default values if no match in priceLimit
+        setChildPrice(defaultChildPrice);
+        setMinChildCount(defaultChildCount);
+      }
+      try {
+        const response = await axios.post(BASE_URL + "/tickets/counts", {
+          date: selectedDate,
+          planId: data._id,
+        });
+        console.log(priceLimit);
+
+        console.log("YEah", response.data);
+        setSessionStatus(response.data.sessionStatus);
+        setSessionCounts(response.data.sessionCounts);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setSessionLoading(false);
+      }
+    };
+    getData();
+  }, [selectedDate]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setContentLoading(true);
+        const data = await axios.get(`${BASE_URL}/plans/${singletour}`, {
+          params: user ? { user: user?._id, email: user?.email } : {},
+        });
+
+        const res = await axios.get(
+          BASE_URL + "/reviews/" + singletour,
+          newReview
+        );
+
+        setSessionStatus({});
+        setSessionCounts({});
+
+        setNewReview({
+          reviewText: "",
+          imageURL: null,
+        });
+
+        setSelectedImage(null);
+
+        setAdultCount(0);
+        setChildCount(0);
+        setTotalPrice(0);
+        console.log(data.data.data.plan);
+        setPriceLimiting(data?.data?.data?.plan?.pricingLimits);
+        if (data.data.data.plan.adultPrice || data.data.data.plan.childPrice) {
+          setAdultPrice(data.data.data.plan.adultPrice);
+          setDefaultAdultPrice(data.data.data.plan.adultPrice);
+          setChildPrice(data.data.data.plan.childPrice);
+          setDefaultChildPrice(data.data.data.plan.childPrice);
+        } else {
+          const sortedAdultData = data.data.data.plan.adultData.sort(
+            (a, b) => a.pax - b.pax
+          );
+          setAdultPrice(sortedAdultData[0]?.price);
+          setDefaultAdultPrice(sortedAdultData[0]?.price);
+          setMinAdultCount(sortedAdultData[0]?.pax);
+          setDefaultAdultCount(sortedAdultData[0]?.pax);
+
+          const sortedChildData = data.data.data.plan.childData.sort(
+            (a, b) => a.pax - b.pax
+          );
+          setChildPrice(sortedChildData[0]?.price);
+          setMinChildCount(sortedChildData[0]?.pax);
+          setDefaultChildPrice(sortedChildData[0]?.price);
+          setDefaultChildCount(sortedChildData[0]?.pax);
+        }
+        if (data.data.data.cart) setIsInCart(data.data.data.cart);
+        if (data.data.data.fav) setIsInFav(data.data.data.fav);
+
+        setSelectedAddOns([]);
+
+        setSelectedDate(null);
+        setReviews(res.data.data);
+        setData(data.data.data.plan);
+        setCanWriteReview(data.data.data.canWriteReview);
+        setSession(null);
+        setAddOnTotalCost(0);
+        setSelectedAdultData(null);
+
+        setSelectedChildData(null);
+
+        // setAlbum(data?.data?.images);
+        // setTours(data.data.data.plans);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setContentLoading(false);
+      }
+    };
+    getData();
+  }, [singletour]);
+
+  console.log(">>>", sessionStatus);
+
+  const addOnOptions = data?.addOn?.map((addOn) => ({
+    label: addOn?.[lang] + "  (" + addOn.price + "  qar) ", // or addOn.ar for Arabic if needed
+    value: addOn._id,
+    price: addOn.price,
+  }));
+
+  if (contentLoading) {
     return (
-        <div>
-            <Banner
-                image={data?.coverImage}
-                title={data && data.title && data?.title[lang]}
-                subTitle={"Home | Tours"}
-            />
+      <div>
+        <Skleton width={"w-full"} height={"h-[40vh]"} />;
+        <div className="flex flex-col mb-20  justify-center items-center px-2  pt-10">
+          <div className="flex justify-center items-center gap-5 w-[80vw] overflow-hidden flex-wrap">
+            <Skleton width="w-screen h-[20vh]" />
+            <Skleton width="w-screen h-[19vh] " />
+          </div>
+          <div>
+            <Skleton width="w-screen md:w-[80vw] h-[20vh]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-            <div className="flex justify-center items-center px-2  pt-10">
-                <div className="flex w-screen md:w-[80vw]   flex-wrap">
-                    <div className="w-full md:w-3/4  space-y-10    flex flex-col jus tify-center ">
-                        {(data?.duration?.[lang] ||
-                            data?.transportation?.[lang] ||
-                            data?.typeOfTour?.[lang] ||
-                            data?.language?.[lang]) && (
-                            <div>
-                                <h2 className="text-3xl font-bold">
-                                    {lang === "ar"
-                                        ? "عرض الجولة"
-                                        : "About this activity"}
-                                </h2>
+  return (
+    <div>
+      <Banner
+        image={data?.coverImage}
+        title={data && data.title && data?.title[lang]}
+        subTitle={"Home | Tours"}
+      />
 
-                                <div
-                                    className="relative grid grid-cols-1 md:grid-cols-2 mt-5 bg-custom-yellow w-full md:w-4/5 p-5 gap-3 rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
-                                    dir={lang === "ar" ? "rtl" : "ltr"}
-                                >
-                                    {/* Render Time Duration if available */}
-                                    {data?.duration?.[lang] && (
-                                        <div className="flex  gap-5 items-center">
-                                            <BiTime className="w-[60px] h-[60px]" />
-                                            <div>
-                                                <h4 className="font-bold text-lg">
-                                                    {lang === "ar"
-                                                        ? "مدة الوقت"
-                                                        : "Time Duration"}
-                                                </h4>
-                                                <p>{data?.duration[lang]}</p>
-                                            </div>
-                                        </div>
-                                    )}
+      <div className="flex justify-center items-center px-2  pt-10">
+        <div className="flex w-screen md:w-[80vw]   flex-wrap">
+          <div className="w-full md:w-3/4  space-y-10    flex flex-col jus tify-center ">
+            {(data?.duration?.[lang] ||
+              data?.transportation?.[lang] ||
+              data?.typeOfTour?.[lang] ||
+              data?.language?.[lang]) && (
+              <div>
+                <h2 className="text-3xl font-bold">
+                  {lang === "ar" ? "عرض الجولة" : "About this activity"}
+                </h2>
 
-                                    {/* Render Transportation if available */}
-                                    {data?.transportation?.[lang] && (
-                                        <div className="flex  gap-5 items-center">
-                                            <FaBus className="w-[60px] h-[60px]" />
-                                            <div>
-                                                <h4 className="font-bold text-lg">
-                                                    {lang === "ar"
-                                                        ? "المواصلات"
-                                                        : "Transportation"}
-                                                </h4>
-                                                <p>
-                                                    {data?.transportation[lang]}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
+                <div
+                  className="relative grid grid-cols-1 md:grid-cols-2 mt-5 bg-custom-yellow w-full md:w-4/5 p-5 gap-3 rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                  dir={lang === "ar" ? "rtl" : "ltr"}
+                >
+                  {/* Render Time Duration if available */}
+                  {data?.duration?.[lang] && (
+                    <div className="flex  gap-5 items-center">
+                      <BiTime className="w-[60px] h-[60px]" />
+                      <div>
+                        <h4 className="font-bold text-lg">
+                          {lang === "ar" ? "مدة الوقت" : "Time Duration"}
+                        </h4>
+                        <p>{data?.duration[lang]}</p>
+                      </div>
+                    </div>
+                  )}
 
-                                    {/* Render Type of Tour if available */}
-                                    {data?.typeOfTour?.[lang] && (
-                                        <div className="flex  gap-5 items-center">
-                                            {/*<img
+                  {/* Render Transportation if available */}
+                  {data?.transportation?.[lang] && (
+                    <div className="flex  gap-5 items-center">
+                      <FaBus className="w-[60px] h-[60px]" />
+                      <div>
+                        <h4 className="font-bold text-lg">
+                          {lang === "ar" ? "المواصلات" : "Transportation"}
+                        </h4>
+                        <p>{data?.transportation[lang]}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Render Type of Tour if available */}
+                  {data?.typeOfTour?.[lang] && (
+                    <div className="flex  gap-5 items-center">
+                      {/*<img
                         src={men}
                         className="w-[60px] h-[60px] object-cover"
                       />*/}
-                                            <GrUserWorker className="w-[60px] h-[60px]" />
+                      <GrUserWorker className="w-[60px] h-[60px]" />
 
-                                            <div>
-                                                <h4 className="font-bold text-lg">
-                                                    {lang === "ar"
-                                                        ? "نوع الجولة"
-                                                        : "Type of Tour"}
-                                                </h4>
-                                                <p>{data?.typeOfTour[lang]}</p>
-                                            </div>
-                                        </div>
-                                    )}
+                      <div>
+                        <h4 className="font-bold text-lg">
+                          {lang === "ar" ? "نوع الجولة" : "Type of Tour"}
+                        </h4>
+                        <p>{data?.typeOfTour[lang]}</p>
+                      </div>
+                    </div>
+                  )}
 
-                                    {/* Render Language if available */}
-                                    {data?.language?.[lang] && (
-                                        <div className="flex  gap-5 items-center">
-                                            {/*   <img
+                  {/* Render Language if available */}
+                  {data?.language?.[lang] && (
+                    <div className="flex  gap-5 items-center">
+                      {/*   <img
                         src={languagesss}
                         className="w-[60px] h-[60px] object-cover"
                       />*/}
-                                            <LuLanguages className="w-[60px] h-[60px]" />
+                      <LuLanguages className="w-[60px] h-[60px]" />
 
-                                            <div>
-                                                <h4 className="font-bold text-lg">
-                                                    {lang === "ar"
-                                                        ? "اللغة"
-                                                        : "Language"}
-                                                </h4>
-                                                <p>{data?.language[lang]}</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                        {data?.description?.[lang] && (
-                            <div>
-                                <h2 className="text-3xl font-bold">
-                                    {lang === "ar" ? "الوصف" : "Description"}
-                                </h2>
+                      <div>
+                        <h4 className="font-bold text-lg">
+                          {lang === "ar" ? "اللغة" : "Language"}
+                        </h4>
+                        <p>{data?.language[lang]}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {data?.description?.[lang] && (
+              <div>
+                <h2 className="text-3xl font-bold">
+                  {lang === "ar" ? "الوصف" : "Description"}
+                </h2>
 
-                                <div
-                                    className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
-                                    dir={lang === "ar" ? "rtl" : "ltr"}
+                <div
+                  className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                  dir={lang === "ar" ? "rtl" : "ltr"}
+                >
+                  <p>{data?.description && data?.description?.[lang]}</p>
+                </div>
+              </div>
+            )}
+            {data?.highlights?.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold">
+                  {lang === "ar" ? "أبرز النقاط" : "Highlights"}
+                </h2>
+
+                <div
+                  className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                  dir={lang === "ar" ? "rtl" : "ltr"}
+                >
+                  <ul className="list-disc pl-5">
+                    {data?.highlights &&
+                      data?.highlights?.map((item) => <li>{item[lang]}</li>)}
+                  </ul>
+                </div>
+              </div>
+            )}
+            {data?.includes?.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold">
+                  {lang === "ar" ? "ما الذي يتضمنه؟" : "What’s Included?"}
+                </h2>
+
+                <div
+                  className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
+                  dir={lang === "ar" ? "rtl" : "ltr"}
+                >
+                  <ul className="list-disc pl-5">
+                    {data?.includes &&
+                      data?.includes?.map((item) => <li>{item[lang]}</li>)}
+                  </ul>
+                </div>
+              </div>
+            )}
+            <div className="flex justify-between flex-col md:flex-row ">
+              <div>
+                {data?.itinerary?.length > 0 && (
+                  <div>
+                    <h2 className="text-3xl font-bold">
+                      {lang === "ar" ? "برنامج الرحلة" : "Itinerary"}
+                    </h2>
+
+                    <div
+                      className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
+                      dir={lang === "ar" ? "rtl" : "ltr"}
+                    >
+                      <ul>
+                        {data?.itinerary &&
+                          data?.itinerary?.map((item, index) => {
+                            if (item.en.charAt(0) == "#") {
+                              let paddingImg = "";
+                              if (data.itinerary.length > 1 && index == 0)
+                                paddingImg = "pb-[90px]";
+                              else if (
+                                data.itinerary.length > 1 &&
+                                index == data?.itinerary.length - 1
+                              )
+                                paddingImg = "pt-[90px]";
+                              else paddingImg = "pb-[90px] pt-[90px]";
+
+                              if (data.itinerary.length <= 1) paddingImg = "";
+
+                              return (
+                                <li
+                                  className={` ${paddingImg} border-l border-l-4 group  border-dashed border-black flex  items-center relative`}
                                 >
-                                    <p>
-                                        {data?.description &&
-                                            data?.description?.[lang]}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                        {data?.highlights?.length > 0 && (
-                            <div>
-                                <h2 className="text-3xl font-bold">
-                                    {lang === "ar"
-                                        ? "أبرز النقاط"
-                                        : "Highlights"}
-                                </h2>
-
-                                <div
-                                    className="relative  mt-5 bg-custom-yellow w-full md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
-                                    dir={lang === "ar" ? "rtl" : "ltr"}
-                                >
-                                    <ul className="list-disc pl-5">
-                                        {data?.highlights &&
-                                            data?.highlights?.map((item) => (
-                                                <li>{item[lang]}</li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        )}
-                        {data?.includes?.length > 0 && (
-                            <div>
-                                <h2 className="text-3xl font-bold">
-                                    {lang === "ar"
-                                        ? "ما الذي يتضمنه؟"
-                                        : "What’s Included?"}
-                                </h2>
-
-                                <div
-                                    className="relative  mt-5 bg-custom-yellow w-full   md:w-4/5 p-5  rounded-lg shadow-xl transition-transform duration-[.6s] transform hover:scale-105 cursor-pointer"
-                                    dir={lang === "ar" ? "rtl" : "ltr"}
-                                >
-                                    <ul className="list-disc pl-5">
-                                        {data?.includes &&
-                                            data?.includes?.map((item) => (
-                                                <li>{item[lang]}</li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        )}
-                        <div className="flex justify-between flex-col md:flex-row ">
-                            <div>
-                                {data?.itinerary?.length > 0 && (
-                                    <div>
-                                        <h2 className="text-3xl font-bold">
-                                            {lang === "ar"
-                                                ? "برنامج الرحلة"
-                                                : "Itinerary"}
-                                        </h2>
-
-                                        <div
-                                            className="relative  mt-5  pl-7  w-full md:w-4/5 py-5  rounded-lg "
-                                            dir={lang === "ar" ? "rtl" : "ltr"}
-                                        >
-                                            <ul>
-                                                {data?.itinerary &&
-                                                    data?.itinerary?.map(
-                                                        (item, index) => {
-                                                            if (
-                                                                item.en.charAt(
-                                                                    0
-                                                                ) == "#"
-                                                            ) {
-                                                                let paddingImg =
-                                                                    "";
-                                                                if (
-                                                                    data
-                                                                        .itinerary
-                                                                        .length >
-                                                                        1 &&
-                                                                    index == 0
-                                                                )
-                                                                    paddingImg =
-                                                                        "pb-[90px]";
-                                                                else if (
-                                                                    data
-                                                                        .itinerary
-                                                                        .length >
-                                                                        1 &&
-                                                                    index ==
-                                                                        data
-                                                                            ?.itinerary
-                                                                            .length -
-                                                                            1
-                                                                )
-                                                                    paddingImg =
-                                                                        "pt-[90px]";
-                                                                else
-                                                                    paddingImg =
-                                                                        "pb-[90px] pt-[90px]";
-
-                                                                if (
-                                                                    data
-                                                                        .itinerary
-                                                                        .length <=
-                                                                    1
-                                                                )
-                                                                    paddingImg =
-                                                                        "";
-
-                                                                return (
-                                                                    <li
-                                                                        className={` ${paddingImg} border-l border-l-4 group  border-dashed border-black flex  items-center relative`}
-                                                                    >
-                                                                        <DiscImage />
-                                                                        <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
-                                                                            {lang ===
-                                                                            "en"
-                                                                                ? item[
-                                                                                      lang
-                                                                                  ].substring(
-                                                                                      1
-                                                                                  )
-                                                                                : item[
-                                                                                      lang
-                                                                                  ]}
-                                                                        </span>
-                                                                    </li>
-                                                                );
-                                                            }
-                                                            let padding = "";
-                                                            if (
-                                                                data?.itinerary[
-                                                                    index + 1
-                                                                ]?.en.charAt(
-                                                                    0
-                                                                ) == "#"
-                                                            )
-                                                                padding =
-                                                                    "pb-0";
-                                                            else
-                                                                padding =
-                                                                    "pb-[90px]";
-                                                            return (
-                                                                <li
-                                                                    className={`group ${
-                                                                        index ==
-                                                                        data
-                                                                            ?.itinerary
-                                                                            .length -
-                                                                            1
-                                                                            ? " pb-0 "
-                                                                            : padding
-                                                                    }  
+                                  <DiscImage />
+                                  <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
+                                    {lang === "en"
+                                      ? item[lang].substring(1)
+                                      : item[lang]}
+                                  </span>
+                                </li>
+                              );
+                            }
+                            let padding = "";
+                            if (data?.itinerary[index + 1]?.en.charAt(0) == "#")
+                              padding = "pb-0";
+                            else padding = "pb-[90px]";
+                            return (
+                              <li
+                                className={`group ${
+                                  index == data?.itinerary.length - 1
+                                    ? " pb-0 "
+                                    : padding
+                                }  
                          
                           
                         border-solid 
              border-l border-l-4   border-solid border-black flex  items-center relative`}
-                                                                >
-                                                                    <Disc />
-                                                                    <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
-                                                                        {
-                                                                            item[
-                                                                                lang
-                                                                            ]
-                                                                        }
-                                                                    </span>
-                                                                </li>
-                                                            );
-                                                        }
-                                                    )}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                              >
+                                <Disc />
+                                <span className="pl-10 group-hover:translate-x-6 transition-transform duration-300 ease-in-out">
+                                  {item[lang]}
+                                </span>
+                              </li>
+                            );
+                          })}
+                      </ul>
                     </div>
-                    <div className="w-full md:w-1/4   relative">
-                        <div>
-                            <h2 className="text-xl font-bold">
-                                {lang === "ar"
-                                    ? "اختر التاريخ والوقت"
-                                    : "Choose date and time"}
-                            </h2>
-                            <br />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/4   relative">
+            <div>
+              <h2 className="text-xl font-bold">
+                {lang === "ar" ? "اختر التاريخ والوقت" : "Choose date and time"}
+              </h2>
+              <br />
 
-                            {data?.availableDays && (
-                                <DatePickerr
-                                    enableDays={data?.availableDays}
-                                    setSelectedDate={setSelectedDate}
-                                    setSession={setSession}
-                                />
-                            )}
-                        </div>
-                        {selectedDate && data?.sessions?.length > 0 && (
-                            <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
-                                {sessionLoading ? (
-                                    <div className="grid grid-cols-2 gap-2 w-full">
-                                        <Skleton height={"h-[30px]"} />
-                                        <Skleton height={"h-[30px]"} />
-                                        <Skleton height={"h-[30px]"} />
-                                    </div>
-                                ) : (
-                                    data.sessions &&
-                                    data.sessions
-                                        .filter((sessionL) => {
-                                            // Get the current time as a dayjs object
-                                            const currentTime = dayjs();
-                                            console.log(
-                                                "Current Time:",
-                                                currentTime.format("HH:mm")
-                                            );
+              {data?.availableDays && (
+                <DatePickerr
+                  enableDays={data?.availableDays}
+                  setSelectedDate={setSelectedDate}
+                  setSession={setSession}
+                  stopSales={data?.stopSales}
+                />
+              )}
+            </div>
+            {selectedDate && data?.sessions?.length > 0 && (
+              <div className="flex justify-start items-center gap-5 flex-wrap mt-5">
+                {sessionLoading ? (
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    <Skleton height={"h-[30px]"} />
+                    <Skleton height={"h-[30px]"} />
+                    <Skleton height={"h-[30px]"} />
+                  </div>
+                ) : (
+                  data.sessions &&
+                  data.sessions
+                    .filter((sessionL) => {
+                      // Get the current time as a dayjs object
+                      const currentTime = dayjs();
+                      console.log("Current Time:", currentTime.format("HH:mm"));
 
-                                            // Check if selectedDate is today
-                                            const isToday = dayjs(
-                                                selectedDate
-                                            ).isSame(currentTime, "day");
+                      // Check if selectedDate is today
+                      const isToday = dayjs(selectedDate).isSame(
+                        currentTime,
+                        "day"
+                      );
 
-                                            if (isToday) {
-                                                // Combine today's date with sessionL.closeTime to create a valid dayjs object
-                                                const closeTime = dayjs(
-                                                    `${currentTime.format(
-                                                        "YYYY-MM-DD"
-                                                    )} ${sessionL.closeTime}`,
-                                                    "YYYY-MM-DD h:mm A"
-                                                );
+                      if (isToday) {
+                        // Combine today's date with sessionL.closeTime to create a valid dayjs object
+                        const closeTime = dayjs(
+                          `${currentTime.format("YYYY-MM-DD")} ${
+                            sessionL.closeTime
+                          }`,
+                          "YYYY-MM-DD h:mm A"
+                        );
 
-                                                if (!closeTime.isValid()) {
-                                                    console.error(
-                                                        "Invalid closeTime format for session:",
-                                                        sessionL
-                                                    );
-                                                    return false; // If closeTime is invalid, filter it out
-                                                }
-                                                console.log(
-                                                    "*********** prev line"
-                                                );
-                                                console.log(
-                                                    "Parsed Close Time (24-hour):",
-                                                    closeTime.format("HH:mm")
-                                                );
-                                                console.log(
-                                                    currentTime.isBefore(
-                                                        closeTime
-                                                    )
-                                                );
-                                                // Compare the current time and session closeTime if the selected date is today
-                                                return currentTime.isBefore(
-                                                    closeTime
-                                                );
-                                            } else {
-                                                // If the selected date is not today, show all sessions
-                                                return true;
-                                            }
-                                        })
-                                        .map((sessionL) => {
-                                            console.log("Session:", sessionL);
-                                            const isAvailable =
-                                                sessionStatus[sessionL.name] ===
-                                                "Available";
-                                            const isFillingUp =
-                                                sessionStatus[sessionL.name] ===
-                                                "Filling Up";
-                                            const isFull =
-                                                sessionStatus[sessionL.name] ===
-                                                "Full";
-                                            const isSelected =
-                                                session === sessionL.name; // Check if session is selected
+                        if (!closeTime.isValid()) {
+                          console.error(
+                            "Invalid closeTime format for session:",
+                            sessionL
+                          );
+                          return false; // If closeTime is invalid, filter it out
+                        }
+                        console.log("*********** prev line");
+                        console.log(
+                          "Parsed Close Time (24-hour):",
+                          closeTime.format("HH:mm")
+                        );
+                        console.log(currentTime.isBefore(closeTime));
+                        // Compare the current time and session closeTime if the selected date is today
+                        return currentTime.isBefore(closeTime);
+                      } else {
+                        // If the selected date is not today, show all sessions
+                        return true;
+                      }
+                    })
+                    .map((sessionL) => {
+                      console.log("Session:", sessionL);
+                      const isAvailable =
+                        sessionStatus[sessionL.name] === "Available";
+                      const isFillingUp =
+                        sessionStatus[sessionL.name] === "Filling Up";
+                      const isFull = sessionStatus[sessionL.name] === "Full";
+                      const isSelected = session === sessionL.name; // Check if session is selected
 
-                                            return (
-                                                <button
-                                                    key={sessionL._id}
-                                                    className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
-                                                        isSelected
-                                                            ? "bg-custom-yellow"
-                                                            : isAvailable
-                                                            ? "bg-green-500"
-                                                            : isFillingUp
-                                                            ? "bg-orange-500"
-                                                            : isFull
-                                                            ? "bg-red-500"
-                                                            : ""
-                                                    }`}
-                                                    
-                                                    onClick={() => {
-                                                        if (
-                                                            isAvailable ||
-                                                            isFillingUp
-                                                        ) {
-                                                            handleSession(
-                                                                sessionL.name
-                                                            );
-                                                        } else {
-                                                            toast.error(
-                                                                "Tickets for this session are sold out."
-                                                            );
-                                                        }
-                                                    }}
-                                                >
-                                                    {console.log(sessionStatus)}
-                                                    <BiTime className="w-[25px] h-[25px]" />{" "}
-                                                    {sessionL.name}
-                                                </button>
-                                            );
-                                        })
-                                )}
-                            </div>
-                        )}
+                      return (
+                        <button
+                          key={sessionL._id}
+                          className={`px-3 py-2 border border-black border-3 rounded-md flex gap-3 items-center ${
+                            isSelected
+                              ? "bg-custom-yellow"
+                              : isAvailable
+                              ? "bg-green-500"
+                              : isFillingUp
+                              ? "bg-orange-500"
+                              : isFull
+                              ? "bg-red-500"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            if (isAvailable || isFillingUp) {
+                              handleSession(sessionL.name);
+                            } else {
+                              toast.error(
+                                "Tickets for this session are sold out."
+                              );
+                            }
+                          }}
+                        >
+                          {console.log(sessionStatus)}
+                          <BiTime className="w-[25px] h-[25px]" />{" "}
+                          {sessionL.name}
+                        </button>
+                      );
+                    })
+                )}
+              </div>
+            )}
 
-                        {/* {data?.addOn?.length > 0 && (
+            {/* {data?.addOn?.length > 0 && (
                             <div>
                                 <h2 className="text-xl mt-5 font-bold">
                                     {lang === "ar" ? "الإضافات" : "Add-Ons"}
@@ -1168,132 +1074,126 @@ const SingleTour = () => {
                             </div>
                         )} */}
 
-                        {data?.addOn?.length > 0 && (
-                            <Addons
-                                lang={lang}
-                                addOnOptions={addOnOptions}
-                                handleAddOnChange={handleAddOnChange}
-                                selectedAddOns={selectedAddOns}
-                                ticketsCount={ticketsCount}
-                                setTicketsCount={setTicketsCount}
-                                totalAddOnCost={totalAddOnCost}
-                                setTotalAddOnCost={setTotalAddOnCost}
-                            />
-                        )}
+            {data?.addOn?.length > 0 && (
+              <Addons
+                lang={lang}
+                addOnOptions={addOnOptions}
+                handleAddOnChange={handleAddOnChange}
+                selectedAddOns={selectedAddOns}
+                ticketsCount={ticketsCount}
+                setTicketsCount={setTicketsCount}
+                totalAddOnCost={totalAddOnCost}
+                setTotalAddOnCost={setTotalAddOnCost}
+              />
+            )}
 
-                        <TicketBooking
-                            data={data}
-                            adultCount={adultCount}
-                            childCount={childCount}
-                            lang={lang}
-                            user={user}
-                            selectedDate={selectedDate}
-                            session={session}
-                            navigate={navigate}
-                            toast={toast}
-                            handleTicketCountChange={handleTicketCountChange}
-                            setTotalPrice={setTotalPrice}
-                            totalPrice={totalPrice}
-                            selectedAdultData={selectedAdultData}
-                            setSelectedAdultData={setSelectedAdultData}
-                            selectedChildData={selectedChildData}
-                            setSelectedChildData={setSelectedChildData}
-                            addOnTotalCost={addOnTotalCost}
-                            handleBooking={handleBooking}
-                            loading={loading}
-                            adultPrice={adultPrice}
-                            setAdultPrice={setAdultPrice}
-                            childPrice={childPrice}
-                            setChildPrice={setChildPrice}
-                            totalAddOnCost={totalAddOnCost}
-                        />
-                        <div className="mt-10 rounded-md bg-gray-100 shadow-lg p-3">
-                            <h2 className="text-xl my-3 font-bold">
-                                {lang === "ar"
-                                    ? "أضف إلى السلة والمفضلة"
-                                    : "Add to Cart & Favorites"}
-                            </h2>
-
-                            <div className="flex justify-between items-center gap-5 felx-wrap">
-                                <button
-                                    className={`py-3 px-2 rounded-md w-full group duration-200 flex justify-center items-center gap-3   ${
-                                        isInCart
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-blue-100 hover:bg-blue-500 hover:text-white"
-                                    }`}
-                                    onClick={() => {
-                                        if (!isInCart)
-                                            addToCart(data.category, data._id);
-                                        else removeFromCart(isInCart);
-                                    }}
-                                >
-                                    <BsBagCheckFill
-                                        className={`text-3xl text-blue-500 group-hover:text-white duration-200 ${
-                                            isInCart && "text-white"
-                                        }`}
-                                    />
-                                    {isInCart ? "Added" : "Add to cart"}
-                                </button>
-                              
-                                <button
-                                    className={`py-3 px-2 rounded-md w-full group duration-200 flex justify-center items-center gap-3    ${
-                                        isInFav
-                                            ? "bg-red-500 text-white"
-                                            : "bg-red-100 hover:bg-red-500 hover:text-white"
-                                    }`}
-                                    onClick={() => {
-                                        if (isInFav) removeFromFav(isInFav);
-                                        else addToFav(data.category, data._id);
-                                    }}
-                                >
-                                    <BiHeartCircle
-                                        className={`text-3xl text-red-500 group-hover:text-white duration-200 ${
-                                            isInFav && "text-white"
-                                        }`}
-                                    />
-
-                                    {isInFav ? "Added" : "Add to Fav"}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <Slider
-                mediaUrls={data && data.galleryImages ? data.galleryImages : []}
-                mediaVideoUrls={
-                    data && data.galleryVideos ? data.galleryVideos : []
-                }
+            <TicketBooking
+              data={data}
+              adultCount={adultCount}
+              childCount={childCount}
+              lang={lang}
+              user={user}
+              selectedDate={selectedDate}
+              session={session}
+              navigate={navigate}
+              toast={toast}
+              handleTicketCountChange={handleTicketCountChange}
+              setTotalPrice={setTotalPrice}
+              totalPrice={totalPrice}
+              selectedAdultData={selectedAdultData}
+              setSelectedAdultData={setSelectedAdultData}
+              selectedChildData={selectedChildData}
+              setSelectedChildData={setSelectedChildData}
+              addOnTotalCost={addOnTotalCost}
+              handleBooking={handleBooking}
+              loading={loading}
+              adultPrice={adultPrice}
+              setAdultPrice={setAdultPrice}
+              childPrice={childPrice}
+              setChildPrice={setChildPrice}
+              totalAddOnCost={totalAddOnCost}
             />
-            <div className="flex justify-center items-center px-2  mb-10 ">
-                <div className="flex    flex-wrap  w-[80vw]">
-                    <div className="w-full   space-y-10    flex flex-col justify-center ">
-                        <div>
-                            <h2 className="text-3xl font-bold mb-5">
-                                {lang === "ar" ? "الأسئلة المتكررة" : "FAQs"}
-                            </h2>
-                            <Faq
-                                faqData={data.faq ? data?.faq : []}
-                                lang={lang}
-                            />
-                        </div>
-                    </div>
-                </div>
+            <div className="mt-10 rounded-md bg-gray-100 shadow-lg p-3">
+              <h2 className="text-xl my-3 font-bold">
+                {lang === "ar"
+                  ? "أضف إلى السلة والمفضلة"
+                  : "Add to Cart & Favorites"}
+              </h2>
+
+              <div className="flex justify-between items-center gap-5 felx-wrap">
+                <button
+                  className={`py-3 px-2 rounded-md w-full group duration-200 flex justify-center items-center gap-3   ${
+                    isInCart
+                      ? "bg-blue-500 text-white"
+                      : "bg-blue-100 hover:bg-blue-500 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    if (!isInCart) addToCart(data.category, data._id);
+                    else removeFromCart(isInCart);
+                  }}
+                >
+                  <BsBagCheckFill
+                    className={`text-3xl text-blue-500 group-hover:text-white duration-200 ${
+                      isInCart && "text-white"
+                    }`}
+                  />
+                  {isInCart ? "Added" : "Add to cart"}
+                </button>
+
+                <button
+                  className={`py-3 px-2 rounded-md w-full group duration-200 flex justify-center items-center gap-3    ${
+                    isInFav
+                      ? "bg-red-500 text-white"
+                      : "bg-red-100 hover:bg-red-500 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    if (isInFav) removeFromFav(isInFav);
+                    else addToFav(data.category, data._id);
+                  }}
+                >
+                  <BiHeartCircle
+                    className={`text-3xl text-red-500 group-hover:text-white duration-200 ${
+                      isInFav && "text-white"
+                    }`}
+                  />
+
+                  {isInFav ? "Added" : "Add to Fav"}
+                </button>
+              </div>
             </div>
-            <div className="flex justify-center items-center  ">
-                <Reviews
-                    canWriteReview={canWriteReview}
-                    reviews={reviews}
-                    setReviews={setReviews}
-                    newReview={newReview}
-                    setNewReview={setNewReview}
-                    handleReviewSubmit={handleReviewSubmit}
-                    user={user}
-                />
-            </div>
+          </div>
         </div>
-    );
+      </div>
+
+      <Slider
+        mediaUrls={data && data.galleryImages ? data.galleryImages : []}
+        mediaVideoUrls={data && data.galleryVideos ? data.galleryVideos : []}
+      />
+      <div className="flex justify-center items-center px-2  mb-10 ">
+        <div className="flex    flex-wrap  w-[80vw]">
+          <div className="w-full   space-y-10    flex flex-col justify-center ">
+            <div>
+              <h2 className="text-3xl font-bold mb-5">
+                {lang === "ar" ? "الأسئلة المتكررة" : "FAQs"}
+              </h2>
+              <Faq faqData={data.faq ? data?.faq : []} lang={lang} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center items-center  ">
+        <Reviews
+          canWriteReview={canWriteReview}
+          reviews={reviews}
+          setReviews={setReviews}
+          newReview={newReview}
+          setNewReview={setNewReview}
+          handleReviewSubmit={handleReviewSubmit}
+          user={user}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default SingleTour;
