@@ -955,7 +955,7 @@ const SingleTour = () => {
                 {lang === "ar" ? "اختر التاريخ والوقت" : "Choose date and time"}
               </h2>
               <br />
-              {console.log(data)}
+
               {data?.availableDays && (
                 <DatePickerr
                   enableDays={data?.availableDays}

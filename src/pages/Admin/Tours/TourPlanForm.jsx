@@ -433,7 +433,7 @@ const TourPlanForm = ({ onClose }) => {
           item.answer.ar
       ),
       selectedSessions,
-      isPickupRequired: false,
+      isPickupRequired,
       isDropOffRequired,
       addOn: addon.filter((item) => item.en || item.ar || item.price),
       limit,
@@ -697,19 +697,17 @@ const TourPlanForm = ({ onClose }) => {
           <span className="text-gray-600 ml-2">(optional)</span>
         </label>
         <div className="flex gap-10 items-center">
-          {/* <div>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={isPickupRequired}
-                                onChange={(e) =>
-                                    setIsPickupRequired(e.target.checked)
-                                }
-                            />{" "}
-                            &nbsp;&nbsp; Is pickup location required
-                        </label>
-                    </div> */}
           <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={isPickupRequired}
+                onChange={(e) => setIsPickupRequired(e.target.checked)}
+              />{" "}
+              &nbsp;&nbsp; Is pickup location required
+            </label>
+          </div>
+          {/* <div>
             <label>
               <input
                 type="checkbox"
@@ -718,7 +716,7 @@ const TourPlanForm = ({ onClose }) => {
               />
               &nbsp;&nbsp; Is drop off location required
             </label>
-          </div>
+          </div> */}
         </div>
         {/* Gallery Images Input */}
         <div>

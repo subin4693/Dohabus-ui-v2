@@ -9,8 +9,6 @@ export default function BasicDateCalendar({
   setSession,
   stopSales,
 }) {
-  console.log("**********************88stp sale");
-  console.log(stopSales);
   // Function to disable past dates and specific days
   const tileDisabled = ({ date }) => {
     const today = new Date();

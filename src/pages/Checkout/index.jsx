@@ -167,8 +167,8 @@ const Checkout = () => {
       return;
     }
     // if (!pickupLocation.trim()) {
-    //     toast.error("Please enter pickup location!");
-    //     return;
+    //   toast.error("Please enter pickup location!");
+    //   return;
     // }
     // if (!dropLocation.trim()) {
     //     toast.error("Please enter drop location!");
@@ -469,20 +469,20 @@ const Checkout = () => {
           />
         </div>
 
-        {/* {data?.isPickupRequired && (
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pick-up Location
-                        </label>
-                        <input
-                            type="text"
-                            value={pickupLocation}
-                            onChange={(e) => setPickupLocation(e.target.value)}
-                            placeholder="Enter pick-up location"
-                            className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
-                        />
-                    </div>
-                )} */}
+        {data?.isPickupRequired && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Pick-up Location
+            </label>
+            <input
+              type="text"
+              value={pickupLocation}
+              onChange={(e) => setPickupLocation(e.target.value)}
+              placeholder="Enter pick-up location"
+              className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+            />
+          </div>
+        )}
         {data?.isDropOffRequired && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">

@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import logo from "../../assets/logo.png";
 import Slider from "react-slick";
-
+import transportation from "../../assets/transportation.jpg";
+// transportation
 import { IoClose, IoArrowBack, IoArrowForward } from "react-icons/io5";
 const Home = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -250,7 +251,9 @@ const Home = () => {
                         src={slide.image}
                         alt={slide.alt}
                         className={`w-full h-[350px] object-cover  ${
-                          offer.isOpen ? "h-[350px] lg:h-screen " : "lg:h-screen "
+                          offer.isOpen
+                            ? "h-[350px] lg:h-screen "
+                            : "lg:h-screen "
                         }`}
                       />
                     </motion.div>
@@ -484,10 +487,15 @@ const Home = () => {
           </div>
 
           <div className="mt-10">
-            <img
+            {/* <img
               src="https://eng.dohabus.com/English/images/2022/10/17/fleet.jpg"
               alt="Fleet"
               className="w-full h-auto"
+            /> */}
+            <img
+              src={transportation}
+              alt="Fleet"
+              className="w-full h-[450px]"
             />
           </div>
         </div>
