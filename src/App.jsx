@@ -91,8 +91,7 @@ function App() {
 
   return (
     <div className="font-custom cursor-default overflow-x-hidden">
-      <Router>
-        <Routes>
+      >
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/" element={<Layout />}>
