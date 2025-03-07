@@ -5,16 +5,17 @@ import {
   useNavigate,
   useParams,
   useSearchParams,
-} from "react-router-dom"; // Import necessary hooks
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+
 const Checkout = () => {
-  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
-  const { id } = useParams(); // Get the route parameter (e.g., checkout/:id)
-  const [searchParams] = useSearchParams(); // Get the search/query parameters
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Set your BASE_URL properly
+  const { id } = useParams(); // Get plan ID from route parameter (e.g., /checkout/:id)
+  const [searchParams] = useSearchParams(); // Extract query parameters
   const navigate = useNavigate();
   const [data, setData] = useState({});
   const lang = useSelector((state) => state.language.lang);
@@ -35,11 +36,14 @@ const Checkout = () => {
   const [totalAdultPrice, setTotalAdultPrice] = useState(0);
   const [totalChildPrice, setTotalChildPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [invoiceID, setinvoiceID] = useState("");
+  const [invoiceID, setInvoiceID] = useState("");
   const [loading, setLoading] = useState(false);
   const [showAddons, setShowAddons] = useState([]);
 
-  // Extract individual query parameters
+  // New state for payment option: "qpay" (Debit Card) or "cybersource" (Credit Card)
+  const [paymentOption, setPaymentOption] = useState("qpay");
+
+  // Extract individual query parameters from URL
   const selectedDate = searchParams.get("date");
   const adultCount = Number(searchParams.get("adultCount") || 0);
   const childCount = Number(searchParams.get("childCount") || 0);
@@ -47,25 +51,21 @@ const Checkout = () => {
   const childData = searchParams.get("selectedChild");
   const adultData = searchParams.get("selectedAdult");
   const addons = searchParams.get("addOns") || "";
-  console.log(addons);
+  console.log("Addons:", addons);
+
+  // Discount coupon handler
   const checkOffer = async () => {
     if (!firstName.trim()) {
       toast.error("Please enter first name!");
       setLoading(false);
       return;
     }
-    // if (!lastName.trim()) {
-    //   toast.error("Please enter last name!");
-    //   setLoading(false);
-    //   return;
-    // }
     if (!email.trim()) {
       toast.error("Please enter email!");
       setLoading(false);
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address!");
       setLoading(false);
@@ -82,12 +82,10 @@ const Checkout = () => {
     }
     if (!data._id) {
       toast.error("Plan ID is missing");
+      setLoading(false);
       return;
     }
-    // if ((!childCount && !adultCount) || (!adultData && !childData)) {
-    //     toast.error("Person count is missing");
-    //     return;
-    // }
+
     let requestData = {
       couponCode: coupon,
       planId: data._id,
@@ -100,10 +98,6 @@ const Checkout = () => {
       if (addons) requestData.addons = addons.split(",");
       if (selectedDate) requestData.selectedDate = selectedDate;
     }
-    // else {
-    //     if (childData) requestData.childData = childData;
-    //     if (adultData) requestData.adultData = adultData;
-    // }
 
     try {
       setApplyLoader(true);
@@ -121,12 +115,15 @@ const Checkout = () => {
       ) {
         toast.error(error?.response?.data?.message);
         setCoupon("");
-      } else toast.error("Coupon code is not valid");
+      } else {
+        toast.error("Coupon code is not valid");
+      }
     } finally {
       setApplyLoader(false);
     }
   };
 
+  // Ticket booking handler – updated to use QPay/CyberSource integration
   const handleTicketBooking = async () => {
     setLoading(true);
     if (data.minPerson > 0 && data.minPerson > adultCount + childCount) {
@@ -143,37 +140,22 @@ const Checkout = () => {
       setLoading(false);
       return;
     }
-    // if (!lastName.trim()) {
-    //   toast.error("Please enter last name!");
-    //   setLoading(false);
-    //   return;
-    // }
     if (!email.trim()) {
       toast.error("Please enter email!");
       setLoading(false);
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address!");
       setLoading(false);
       return;
     }
-
     if (!number?.trim()) {
       toast.error("Please enter a valid mobile number!");
       setLoading(false);
       return;
     }
-    // if (!pickupLocation.trim()) {
-    //   toast.error("Please enter pickup location!");
-    //   return;
-    // }
-    // if (!dropLocation.trim()) {
-    //     toast.error("Please enter drop location!");
-    //     return;
-    // }
     if (!selectedDate) {
       toast.error("Please select a date!");
       setLoading(false);
@@ -200,9 +182,7 @@ const Checkout = () => {
       return;
     }
 
-    // const childData = searchParams.get("selectedChild");
-    // const adultData = searchParams.get("selectedAdult");
-
+    // Build the payload and include the paymentMethod chosen by the user.
     let dataa = {
       firstName,
       lastName,
@@ -216,43 +196,54 @@ const Checkout = () => {
       plan: data._id,
       number,
       pickupTime,
+      paymentMethod: paymentOption, // "qpay" for Debit Card, "cybersource" for Credit Card
     };
 
     if (childCount || adultCount) {
       if (adultCount) dataa.adultQuantity = adultCount;
       if (childCount) dataa.childQuantity = childCount;
-      if (addons) dataa.addons = addons?.split(",");
+      if (addons) dataa.addons = addons.split(",");
     }
-    // else if (adultData || childData) {
-    //     if (adultData) dataa.adultData = adultData;
-    //     if (childData) dataa.childData = childData;
-    // }
 
     try {
-      const res = await axios.post(BASE_URL + "/tickets", {
-        dataa,
-        user,
-      });
-      const { ticketId, payUrl } = res.data.data;
-      localStorage.setItem("pendingTicketId", ticketId);
-      window.location.href = payUrl;
+      // POST booking data to our backend (tickets route)
+      const res = await axios.post(`${BASE_URL}/tickets`, { dataa, user });
+      const { ticketId, paymentUrl, formFields } = res.data.data;
+      console.log("Booking Response:", res.data);
 
-      // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
+      // Store pending ticket ID (if needed)
+      localStorage.setItem("pendingTicketId", ticketId);
+      // Log the full response data (for debugging)
+      console.log("Received Payment Data:", { paymentUrl, formFields });
+
+      // Build and auto-submit an HTML form to redirect the user to the chosen payment gateway
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = paymentUrl;
+      Object.entries(formFields).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      console.log("Form created with payment data, submitting form...");
+      form.submit();
 
       toast.success(
         "Your ticket has been created. Proceed to payment to confirm your booking."
       );
       setLoading(false);
-      // navigate(`/invoice/${res?.data?.data?.bookedTickets?._id}`);
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      console.log("Booking error:", error);
       if (
         error?.response?.data?.message?.includes(
           "tickets are available for this session"
         )
       ) {
-        return toast.error(error?.response?.data?.message);
+        toast.error(error?.response?.data?.message);
       } else if (
         error?.response?.data?.message?.includes("Coupon code can only be used")
       ) {
@@ -270,32 +261,31 @@ const Checkout = () => {
       ) {
         toast.error(error?.response?.data?.message);
       } else {
-        toast.error("Something went wront please try again later");
+        toast.error("Something went wrong. Please try again later");
       }
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch plan data on mount and when key parameters change
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`${BASE_URL}/plans/${id}`);
-
         setData(res.data.data.plan);
         setFirstName(user?.name);
-        console.log(res.data.data.plan);
-
+        console.log("Plan Data:", res.data.data.plan);
         setEmail(user?.email);
         setNumber(user?.number);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching plan data:", error);
       }
     };
-
     fetchData();
   }, [id, selectedDate, adultCount, childCount, BASE_URL]);
 
+  // Calculate pricing details when data or selection changes
   useEffect(() => {
     let calculatedTotalAdultPrice = 0;
     let calculatedTotalChildPrice = 0;
@@ -309,38 +299,32 @@ const Checkout = () => {
       const endDate = new Date(limit.endDate);
       startDate.setHours(0, 0, 0, 0);
       endDate.setHours(0, 0, 0, 0);
-
       return (
         normalizedSelectedDate >= startDate && normalizedSelectedDate <= endDate
       );
     });
 
     console.log("Current Pricing Limit:", currentPricingLimit);
-
     const pricingSource = currentPricingLimit || data;
 
     // Calculate adult price based on count
     if (adultCount > 0) {
       if (pricingSource?.adultPrice) {
-        // Use direct adult price if available
         calculatedTotalAdultPrice = pricingSource.adultPrice * adultCount;
       } else if (pricingSource?.adultData?.length > 0) {
-        // If adultData exists, find the closest matching or lowest available pax
         const sortedAdultData = pricingSource.adultData.sort(
           (a, b) => a.pax - b.pax
         );
         let foundAdultPrice = null;
-
         const nearestAdultPax = sortedAdultData
           .filter((adult) => adult.pax <= adultCount)
           .pop();
-        console.log(nearestAdultPax);
+        console.log("Nearest Adult Data:", nearestAdultPax);
         if (nearestAdultPax) {
           foundAdultPrice = nearestAdultPax.price;
         } else {
           foundAdultPrice = sortedAdultData[0].price;
         }
-
         calculatedTotalAdultPrice = foundAdultPrice * adultCount;
       }
     }
@@ -348,43 +332,34 @@ const Checkout = () => {
     // Calculate child price based on count
     if (childCount > 0) {
       if (pricingSource?.childPrice) {
-        // Use direct child price if available
         calculatedTotalChildPrice = pricingSource.childPrice * childCount;
       } else if (pricingSource?.childData?.length > 0) {
-        // If childData exists, find the closest matching or lowest available pax
         const sortedChildData = pricingSource.childData.sort(
           (a, b) => a.pax - b.pax
         );
         let foundChildPrice = null;
-
         const nearestChildPax = sortedChildData
           .filter((child) => child.pax <= childCount)
           .pop();
-
         if (nearestChildPax) {
           foundChildPrice = nearestChildPax.price;
         } else {
           foundChildPrice = sortedChildData[0].price;
         }
-        console.log(foundChildPrice);
+        console.log("Found Child Price:", foundChildPrice);
         calculatedTotalChildPrice = foundChildPrice * childCount;
       }
     }
 
     // Calculate add-on prices if selected
     if (addons) {
-      const selectedAddOns = addons.split(","); // Array of add-on IDs and counts
-
-      // Loop through add-on IDs and counts
+      const selectedAddOns = addons.split(",");
       selectedAddOns.forEach((addOnEntry) => {
-        const [addId, count] = addOnEntry.split(":"); // Extract add-on ID and count
+        const [addId, count] = addOnEntry.split(":");
         const matchingAddOn = data?.addOn?.find((addOn) => addOn._id === addId);
-
         if (matchingAddOn) {
-          const addOnCount = parseInt(count, 10) || 1; // Parse the count or default to 1
-          const totalAddOnPrice = matchingAddOn.price * addOnCount; // Calculate total price for this add-on
-
-          // Add the add-on to the display list
+          const addOnCount = parseInt(count, 10) || 1;
+          const totalAddOnPrice = matchingAddOn.price * addOnCount;
           setShowAddons((prev) => [
             ...prev,
             {
@@ -393,13 +368,11 @@ const Checkout = () => {
               count: addOnCount,
             },
           ]);
-
           addOnTotalPrice += totalAddOnPrice;
         }
       });
     }
 
-    // Set calculated total prices
     setTotalAdultPrice(calculatedTotalAdultPrice);
     setTotalChildPrice(calculatedTotalChildPrice);
     setTotalPrice(
@@ -410,14 +383,12 @@ const Checkout = () => {
   return (
     <div className="md:container mx-auto px-4 py-8 md:flex md:gap-8 mt-20">
       {/* Left side: Input form */}
-
-      <div className="checkout-form w-full md:w-3/4  p-8 border border-gray-300 rounded-lg h-fit">
+      <div className="checkout-form w-full md:w-3/4 p-8 border border-gray-300 rounded-lg h-fit">
         {user?.role == undefined && (
           <h1 className="text-center text-3xl font-bold mb-5">
             Continue as a Guest
           </h1>
         )}
-
         <h2 className="text-xl font-semibold mb-4">Customer Information</h2>
         <div className="flex justify-between items-center gap-5">
           <div className="mb-4 flex-1">
@@ -429,21 +400,9 @@ const Checkout = () => {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="Enter your name"
-              className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+              className="w-full px-3 py-2 bg-gray-100 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
             />
           </div>
-          {/* <div className="mb-4 flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Last Name
-            </label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Enter your last name"
-              className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
-            />
-          </div> */}
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -453,7 +412,7 @@ const Checkout = () => {
             value={number}
             onChange={setNumber}
             placeholder="Enter your mobile number"
-            className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+            className="w-full px-3 py-2 bg-gray-100 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
           />
         </div>
         <div className="mb-4">
@@ -465,10 +424,9 @@ const Checkout = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
-            className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+            className="w-full px-3 py-2 bg-gray-100 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
           />
         </div>
-
         {data?.isPickupRequired && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -479,7 +437,7 @@ const Checkout = () => {
               value={pickupLocation}
               onChange={(e) => setPickupLocation(e.target.value)}
               placeholder="Enter pick-up location"
-              className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+              className="w-full px-3 py-2 bg-gray-100 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
             />
           </div>
         )}
@@ -493,30 +451,46 @@ const Checkout = () => {
               value={dropLocation}
               onChange={(e) => setDropLocation(e.target.value)}
               placeholder="Enter drop-off location"
-              className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
+              className="w-full px-3 py-2 bg-gray-100 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
             />
           </div>
         )}
 
-        {/* {data?.isPickupRequired && (
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Pick-up Time
+        {/* Payment Option Field */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Payment Option
+          </label>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentOption"
+                value="qpay"
+                checked={paymentOption === "qpay"}
+                onChange={(e) => setPaymentOption(e.target.value)}
+                className="mr-2"
+              />
+              Debit Card
             </label>
-            <input
-              type="text"
-              value={pickupTime}
-              onChange={(e) => setPickupTime(e.target.value)}
-              placeholder="Enter your Pickup time Eg:8:00 AM"
-              className="w-full px-3 py-2 bg-gray-100 border-none outline-none rounded-md focus:outline-none focus:ring-2 focus:ring-custom-yellow"
-            />
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentOption"
+                value="cybersource"
+                checked={paymentOption === "cybersource"}
+                onChange={(e) => setPaymentOption(e.target.value)}
+                className="mr-2"
+              />
+              Credit Card
+            </label>
           </div>
-        )} */}
+        </div>
       </div>
 
       {/* Right side: Plan details */}
       <div className="w-full md:w-1/4 bg-white p-4 space-y-5 h-fit rounded-lg border">
-        <h2 className="text-xl font-semibold ">Plan Details</h2>
+        <h2 className="text-xl font-semibold">Plan Details</h2>
         {data.coverImage && (
           <img
             src={data.coverImage}
@@ -525,14 +499,13 @@ const Checkout = () => {
           />
         )}
         <p className="text-lg font-medium mb-2">
-          {data && data.title && data?.title[lang]}
-        </p>{" "}
+          {data?.title && data?.title[lang]}
+        </p>
         <div className="flex flex-col mb-4">
           <div className="flex justify-between mb-2">
             <span className="font-medium">Selected Date:</span>
             <span>{selectedDate?.split("T")[0]}</span>
           </div>
-
           <div className="flex justify-between mb-2">
             <span className="font-medium">Session:</span>
             <span>{session}</span>
@@ -550,7 +523,6 @@ const Checkout = () => {
               onChange={(e) => setCoupon(e.target.value)}
               className="w-full border-none outline-none bg-white"
             />
-
             <button
               className={`bg-blue-500 text-white px-4 py-2 ml-2 rounded-md transition duration-300 ${
                 coupon ? "hover:bg-blue-600" : "bg-blue-300 cursor-not-allowed"
@@ -559,7 +531,7 @@ const Checkout = () => {
               onClick={checkOffer}
             >
               {applyLoader ? (
-                <div className=" px-2">
+                <div className="px-2">
                   <Loader w={20} h={20} b={5} />
                 </div>
               ) : (
@@ -571,37 +543,27 @@ const Checkout = () => {
         <div className="flex flex-col p-4 border border-gray-300 rounded-md">
           {adultData || childData ? (
             <>
-              {data?.adultData?.map((adult, index) => (
-                <>
-                  {/* Match adult data with data.adultData[index]._id and replace adultCount with pax */}
-                  {adult._id === adultData && (
+              {data?.adultData?.map(
+                (adult) =>
+                  adult._id === adultData && (
                     <div className="flex justify-between mb-2" key={adult._id}>
-                      <span>Adult Price x {adult?.pax}</span>{" "}
-                      {/* Replace with pax */}
-                      <span>{adult.price} Qar</span>{" "}
-                      {/* Calculate total price */}
+                      <span>Adult Price x {adult?.pax}</span>
+                      <span>{adult.price} Qar</span>
                     </div>
-                  )}
-                </>
-              ))}
-
-              {data?.childData?.map((child, index) => (
-                <>
-                  {/* Match child data with data.childData[index]._id and replace childCount with pax */}
-                  {child._id === childData && (
+                  )
+              )}
+              {data?.childData?.map(
+                (child) =>
+                  child._id === childData && (
                     <div className="flex justify-between mb-2" key={child._id}>
-                      <span>Child Price x {child?.pax}</span>{" "}
-                      {/* Replace with pax */}
-                      <span> {child.price} Qar</span>{" "}
-                      {/* Calculate total price */}
+                      <span>Child Price x {child?.pax}</span>
+                      <span>{child.price} Qar</span>
                     </div>
-                  )}
-                </>
-              ))}
+                  )
+              )}
             </>
           ) : (
             <>
-              {" "}
               <div className="flex justify-between mb-2">
                 <span>Adult Price x {adultCount}</span>
                 <span>{totalAdultPrice} Qar</span>
@@ -612,30 +574,14 @@ const Checkout = () => {
               </div>
             </>
           )}
-
-          <>
-            {showAddons.map((addon) => (
-              <div className="flex justify-between mb-2">
-                <span>
-                  {addon[lang]} x {addon?.count}
-                </span>
-                <span>
-                  {addon.price}
-                  Qar
-                </span>
-              </div>
-            ))}
-          </>
-          {/* {discountedPrice && (
-                        <div className="flex justify-between mt-4">
-                            <span className="font-semibold text-red-500">
-                                Total Discount Amount
-                            </span>
-                            <span className="font-semibold text-red-500">
-                                {discountedPrice} Qar
-                            </span>
-                        </div>
-                    )}*/}
+          {showAddons.map((addon, index) => (
+            <div className="flex justify-between mb-2" key={index}>
+              <span>
+                {addon[lang]} x {addon?.count}
+              </span>
+              <span>{addon.price} Qar</span>
+            </div>
+          ))}
           {totalDiscountedAmount && (
             <div className="flex justify-between mt-2">
               <span className="font-bold text-green-600">Discounted Price</span>
@@ -645,7 +591,6 @@ const Checkout = () => {
             </div>
           )}
           <hr className="my-4" />
-
           <div className="flex justify-between items-center font-bold text-lg">
             <span>Total</span>
             <div>
@@ -653,7 +598,7 @@ const Checkout = () => {
                 className={`${discountedPrice && "text-red-500 line-through"}`}
               >
                 {totalPrice} Qar
-              </span>{" "}
+              </span>
               &nbsp;&nbsp;
               {discountedPrice && (
                 <span className="font-bold text-green-600">
@@ -668,7 +613,7 @@ const Checkout = () => {
               onClick={handleTicketBooking}
             >
               {loading ? (
-                <div className="">
+                <div>
                   <Loader w={20} h={20} b={5} />
                 </div>
               ) : (

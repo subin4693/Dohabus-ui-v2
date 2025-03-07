@@ -68,6 +68,7 @@ import Subscribers from "./pages/Admin/Subscribers";
 import AdminPopulorCruise from "./pages/Admin/Populor-Cruise";
 import FAQ from "./pages/Admin/FAQ";
 import TermsAndCondition from "./pages/Admin/TermsAndConditions";
+import PaymentResponse from "./pages/PaymentResponse";
 
 function App() {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -109,6 +110,7 @@ function App() {
               }
             />
             <Route path="/checkout/:id" element={<Checkout />} />
+            <Route path="/payment-response" element={<PaymentResponse />} />
             <Route
               path="/favourites"
               element={
