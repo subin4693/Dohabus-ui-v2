@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UserRefundRequestPopup from "./userRefundRequestPopup";
+import UserRefundRequestPopup from "./UserRefundRequestPopup";
 
 export default function UserRefundRequestButton() {
   const [showPopup, setShowPopup] = useState(false);
