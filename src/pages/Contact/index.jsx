@@ -1,13 +1,16 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Banner from "../../components/Banner";
 import contactImg from "../../assets/contact.jpg";
 import { FaMapPin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Map from "./Map";
+import UserRefundRequestButton from "./UserRefundRequestButton";
+import UserPaymentStatusCheck from "../Admin/Tickets/UserPaymentStatusCheck";
+
 const Contact = () => {
-  const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const lang = useSelector((state) => state.language.lang);
   const [datas, setDatas] = useState([]);
 
@@ -53,7 +56,7 @@ const Contact = () => {
       }
     };
     getData();
-  }, []);
+  }, [BASE_URL]);
   return (
     <div>
       <Banner
@@ -63,8 +66,8 @@ const Contact = () => {
       />
       <div className="flex flex-wrap justify-center gap-20 mt-10">
         <div dir={lang === "ar" ? "rtl" : "ltr"} className="w-[600px]">
-          <div className="">
-            <h1 className="text-3xl  font-bold text-dark">{heading}</h1>
+          <div>
+            <h1 className="text-3xl font-bold text-dark">{heading}</h1>
             <p className="text-gray">{paragraph}</p>
 
             <form
@@ -117,25 +120,27 @@ const Contact = () => {
               >
                 {button}
               </button>
-              <Link to={"/faq"}>
-                <p className="text-center text-lg mt-5">{faq}</p>
-              </Link>
             </form>
+            {/* Refund Request Button */}
+            <UserRefundRequestButton />
+            <Link to={"/faq"}>
+              <p className="text-center text-lg mt-5">{faq}</p>
+            </Link>
           </div>
         </div>
         <div
           dir={lang === "ar" ? "rtl" : "ltr"}
           className="w-full lg:w-[400px] flex justify-center"
         >
-          <div className="space-y-5 ">
-            <h2 className=" font-bold text-dark text-3xl  font-bold text-dark">
+          <div className="space-y-5">
+            <h2 className="text-3xl font-bold text-dark">
               {lang === "en"
                 ? "Locations & Opening Times"
                 : "المواقع وأوقات العمل"}
             </h2>
             {datas?.map((location) => (
-              <Link to={location.url}>
-                <div key={location.id} className="mt-4">
+              <Link key={location.id} to={location.url}>
+                <div className="mt-4">
                   <h4 className="flex">
                     <FaMapPin className="w-7 h-7" />
                     &nbsp;
@@ -159,13 +164,11 @@ const Contact = () => {
             ))}
           </div>
         </div>
-        <div className="flex justify-center items-center ">
+        <div className="flex justify-center items-center">
           <div className="px-5 w-[600px]">
-            {" "}
             <h2 className="text-3xl font-bold text-center">
-              {lang == "ar" ? "موقعنا" : "Our Locations"}
-            </h2>{" "}
-            {/* Add your heading here */}
+              {lang === "ar" ? "موقعنا" : "Our Locations"}
+            </h2>
             <Map />
           </div>
         </div>

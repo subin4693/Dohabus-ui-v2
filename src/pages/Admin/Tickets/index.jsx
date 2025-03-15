@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import UserPaymentStatusCheck from "./UserPaymentStatusCheck";
 
 const ManageTickets = () => {
   const mainUser = useSelector((state) => state.user.user);
@@ -336,81 +337,83 @@ const ManageTickets = () => {
   };
 
   return (
-    <div className="p-5 bg-gray-100">
-      <div className="flex justify-between items-center flex-wrap">
-        <h1 className="text-3xl font-bold mb-6">Manage Ticket Bookings</h1>
-        <div className="flex gap-2 flex-wrap">
-          {" "}
-          <select
-            className="px-5 rounded-md"
-            value={selectedFilter}
-            onChange={(e) => {
-              setStartDate(null);
-              setEndDate(null);
-              setSelectedFilter(e.target.value);
-            }} // Set selected filter
-          >
-            <option value="week">Current Week</option>
-            <option value="Month">Current Month</option>
-            <option value="Year">Current Year</option>
-            <option value="All">All</option>
-          </select>{" "}
-          <div className="flex items-center gap-2">
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              placeholderText="Start Date"
-              className="px-2 py-1 rounded-md shadow border-black"
-            />
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              placeholderText="End Date"
-              className="px-2 py-1 rounded-md shadow border-black"
-            />
-          </div>
-          <div className="">
-            <input
-              type="text"
-              placeholder="Search ticket"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="px-2 py-1 rounded-md shadow border-black "
-            />
-            <button
-              onClick={openPopup}
-              className="bg-yellow-400 p-2 rounded-md"
+    <>
+      <UserPaymentStatusCheck />
+      <div className="p-5 bg-gray-100">
+        <div className="flex justify-between items-center flex-wrap">
+          <h1 className="text-3xl font-bold mb-6">Manage Ticket Bookings</h1>
+          <div className="flex gap-2 flex-wrap">
+            <select
+              className="px-5 rounded-md"
+              value={selectedFilter}
+              onChange={(e) => {
+                setStartDate(null);
+                setEndDate(null);
+                setSelectedFilter(e.target.value);
+              }} // Set selected filter
             >
-              Download
-            </button>
+              <option value="week">Current Week</option>
+              <option value="Month">Current Month</option>
+              <option value="Year">Current Year</option>
+              <option value="All">All</option>
+            </select>{" "}
+            <div className="flex items-center gap-2">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Start Date"
+                className="px-2 py-1 rounded-md shadow border-black"
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                placeholderText="End Date"
+                className="px-2 py-1 rounded-md shadow border-black"
+              />
+            </div>
+            <div className="">
+              <input
+                type="text"
+                placeholder="Search ticket"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="px-2 py-1 rounded-md shadow border-black "
+              />
+              <button
+                onClick={openPopup}
+                className="bg-yellow-400 p-2 rounded-md"
+              >
+                Download
+              </button>
+            </div>
           </div>
         </div>
+        <div className="flex flex-wrap gap-5 justify-center mt-5">
+          {filteredDetails.map((booking, index) => (
+            <TicketCard
+              key={index}
+              booking={booking}
+              lang={lang}
+              handleCancelTicket={handleCancelTicket}
+              mainUserRole={mainUser.role}
+              handleRemove={handleRemove}
+            />
+          ))}
+        </div>
+        <DownloadModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onDownload={handleDownload}
+        />
       </div>
-      <div className="flex flex-wrap gap-5 justify-center mt-5">
-        {filteredDetails.map((booking, index) => (
-          <TicketCard
-            key={index}
-            booking={booking}
-            lang={lang}
-            handleCancelTicket={handleCancelTicket}
-            mainUserRole={mainUser.role}
-            handleRemove={handleRemove}
-          />
-        ))}
-      </div>
-      <DownloadModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onDownload={handleDownload}
-      />
-    </div>
+    </>
   );
 };
 
