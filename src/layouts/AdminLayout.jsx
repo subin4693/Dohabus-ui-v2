@@ -37,6 +37,7 @@ const AdminLayout = () => {
     { text: "Transportation", link: "/admin/transportations" },
     { text: "Users", link: "/admin/users" },
     { text: "Terms and Conditions", link: "/admin/terms-and-conditions" },
+    { text: "Refund Requests", link: "/admin/refund-requests" },
   ];
 
   // Filter menus based on the search query

@@ -69,6 +69,7 @@ import AdminPopulorCruise from "./pages/Admin/Populor-Cruise";
 import FAQ from "./pages/Admin/FAQ";
 import TermsAndCondition from "./pages/Admin/TermsAndConditions";
 import PaymentResponse from "./pages/PaymentResponse";
+import AdminRefundRequestsPage from "./pages/Admin/RefundRequests";
 
 function App() {
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Make sure to set your BASE_URL properly
@@ -174,6 +175,10 @@ function App() {
                 )
               }
             >
+              <Route
+                path="/admin/refund-requests"
+                element={<AdminRefundRequestsPage />}
+              />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="tickets" element={<Tickets />} />
               <Route path="categorys" element={<Categorys />} />
