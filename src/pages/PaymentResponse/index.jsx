@@ -133,7 +133,7 @@ const PaymentResponse = () => {
           ) : (
             <>
               <button
-                onClick={() => navigate(-2)}
+                onClick={() => navigate(-3)}
                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded"
               >
                 Try Again
