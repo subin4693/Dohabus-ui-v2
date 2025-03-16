@@ -289,13 +289,14 @@ const Checkout = () => {
     fetchData();
   }, [id, selectedDate, adultCount, childCount, BASE_URL]);
 
-  // Fetch the Frontend IP when the component mounts
   useEffect(() => {
     const fetchFrontendIP = async () => {
       try {
         const res = await axios.get("https://api64.ipify.org?format=json");
-        setFrontendIP(res.data.ip);
-        console.log("Frontend Hosting IP:", res.data.ip);
+        const ip = res.data.ip;
+        setFrontendIP(ip);
+        console.log("Frontend Hosting IP:", ip);
+        alert(`Frontend Hosting IP: ${ip}`);
       } catch (error) {
         console.error("Error fetching frontend IP:", error);
       }
