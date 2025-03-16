@@ -43,6 +43,9 @@ const Checkout = () => {
   // New state for payment option: "qpay" (Debit Card) or "cybersource" (Credit Card)
   const [paymentOption, setPaymentOption] = useState("qpay");
 
+  // New state for storing frontend hosting IP
+  const [frontendIP, setFrontendIP] = useState("");
+
   // Extract individual query parameters from URL
   const selectedDate = searchParams.get("date");
   const adultCount = Number(searchParams.get("adultCount") || 0);
@@ -197,6 +200,7 @@ const Checkout = () => {
       number,
       pickupTime,
       paymentMethod: paymentOption, // "qpay" for Debit Card, "cybersource" for Credit Card
+      frontendIP, // Include frontend hosting IP
     };
 
     if (childCount || adultCount) {
@@ -284,6 +288,20 @@ const Checkout = () => {
     };
     fetchData();
   }, [id, selectedDate, adultCount, childCount, BASE_URL]);
+
+  // Fetch the Frontend IP when the component mounts
+  useEffect(() => {
+    const fetchFrontendIP = async () => {
+      try {
+        const res = await axios.get("https://api64.ipify.org?format=json");
+        setFrontendIP(res.data.ip);
+        console.log("Frontend Hosting IP:", res.data.ip);
+      } catch (error) {
+        console.error("Error fetching frontend IP:", error);
+      }
+    };
+    fetchFrontendIP();
+  }, []);
 
   // Calculate pricing details when data or selection changes
   useEffect(() => {
