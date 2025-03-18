@@ -46,10 +46,12 @@ export default function AdminRefundRequestsPage() {
     // Filter by search query
     if (searchQuery.trim() !== "") {
       filtered = filtered.filter((req) => {
-        const ticketUniqueId =
-          typeof req.ticketId === "object"
-            ? req.ticketId.uniqueId
-            : req.ticketId;
+        const ticketUniqueId = req.ticketId?.uniqueId || req.ticketId;
+
+        // const ticketUniqueId =
+        //   typeof req.ticketId === "object"
+        //     ? req.ticketId.uniqueId
+        //     : req.ticketId;
         return (
           (req.reason &&
             req.reason.toLowerCase().includes(searchQuery.toLowerCase())) ||
