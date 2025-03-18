@@ -511,7 +511,9 @@ export default function AdminRefundRequestsPage() {
                 return (
                   <tr key={refund._id} className="border-t border-stone-200">
                     <td className="py-3 px-4">{refund._id}</td>
-                    <td className="py-3 px-4">{ticketUniqueId}</td>
+                    <td className="py-3 px-4">
+                      {ticketUniqueId || "Ticket Deleted"}
+                    </td>
                     <td className="py-3 px-4">{refund.reason}</td>
                     <td
                       className={`py-3 px-4 ${getStatusColor(refund.status)}`}
