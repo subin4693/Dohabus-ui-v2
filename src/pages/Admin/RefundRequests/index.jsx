@@ -21,6 +21,8 @@ export default function AdminRefundRequestsPage() {
       try {
         const response = await axios.get(`${BASE_URL}/tickets/refunds`);
         if (response.data && response.data.data) {
+          console.log(response.data.data);
+
           setRefundRequests(response.data.data.refunds);
           setFilteredRequests(response.data.data.refunds);
         }
