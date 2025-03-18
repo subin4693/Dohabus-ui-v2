@@ -518,7 +518,7 @@ export default function AdminRefundRequestsPage() {
                     <td
                       className={`py-3 px-4 ${getStatusColor(refund.status)}`}
                     >
-                      {refund.status}
+                      {ticketUniqueId ? refund.status : "Ticket Deleted"}
                     </td>
                     <td className="py-3 px-4">
                       {new Date(refund.createdAt).toLocaleString()}
