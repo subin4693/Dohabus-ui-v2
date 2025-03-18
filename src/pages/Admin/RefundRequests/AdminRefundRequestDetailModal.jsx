@@ -19,10 +19,8 @@ export default function AdminRefundRequestDetailModal({
     const fetchTicketDetails = async () => {
       try {
         setLoadingTicket(true);
-        const ticketId =
-          (typeof refundRequest.ticketId === "object" &&
-            refundRequest.ticketId._id) ||
-          refundRequest.ticketId;
+        // Safely get the ticketId from refundRequest
+        const ticketId = refundRequest.ticketId?._id || refundRequest.ticketId;
         const res = await axios.get(`${BASE_URL}/tickets/${ticketId}`);
         setTicketData(res.data.data.ticket);
       } catch (error) {
@@ -74,10 +72,7 @@ export default function AdminRefundRequestDetailModal({
     setUpdateMessage("");
 
     try {
-      const ticketId =
-        typeof refundRequest.ticketId === "object"
-          ? refundRequest.ticketId._id
-          : refundRequest.ticketId;
+      const ticketId = refundRequest.ticketId?._id || refundRequest.ticketId;
       const payload = { ticketId };
 
       const res = await axios.post(
@@ -119,9 +114,7 @@ export default function AdminRefundRequestDetailModal({
           </p>
           <p>
             <strong>Ticket Unique ID:</strong>{" "}
-            {typeof refundRequest.ticketId === "object"
-              ? refundRequest.ticketId.uniqueId
-              : refundRequest.ticketId}
+            {refundRequest.ticketId?.uniqueId || refundRequest.ticketId}
           </p>
           <p>
             <strong>Reason:</strong> {refundRequest.reason}
