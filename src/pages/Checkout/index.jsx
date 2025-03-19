@@ -1232,7 +1232,7 @@ const Checkout = () => {
           </div>
           {!invoiceID ? (
             <button
-              // disabled
+              disabled
               className="py-2 w-full h-auto bg-custom-yellow duration-300 mt-4 rounded-md"
               onClick={handleTicketBooking}
             >
@@ -1241,8 +1241,8 @@ const Checkout = () => {
                   <Loader w={20} h={20} b={5} />
                 </div>
               ) : (
-                "Complete booking"
-                // "Online Booking is disbaled due to maintenance. Please give us a Call to book your tickets"
+                // "Complete booking"
+                "Online Booking is disbaled due to maintenance. Please give us a Call to book your tickets"
               )}
             </button>
           ) : (
