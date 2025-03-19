@@ -151,7 +151,7 @@ export default function UserPaymentStatusPopup({ onClose }) {
     } catch (error) {
       console.error("Error checking payment status:", error.message);
       if (error.response && error.response.data) {
-        setErrorMessage(error.response.data.data.message);
+        setErrorMessage(error.response.data.message);
       } else {
         setErrorMessage("Something went wrong while checking payment status.");
       }
