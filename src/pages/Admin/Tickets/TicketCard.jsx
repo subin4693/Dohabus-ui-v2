@@ -198,7 +198,6 @@ const TicketCard = ({
               </div>
             )
           )}
-          <div>Update</div>
         </div>
         <p className="text-stone-600 mb-1">
           UniqueID : {booking && booking?.uniqueId}
