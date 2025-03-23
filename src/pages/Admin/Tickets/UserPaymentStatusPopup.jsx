@@ -146,7 +146,7 @@ export default function UserPaymentStatusPopup({ onClose }) {
         // Then call onClose() which also triggers a ticket re-fetch in the parent.
         setTimeout(() => {
           onClose();
-        }, 2000);
+        }, 3000);
       }
     } catch (error) {
       console.error("Error checking payment status:", error.message);
