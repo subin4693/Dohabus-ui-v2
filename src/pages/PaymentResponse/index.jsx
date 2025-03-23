@@ -58,7 +58,7 @@ const PaymentResponse = () => {
   const isSuccess = () => {
     if (!paymentResult || !paymentResult.status) return false;
     const status = paymentResult.status.toLowerCase();
-    return status === "0000" || status === "accept";
+    return status === "0000" || status === "accept" || status === "success";
   };
 
   useEffect(() => {
