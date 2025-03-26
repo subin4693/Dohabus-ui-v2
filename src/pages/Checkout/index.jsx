@@ -609,7 +609,7 @@ const Checkout = () => {
               </button>
             ) : (
               <button
-                disabled
+          
                 className="py-2 w-full h-auto bg-custom-yellow duration-300 mt-4 rounded-md"
                 onClick={handleTicketBooking}
               >
