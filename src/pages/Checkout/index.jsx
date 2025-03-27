@@ -594,18 +594,34 @@ const Checkout = () => {
             </div>
           </div>
           {!invoiceID ? (
-            <button
-              className="py-2 w-full h-auto bg-custom-yellow duration-300 mt-4 rounded-md"
-              onClick={handleTicketBooking}
-            >
-              {loading ? (
-                <div>
-                  <Loader w={20} h={20} b={5} />
-                </div>
-              ) : (
-                "Book Now"
-              )}
-            </button>
+            data?.title === "TEST" ? (
+              <button
+                className="py-2 w-full h-auto bg-custom-yellow duration-300 mt-4 rounded-md"
+                onClick={handleTicketBooking}
+              >
+                {loading ? (
+                  <div>
+                    <Loader w={20} h={20} b={5} />
+                  </div>
+                ) : (
+                  "Complete booking"
+                )}
+              </button>
+            ) : (
+              <button
+                disabled
+                className="py-2 w-full h-auto bg-custom-yellow duration-300 mt-4 rounded-md"
+                onClick={handleTicketBooking}
+              >
+                {loading ? (
+                  <div>
+                    <Loader w={20} h={20} b={5} />
+                  </div>
+                ) : (
+                  "Online Booking is disbaled due to maintenance. Please give us a Call to book your tickets"
+                )}
+              </button>
+            )
           ) : (
             <Link to={`/invoice/${invoiceID}`}>
               <button className="py-2 w-full bg-blue-500 duration-300 text-white mt-4 rounded-md">
