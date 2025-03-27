@@ -35,14 +35,10 @@ const Signin = () => {
         return;
       }
 
-      const res = await axios.post(
-        BASE_URL + "/users/signin",
-        {
-          email: email.trim(),
-          password,
-        },
-        
-      );
+      const res = await axios.post(BASE_URL + "/users/signin", {
+        email: email.trim(),
+        password,
+      });
       toast.success("Signin successfully", {
         position: "top-right",
         autoClose: 5000,

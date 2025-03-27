@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import UserPaymentStatusPopup from "./UserPaymentStatusPopup";
+import UserTicketDetailsPopup from "./UserTicketDetailsPopup";
 
-export default function UserPaymentStatusCheck({ onRefresh }) {
+export default function UserTicketDetailsCheck({ onRefresh }) {
   const [showPopup, setShowPopup] = useState(false);
 
-  // When the payment status check completes, close the popup and refresh tickets.
   const handleClose = () => {
     setShowPopup(false);
     if (onRefresh) {
@@ -19,9 +18,9 @@ export default function UserPaymentStatusCheck({ onRefresh }) {
         onClick={() => setShowPopup(true)}
         className="w-[20rem] py-3 bg-custom-yellow hover:bg-black hover:text-white rounded-full text-lg font-semibold transition duration-300"
       >
-        Check Payment Status
+        Get Ticket Details
       </button>
-      {showPopup && <UserPaymentStatusPopup onClose={handleClose} />}
+      {showPopup && <UserTicketDetailsPopup onClose={handleClose} />}
     </div>
   );
 }

@@ -9,6 +9,7 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import UserPaymentStatusCheck from "./UserPaymentStatusCheck";
+import UserTicketDetailsCheck from "./UserDetailsCheck";
 
 const ManageTickets = () => {
   const mainUser = useSelector((state) => state.user.user);
@@ -283,7 +284,10 @@ const ManageTickets = () => {
   return (
     <>
       {/* Pass the fetchTickets callback so that the payment status check can refresh the data */}
-      <UserPaymentStatusCheck onRefresh={fetchTickets} />
+      <div className="flex gap-[5rem] mb-[2rem]">
+        <UserPaymentStatusCheck onRefresh={fetchTickets} />
+        <UserTicketDetailsCheck />
+      </div>
       <div className="p-5 bg-gray-100">
         <div className="flex justify-between items-center flex-wrap">
           <h1 className="text-3xl font-bold mb-6">Manage Ticket Bookings</h1>
