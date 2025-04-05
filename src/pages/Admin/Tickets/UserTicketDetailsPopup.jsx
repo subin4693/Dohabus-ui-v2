@@ -101,10 +101,9 @@ export default function UserTicketDetailsPopup({ onClose }) {
     }));
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/tickets/qpay-payment-inquire`,
-        { uniqueId: uniqueIdParam }
-      );
+      const response = await axios.post(`${BASE_URL}/tickets/payment-inquire`, {
+        uniqueId: uniqueIdParam,
+      });
 
       if (response.status === 200) {
         setPaymentStatus((prev) => ({

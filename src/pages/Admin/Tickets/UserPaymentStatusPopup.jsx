@@ -16,12 +16,13 @@ export default function UserPaymentStatusPopup({ onClose }) {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/tickets/qpay-payment-inquire`,
-        { uniqueId }
-      );
+      const response = await axios.post(`${BASE_URL}/tickets/payment-inquire`, {
+        uniqueId,
+      });
 
       if (response.status === 200) {
+        console.log(response.data);
+
         setStatusMessage(response.data.message);
         // Optionally, you can delay closing the popup or show the success message for a moment.
         // Then call onClose() which also triggers a ticket re-fetch in the parent.
@@ -32,6 +33,8 @@ export default function UserPaymentStatusPopup({ onClose }) {
     } catch (error) {
       console.error("Error checking payment status:", error.message);
       if (error.response && error.response.data) {
+        console.log(error.data);
+
         setErrorMessage(error.response.data.message);
       } else {
         setErrorMessage("Something went wrong while checking payment status.");
