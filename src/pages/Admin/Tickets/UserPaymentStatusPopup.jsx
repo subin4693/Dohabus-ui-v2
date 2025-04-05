@@ -23,7 +23,7 @@ export default function UserPaymentStatusPopup({ onClose }) {
       if (response.status === 200) {
         console.log(response.data);
 
-        if (response.data.status === "success") {
+        if (response.data.message === "Payment processed successfully.") {
           setStatusMessage(response.data.message);
           setTimeout(() => {
             onClose();

@@ -103,9 +103,10 @@ export default function UserTicketDetailsPopup({ onClose }) {
       const response = await axios.post(`${BASE_URL}/tickets/payment-inquire`, {
         uniqueId: uniqueIdParam,
       });
+      console.log(response);
 
       if (response.status === 200) {
-        if (response.data.status === "success") {
+        if (response.data.message === "Payment processed successfully.") {
           setPaymentStatus((prev) => ({
             ...prev,
             [uniqueIdParam]: {
