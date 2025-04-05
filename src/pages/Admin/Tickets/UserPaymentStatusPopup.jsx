@@ -23,18 +23,19 @@ export default function UserPaymentStatusPopup({ onClose }) {
       if (response.status === 200) {
         console.log(response.data);
 
-        setStatusMessage(response.data.message);
-        // Optionally, you can delay closing the popup or show the success message for a moment.
-        // Then call onClose() which also triggers a ticket re-fetch in the parent.
-        setTimeout(() => {
-          onClose();
-        }, 3000);
+        if (response.data.status === "success") {
+          setStatusMessage(response.data.message);
+          setTimeout(() => {
+            onClose();
+          }, 3000);
+        } else {
+          setErrorMessage(response.data.message);
+        }
       }
     } catch (error) {
       console.error("Error checking payment status:", error.message);
       if (error.response && error.response.data) {
         console.log(error.data);
-
         setErrorMessage(error.response.data.message);
       } else {
         setErrorMessage("Something went wrong while checking payment status.");

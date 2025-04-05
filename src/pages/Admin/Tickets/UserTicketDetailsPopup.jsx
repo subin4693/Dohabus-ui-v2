@@ -94,7 +94,6 @@ export default function UserTicketDetailsPopup({ onClose }) {
 
   // Check payment status using the provided logic; then refresh search results.
   const handlePaymentStatus = async (uniqueIdParam) => {
-    // Update state to mark loading for this ticket
     setPaymentStatus((prev) => ({
       ...prev,
       [uniqueIdParam]: { loading: true, message: "", error: "" },
@@ -106,15 +105,26 @@ export default function UserTicketDetailsPopup({ onClose }) {
       });
 
       if (response.status === 200) {
-        setPaymentStatus((prev) => ({
-          ...prev,
-          [uniqueIdParam]: {
-            loading: false,
-            message: response.data.message,
-            error: "",
-          },
-        }));
-        // After a short delay, refetch search results to update the payment status in the table
+        if (response.data.status === "success") {
+          setPaymentStatus((prev) => ({
+            ...prev,
+            [uniqueIdParam]: {
+              loading: false,
+              message: response.data.message,
+              error: "",
+            },
+          }));
+        } else {
+          setPaymentStatus((prev) => ({
+            ...prev,
+            [uniqueIdParam]: {
+              loading: false,
+              message: "",
+              error: response.data.message,
+            },
+          }));
+        }
+
         setTimeout(() => {
           handleSearch();
         }, 3000);
