@@ -105,7 +105,34 @@ export default function UserTicketDetailsPopup({ onClose }) {
       });
       console.log(response);
 
-      if (response.status === 200) {
+      //       if (response.status === 200) {
+      //         if (response.data.message === "Payment processed successfully.") {
+      //           setPaymentStatus((prev) => ({
+      //             ...prev,
+      //             [uniqueIdParam]: {
+      //               loading: false,
+      //               message: response.data.message,
+      //               error: "",
+      //             },
+      //           }));
+      //         } else {
+      //           setPaymentStatus((prev) => ({
+      //             ...prev,
+      //             [uniqueIdParam]: {
+      //               loading: false,
+      //               message: "",
+      //               error: response.data.message,
+      //             },
+      //           }));
+      //         }
+      //
+      //         setTimeout(() => {
+      //           handleSearch();
+      //         }, 3000);
+      //       }
+      if (response.status === 200 || response.status === "success") {
+        console.log(response.data);
+
         if (response.data.message === "Payment processed successfully.") {
           setPaymentStatus((prev) => ({
             ...prev,
@@ -115,6 +142,26 @@ export default function UserTicketDetailsPopup({ onClose }) {
               error: "",
             },
           }));
+        } else if (response.data.message === "Payment inquiry completed") {
+          if (response.data.updatedPaymentStatus === "Paid") {
+            setPaymentStatus((prev) => ({
+              ...prev,
+              [uniqueIdParam]: {
+                loading: false,
+                message: "Paid",
+                error: "",
+              },
+            }));
+          } else {
+            setPaymentStatus((prev) => ({
+              ...prev,
+              [uniqueIdParam]: {
+                loading: false,
+                message: "",
+                error: "Payment Status: " + response.data.updatedPaymentStatus,
+              },
+            }));
+          }
         } else {
           setPaymentStatus((prev) => ({
             ...prev,
@@ -125,10 +172,6 @@ export default function UserTicketDetailsPopup({ onClose }) {
             },
           }));
         }
-
-        setTimeout(() => {
-          handleSearch();
-        }, 3000);
       }
     } catch (error) {
       const errMsg =

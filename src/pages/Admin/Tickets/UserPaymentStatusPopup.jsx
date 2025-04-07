@@ -20,14 +20,22 @@ export default function UserPaymentStatusPopup({ onClose }) {
         uniqueId,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === "success") {
         console.log(response.data);
 
         if (response.data.message === "Payment processed successfully.") {
-          setStatusMessage(response.data.message);
+          setStatusMessage(response.data.message, "QPay");
           setTimeout(() => {
             onClose();
           }, 3000);
+        } else if (response.data.message === "Payment inquiry completed") {
+          if (response.data.updatedPaymentStatus === "Paid") {
+            setStatusMessage("Payment Status: Paid, Cybersource");
+          } else {
+            setStatusMessage(
+              "Payment Status: " + response.data.updatedPaymentStatus
+            );
+          }
         } else {
           setErrorMessage(response.data.message);
         }
