@@ -131,8 +131,7 @@ export default function AdminRefundRequestsPage() {
       const response = await axios.post(`${BASE_URL}/tickets/refund-inquire`, {
         uniqueId,
       });
-      const status = response.data?.data?.status;
-      console.log("Refund inquiry response status:", status);
+      console.log("Refund inquiry response status:", response);
 
       setInquiryResults((prev) => ({
         ...prev,
