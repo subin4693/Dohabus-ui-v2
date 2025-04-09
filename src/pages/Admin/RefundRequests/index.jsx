@@ -13,7 +13,8 @@ export default function AdminRefundRequestsPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // State to store inquiry results by ticket unique ID
+  // State to store inquiry results by ticket unique ID.
+  // Each entry will include: loading, error, result and paymentMethod.
   const [inquiryResults, setInquiryResults] = useState({});
 
   // Updated helper: returns CSS class based on the new refund.status field
@@ -120,22 +121,27 @@ export default function AdminRefundRequestsPage() {
   };
 
   // Refund Inquiry handler (POST to /tickets/refund-inquire)
-  const handleRefundInquiry = async (uniqueId) => {
-    // Set inquiry state to loading
+  // Updated to accept paymentMethod as a parameter.
+  const handleRefundInquiry = async (uniqueId, paymentMethod) => {
+    // Set inquiry state to loading, store paymentMethod along with result.
     setInquiryResults((prev) => ({
       ...prev,
-      [uniqueId]: { loading: true, error: null, result: null },
+      [uniqueId]: { loading: true, error: null, result: null, paymentMethod },
     }));
 
     try {
       const response = await axios.post(`${BASE_URL}/tickets/refund-inquire`, {
         uniqueId,
       });
-      console.log("Refund inquiry response status:", response);
 
       setInquiryResults((prev) => ({
         ...prev,
-        [uniqueId]: { loading: false, error: null, result: response.data },
+        [uniqueId]: {
+          loading: false,
+          error: null,
+          result: response.data,
+          paymentMethod,
+        },
       }));
 
       toast.success("Refund inquiry successful.", { theme: "dark" });
@@ -148,38 +154,61 @@ export default function AdminRefundRequestsPage() {
         "An unexpected error occurred during refund inquiry.";
       setInquiryResults((prev) => ({
         ...prev,
-        [uniqueId]: { loading: false, error: errorMessage, result: null },
+        [uniqueId]: {
+          loading: false,
+          error: errorMessage,
+          result: null,
+          paymentMethod,
+        },
       }));
       toast.error("Failed to get refund inquiry.", { theme: "dark" });
     }
   };
 
-  // Render a simplified inquiry result showing only the status.
-  // (Logic in renderInquiryResult remains unchanged.)
-  const renderInquiryResult = (result) => {
-    if (!result || !result.data) return null;
-    const inquiryStatus = result.data?.status;
-    console.log("Inquiry Status:", inquiryStatus);
+  // Updated renderInquiryResult: Check the paymentMethod before checking for result.data.
+  const renderInquiryResult = (result, paymentMethod) => {
+    // For QPay we ignore the result.data check.
+    if (paymentMethod === "qpay") {
+      if (result && result.originalStatus) {
+        const inquiryStatus = result.originalStatus;
+        const displayStatus =
+          inquiryStatus === "0000"
+            ? "TRANSMITTED"
+            : inquiryStatus === "5002"
+            ? "PENDING"
+            : "REJECTED";
 
-    // If status is TRANSMITTED or PENDING, show that; otherwise, show REJECTED.
-    const displayStatus =
-      inquiryStatus === "TRANSMITTED" || inquiryStatus === "PENDING"
-        ? inquiryStatus
-        : "REJECTED";
-
-    // Set color based on the display status using getStatusColor mapping
-    let statusColor = "";
-    if (displayStatus === "TRANSMITTED") {
-      // For inquiry result, you could use blue for "TRANSMITTED" if desired,
-      // but here we reuse our mapping from the refund record if needed.
-      statusColor = "text-green-600 font-bold";
-    } else if (displayStatus === "PENDING") {
-      statusColor = "text-yellow-600 font-bold";
+        let statusColor = "";
+        if (displayStatus === "PENDING") {
+          statusColor = "text-yellow-600 font-bold";
+        } else if (displayStatus === "TRANSMITTED") {
+          statusColor = "text-green-600 font-bold";
+        } else {
+          statusColor = "text-red-600 font-bold";
+        }
+        return <div className={statusColor}>Status: {displayStatus}</div>;
+      } else {
+        return null;
+      }
     } else {
-      statusColor = "text-red-600 font-bold";
-    }
+      // For cybersource, ensure result.data exists.
+      if (!result || !result.data) return null;
+      const inquiryStatus = result.data?.status;
+      const displayStatus =
+        inquiryStatus === "TRANSMITTED" || inquiryStatus === "PENDING"
+          ? inquiryStatus
+          : "REJECTED";
 
-    return <div className={statusColor}>Status: {displayStatus}</div>;
+      let statusColor = "";
+      if (displayStatus === "TRANSMITTED") {
+        statusColor = "text-green-600 font-bold";
+      } else if (displayStatus === "PENDING") {
+        statusColor = "text-yellow-600 font-bold";
+      } else {
+        statusColor = "text-red-600 font-bold";
+      }
+      return <div className={statusColor}>Status: {displayStatus}</div>;
+    }
   };
 
   return (
@@ -254,6 +283,7 @@ export default function AdminRefundRequestsPage() {
             <tr>
               <th className="py-3 px-4 text-left">Refund ID</th>
               <th className="py-3 px-4 text-left">Ticket Unique ID</th>
+              <th className="py-3 px-4 text-left">Payment Method</th>
               <th className="py-3 px-4 text-left">Reason</th>
               <th className="py-3 px-4 text-left">Status</th>
               <th className="py-3 px-4 text-left">Created At</th>
@@ -263,7 +293,7 @@ export default function AdminRefundRequestsPage() {
           <tbody>
             {filteredRequests.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4">
+                <td colSpan="7" className="text-center py-4">
                   No refund requests found.
                 </td>
               </tr>
@@ -279,12 +309,14 @@ export default function AdminRefundRequestsPage() {
                     <td className="py-3 px-4">
                       {ticketUniqueId || "Ticket Deleted"}
                     </td>
+                    <td className="py-3 px-4">
+                      {refund.paymentMethod || "Unknown"}
+                    </td>
                     <td className="py-3 px-4">{refund.reason}</td>
-                    {/* Updated table column: using new refund.status and new getStatusColor mapping */}
-                    <td
-                      className={`py-3 px-4 ${getStatusColor(refund.status)}`}
-                    >
-                      {refund.status}
+                    <td className="py-3 px-4">
+                      <span className={getStatusColor(refund.status)}>
+                        {refund.status}
+                      </span>
                     </td>
                     <td className="py-3 px-4">
                       {new Date(refund.createdAt).toLocaleString()}
@@ -299,7 +331,12 @@ export default function AdminRefundRequestsPage() {
                             View Details
                           </button>
                           <button
-                            onClick={() => handleRefundInquiry(ticketUniqueId)}
+                            onClick={() =>
+                              handleRefundInquiry(
+                                ticketUniqueId,
+                                refund.paymentMethod
+                              )
+                            }
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
                           >
                             Refund Inquiry
@@ -318,7 +355,10 @@ export default function AdminRefundRequestsPage() {
                         )}
                         {inquiryState.result && !inquiryState.loading && (
                           <div className="mt-2 whitespace-pre-wrap">
-                            {renderInquiryResult(inquiryState.result)}
+                            {renderInquiryResult(
+                              inquiryState.result,
+                              refund.paymentMethod
+                            )}
                           </div>
                         )}
                       </div>
